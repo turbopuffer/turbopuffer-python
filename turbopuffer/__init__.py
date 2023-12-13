@@ -5,3 +5,4 @@ api_base_uri = os.environ.get('TURBOPUFFER_API_BASE_URI', 'https://api.turbopuff
 from turbopuffer.version import VERSION
 from turbopuffer.namespace import Namespace
 from turbopuffer.vectors import VectorColumns, VectorRow
+from turbopuffer.query import VectorQuery

@@ -8,10 +8,14 @@ class Cursor(str):
     pass
 
 @dataclass
-class VectorRow(JSONSerializable):
+class VectorRow(JSONSerializable, str=False): # Prevent JSON pretty printing of data
     id: Annotated[int, Ge(0)]
     vector: Optional[List[float]] = None
     attributes: Optional[Dict[str, str]] = None
+
+    class _(JSONSerializable.Meta):
+        skip_defaults = True
+        key_transform_with_dump='SNAKE'
 
     def __init__(self, id: Annotated[int, Ge(0)], vector: Optional[List[float]] = None, attributes: Optional[Dict[str, str]] = None):
         if not isinstance(id, int):
@@ -20,17 +24,15 @@ class VectorRow(JSONSerializable):
         self.vector = vector
         self.attributes = attributes
 
-    def __str__(self) -> str:
-        return str(asdict(self)) # Prevent JSON pretty printing of data
-
 @dataclass
-class VectorColumns(JSONSerializable):
+class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing of data
     ids: List[Annotated[int, Ge(0)]]
     vectors: List[List[float]]
     attributes: Dict[str, List[str]]
 
-    def __str__(self) -> str:
-        return str(asdict(self)) # Prevent JSON pretty printing of data
+    class _(JSONSerializable.Meta):
+        skip_defaults = True
+        key_transform_with_dump='SNAKE'
 
     def from_rows(row_data: Union[VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
         ids = []
@@ -111,6 +113,6 @@ class VectorIterator:
         elif self.next_cursor is None:
             raise StopIteration
         else:
-            next_iter = self.namespace.export_vectors(cursor=self.next_cursor)
+            next_iter = self.namespace.vectors(cursor=self.next_cursor)
             self.next_cursor = next_iter.next_cursor
             return next_iter.data

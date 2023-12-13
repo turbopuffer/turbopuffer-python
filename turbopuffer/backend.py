@@ -1,5 +1,5 @@
 import requests
-import turbopuffer
+import turbopuffer as tpuf
 import json
 import gzip
 from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
@@ -7,11 +7,10 @@ from typing import Optional
 from dataclass_wizard import JSONSerializable
 
 def find_api_key(api_key: Optional[str] = None) -> str:
-    import turbopuffer
     if api_key is not None:
         return api_key
-    elif turbopuffer.api_key is not None:
-        return turbopuffer.api_key
+    elif tpuf.api_key is not None:
+        return tpuf.api_key
     else:
         raise AuthenticationError("No turbopuffer API key was provided.\n"
             "Set the TURBOPUFFER_API_KEY environment variable, "
@@ -22,10 +21,10 @@ def make_api_request(*args: list[str], api_key: Optional[str] = None, method: Op
     s = requests.Session()
     s.headers.update({
         'Authorization': f'Bearer {find_api_key(api_key)}',
-        'User-Agent': f'turbopuffer-python/{turbopuffer.VERSION} {requests.utils.default_headers()["User-Agent"]}'
+        'User-Agent': f'tpuf-python/{tpuf.VERSION} {requests.utils.default_headers()["User-Agent"]}'
     })
 
-    request_uri = turbopuffer.api_base_uri + '/' + '/'.join(args)
+    request_uri = tpuf.api_base_uri + '/' + '/'.join(args)
     try:
         if payload is None and (method is None or method == 'GET'):
             if cursor is not None:

@@ -1,6 +1,7 @@
 from turbopuffer.vectors import Cursor, VectorIterator, VectorColumns, VectorRow, DATA
 from turbopuffer.backend import make_api_request
-from typing import Optional, Iterable
+from turbopuffer.query import VectorQuery
+from typing import Optional, Iterable, Union
 
 class Namespace:
     name: str
@@ -11,14 +12,14 @@ class Namespace:
         self.api_key = api_key
 
     def __str__(self) -> str:
-        return f'turbopuffer-namespace:{self.name}'
+        return f'tpuf-namespace:{self.name}'
 
-    def upsert_vectors(self, data: DATA) -> None:
+    def upsert(self, data: DATA) -> None:
         # print(f'Upsert data ({type(data)}):', data)
         if data is None:
-            raise ValueError('upsert_vectors input data cannot be None')
+            raise ValueError('upsert input data cannot be None')
         elif isinstance(data, list):
-            return self.upsert_vectors(VectorColumns.from_rows(data))
+            return self.upsert(VectorColumns.from_rows(data))
         elif isinstance(data, dict):
             if 'id' in data:
                 response = make_api_request('vectors', self.name, api_key=self.api_key, payload=VectorColumns.from_rows(VectorRow.from_dict(data)))
@@ -38,7 +39,17 @@ class Namespace:
         if (response.get('status', '') != 'OK'): print('Upsert response:', response)
         assert response.get('status', '') == 'OK'
 
-    def export_vectors(self, cursor: Optional[Cursor] = None) -> VectorIterator:
+    def query(self, query_data: Union[dict, VectorQuery]):
+        if not isinstance(query_data, VectorQuery):
+            if isinstance(query_data, dict):
+                query_data = VectorQuery.from_dict(query_data)
+            else:
+                raise ValueError(f'query input type must be compatible with turbopuffer.VectorQuery: {type(query_data).name}')
+
+        response = make_api_request('vectors', self.name, 'query', payload=query_data)
+        return VectorIterator(response, namespace=self)
+
+    def vectors(self, cursor: Optional[Cursor] = None) -> VectorIterator:
         response = make_api_request('vectors', self.name, cursor=cursor)
         next_cursor = response.pop('next_cursor', None)
         return VectorIterator(response, namespace=self, next_cursor=next_cursor)
