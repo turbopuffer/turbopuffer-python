@@ -36,12 +36,20 @@ def test_delete_vectors():
     # Test upsert delete single row
     try:
         ns.upsert(tpuf.VectorRow(id=2))
+        assert False, "Upserting to delete should not be allowed"
     except ValueError as err:
         assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
+
+    try:
+        ns.upsert(tpuf.VectorRow(id=2, dist=5))
+        assert False, "Upserting to delete should not be allowed"
+    except ValueError as err:
+        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
 
     # Test upsert single row dict
     try:
         ns.upsert({'id': 6})
+        assert False, "Upserting to delete should not be allowed"
     except ValueError as err:
         assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
 

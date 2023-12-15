@@ -29,6 +29,12 @@ class Namespace:
 
         if data is None:
             raise ValueError('upsert() input data cannot be None')
+        elif isinstance(data, VectorColumns):
+            if None in data.vectors and data.distances is not None:
+                raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
+            response = self.backend.make_api_request('vectors', self.name, payload=data)
+        elif isinstance(data, VectorRow):
+            return self.upsert(VectorColumns.from_rows(data))
         elif isinstance(data, list):
             if isinstance(data[0], dict):
                 return self.upsert(VectorColumns.from_rows(data))
@@ -42,15 +48,11 @@ class Namespace:
                 raise ValueError(f'Unsupported list data type: {type(data[0])}')
         elif isinstance(data, dict):
             if 'id' in data:
-                response = self.backend.make_api_request('vectors', self.name, payload=VectorColumns.from_rows(VectorRow.from_dict(data)))
+                return self.upsert(VectorColumns.from_rows(VectorRow.from_dict(data)))
             elif 'ids' in data:
-                response = self.backend.make_api_request('vectors', self.name, payload=VectorColumns.from_dict(data))
+                return self.upsert(VectorColumns.from_dict(data))
             else:
                 raise ValueError('Provided dict is missing ids.')
-        elif isinstance(data, VectorColumns):
-            response = self.backend.make_api_request('vectors', self.name, payload=data)
-        elif isinstance(data, VectorRow):
-            response = self.backend.make_api_request('vectors', self.name, payload=VectorColumns.from_rows(data))
         elif isinstance(data, Iterable):
             for batch in batch_iter(data, ITERATOR_BATCH_SIZE):
                 self.upsert(batch)
