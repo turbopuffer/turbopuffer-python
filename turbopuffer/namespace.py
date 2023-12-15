@@ -27,7 +27,6 @@ class Namespace:
         Upserting a vector will overwrite any existing vector with the same ID.
         """
 
-        # print(f'Upsert data ({type(data)}):', data)
         if data is None:
             raise ValueError('upsert() input data cannot be None')
         elif isinstance(data, list):
@@ -59,8 +58,7 @@ class Namespace:
         else:
             raise ValueError(f'Unsupported data type: {type(data)}')
 
-        if (response.get('status', '') != 'OK'): print('Upsert response:', response)
-        assert response.get('status', '') == 'OK'
+        assert response.get('status', '') == 'OK', f'Invalid upsert() response: {response}'
 
     def delete(self, ids: Union[int, List[int]]) -> None:
         """
@@ -80,8 +78,7 @@ class Namespace:
         else:
             raise ValueError(f'Unsupported ids type: {type(ids)}')
 
-        if (response.get('status', '') != 'OK'): print('Delete upsert response:', response)
-        assert response.get('status', '') == 'OK'
+        assert response.get('status', '') == 'OK', f'Invalid delete() response: {response}'
 
     def query(self, query_data: Union[dict, VectorQuery]) -> VectorResult:
         """
@@ -117,8 +114,7 @@ class Namespace:
         """
 
         response = self.backend.make_api_request('vectors', self.name, 'index', method='DELETE')
-        if (response.get('status', '') != 'ok'): print('Delete all indexes response:', response)
-        assert response.get('status', '') == 'ok'
+        assert response.get('status', '') == 'ok', f'Invalid delete_all_indexes() response: {response}'
 
     def delete_all(self) -> None:
         """
@@ -126,8 +122,7 @@ class Namespace:
         """
 
         response = self.backend.make_api_request('vectors', self.name, method='DELETE')
-        if (response.get('status', '') != 'ok'): print('Delete all response:', response)
-        assert response.get('status', '') == 'ok'
+        assert response.get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
 
     def recall(self, num=20, top_k=10) -> dict:
         """
@@ -139,7 +134,4 @@ class Namespace:
         Recall is calculated as the ratio of matching vectors between the two search results.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
-        return response
-        # if (response.get('status', '') != 'ok'): print('Delete all response:', response)
-        # assert response.get('status', '') == 'ok'
+        return self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})

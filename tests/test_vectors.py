@@ -75,7 +75,7 @@ def test_query_vectors():
         'include_attributes': ['hello'],
     })
     for i, vector in enumerate(vector_set):
-        print(f'Query {i}: ', vector)
+        print(f'Query1 {i}: ', vector)
 
     # Test query with typed query
     vector_set = ns.query(tpuf.VectorQuery(
@@ -85,9 +85,7 @@ def test_query_vectors():
         include_vectors=True,
         include_attributes=['hello'],
     ))
-    print(vector_set)
-    # for i, vector in enumerate(vector_set):
-    #     print(f'Query {i}: ', vector)
+    print('Query2: ', vector_set)
 
 def test_list_vectors():
     ns = tpuf.Namespace('hello_world')

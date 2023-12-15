@@ -16,7 +16,7 @@ class Cursor(str):
     pass
 
 @dataclass
-class VectorRow(JSONSerializable, str=False): # Prevent JSON pretty printing of data
+class VectorRow(JSONSerializable, str=False): # str=False to prevent JSON pretty printing of data
     """
     The VectorRow type represents a single vector ID, along with its vector values and attributes.
     """
@@ -40,7 +40,7 @@ class VectorRow(JSONSerializable, str=False): # Prevent JSON pretty printing of 
             raise ValueError('VectorRow.attributes must be a dict, got:', type(self.attributes))
 
 @dataclass
-class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing of data
+class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pretty printing of data
     """
     The VectorColumns type represents a set of vectors stored in a column-oriented layout.
     """
