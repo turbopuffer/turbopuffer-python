@@ -30,6 +30,16 @@ def test_vector_endpoints():
         tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}),
     ])
 
+    # Test upsert lazy row iterator
+    namespace.upsert(tpuf.VectorRow(id=i, vector=[i/10, i/10]) for i in range(10, 100))
+
+    # Test upsert lazy column batch iterator
+    def make_test_batch(n, offset):
+        return tpuf.VectorColumns.from_rows([
+            {'id': i, 'vector': [i/10, i/10]} for i in range(offset, n+offset)
+        ])
+    namespace.upsert(make_test_batch(100, i) for i in range(1, 10))
+
     # Test query with dict
     vector_set = namespace.query({
         'vector': [0.8, 0.7],
@@ -54,4 +64,8 @@ def test_vector_endpoints():
     for i, vector in enumerate(vector_set):
         print(f'Export {i}: ', vector)
 
+
+    # print('Recall:', namespace.eval_recall())
+
+    namespace.delete_all_indexes()
     namespace.delete_all()

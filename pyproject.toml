@@ -2,14 +2,35 @@
 name = "turbopuffer"
 version = "0.1.0"
 description = "Python Client for accessing the turbopuffer API"
+authors = ["turbopuffer Inc. <info@turbopuffer.com>"]
+maintainers = ["Jacob Wirth <xthexder@users.noreply.github.com>"]
+homepage = "https://turbopuffer.com"
 documentation = "https://turbopuffer.com/docs"
-authors = ["Jacob Wirth <info@turbopuffer.com>"]
+repository  = "https://github.com/turbopuffer/turbopuffer-python"
+license = "MIT"
 readme = "README.md"
+tags = ["turbopuffer", "vector", "database", "cloud"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Database",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed"
+]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 requests = "^2.31"
-annotated-types = "^0.6.0"
 dataclass-wizard = "^0.22.2"
 
 [tool.poetry.dev-dependencies]

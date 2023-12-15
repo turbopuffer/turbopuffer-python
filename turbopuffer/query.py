@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, List, Annotated, Tuple, Union, Dict
-from annotated_types import Ge
+from typing import Optional, List, Tuple, Union, Dict
 from dataclass_wizard import JSONSerializable
 from enum import Enum
 
@@ -12,7 +11,7 @@ class FilterMatch(Enum):
     NOT_GLOB = 'NotGlob'
 
 @dataclass
-class IdFilter(Tuple[FilterMatch, Union[List[Annotated[int, Ge(0)]], int]]):
+class IdFilter(Tuple[FilterMatch, Union[List[int], int]]):
     pass
 
 @dataclass
@@ -32,7 +31,7 @@ class AttributeFilters(JSONSerializable):
 class VectorQuery(JSONSerializable):
     vector: Optional[List[float]] = None
     distance_metric: Optional[str] = None
-    top_k: Annotated[int, Ge(1)] = 10
+    top_k: int = 10
     include_vectors: bool = False
     include_attributes: Optional[List[str]] = None
     filters: Optional[AttributeFilter] = None
