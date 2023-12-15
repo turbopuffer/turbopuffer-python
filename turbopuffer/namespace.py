@@ -22,14 +22,14 @@ class Namespace:
 
     def upsert(self, data: DATA) -> None:
         """
-        Creates, updates vectors. If this call succeeds, data is guaranteed to be durably written to object storage.
+        Creates or updates vectors. If this call succeeds, data is guaranteed to be durably written to object storage.
 
         Upserting a vector will overwrite any existing vector with the same ID.
         """
 
         # print(f'Upsert data ({type(data)}):', data)
         if data is None:
-            raise ValueError('upsert input data cannot be None')
+            raise ValueError('upsert() input data cannot be None')
         elif isinstance(data, list):
             if isinstance(data[0], dict):
                 return self.upsert(VectorColumns.from_rows(data))
@@ -40,7 +40,7 @@ class Namespace:
                     self.upsert(columns)
                 return
             else:
-                raise NotImplementedError(f'Unsupported list data type: {type(data[0])}')
+                raise ValueError(f'Unsupported list data type: {type(data[0])}')
         elif isinstance(data, dict):
             if 'id' in data:
                 response = self.backend.make_api_request('vectors', self.name, payload=VectorColumns.from_rows(VectorRow.from_dict(data)))
@@ -94,7 +94,7 @@ class Namespace:
             if isinstance(query_data, dict):
                 query_data = VectorQuery.from_dict(query_data)
             else:
-                raise ValueError(f'query input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
+                raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
 
         response = self.backend.make_api_request('vectors', self.name, 'query', payload=query_data)
         return VectorResult(response, namespace=self)

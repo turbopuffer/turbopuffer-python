@@ -127,9 +127,9 @@ class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing
                         v.extend([None] * (new_len-len(v)))
                 return self
             else:
-                raise NotImplementedError('VectorColumns.append unsupported list type:', type(other[0]))
+                raise ValueError('VectorColumns.append unsupported list type:', type(other[0]))
         else:
-            raise NotImplementedError('VectorColumns.append unsupported type:', type(other))
+            raise ValueError('VectorColumns.append unsupported type:', type(other))
 
     def from_rows(row_data: Union[VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
         ids = []
@@ -150,7 +150,7 @@ class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing
                 elif isinstance(row, VectorRow):
                     parsed_row = row
                 else:
-                    raise NotImplementedError(f'Unsupported row data type: {type(row)}')
+                    raise ValueError(f'Unsupported row data type: {type(row)}')
 
                 ids += [parsed_row.id]
                 vectors += [parsed_row.vector]
@@ -159,9 +159,9 @@ class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing
                         attrs = attributes.setdefault(k, [None]*col_count)
                         attrs[i] = v
         elif isinstance(row_data, Iterable):
-            raise NotImplementedError(f'VectorColumns from Iterable not yet supported.')
+            raise ValueError(f'VectorColumns from Iterable not yet supported.')
         else:
-            raise NotImplementedError(f'Unsupported row data type: {type(row_data)}')
+            raise ValueError(f'Unsupported row data type: {type(row_data)}')
         return VectorColumns(ids=ids, vectors=vectors, attributes=attributes)
 
 DATA = Union[Iterable[dict], dict, VectorRow, 'VectorResult']
@@ -197,15 +197,15 @@ class VectorResult:
                 elif isinstance(initial_data[0], VectorRow):
                     return initial_data
                 else:
-                    raise NotImplementedError(f'Unsupported list data type: {type(initial_data[0])}')
+                    raise ValueError(f'Unsupported list data type: {type(initial_data[0])}')
             elif isinstance(initial_data, dict):
                 return VectorColumns.from_dict(initial_data)
             elif isinstance(initial_data, VectorColumns):
                 return initial_data
             elif isinstance(initial_data, Iterable):
-                raise NotImplementedError(f'VectorResult from Iterable not yet supported.')
+                raise ValueError(f'VectorResult from Iterable not yet supported.')
             else:
-                raise NotImplementedError(f'Unsupported data type: {type(initial_data)}')
+                raise ValueError(f'Unsupported data type: {type(initial_data)}')
 
     def __str__(self) -> str:
         if not self.next_cursor and self.offset == 0:
