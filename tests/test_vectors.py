@@ -1,50 +1,37 @@
 import turbopuffer as tpuf
 
 def test_upsert_rows():
-    ns = tpuf.Namespace('hello_world')
+    ns = tpuf.Namespace('client_test')
     print(ns)
 
     # Test upsert mutli row data
     ns.upsert([
         {'id': 2, 'vector': [2, 2]},
-        {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world'}},
+        {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}},
     ])
 
     # Test upsert typed row data
     ns.upsert([
         tpuf.VectorRow(id=2, vector=[2, 2]),
-        tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}),
+        tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world', 'test': 'rows'}),
     ])
 
+    # Test upsert single row
+    ns.upsert({'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world'}})
+
     # Test upsert lazy row iterator
-    ns.upsert(tpuf.VectorRow(id=i, vector=[i/10, i/10]) for i in range(10, 100))
+    ns.upsert(tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'}) for i in range(10, 100))
 
-def test_upsert_columns():
-    ns = tpuf.Namespace('hello_world')
-
-    # Test upsert dict data
-    ns.upsert({
-        "ids": [0, 1, 2, 3],
-        "vectors": [[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
-        "attributes": {"key1": ["zero", "one", "two", "three"], "key2": [" ", "a", "b", "c"]}
-    })
-
-    # Test upsert typed column data
-    ns.upsert(tpuf.VectorColumns(
-        ids=[4, 5, 6],
-        vectors=[[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
-        attributes={"key1": ["one", "two", "three"], "key2": ["a", "b", "c"]},
-    ))
-
-    # Test upsert lazy column batch iterator
-    def make_test_batch(n, offset):
-        return tpuf.VectorColumns.from_rows([
-            {'id': i, 'vector': [i/10, i/10]} for i in range(offset, n+offset)
-        ])
-    ns.upsert(make_test_batch(100, i) for i in range(1, 10))
+    # Check to make sure the vectors were stored as expected
+    results = ns.vectors()
+    assert len(results) == 92, "Got wrong number of vectors back"
+    assert results[0] == tpuf.VectorRow(id=2, vector=[2.0, 2.0], attributes={})
+    assert results[1] == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
+    for i in range(10, 100):
+        assert results[i-8] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
 def test_delete_vectors():
-    ns = tpuf.Namespace('hello_world')
+    ns = tpuf.Namespace('client_test')
 
     # Test upsert delete single row
     try:
@@ -59,12 +46,75 @@ def test_delete_vectors():
         assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
 
     # Test delete single row
-    ns.delete(6)
+    ns.delete(2)
     # Test delete multi row
-    ns.delete([0, 1, 2, 3, 4, 5])
+    ns.delete([10, 11, 12, 13, 14, 15])
+
+    # Check to make sure the vectors were removed
+    results = ns.vectors()
+    assert len(results) == 85, "Got wrong number of vectors back"
+    assert results[0] == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
+    for i in range(16, 100):
+        assert results[i-15] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
+
+def test_upsert_columns():
+    ns = tpuf.Namespace('client_test')
+
+    # Test upsert dict data
+    ns.upsert({
+        "ids": [0, 1, 2, 3],
+        "vectors": [[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
+        "attributes": {
+            "key1": ["zero", "one", "two", "three"],
+            "key2": [" ", "a", "b", "c"],
+            "test": ["cols", "cols", "cols", "cols"],
+        }
+    })
+
+    # Test upsert typed column data
+    ns.upsert(tpuf.VectorColumns(
+        ids=[4, 5, 6],
+        vectors=[[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
+        attributes={
+            "key1": ["one", "two", "three"],
+            "key2": ["a", "b", "c"],
+            "test": ["cols", "cols", "cols"],
+        },
+    ))
+
+    # Test upsert lazy column batch iterator
+    def make_test_batch(n):
+        for i in range(1, 10):
+            yield tpuf.VectorColumns.from_rows([
+                {'id': i, 'vector': [i/10, i/10], 'attributes': {'test': 'cols'}} for i in range(i*n, (i+1)*n)
+            ])
+    ns.upsert(make_test_batch(10))
+
+    # Check to make sure the vectors were stored as expected
+    results = ns.vectors()
+    assert len(results) == 98, "Got wrong number of vectors back"
+    test_count = 0
+    for row in results:
+        if 'test' in row.attributes and row.attributes['test'] == 'cols':
+            test_count += 1
+            if row.id >= 10:
+                assert row == tpuf.VectorRow(id=row.id, vector=[row.id/10, row.id/10], attributes={'test': 'cols'})
+        else:
+            assert row == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
+    assert test_count == 97, "Found wrong number of test cols"
 
 def test_query_vectors():
-    ns = tpuf.Namespace('hello_world')
+    ns = tpuf.Namespace('client_test')
+
+    def check_result(row, expected):
+        assert row.id == expected.id
+        assert row.attributes == expected.attributes
+        if isinstance(expected.vector, list):
+            assert abs(row.vector[0] - expected.vector[0]) < 0.000001
+            assert abs(row.vector[1] - expected.vector[1]) < 0.000001
+        else:
+            assert row.vector == expected.vector
+        assert abs(row.dist - expected.dist) < 0.000001
 
     # Test query with dict
     vector_set = ns.query({
@@ -74,32 +124,47 @@ def test_query_vectors():
         'include_vectors': True,
         'include_attributes': ['hello'],
     })
-    for i, vector in enumerate(vector_set):
-        print(f'Query1 {i}: ', vector)
+    expected = [
+        tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}, dist=0.01),
+        tpuf.VectorRow(id=10, vector=[1.0, 1.0], dist=0.13),
+        tpuf.VectorRow(id=11, vector=[1.1, 1.1], dist=0.25),
+        tpuf.VectorRow(id=3, vector=[0.3, 0.3], dist=0.41),
+        tpuf.VectorRow(id=6, vector=[0.3, 0.3], dist=0.41),
+    ]
+    for i in range(len(vector_set)): # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
 
     # Test query with typed query
     vector_set = ns.query(tpuf.VectorQuery(
         top_k=5,
-        vector=[0.8, 0.7],
+        vector=[1.5, 1.6],
         distance_metric='euclidean_squared',
-        include_vectors=True,
-        include_attributes=['hello'],
     ))
-    print('Query2: ', vector_set)
+    expected = [
+        tpuf.VectorRow(id=15, dist=0.01),
+        tpuf.VectorRow(id=16, dist=0.01),
+        tpuf.VectorRow(id=14, dist=0.05),
+        tpuf.VectorRow(id=17, dist=0.05),
+        tpuf.VectorRow(id=18, dist=0.13),
+    ]
+    i = 0
+    for row in vector_set: # Use VectorResult in iterator mode
+        check_result(row, expected[i])
+        i += 1
 
 def test_list_vectors():
-    ns = tpuf.Namespace('hello_world')
+    ns = tpuf.Namespace('client_test')
 
     vector_set = ns.vectors()
-    print(vector_set)
+    set_str = str(vector_set)
+    assert set_str.startswith("VectorResult(namespace='client_test', offset=0 next_cursor='")
+    # Random cursor string in the middle
+    assert set_str.endswith("', data=VectorColumns(ids=[7], vectors=[[0.7, 0.7]], attributess={'hello': ['world']}))")
 
-    for i in range(0, 10):
-        print(f'Export {i}: ', vector_set[i])
-
-    print(len(vector_set))
+    assert len(vector_set) == 98
 
 def test_delete_all():
-    ns = tpuf.Namespace('hello_world')
+    ns = tpuf.Namespace('client_test')
     # print('Recall:', ns.recall())
 
     ns.delete_all_indexes()
