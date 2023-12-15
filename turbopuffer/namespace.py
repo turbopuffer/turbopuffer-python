@@ -1,7 +1,7 @@
-from turbopuffer.vectors import Cursor, VectorIterator, VectorColumns, VectorRow, DATA, ITERATOR_BATCH_SIZE, batch_iter
+from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, DATA, ITERATOR_BATCH_SIZE, batch_iter
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery
-from typing import Optional, Iterable, Union
+from typing import List, Optional, Iterable, Union
 
 class Namespace:
     """
@@ -22,7 +22,7 @@ class Namespace:
 
     def upsert(self, data: DATA) -> None:
         """
-        Creates, updates, or deletes vectors. If this call succeeds, data is guaranteed to be durably written to object storage.
+        Creates, updates vectors. If this call succeeds, data is guaranteed to be durably written to object storage.
 
         Upserting a vector will overwrite any existing vector with the same ID.
         """
@@ -57,12 +57,33 @@ class Namespace:
                 self.upsert(batch)
             return
         else:
-            raise NotImplementedError(f'Unsupported data type: {type(data)}')
+            raise ValueError(f'Unsupported data type: {type(data)}')
 
         if (response.get('status', '') != 'OK'): print('Upsert response:', response)
         assert response.get('status', '') == 'OK'
 
-    def query(self, query_data: Union[dict, VectorQuery]) -> VectorIterator:
+    def delete(self, ids: Union[int, List[int]]) -> None:
+        """
+        Deletes vectors by id.
+        """
+
+        if isinstance(ids, int):
+            response = self.backend.make_api_request('vectors', self.name, payload={
+                'ids': [ids],
+                'vectors': [None],
+            })
+        elif isinstance(ids, list):
+            response = self.backend.make_api_request('vectors', self.name, payload={
+                'ids': ids,
+                'vectors': [None] * len(ids),
+            })
+        else:
+            raise ValueError(f'Unsupported ids type: {type(ids)}')
+
+        if (response.get('status', '') != 'OK'): print('Delete upsert response:', response)
+        assert response.get('status', '') == 'OK'
+
+    def query(self, query_data: Union[dict, VectorQuery]) -> VectorResult:
         """
         Searches vectors matching the search query.
 
@@ -76,19 +97,19 @@ class Namespace:
                 raise ValueError(f'query input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
 
         response = self.backend.make_api_request('vectors', self.name, 'query', payload=query_data)
-        return VectorIterator(response, namespace=self)
+        return VectorResult(response, namespace=self)
 
-    def vectors(self, cursor: Optional[Cursor] = None) -> VectorIterator:
+    def vectors(self, cursor: Optional[Cursor] = None) -> VectorResult:
         """
         This function to exports the entire dataset at full precision.
-        A VectorIterator is returned that will lazily load batches of vectors.
+        A VectorResult is returned that will lazily load batches of vectors if treated as an Iterator.
 
         If you want to look up vectors by ID, use the query function with an id filter.
         """
 
         response = self.backend.make_api_request('vectors', self.name, query={'cursor': cursor})
         next_cursor = response.pop('next_cursor', None)
-        return VectorIterator(response, namespace=self, next_cursor=next_cursor)
+        return VectorResult(response, namespace=self, next_cursor=next_cursor)
 
     def delete_all_indexes(self) -> None:
         """
@@ -108,7 +129,7 @@ class Namespace:
         if (response.get('status', '') != 'ok'): print('Delete all response:', response)
         assert response.get('status', '') == 'ok'
 
-    def eval_recall(self, num=20, top_k=10):
+    def recall(self, num=20, top_k=10) -> dict:
         """
         This function evaluates the recall performance of ANN queries in this namespace.
 

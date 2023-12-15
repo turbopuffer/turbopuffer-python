@@ -31,11 +31,13 @@ class VectorRow(JSONSerializable, str=False): # Prevent JSON pretty printing of 
 
     def __post_init__(self):
         if not isinstance(self.id, int):
-            raise ValueError('Wrong data type passed for VectorRow.id')
-        if self.vector is not None and not isinstance(self.vector, list):
-            raise ValueError('Wrong data type passed for VectorRow.vector')
+            raise ValueError('VectorRow.id must be an int, got:', type(self.vector))
+        if self.vector is None:
+            raise ValueError('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.')
+        if not isinstance(self.vector, list):
+            raise ValueError('VectorRow.vector must be a list, got:', type(self.vector))
         if self.attributes is not None and not isinstance(self.attributes, dict):
-            raise ValueError('Wrong data type passed for VectorRow.attributes')
+            raise ValueError('VectorRow.attributes must be a dict, got:', type(self.attributes))
 
 @dataclass
 class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing of data
@@ -44,7 +46,7 @@ class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing
     """
 
     ids: List[int]
-    vectors: List[List[float]]
+    vectors: List[Optional[List[float]]]
     attributes: Optional[Dict[str, List[str]]] = None
 
     class _(JSONSerializable.Meta):
@@ -53,11 +55,17 @@ class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing
 
     def __post_init__(self):
         if not isinstance(self.ids, list):
-            raise ValueError('Wrong data type passed for VectorColumns.ids')
+            raise ValueError('VectorColumns.ids must be a list, got:', type(self.ids))
         if not isinstance(self.vectors, list):
-            raise ValueError('Wrong data type passed for VectorColumns.vectors')
-        if self.attributes is not None and not isinstance(self.attributes, dict):
-            raise ValueError('Wrong data type passed for VectorColumns.attributes')
+            raise ValueError('VectorColumns.vectors must be a list, got:', type(self.vectors))
+        if len(self.ids) != len(self.vectors):
+            raise ValueError('VectorColumns.ids and VectorColumns.vectors must be the same length')
+        if self.attributes is not None:
+            if not isinstance(self.attributes, dict):
+                raise ValueError('VectorColumns.attributes must be a dict, got:', type(self.attributes))
+            for key, values in self.attributes.items():
+                if not isinstance(values, list):
+                    raise ValueError(f'VectorColumns.attributes[{key}] must be a list, got:', type(values))
 
     def __len__(self) -> int:
         return len(self.ids)
@@ -70,6 +78,58 @@ class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing
                 if values and len(values) > index:
                     row.attributes[key] = values[index]
         return row
+
+    def __iadd__(self, other) -> 'VectorColumns':
+        return self.append(other)
+
+    def append(self, other) -> 'VectorColumns':
+        old_len = len(self.ids)
+        if isinstance(other, VectorRow):
+            self.ids.append(other.id)
+            self.vectors.append(other.vector)
+            new_len = len(self.ids)
+            if other.attributes:
+                if not self.attributes: self.attributes = dict()
+                for k, v in other.attributes.items():
+                    attrs = self.attributes.setdefault(k, [None]*old_len)
+                    attrs.extend(v)
+            if self.attributes:
+                for v in self.attributes.values():
+                    if len(v) < new_len: v.append(None)
+        elif isinstance(other, VectorColumns):
+            self.ids.extend(other.ids)
+            self.vectors.extend(other.vectors)
+            new_len = len(self.ids)
+            if other.attributes:
+                if not self.attributes: self.attributes = dict()
+                for k, v in other.attributes.items():
+                    attrs = self.attributes.setdefault(k, [None]*old_len)
+                    attrs.extend(v)
+            if self.attributes:
+                for v in self.attributes.values():
+                    if len(v) < new_len:
+                        v.extend([None] * (new_len-len(v)))
+            return self
+        elif isinstance(other, list):
+            if len(other) == 0: return self
+            if isinstance(other[0], VectorRow):
+                self.ids.extend(row.id for row in other)
+                self.vectors.extend(row.vector for row in other)
+                new_len = len(self.ids)
+                if not self.attributes: self.attributes = dict()
+                for i, row in enumerate(other):
+                    if row.attributes:
+                        for k, v in row.attributes.items():
+                            attrs = self.attributes.setdefault(k, [None]*new_len)
+                            attrs[old_len + i] = v
+                for v in self.attributes.values():
+                    if len(v) < new_len:
+                        v.extend([None] * (new_len-len(v)))
+                return self
+            else:
+                raise NotImplementedError('VectorColumns.append unsupported list type:', type(other[0]))
+        else:
+            raise NotImplementedError('VectorColumns.append unsupported type:', type(other))
 
     def from_rows(row_data: Union[VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
         ids = []
@@ -104,25 +164,30 @@ class VectorColumns(JSONSerializable, str=False): # Prevent JSON pretty printing
             raise NotImplementedError(f'Unsupported row data type: {type(row_data)}')
         return VectorColumns(ids=ids, vectors=vectors, attributes=attributes)
 
-DATA = Union[Iterable[dict], dict, VectorRow, 'VectorIterator']
+DATA = Union[Iterable[dict], dict, VectorRow, 'VectorResult']
 SET_DATA = Union[Iterable[VectorRow], VectorColumns]
 
-class VectorIterator:
+class VectorResult:
     """
-    The VectorIterator type represents a set of vectors that may or may not be lazily loaded in batches from an external source.
+    The VectorResult type represents a set of vectors that are the result of a query.
+
+    A VectorResult can be treated as either a lazy iterator or a list by the user.
+    Reading the length of the result will internally buffer the full result.
     """
 
     namespace: Optional['Namespace'] = None
     data: Optional[SET_DATA] = None
     index: int = -1
+    offset: int = 0
     next_cursor: Optional[Cursor] = None
 
     def __init__(self, initial_data: Optional[DATA] = None, namespace: Optional['Namespace'] = None, next_cursor: Optional[Cursor] = None):
         self.namespace = namespace
         self.index = -1
+        self.offset = 0
         self.next_cursor = next_cursor
 
-        self.data = VectorIterator.load_data(initial_data)
+        self.data = VectorResult.load_data(initial_data)
 
     def load_data(initial_data: DATA) -> SET_DATA:
         if initial_data:
@@ -138,31 +203,53 @@ class VectorIterator:
             elif isinstance(initial_data, VectorColumns):
                 return initial_data
             elif isinstance(initial_data, Iterable):
-                raise NotImplementedError(f'VectorIterator from Iterable not yet supported.')
+                raise NotImplementedError(f'VectorResult from Iterable not yet supported.')
             else:
                 raise NotImplementedError(f'Unsupported data type: {type(initial_data)}')
 
     def __str__(self) -> str:
-        return str({
-            'data': 'redacted',#self.data,
-            'namespace': self.namespace.name,
-            'next_cursor': self.next_cursor
-        })
+        if not self.next_cursor and self.offset == 0:
+            return str(self.data)
+        else:
+            return f"VectorResult(namespace='{self.namespace.name}', offset={self.offset} next_cursor='{self.next_cursor}', data={self.data})"
 
-    def __iter__(self) -> 'VectorIterator':
-        return self
+    def __len__(self) -> int:
+        assert self.offset == 0, "Can't call len(VectorResult) after iterating"
+        assert self.index == -1, "Can't call len(VectorResult) after iterating"
+        if not self.next_cursor:
+            if self.data is not None:
+                return len(self.data)
+            return 0
+        else:
+            it = iter(self)
+            self.data = [next for next in it]
+            self.offset = 0
+            self.index = -1
+            self.next_cursor = None
+            return len(self.data)
+
+    def __getitem__(self, index) -> VectorRow:
+        if index >= len(self.data) and self.next_cursor:
+            it = iter(self)
+            self.data = [next for next in it]
+            self.offset = 0
+            self.index = -1
+            self.next_cursor = None
+        return self.data[index]
+
+    def __iter__(self) -> 'VectorResult':
+        assert self.offset == 0, "Can't iterate over VectorResult multiple times"
+        return VectorResult(self.data, self.namespace, self.next_cursor)
 
     def __next__(self):
         if self.data is not None and self.index + 1 < len(self.data):
             self.index += 1
             return self.data[self.index]
+        elif self.next_cursor is None:
+            raise StopIteration
         else:
-            self.data = None
-            self.index = -1
-            if self.next_cursor is None:
-                raise StopIteration
-            else:
-                response = self.namespace.backend.make_api_request('vectors', self.namespace.name, query={'cursor': self.next_cursor})
-                self.next_cursor = response.pop('next_cursor', None)
-                self.data = VectorIterator.load_data(response)
-                return self.__next__()
+            response = self.namespace.backend.make_api_request('vectors', self.namespace.name, query={'cursor': self.next_cursor})
+            self.offset += len(self.data)
+            self.next_cursor = response.pop('next_cursor', None)
+            self.data = VectorResult.load_data(response)
+            return self.__next__()
