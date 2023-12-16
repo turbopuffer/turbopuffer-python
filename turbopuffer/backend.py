@@ -2,7 +2,6 @@ import time
 import traceback
 import requests
 import turbopuffer as tpuf
-import orjson
 import gzip
 from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
 from typing import Optional, List, Union
@@ -46,10 +45,10 @@ class Backend:
                 dict_payload = payload.to_dict()
                 # print('Dict time:', time.monotonic() - before)
                 # before = time.monotonic()
-                json_payload = orjson.dumps(dict_payload)
+                json_payload = tpuf.dump_json_bytes(dict_payload)
                 # print('Json time:', time.monotonic() - before)
             elif isinstance(payload, dict):
-                json_payload = orjson.dumps(payload)
+                json_payload = tpuf.dump_json_bytes(payload)
             else:
                 raise ValueError(f'Unsupported POST payload type: {type(payload)}')
 

@@ -9,35 +9,35 @@ Usage
 1. Install the turbopuffer package and set your API key.
 ```sh
 $ pip install turbopuffer
-$ export TURBOPUFFER_API_KEY=your-token
 ```
 
-2. Open a namespace
+2. Start using the API
 ```py
 import turbopuffer as tpuf
+tpuf.api_key = 'your-token' # Alternatively: export=TURBOPUFFER_API_KEY=your-token
 
+# Open a namespace
 ns = tpuf.Namespace('hello_world')
-```
 
-3. Upsert your dataset
-```py
+# Upsert your dataset
 ns.upsert({
     'ids': [1, 2],
     'vectors': [[0.1, 0.2], [0.3, 0.4]],
     'attributes': {'name': ['foo', 'bar']}
 })
-```
 
-4. Query your dataset
-```py
+# Query your dataset
 vectors = ns.query({
     'vector': [0.15, 0.22],
     'distance_metric': 'euclidean_squared',
     'top_k': 10,
     'filters': { 'name': [['Eq', 'foo'], ['NotEq', 'bar'], ['Glob', '*foo*']] },
     'include_attributes': ['name'],
-    'include_vectors': False
+    'include_vectors': True
 })
 print(vectors)
-# [VectorRow(id=1, vector=None, attributes={'name': 'foo'}, dist=0.0029000001959502697), VectorRow(id=2, vector=None, attributes={'name': 'bar'}, dist=0.05490000173449516)]
+# [
+#   VectorRow(id=1, vector=[0.10000000149011612, 0.20000000298023224], attributes={'name': 'foo'}, dist=0.0029000001959502697),
+#   VectorRow(id=2, vector=[0.30000001192092896, 0.4000000059604645], attributes={'name': 'bar'}, dist=0.05490000173449516)
+# ]
 ```

@@ -15,7 +15,7 @@ def test_readme():
         'top_k': 10,
         'filters': { 'name': [['Eq', 'foo'], ['NotEq', 'bar'], ['Glob', '*foo*']] },
         'include_attributes': ['name'],
-        'include_vectors': False
+        'include_vectors': True
     })
     print(vectors)
 
