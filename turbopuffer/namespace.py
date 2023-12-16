@@ -1,7 +1,7 @@
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, DATA, ITERATOR_BATCH_SIZE, batch_iter
 from turbopuffer.backend import Backend
-from turbopuffer.query import VectorQuery
-from typing import List, Optional, Iterable, Union
+from turbopuffer.query import VectorQuery, AttributeFilter
+from typing import Dict, List, Optional, Iterable, Union, overload
 
 class Namespace:
     """
@@ -20,7 +20,19 @@ class Namespace:
     def __str__(self) -> str:
         return f'tpuf-namespace:{self.name}'
 
+    @overload
+    def upsert(self, id: int, vector: List[float], attributes: Optional[Dict[str, Optional[str]]] = None) -> None:
+        ...
+
+    @overload
+    def upsert(self, ids: List[int], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
+        ...
+
+    @overload
     def upsert(self, data: DATA) -> None:
+        ...
+
+    def upsert(self, data=None, id=None, vector=None, ids=None, vectors=None, attributes=None) -> None:
         """
         Creates or updates vectors. If this call succeeds, data is guaranteed to be durably written to object storage.
 
@@ -28,7 +40,12 @@ class Namespace:
         """
 
         if data is None:
-            raise ValueError('upsert() input data cannot be None')
+            if id is not None:
+                return self.upsert(VectorRow(id=id, vector=vector, attributes=attributes))
+            elif ids is not None:
+                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes))
+            else:
+                raise ValueError('upsert() input data cannot be None')
         elif isinstance(data, VectorColumns):
             if None in data.vectors and data.distances is not None:
                 raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
@@ -82,13 +99,47 @@ class Namespace:
 
         assert response.get('status', '') == 'OK', f'Invalid delete() response: {response}'
 
-    def query(self, query_data: Union[dict, VectorQuery]) -> VectorResult:
+    @overload
+    def query(self,
+              vector: Optional[List[float]] = None,
+              distance_metric: Optional[str] = None,
+              top_k: int = 10,
+              include_vectors: bool = False,
+              include_attributes: Optional[List[str]] = None,
+              filters: Optional[AttributeFilter] = None):
+        ...
+
+    @overload
+    def query(self, query_data: VectorQuery):
+        ...
+
+    @overload
+    def query(self, query_data: dict):
+        ...
+
+    def query(self,
+              query_data = None,
+              vector = None,
+              distance_metric = None,
+              top_k = None,
+              include_vectors = None,
+              include_attributes = None,
+              filters = None) -> VectorResult:
         """
         Searches vectors matching the search query.
 
         See https://turbopuffer.com/docs/reference/query for query filter parameters.
         """
 
+        if query_data is None:
+            return self.query(VectorQuery(
+                vector=vector,
+                distance_metric=distance_metric,
+                top_k=top_k,
+                include_vectors=include_vectors,
+                include_attributes=include_attributes,
+                filters=filters
+            ))
         if not isinstance(query_data, VectorQuery):
             if isinstance(query_data, dict):
                 query_data = VectorQuery.from_dict(query_data)
