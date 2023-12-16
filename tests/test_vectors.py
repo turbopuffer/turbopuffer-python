@@ -206,7 +206,7 @@ def test_list_vectors():
     set_str = str(vector_set)
     assert set_str.startswith("VectorResult(namespace='client_test', offset=0 next_cursor='")
     # Random cursor string in the middle
-    assert set_str.endswith("', data=VectorColumns(ids=[7], vectors=[[0.7, 0.7]], attributess={'hello': ['world']}))")
+    assert set_str.endswith("', data=VectorColumns(ids=[7], vectors=[[0.7, 0.7]], attributes={'hello': ['world']}))")
 
     assert len(vector_set) == 98
 

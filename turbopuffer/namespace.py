@@ -1,6 +1,6 @@
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, DATA, ITERATOR_BATCH_SIZE, batch_iter
 from turbopuffer.backend import Backend
-from turbopuffer.query import VectorQuery, AttributeFilter
+from turbopuffer.query import VectorQuery, FilterTuple
 from typing import Dict, List, Optional, Iterable, Union, overload
 
 class Namespace:
@@ -22,23 +22,65 @@ class Namespace:
 
     @overload
     def upsert(self, id: int, vector: List[float], attributes: Optional[Dict[str, Optional[str]]] = None) -> None:
+        """
+        Creates or updates a single vector.
+        If this call succeeds, data is guaranteed to be durably written to object storage.
+
+        Upserting a vector will overwrite any existing vector with the same ID.
+        """
+        ...
+
+    @overload
+    def upsert(self, data: VectorRow) -> None:
+        """
+        Creates or updates a single vector.
+        If this call succeeds, data is guaranteed to be durably written to object storage.
+
+        Upserting a vector will overwrite any existing vector with the same ID.
+        """
+        ...
+
+    @overload
+    def upsert(self, data: Union[Iterable[dict], Iterable[VectorRow]]) -> None:
+        """
+        Creates or updates a multiple vectors provided as a list or iterator.
+        If this call succeeds, data is guaranteed to be durably written to object storage.
+
+        Upserting a vector will overwrite any existing vector with the same ID.
+        """
         ...
 
     @overload
     def upsert(self, ids: List[int], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
-        ...
-
-    @overload
-    def upsert(self, data: DATA) -> None:
-        ...
-
-    def upsert(self, data=None, id=None, vector=None, ids=None, vectors=None, attributes=None) -> None:
         """
-        Creates or updates vectors. If this call succeeds, data is guaranteed to be durably written to object storage.
+        Creates or updates multiple vectors provided in a column-oriented layout.
+        If this call succeeds, data is guaranteed to be durably written to object storage.
 
         Upserting a vector will overwrite any existing vector with the same ID.
         """
+        ...
 
+    @overload
+    def upsert(self, data: Union[dict, VectorColumns]) -> None:
+        """
+        Creates or updates multiple vectors provided in a column-oriented layout.
+        If this call succeeds, data is guaranteed to be durably written to object storage.
+
+        Upserting a vector will overwrite any existing vector with the same ID.
+        """
+        ...
+
+    @overload
+    def upsert(self, data: VectorResult) -> None:
+        """
+        Creates or updates multiple vectors.
+        If this call succeeds, data is guaranteed to be durably written to object storage.
+
+        Upserting a vector will overwrite any existing vector with the same ID.
+        """
+        ...
+
+    def upsert(self, data=None, id=None, vector=None, ids=None, vectors=None, attributes=None) -> None:
         if data is None:
             if id is not None:
                 return self.upsert(VectorRow(id=id, vector=vector, attributes=attributes))
@@ -106,7 +148,7 @@ class Namespace:
               top_k: int = 10,
               include_vectors: bool = False,
               include_attributes: Optional[List[str]] = None,
-              filters: Optional[AttributeFilter] = None):
+              filters: Optional[Dict[str, List[FilterTuple]]] = None):
         ...
 
     @overload
@@ -151,7 +193,7 @@ class Namespace:
 
     def vectors(self, cursor: Optional[Cursor] = None) -> VectorResult:
         """
-        This function to exports the entire dataset at full precision.
+        This function exports the entire dataset at full precision.
         A VectorResult is returned that will lazily load batches of vectors if treated as an Iterator.
 
         If you want to look up vectors by ID, use the query function with an id filter.
@@ -177,7 +219,7 @@ class Namespace:
         response = self.backend.make_api_request('vectors', self.name, method='DELETE')
         assert response.get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
 
-    def recall(self, num=20, top_k=10) -> dict:
+    def recall(self, num=20, top_k=10) -> float:
         """
         This function evaluates the recall performance of ANN queries in this namespace.
 
@@ -187,4 +229,6 @@ class Namespace:
         Recall is calculated as the ratio of matching vectors between the two search results.
         """
 
-        return self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
+        response = self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
+        assert 'recall' in response, f'Invalid recall() response: {response}'
+        return float(response.get('recall'))

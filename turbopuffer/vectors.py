@@ -3,7 +3,7 @@ from typing import Optional, Union, List, Iterable, Dict
 from dataclass_wizard import JSONSerializable
 from itertools import islice
 
-ITERATOR_BATCH_SIZE = 5_000
+ITERATOR_BATCH_SIZE = 10_000
 
 def batch_iter(iterable, n):
     it = iter(iterable)
@@ -93,7 +93,7 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
             f'ids={self.ids}',
             f'vectors={self.vectors}',
         ]
-        if self.attributes: fields.append(f'attributess={self.attributes}')
+        if self.attributes: fields.append(f'attributes={self.attributes}')
         if self.distances: fields.append(f'distances={self.distances}')
         return f"VectorColumns({', '.join(fields)})"
 
@@ -113,6 +113,15 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
 
     def __iadd__(self, other) -> 'VectorColumns':
         return self.append(other)
+
+    def append(self, other: VectorRow) -> 'VectorColumns':
+        ...
+
+    def append(self, other: List[VectorRow]) -> 'VectorColumns':
+        ...
+
+    def append(self, other: 'VectorColumns') -> 'VectorColumns':
+        ...
 
     def append(self, other) -> 'VectorColumns':
         old_len = len(self.ids)
@@ -202,8 +211,8 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
             raise ValueError(f'Unsupported row data type: {type(row_data)}')
         return VectorColumns(ids=ids, vectors=vectors, attributes=attributes, distances=distances)
 
-DATA = Union[Iterable[dict], dict, VectorRow, 'VectorResult']
 SET_DATA = Union[Iterable[VectorRow], VectorColumns]
+DATA = Union[Iterable[dict], dict, VectorRow, SET_DATA]
 
 class VectorResult:
     """

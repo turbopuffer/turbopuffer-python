@@ -10,22 +10,7 @@ class FilterMatch(Enum):
     GLOB = 'Glob'
     NOT_GLOB = 'NotGlob'
 
-@dataclass
-class IdFilter(Tuple[FilterMatch, Union[List[int], int]]):
-    pass
-
-@dataclass
-class AttributeFilter(Tuple[FilterMatch, Union[List[str], str]]):
-    pass
-
-@dataclass
-class AttributeFilters(JSONSerializable):
-    id: Optional[List[IdFilter]]
-    attributes: Optional[Dict[str, List[AttributeFilter]]]
-
-    class _(JSONSerializable.Meta):
-        skip_defaults = True
-        key_transform_with_dump='SNAKE'
+FilterTuple = Tuple[FilterMatch, Union[List[str], str, Union[List[int], int]]]
 
 @dataclass
 class VectorQuery(JSONSerializable):
@@ -34,7 +19,7 @@ class VectorQuery(JSONSerializable):
     top_k: int = 10
     include_vectors: bool = False
     include_attributes: Optional[List[str]] = None
-    filters: Optional[AttributeFilter] = None
+    filters: Optional[Dict[str, List[FilterTuple]]] = None
 
     class _(JSONSerializable.Meta):
         skip_defaults = True

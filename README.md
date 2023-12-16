@@ -36,8 +36,5 @@ vectors = ns.query(
     include_vectors=True
 )
 print(vectors)
-# [
-#   VectorRow(id=1, vector=[0.10000000149011612, 0.20000000298023224], attributes={'name': 'foo'}, dist=0.0029000001959502697),
-#   VectorRow(id=2, vector=[0.30000001192092896, 0.4000000059604645], attributes={'name': 'bar'}, dist=0.05490000173449516)
-# ]
+# [VectorRow(id=1, vector=[0.10000000149011612, 0.20000000298023224], attributes={'name': 'foo'}, dist=0.0029000001959502697)]
 ```
