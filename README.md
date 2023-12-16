@@ -1,4 +1,4 @@
-turbopuffer Python Client
+![turbopuffer logo](https://github.com/turbopuffer/turbopuffer-python/assets/1594638/0482aa50-4665-4998-afd3-78afe56b52f3) turbopuffer Python Client
 =========================
 
 The official Python client for accessing the turbopuffer API.
@@ -54,3 +54,8 @@ print(vectors)
 #   VectorRow(id=1, vector=[0.10000000149011612, 0.20000000298023224], attributes={'name': 'foo'}, dist=0.009067952632904053)
 # ]
 ```
+
+Endpoint Documentation
+----------------------
+
+For more details on request parameters and query options, check the docs at https://turbopuffer.com/docs
