@@ -21,36 +21,6 @@ class Namespace:
         return f'tpuf-namespace:{self.name}'
 
     @overload
-    def upsert(self, id: int, vector: List[float], attributes: Optional[Dict[str, Optional[str]]] = None) -> None:
-        """
-        Creates or updates a single vector.
-        If this call succeeds, data is guaranteed to be durably written to object storage.
-
-        Upserting a vector will overwrite any existing vector with the same ID.
-        """
-        ...
-
-    @overload
-    def upsert(self, data: VectorRow) -> None:
-        """
-        Creates or updates a single vector.
-        If this call succeeds, data is guaranteed to be durably written to object storage.
-
-        Upserting a vector will overwrite any existing vector with the same ID.
-        """
-        ...
-
-    @overload
-    def upsert(self, data: Union[Iterable[dict], Iterable[VectorRow]]) -> None:
-        """
-        Creates or updates a multiple vectors provided as a list or iterator.
-        If this call succeeds, data is guaranteed to be durably written to object storage.
-
-        Upserting a vector will overwrite any existing vector with the same ID.
-        """
-        ...
-
-    @overload
     def upsert(self, ids: List[int], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
@@ -71,6 +41,16 @@ class Namespace:
         ...
 
     @overload
+    def upsert(self, data: Union[Iterable[dict], Iterable[VectorRow]]) -> None:
+        """
+        Creates or updates a multiple vectors provided as a list or iterator.
+        If this call succeeds, data is guaranteed to be durably written to object storage.
+
+        Upserting a vector will overwrite any existing vector with the same ID.
+        """
+        ...
+
+    @overload
     def upsert(self, data: VectorResult) -> None:
         """
         Creates or updates multiple vectors.
@@ -80,20 +60,18 @@ class Namespace:
         """
         ...
 
-    def upsert(self, data=None, id=None, vector=None, ids=None, vectors=None, attributes=None) -> None:
+    def upsert(self, data=None, ids=None, vectors=None, attributes=None) -> None:
         if data is None:
-            if id is not None:
-                return self.upsert(VectorRow(id=id, vector=vector, attributes=attributes))
-            elif ids is not None:
+            if ids is not None and vectors is not None:
                 return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes))
             else:
-                raise ValueError('upsert() input data cannot be None')
+                raise ValueError('upsert() requires both ids= and vectors= be set.')
         elif isinstance(data, VectorColumns):
-            if None in data.vectors and data.distances is not None:
+            if None in data.vectors:
                 raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
             response = self.backend.make_api_request('vectors', self.name, payload=data)
         elif isinstance(data, VectorRow):
-            return self.upsert(VectorColumns.from_rows(data))
+            raise ValueError('upsert() should be called on a list of vectors, got single vector.')
         elif isinstance(data, list):
             if isinstance(data[0], dict):
                 return self.upsert(VectorColumns.from_rows(data))
@@ -107,7 +85,7 @@ class Namespace:
                 raise ValueError(f'Unsupported list data type: {type(data[0])}')
         elif isinstance(data, dict):
             if 'id' in data:
-                return self.upsert(VectorColumns.from_rows(VectorRow.from_dict(data)))
+                raise ValueError('upsert() should be called on a list of vectors, got single vector.')
             elif 'ids' in data:
                 return self.upsert(VectorColumns.from_dict(data))
             else:

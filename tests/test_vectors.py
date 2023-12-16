@@ -2,11 +2,7 @@ import turbopuffer as tpuf
 
 def test_upsert_rows():
     ns = tpuf.Namespace('client_test')
-    print(ns)
-
-    # Test upsert single rows
-    ns.upsert(id=2, vector=[2, 2])
-    ns.upsert(id=7, vector=[0.7, 0.7], attributes={'hello': 'world', 'test': 'rows'})
+    assert str(ns) == 'tpuf-namespace:client_test'
 
     # Test upsert mutliple dict rows
     ns.upsert([
@@ -14,27 +10,41 @@ def test_upsert_rows():
         {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}},
     ])
 
-    # Test upsert single dict row
-    ns.upsert({'id': 2, 'vector': [2, 2]})
-    ns.upsert({'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}})
-
     # Test upsert multiple typed rows
     ns.upsert([
         tpuf.VectorRow(id=2, vector=[2, 2]),
-        tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world', 'test': 'rows'}),
+        tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}),
     ])
-
-    # Test upsert single typed rows
-    ns.upsert(tpuf.VectorRow(id=2, vector=[2, 2]))
-    ns.upsert(tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}))
 
     # Test upsert lazy row iterator
     ns.upsert(tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'}) for i in range(10, 100))
 
+    # Test upsert single rows should fail
+    try:
+        ns.upsert(tpuf.VectorRow(id=2, vector=[2, 2]))
+        assert False, "Upserting single row should not be allowed"
+    except ValueError as err:
+        assert err.args == ('upsert() should be called on a list of vectors, got single vector.',)
+    try:
+        ns.upsert(tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world', 'test': 'rows'}))
+        assert False, "Upserting single row should not be allowed"
+    except ValueError as err:
+        assert err.args == ('upsert() should be called on a list of vectors, got single vector.',)
+    try:
+        ns.upsert({'id': 2, 'vector': [2, 2]})
+        assert False, "Upserting single row should not be allowed"
+    except ValueError as err:
+        assert err.args == ('upsert() should be called on a list of vectors, got single vector.',)
+    try:
+        ns.upsert({'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}})
+        assert False, "Upserting single row should not be allowed"
+    except ValueError as err:
+        assert err.args == ('upsert() should be called on a list of vectors, got single vector.',)
+
     # Check to make sure the vectors were stored as expected
     results = ns.vectors()
     assert len(results) == 92, "Got wrong number of vectors back"
-    assert results[0] == tpuf.VectorRow(id=2, vector=[2.0, 2.0])
+    assert results[0] == tpuf.VectorRow(id=2, vector=[2.0, 2.0], attributes={})
     assert results[1] == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
     for i in range(10, 100):
         assert results[i-8] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
@@ -42,29 +52,29 @@ def test_upsert_rows():
 def test_delete_vectors():
     ns = tpuf.Namespace('client_test')
 
-    # Test upsert single row
+    # Test upsert delete columns
     try:
-        ns.upsert(id=6)
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
-
-    # Test upsert delete typed row
-    try:
-        ns.upsert(tpuf.VectorRow(id=2))
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
-
-    try:
-        ns.upsert(tpuf.VectorRow(id=2, dist=5))
+        ns.upsert(ids=[6], vectors=[None])
         assert False, "Upserting to delete should not be allowed"
     except ValueError as err:
         assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
 
-    # Test upsert single dict row
+    # Test upsert delete typed row
     try:
-        ns.upsert({'id': 6})
+        ns.upsert([tpuf.VectorRow(id=2)])
+        assert False, "Upserting to delete should not be allowed"
+    except ValueError as err:
+        assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
+
+    try:
+        ns.upsert([tpuf.VectorRow(id=2, dist=5)])
+        assert False, "Upserting to delete should not be allowed"
+    except ValueError as err:
+        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
+
+    # Test upsert delete dict row
+    try:
+        ns.upsert([{'id': 6}])
         assert False, "Upserting to delete should not be allowed"
     except ValueError as err:
         assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
