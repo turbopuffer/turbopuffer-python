@@ -9,7 +9,7 @@ documentation = "https://turbopuffer.com/docs"
 repository  = "https://github.com/turbopuffer/turbopuffer-python"
 license = "MIT"
 readme = "README.md"
-tags = ["turbopuffer", "vector", "database", "cloud"]
+keywords = ["turbopuffer", "vector", "database", "cloud"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -31,7 +31,8 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "^2.31"
-dataclass-wizard = "^0.22.2"
+dataclass-wizard = "^0.22"
+orjson = {extras = ["fast"], version = "^3.9"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.4.3"

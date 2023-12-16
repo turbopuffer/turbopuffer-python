@@ -2,10 +2,9 @@ import time
 import traceback
 import requests
 import turbopuffer as tpuf
-import json
 import gzip
 from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
-from typing import Optional, List
+from typing import Optional, List, Union
 from dataclass_wizard import JSONSerializable
 
 def find_api_key(api_key: Optional[str] = None) -> str:
@@ -32,7 +31,7 @@ class Backend:
             'User-Agent': f'tpuf-python/{tpuf.VERSION} {requests.utils.default_headers()["User-Agent"]}',
         })
 
-    def make_api_request(self, *args: List[str], method: Optional[str] = None, query: Optional[dict] = None, payload: Optional[dict] = None) -> dict:
+    def make_api_request(self, *args: List[str], method: Optional[str] = None, query: Optional[dict] = None, payload: Optional[Union[JSONSerializable, dict]] = None) -> dict:
         start = time.monotonic()
         if method is None and payload is not None: method = 'POST'
         request = requests.Request(method or 'GET', self.api_base_url + '/' + '/'.join(args))
@@ -41,24 +40,27 @@ class Backend:
             request.params = query
 
         if payload is not None:
-            try:
-                if isinstance(payload, JSONSerializable):
-                    # before = time.monotonic()
-                    json_payload = payload.to_json()
-                    # print('Json time:', time.monotonic() - before)
-                    # before = time.monotonic()
-                    gzip_payload = gzip.compress(json_payload.encode(), compresslevel=1)
-                    # print(f'Gzip time ({len(json_payload) / 1024 / 1024} MiB json / {len(gzip_payload) / 1024 / 1024} MiB gzip):', time.monotonic() - before)
+            if isinstance(payload, JSONSerializable):
+                # before = time.monotonic()
+                dict_payload = payload.to_dict()
+                # print('Dict time:', time.monotonic() - before)
+                # before = time.monotonic()
+                json_payload = tpuf.dump_json_bytes(dict_payload)
+                # print('Json time:', time.monotonic() - before)
+            elif isinstance(payload, dict):
+                json_payload = tpuf.dump_json_bytes(payload)
+            else:
+                raise ValueError(f'Unsupported POST payload type: {type(payload)}')
 
-                    request.headers.update({
-                        'Content-Type': 'application/json',
-                        'Content-Encoding': 'gzip',
-                    })
-                    request.data = gzip_payload
-                else:
-                    raise ValueError(f'Unsupported POST payload type: {type(payload)}')
-            except json.decoder.JSONDecodeError as err:
-                raise TurbopufferError(err)
+            # before = time.monotonic()
+            gzip_payload = gzip.compress(json_payload, compresslevel=1)
+            # print(f'Gzip time ({len(json_payload) / 1024 / 1024} MiB json / {len(gzip_payload) / 1024 / 1024} MiB gzip):', time.monotonic() - before)
+
+            request.headers.update({
+                'Content-Type': 'application/json',
+                'Content-Encoding': 'gzip',
+            })
+            request.data = gzip_payload
 
         prepared = self.session.prepare_request(request)
 
@@ -70,19 +72,23 @@ class Backend:
                 response = self.session.send(prepared, allow_redirects=False)
                 # print(f'Request time (HTTP {response.status_code}):', time.monotonic() - before)
 
+                if response.status_code > 500:
+                    response.raise_for_status()
+
                 content_type = response.headers.get('Content-Type', 'text/plain')
                 if content_type == 'application/json':
-                    content = response.json()
+                    try:
+                        content = response.json()
+                    except json.JSONDecodeError as err:
+                        raise APIError(response.status_code, traceback.format_exception_only(err), response.text)
+
                     if response.ok:
                         # print("Total request time:", time.monotonic() - start)
                         return content
                     else:
                         raise APIError(response.status_code, content.get('status', 'error'), content.get('error', ''))
                 else:
-                    raise requests.HTTPError('invalid_response', response.text, request=prepared, response=response)
-            except json.JSONDecodeError:
-                print(traceback.format_exc())
-                raise requests.HTTPError('invalid_response', response.text, request=prepared, response=response)
+                    raise APIError(response.status_code, 'Server returned non-JSON response', response.text)
             except requests.HTTPError:
                 print(traceback.format_exc())
                 print("retrying...")
