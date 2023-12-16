@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import sys
 from typing import Optional, Union, List, Iterable, Dict
 from dataclass_wizard import JSONSerializable
 from itertools import islice
@@ -73,7 +74,9 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
     def __post_init__(self):
         if not isinstance(self.ids, list):
             raise ValueError('VectorColumns.ids must be a list, got:', type(self.ids))
-        if not isinstance(self.vectors, list):
+        if 'numpy' in sys.modules and isinstance(self.vectors, sys.modules['numpy'].ndarray):
+            self.vectors = self.vectors.tolist()
+        elif not isinstance(self.vectors, list):
             raise ValueError('VectorColumns.vectors must be a list, got:', type(self.vectors))
         if len(self.ids) != len(self.vectors):
             raise ValueError('VectorColumns.ids and VectorColumns.vectors must be the same length')
