@@ -1,4 +1,4 @@
-![turbopuffer logo](https://github.com/turbopuffer/turbopuffer-python/assets/1594638/0482aa50-4665-4998-afd3-78afe56b52f3) turbopuffer Python Client
+![](https://github.com/turbopuffer/turbopuffer-python/assets/1594638/0482aa50-4665-4998-afd3-78afe56b52f3) turbopuffer Python Client
 =========================
 
 The official Python client for accessing the turbopuffer API.

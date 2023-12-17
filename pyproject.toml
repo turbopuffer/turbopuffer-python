@@ -3,7 +3,7 @@ name = "turbopuffer"
 version = "0.1.0"
 description = "Python Client for accessing the turbopuffer API"
 authors = ["turbopuffer Inc. <info@turbopuffer.com>"]
-maintainers = ["Jacob Wirth <xthexder@users.noreply.github.com>"]
+maintainers = ["Jacob Wirth"]
 homepage = "https://turbopuffer.com"
 documentation = "https://turbopuffer.com/docs"
 repository  = "https://github.com/turbopuffer/turbopuffer-python"
@@ -29,7 +29,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 requests = "^2.31"
 dataclass-wizard = "^0.22"
 orjson = {extras = ["fast"], version = "^3.9"}
