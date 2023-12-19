@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "turbopuffer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python Client for accessing the turbopuffer API"
 authors = ["turbopuffer Inc. <info@turbopuffer.com>"]
 maintainers = ["Jacob Wirth"]
@@ -32,7 +32,10 @@ classifiers = [
 python = "^3.9"
 requests = "^2.31"
 dataclass-wizard = "^0.22"
-orjson = {extras = ["fast"], version = "^3.9"}
+orjson = {version = "^3.9", optional = true}
+
+[tool.poetry.extras]
+fast = ["orjson"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.4.3"
