@@ -64,7 +64,7 @@ def test_delete_vectors():
         ns.upsert([tpuf.VectorRow(id=2)])
         assert False, "Upserting to delete should not be allowed"
     except ValueError as err:
-        assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
+        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
 
     try:
         ns.upsert([tpuf.VectorRow(id=2, dist=5)])
@@ -77,7 +77,7 @@ def test_delete_vectors():
         ns.upsert([{'id': 6}])
         assert False, "Upserting to delete should not be allowed"
     except ValueError as err:
-        assert err.args == ('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.',)
+        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
 
     # Test delete single row
     ns.delete(2)
@@ -155,11 +155,15 @@ def test_query_vectors():
         assert row.id == expected.id
         assert row.attributes == expected.attributes
         if isinstance(expected.vector, list):
+            assert isinstance(row.vector, list)
             assert abs(row.vector[0] - expected.vector[0]) < 0.000001
             assert abs(row.vector[1] - expected.vector[1]) < 0.000001
         else:
             assert row.vector == expected.vector
-        assert abs(row.dist - expected.dist) < 0.000001
+        if isinstance(expected.dist, float):
+            assert abs(row.dist - expected.dist) < 0.000001
+        else:
+            assert row.dist == expected.dist
 
     expected = [
         tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}, dist=0.01),
@@ -208,6 +212,22 @@ def test_query_vectors():
     for row in vector_set: # Use VectorResult in iterator mode
         check_result(row, expected[i])
         i += 1
+
+    # Test query with no vectors
+    expected = [
+        tpuf.VectorRow(id=10),
+        tpuf.VectorRow(id=11),
+        tpuf.VectorRow(id=12),
+    ]
+    vector_set = ns.query(
+        top_k=3,
+        include_vectors=False,
+        filters={
+            'id': [['In', [10, 11, 12]]]
+        },
+    )
+    for i in range(len(vector_set)): # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
 
 def test_list_vectors():
     ns = tpuf.Namespace('client_test')

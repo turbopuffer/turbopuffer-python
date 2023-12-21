@@ -14,6 +14,13 @@ class Namespace:
     backend: Backend
 
     def __init__(self, name: str, api_key: Optional[str] = None):
+        """
+        Creates a new turbopuffer.Namespace object for querying the turbopuffer API.
+
+        This function does not make any API calls on its own.
+
+        Specifying an api_key here will override the global configuration for API calls to this namespace.
+        """
         self.name = name
         self.backend = Backend(api_key)
 

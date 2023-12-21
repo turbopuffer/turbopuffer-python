@@ -37,9 +37,7 @@ class VectorRow(JSONSerializable, str=False): # str=False to prevent JSON pretty
     def __post_init__(self):
         if not isinstance(self.id, int):
             raise ValueError('VectorRow.id must be an int, got:', type(self.id))
-        if self.vector is None and self.dist is None:
-            raise ValueError('VectorRow.vector cannot be None, use Namespace.delete([ids...]) instead.')
-        if not isinstance(self.vector, list) and self.dist is None:
+        if self.vector is not None and not isinstance(self.vector, list):
             raise ValueError('VectorRow.vector must be a list, got:', type(self.vector))
         if self.attributes is not None and not isinstance(self.attributes, dict):
             raise ValueError('VectorRow.attributes must be a dict, got:', type(self.attributes))
