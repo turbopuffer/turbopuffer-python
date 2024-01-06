@@ -4,8 +4,7 @@ import requests
 import turbopuffer as tpuf
 import gzip
 from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
-from typing import Optional, List, Union
-from dataclass_wizard import JSONSerializable
+from typing import Optional, List
 
 def find_api_key(api_key: Optional[str] = None) -> str:
     if api_key is not None:
@@ -31,7 +30,7 @@ class Backend:
             'User-Agent': f'tpuf-python/{tpuf.VERSION} {requests.utils.default_headers()["User-Agent"]}',
         })
 
-    def make_api_request(self, *args: List[str], method: Optional[str] = None, query: Optional[dict] = None, payload: Optional[Union[JSONSerializable, dict]] = None) -> dict:
+    def make_api_request(self, *args: List[str], method: Optional[str] = None, query: Optional[dict] = None, payload: Optional[dict] = None) -> dict:
         start = time.monotonic()
         if method is None and payload is not None: method = 'POST'
         request = requests.Request(method or 'GET', self.api_base_url + '/' + '/'.join(args))
@@ -40,19 +39,14 @@ class Backend:
             request.params = query
 
         if payload is not None:
-            if isinstance(payload, JSONSerializable):
+            # before = time.monotonic()
+            if isinstance(payload, dict):
                 # before = time.monotonic()
-                dict_payload = payload.to_dict()
-                # print('Dict time:', time.monotonic() - before)
-                # before = time.monotonic()
-                json_payload = tpuf.dump_json_bytes(dict_payload)
-                # print('Json time:', time.monotonic() - before)
-            elif isinstance(payload, dict):
                 json_payload = tpuf.dump_json_bytes(payload)
+                # print('Json time:', time.monotonic() - before)
             else:
                 raise ValueError(f'Unsupported POST payload type: {type(payload)}')
 
-            # before = time.monotonic()
             gzip_payload = gzip.compress(json_payload, compresslevel=1)
             # print(f'Gzip time ({len(json_payload) / 1024 / 1024} MiB json / {len(gzip_payload) / 1024 / 1024} MiB gzip):', time.monotonic() - before)
 
