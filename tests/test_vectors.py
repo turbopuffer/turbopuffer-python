@@ -1,7 +1,8 @@
 import turbopuffer as tpuf
+import tests
 
 def test_upsert_rows():
-    ns = tpuf.Namespace('client_test')
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
     assert str(ns) == 'tpuf-namespace:client_test'
 
     # Test upsert mutliple dict rows
@@ -50,7 +51,7 @@ def test_upsert_rows():
         assert results[i-8] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
 def test_delete_vectors():
-    ns = tpuf.Namespace('client_test')
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
     # Test upsert delete columns
     try:
@@ -92,7 +93,7 @@ def test_delete_vectors():
         assert results[i-15] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
 def test_upsert_columns():
-    ns = tpuf.Namespace('client_test')
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
     # Test upsert columns
     ns.upsert(
@@ -149,7 +150,7 @@ def test_upsert_columns():
     assert test_count == 97, "Found wrong number of test cols"
 
 def test_query_vectors():
-    ns = tpuf.Namespace('client_test')
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
     def check_result(row, expected):
         assert row.id == expected.id
@@ -230,7 +231,7 @@ def test_query_vectors():
         check_result(vector_set[i], expected[i])
 
 def test_list_vectors():
-    ns = tpuf.Namespace('client_test')
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
     vector_set = ns.vectors()
     set_str = str(vector_set)
@@ -241,7 +242,7 @@ def test_list_vectors():
     assert len(vector_set) == 98
 
 def test_delete_all():
-    ns = tpuf.Namespace('client_test')
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
     # print('Recall:', ns.recall())
 
     ns.delete_all_indexes()
