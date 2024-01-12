@@ -11,6 +11,6 @@ except ImportError:
 
 from turbopuffer.version import VERSION
 from turbopuffer.namespace import Namespace
-from turbopuffer.vectors import VectorColumns, VectorRow
+from turbopuffer.vectors import VectorColumns, VectorRow, VectorResult
 from turbopuffer.query import VectorQuery, FilterTuple
 from turbopuffer.error import TurbopufferError, AuthenticationError, APIError

@@ -133,15 +133,15 @@ class Namespace:
               top_k: int = 10,
               include_vectors: bool = False,
               include_attributes: Optional[List[str]] = None,
-              filters: Optional[Dict[str, List[FilterTuple]]] = None):
+              filters: Optional[Dict[str, List[FilterTuple]]] = None) -> VectorResult:
         ...
 
     @overload
-    def query(self, query_data: VectorQuery):
+    def query(self, query_data: VectorQuery) -> VectorResult:
         ...
 
     @overload
-    def query(self, query_data: dict):
+    def query(self, query_data: dict) -> VectorResult:
         ...
 
     def query(self,
