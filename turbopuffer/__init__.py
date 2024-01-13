@@ -1,6 +1,7 @@
 import os
 api_key = os.environ.get('TURBOPUFFER_API_KEY')
 api_base_url = os.environ.get('TURBOPUFFER_API_BASE_URL', 'https://api.turbopuffer.com/v1')
+upsert_batch_size = 5_000
 
 try:
     import orjson  # extras = ["fast"]

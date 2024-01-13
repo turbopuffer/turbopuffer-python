@@ -31,7 +31,6 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.9"
 requests = "^2.31"
-dataclass-wizard = "^0.22"
 orjson = {version = "^3.9", optional = true}
 
 [tool.poetry.extras]
