@@ -12,11 +12,12 @@ To build and publish the PyPI package:
     ```sh
     $ rm -rf dist/
     ```
-4. Build new package
+4. Make sure version in pyproject.toml and turbopuffer/version.py are up to date.
+5. Build new package
     ```sh
     $ python -m build
     ```
-5. Upload release
+6. Upload release
     ```sh
     $ python -m twine upload dist/*
     ```
