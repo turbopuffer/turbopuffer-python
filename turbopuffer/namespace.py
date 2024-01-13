@@ -1,4 +1,3 @@
-import time
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, FilterTuple
@@ -79,7 +78,6 @@ class Namespace:
         elif isinstance(data, VectorColumns):
             if None in data.vectors:
                 raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
-            # print('Upserting', len(data.vectors), 'vectors')
             response = self.backend.make_api_request('vectors', self.name, payload=data.__dict__)
         elif isinstance(data, VectorRow):
             raise ValueError('upsert() should be called on a list of vectors, got single vector.')
@@ -109,7 +107,7 @@ class Namespace:
                         raise ValueError('Provided pd.DataFrame is missing an id column.')
                     if 'vector' not in data.keys():
                         raise ValueError('Provided pd.DataFrame is missing a vector column.')
-                    start = time.monotonic()
+                    # start = time.monotonic()
                     for i in range(0, len(data), tpuf.upsert_batch_size):
                         batch = data[i:i+tpuf.upsert_batch_size]
                         attributes = dict()
@@ -121,14 +119,14 @@ class Namespace:
                             vectors=batch['vector'].transform(lambda x: x.tolist()).tolist(),
                             attributes=attributes
                         )
-                        time_diff = time.monotonic() - start
-                        print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                        before = time.monotonic()
+                        # time_diff = time.monotonic() - start
+                        # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
+                        # before = time.monotonic()
                         # print(columns)
                         self.upsert(columns)
-                        time_diff = time.monotonic() - before
-                        print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                        start = time.monotonic()
+                        # time_diff = time.monotonic() - before
+                        # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
+                        # start = time.monotonic()
                     return
             except ImportError:
                 pass
