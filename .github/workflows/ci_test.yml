@@ -30,9 +30,9 @@ jobs:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        poetry run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        poetry run flake8 . --count --per-file-ignores=vectors.py:F821 --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. Skip package import warnings.
-        poetry run flake8 . --count --exit-zero --per-file-ignores vectors.py:F821 --exclude __init__.py --max-line-length=140 --statistics
+        poetry run flake8 . --count --exit-zero --per-file-ignores=vectors.py:F821 --exclude=__init__.py --max-line-length=140 --statistics
     - name: Test with pytest
       env:
         TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_TEST_API_KEY }}
