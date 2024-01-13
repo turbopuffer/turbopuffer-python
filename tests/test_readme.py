@@ -1,7 +1,9 @@
 import turbopuffer as tpuf
+import tests
+
 
 def test_readme():
-    ns = tpuf.Namespace('hello_world')
+    ns = tpuf.Namespace(tests.test_prefix + 'hello_world')
 
     ns.upsert(
         ids=[1, 2],
@@ -21,7 +23,7 @@ def test_readme():
         vector=[0.15, 0.22],
         distance_metric='cosine_distance',
         top_k=10,
-        filters={ 'name': [['Glob', 'foo*'], ['NotEq', 'food']] },
+        filters={'name': [['Glob', 'foo*'], ['NotEq', 'food']]},
         include_attributes=['name'],
         include_vectors=True
     )

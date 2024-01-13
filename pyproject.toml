@@ -37,8 +37,12 @@ orjson = {version = "^3.9", optional = true}
 [tool.poetry.extras]
 fast = ["orjson"]
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
+flake8 = "^7.0.0"
 
 [build-system]
 requires = ["poetry-core"]

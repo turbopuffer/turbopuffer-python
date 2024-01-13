@@ -1,7 +1,8 @@
-from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, DATA, ITERATOR_BATCH_SIZE, batch_iter
+from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, ITERATOR_BATCH_SIZE, batch_iter
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, FilterTuple
 from typing import Dict, List, Optional, Iterable, Union, overload
+
 
 class Namespace:
     """
@@ -145,13 +146,13 @@ class Namespace:
         ...
 
     def query(self,
-              query_data = None,
-              vector = None,
-              distance_metric = None,
-              top_k = None,
-              include_vectors = None,
-              include_attributes = None,
-              filters = None) -> VectorResult:
+              query_data=None,
+              vector=None,
+              distance_metric=None,
+              top_k=None,
+              include_vectors=None,
+              include_attributes=None,
+              filters=None) -> VectorResult:
         """
         Searches vectors matching the search query.
 

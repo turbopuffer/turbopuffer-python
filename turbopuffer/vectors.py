@@ -1,23 +1,27 @@
 from dataclasses import dataclass
 import sys
-from typing import Optional, Union, List, Iterable, Dict
+from typing import Optional, Union, List, Iterable, Dict, overload
 from dataclass_wizard import JSONSerializable
 from itertools import islice
 
 ITERATOR_BATCH_SIZE = 10_000
 
+
 def batch_iter(iterable, n):
     it = iter(iterable)
     while True:
         batch = list(islice(it, n))
-        if not batch: return
+        if not batch:
+            return
         yield batch
+
 
 class Cursor(str):
     pass
 
+
 @dataclass
-class VectorRow(JSONSerializable, str=False): # str=False to prevent JSON pretty printing of data
+class VectorRow(JSONSerializable, str=False):  # str=False to prevent JSON pretty printing of data
     """
     The VectorRow type represents a single vector ID, along with its vector values and attributes.
 
@@ -32,7 +36,7 @@ class VectorRow(JSONSerializable, str=False): # str=False to prevent JSON pretty
 
     class _(JSONSerializable.Meta):
         skip_defaults = True
-        key_transform_with_dump='SNAKE'
+        key_transform_with_dump = 'SNAKE'
 
     def __post_init__(self):
         if not isinstance(self.id, int):
@@ -47,12 +51,15 @@ class VectorRow(JSONSerializable, str=False): # str=False to prevent JSON pretty
             f'id={self.id}',
             f'vector={self.vector}',
         ]
-        if self.attributes: fields.append(f'attributes={self.attributes}')
-        if self.dist: fields.append(f'dist={self.dist}')
+        if self.attributes:
+            fields.append(f'attributes={self.attributes}')
+        if self.dist:
+            fields.append(f'dist={self.dist}')
         return f"VectorRow({', '.join(fields)})"
 
+
 @dataclass
-class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pretty printing of data
+class VectorColumns(JSONSerializable, str=False):  # str=False to prevent JSON pretty printing of data
     """
     The VectorColumns type represents a set of vectors stored in a column-oriented layout with their attributes.
 
@@ -67,7 +74,7 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
 
     class _(JSONSerializable.Meta):
         skip_defaults = True
-        key_transform_with_dump='SNAKE'
+        key_transform_with_dump = 'SNAKE'
 
     def __post_init__(self):
         if not isinstance(self.ids, list):
@@ -87,15 +94,17 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
                 if len(values) != len(self.ids):
                     raise ValueError(f'VectorColumns.attributes[{key}] must be the same length as VectorColumns.ids')
         if self.distances is not None and len(self.distances) != len(self.ids):
-            raise ValueError(f'VectorColumns.distances must be the same length as VectorColumns.ids')
+            raise ValueError('VectorColumns.distances must be the same length as VectorColumns.ids')
 
     def __str__(self) -> str:
         fields = [
             f'ids={self.ids}',
             f'vectors={self.vectors}',
         ]
-        if self.attributes: fields.append(f'attributes={self.attributes}')
-        if self.distances: fields.append(f'distances={self.distances}')
+        if self.attributes:
+            fields.append(f'attributes={self.attributes}')
+        if self.distances:
+            fields.append(f'distances={self.distances}')
         return f"VectorColumns({', '.join(fields)})"
 
     def __len__(self) -> int:
@@ -115,12 +124,15 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
     def __iadd__(self, other) -> 'VectorColumns':
         return self.append(other)
 
+    @overload
     def append(self, other: VectorRow) -> 'VectorColumns':
         ...
 
+    @overload
     def append(self, other: List[VectorRow]) -> 'VectorColumns':
         ...
 
+    @overload
     def append(self, other: 'VectorColumns') -> 'VectorColumns':
         ...
 
@@ -132,20 +144,23 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
             self.distances.append(other.dist)
             new_len = len(self.ids)
             if other.attributes:
-                if not self.attributes: self.attributes = dict()
+                if not self.attributes:
+                    self.attributes = dict()
                 for k, v in other.attributes.items():
                     attrs = self.attributes.setdefault(k, [None]*old_len)
                     attrs.extend(v)
             if self.attributes:
                 for v in self.attributes.values():
-                    if len(v) < new_len: v.append(None)
+                    if len(v) < new_len:
+                        v.append(None)
         elif isinstance(other, VectorColumns):
             self.ids.extend(other.ids)
             self.vectors.extend(other.vectors)
             self.distances.extend(other.distances)
             new_len = len(self.ids)
             if other.attributes:
-                if not self.attributes: self.attributes = dict()
+                if not self.attributes:
+                    self.attributes = dict()
                 for k, v in other.attributes.items():
                     attrs = self.attributes.setdefault(k, [None]*old_len)
                     attrs.extend(v)
@@ -155,13 +170,15 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
                         v.extend([None] * (new_len-len(v)))
             return self
         elif isinstance(other, list):
-            if len(other) == 0: return self
+            if len(other) == 0:
+                return self
             if isinstance(other[0], VectorRow):
                 self.ids.extend(row.id for row in other)
                 self.vectors.extend(row.vector for row in other)
                 self.distances.extend(row.dist for row in other)
                 new_len = len(self.ids)
-                if not self.attributes: self.attributes = dict()
+                if not self.attributes:
+                    self.attributes = dict()
                 for i, row in enumerate(other):
                     if row.attributes:
                         for k, v in row.attributes.items():
@@ -207,13 +224,15 @@ class VectorColumns(JSONSerializable, str=False): # str=False to prevent JSON pr
                         attrs = attributes.setdefault(k, [None]*col_count)
                         attrs[i] = v
         elif isinstance(row_data, Iterable):
-            raise ValueError(f'VectorColumns from Iterable not yet supported.')
+            raise ValueError('VectorColumns from Iterable not yet supported.')
         else:
             raise ValueError(f'Unsupported row data type: {type(row_data)}')
         return VectorColumns(ids=ids, vectors=vectors, attributes=attributes, distances=distances)
 
+
 SET_DATA = Union[Iterable[VectorRow], VectorColumns]
 DATA = Union[Iterable[dict], dict, VectorRow, SET_DATA]
+
 
 class VectorResult:
     """
@@ -251,7 +270,7 @@ class VectorResult:
             elif isinstance(initial_data, VectorColumns):
                 return initial_data
             elif isinstance(initial_data, Iterable):
-                raise ValueError(f'VectorResult from Iterable not yet supported.')
+                raise ValueError('VectorResult from Iterable not yet supported.')
             else:
                 raise ValueError(f'Unsupported data type: {type(initial_data)}')
 
@@ -259,7 +278,11 @@ class VectorResult:
         if not self.next_cursor and self.offset == 0:
             return str(self.data)
         else:
-            return f"VectorResult(namespace='{self.namespace.name}', offset={self.offset} next_cursor='{self.next_cursor}', data={self.data})"
+            return ("VectorResult("
+                    f"namespace='{self.namespace.name}', "
+                    f"offset={self.offset}, "
+                    f"next_cursor='{self.next_cursor}', "
+                    f"data={self.data})")
 
     def __len__(self) -> int:
         assert self.offset == 0, "Can't call len(VectorResult) after iterating"
@@ -296,7 +319,11 @@ class VectorResult:
         elif self.next_cursor is None:
             raise StopIteration
         else:
-            response = self.namespace.backend.make_api_request('vectors', self.namespace.name, query={'cursor': self.next_cursor})
+            response = self.namespace.backend.make_api_request(
+                'vectors',
+                self.namespace.name,
+                query={'cursor': self.next_cursor}
+            )
             self.offset += len(self.data)
             self.index = -1
             self.next_cursor = response.pop('next_cursor', None)
