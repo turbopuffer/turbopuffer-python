@@ -3,6 +3,7 @@ from typing import Optional, List, Tuple, Union, Dict
 from dataclass_wizard import JSONSerializable
 from enum import Enum
 
+
 class FilterMatch(Enum):
     EQ = 'Eq'
     NOT_EQ = 'NotEq'
@@ -10,7 +11,9 @@ class FilterMatch(Enum):
     GLOB = 'Glob'
     NOT_GLOB = 'NotGlob'
 
+
 FilterTuple = Tuple[FilterMatch, Union[List[str], str, Union[List[int], int]]]
+
 
 @dataclass
 class VectorQuery(JSONSerializable):
@@ -23,4 +26,4 @@ class VectorQuery(JSONSerializable):
 
     class _(JSONSerializable.Meta):
         skip_defaults = True
-        key_transform_with_dump='SNAKE'
+        key_transform_with_dump = 'SNAKE'

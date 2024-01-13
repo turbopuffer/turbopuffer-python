@@ -1,9 +1,10 @@
 import turbopuffer as tpuf
 import tests
 
+
 def test_upsert_rows():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
-    assert str(ns) == 'tpuf-namespace:client_test'
+    assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
 
     # Test upsert mutliple dict rows
     ns.upsert([
@@ -50,6 +51,7 @@ def test_upsert_rows():
     for i in range(10, 100):
         assert results[i-8] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
+
 def test_delete_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
@@ -91,6 +93,7 @@ def test_delete_vectors():
     assert results[0] == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
     for i in range(16, 100):
         assert results[i-15] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
+
 
 def test_upsert_columns():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
@@ -149,6 +152,7 @@ def test_upsert_columns():
             assert row == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
     assert test_count == 97, "Found wrong number of test cols"
 
+
 def test_query_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
@@ -182,7 +186,7 @@ def test_query_vectors():
         include_vectors=True,
         include_attributes=['hello'],
     )
-    for i in range(len(vector_set)): # Use VectorResult in index mode
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
         check_result(vector_set[i], expected[i])
 
     # Test query with dict
@@ -193,7 +197,7 @@ def test_query_vectors():
         'include_vectors': True,
         'include_attributes': ['hello'],
     })
-    for i in range(len(vector_set)): # Use VectorResult in index mode
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
         check_result(vector_set[i], expected[i])
 
     # Test query with typed query
@@ -210,7 +214,7 @@ def test_query_vectors():
         tpuf.VectorRow(id=18, dist=0.13),
     ]
     i = 0
-    for row in vector_set: # Use VectorResult in iterator mode
+    for row in vector_set:  # Use VectorResult in iterator mode
         check_result(row, expected[i])
         i += 1
 
@@ -227,19 +231,21 @@ def test_query_vectors():
             'id': [['In', [10, 11, 12]]]
         },
     )
-    for i in range(len(vector_set)): # Use VectorResult in index mode
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
         check_result(vector_set[i], expected[i])
+
 
 def test_list_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
     vector_set = ns.vectors()
     set_str = str(vector_set)
-    assert set_str.startswith("VectorResult(namespace='client_test', offset=0 next_cursor='")
+    assert set_str.startswith(f"VectorResult(namespace='{tests.test_prefix}client_test', offset=0, next_cursor='")
     # Random cursor string in the middle
     assert set_str.endswith("', data=VectorColumns(ids=[7], vectors=[[0.7, 0.7]], attributes={'hello': ['world']}))")
 
     assert len(vector_set) == 98
+
 
 def test_delete_all():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')

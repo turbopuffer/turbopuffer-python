@@ -1,8 +1,10 @@
 class TurbopufferError(Exception):
     pass
 
+
 class AuthenticationError(TurbopufferError):
     pass
+
 
 class APIError(TurbopufferError):
     def __init__(self, status_code: int, status_name: str, message: str):

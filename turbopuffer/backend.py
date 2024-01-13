@@ -1,3 +1,4 @@
+import json
 import time
 import traceback
 import requests
@@ -7,6 +8,7 @@ from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
 from typing import Optional, List, Union
 from dataclass_wizard import JSONSerializable
 
+
 def find_api_key(api_key: Optional[str] = None) -> str:
     if api_key is not None:
         return api_key
@@ -14,8 +16,9 @@ def find_api_key(api_key: Optional[str] = None) -> str:
         return tpuf.api_key
     else:
         raise AuthenticationError("No turbopuffer API key was provided.\n"
-            "Set the TURBOPUFFER_API_KEY environment variable, "
-            "or pass `api_key=` when creating a Namespace.")
+                                  "Set the TURBOPUFFER_API_KEY environment variable, "
+                                  "or pass `api_key=` when creating a Namespace.")
+
 
 class Backend:
     api_key: str
@@ -31,9 +34,14 @@ class Backend:
             'User-Agent': f'tpuf-python/{tpuf.VERSION} {requests.utils.default_headers()["User-Agent"]}',
         })
 
-    def make_api_request(self, *args: List[str], method: Optional[str] = None, query: Optional[dict] = None, payload: Optional[Union[JSONSerializable, dict]] = None) -> dict:
+    def make_api_request(self,
+                         *args: List[str],
+                         method: Optional[str] = None,
+                         query: Optional[dict] = None,
+                         payload: Optional[Union[JSONSerializable, dict]] = None) -> dict:
         start = time.monotonic()
-        if method is None and payload is not None: method = 'POST'
+        if method is None and payload is not None:
+            method = 'POST'
         request = requests.Request(method or 'GET', self.api_base_url + '/' + '/'.join(args))
 
         if query is not None:
@@ -54,7 +62,9 @@ class Backend:
 
             # before = time.monotonic()
             gzip_payload = gzip.compress(json_payload, compresslevel=1)
-            # print(f'Gzip time ({len(json_payload) / 1024 / 1024} MiB json / {len(gzip_payload) / 1024 / 1024} MiB gzip):', time.monotonic() - before)
+            # json_mebibytes = len(json_payload) / 1024 / 1024
+            # gzip_mebibytes = len(gzip_payload) / 1024 / 1024
+            # print(f'Gzip time ({json_mebibytes} MiB json / {gzip_mebibytes} MiB gzip):', time.monotonic() - before)
 
             request.headers.update({
                 'Content-Type': 'application/json',
