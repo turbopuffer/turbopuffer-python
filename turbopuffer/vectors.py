@@ -1,10 +1,7 @@
 from dataclasses import dataclass
 import sys
 from typing import Optional, Union, List, Iterable, Dict, overload
-from dataclass_wizard import JSONSerializable
 from itertools import islice
-
-ITERATOR_BATCH_SIZE = 10_000
 
 
 def batch_iter(iterable, n):
@@ -21,7 +18,7 @@ class Cursor(str):
 
 
 @dataclass
-class VectorRow(JSONSerializable, str=False):  # str=False to prevent JSON pretty printing of data
+class VectorRow:
     """
     The VectorRow type represents a single vector ID, along with its vector values and attributes.
 
@@ -34,9 +31,13 @@ class VectorRow(JSONSerializable, str=False):  # str=False to prevent JSON prett
 
     dist: Optional[float] = None
 
-    class _(JSONSerializable.Meta):
-        skip_defaults = True
-        key_transform_with_dump = 'SNAKE'
+    def from_dict(source: dict) -> 'VectorRow':
+        return VectorRow(
+            id=source.get('id'),
+            vector=source.get('vector'),
+            attributes=source.get('attributes'),
+            dist=source.get('dist'),
+        )
 
     def __post_init__(self):
         if not isinstance(self.id, int):
@@ -59,7 +60,7 @@ class VectorRow(JSONSerializable, str=False):  # str=False to prevent JSON prett
 
 
 @dataclass
-class VectorColumns(JSONSerializable, str=False):  # str=False to prevent JSON pretty printing of data
+class VectorColumns:
     """
     The VectorColumns type represents a set of vectors stored in a column-oriented layout with their attributes.
 
@@ -72,9 +73,13 @@ class VectorColumns(JSONSerializable, str=False):  # str=False to prevent JSON p
 
     distances: Optional[List[float]] = None
 
-    class _(JSONSerializable.Meta):
-        skip_defaults = True
-        key_transform_with_dump = 'SNAKE'
+    def from_dict(source: dict) -> 'VectorColumns':
+        return VectorColumns(
+            ids=source.get('ids'),
+            vectors=source.get('vectors'),
+            attributes=source.get('attributes'),
+            distances=source.get('distances'),
+        )
 
     def __post_init__(self):
         if not isinstance(self.ids, list):
@@ -141,14 +146,15 @@ class VectorColumns(JSONSerializable, str=False):  # str=False to prevent JSON p
         if isinstance(other, VectorRow):
             self.ids.append(other.id)
             self.vectors.append(other.vector)
-            self.distances.append(other.dist)
+            if other.dist is not None:
+                self.distances.append(other.dist)
             new_len = len(self.ids)
             if other.attributes:
                 if not self.attributes:
                     self.attributes = dict()
                 for k, v in other.attributes.items():
                     attrs = self.attributes.setdefault(k, [None]*old_len)
-                    attrs.extend(v)
+                    attrs.append(v)
             if self.attributes:
                 for v in self.attributes.values():
                     if len(v) < new_len:
