@@ -25,7 +25,7 @@ class VectorRow:
     If the VectorRow is a response from a query, it may also have a distance weighting.
     """
 
-    id: int
+    id: Union[int, str]
     vector: Optional[List[float]] = None
     attributes: Optional[Dict[str, Optional[str]]] = None
 
@@ -40,8 +40,8 @@ class VectorRow:
         )
 
     def __post_init__(self):
-        if not isinstance(self.id, int):
-            raise ValueError('VectorRow.id must be an int, got:', type(self.id))
+        if not isinstance(self.id, int) and not isinstance(self.id, str):
+            raise ValueError('VectorRow.id must be an int or str, got:', type(self.id))
         if self.vector is not None:
             if 'numpy' in sys.modules and isinstance(self.vector, sys.modules['numpy'].ndarray):
                 if self.vector.ndim != 1:
@@ -52,13 +52,15 @@ class VectorRow:
             raise ValueError('VectorRow.attributes must be a dict, got:', type(self.attributes))
 
     def __str__(self) -> str:
-        fields = [
-            f'id={self.id}',
-            f'vector={self.vector}',
-        ]
+        fields = []
+        if isinstance(self.id, int):
+            fields.append(f'id={self.id}')
+        else:
+            fields.append(f"id='{self.id}'")
+        fields.append(f'vector={self.vector}')
         if self.attributes:
             fields.append(f'attributes={self.attributes}')
-        if self.dist:
+        if self.dist is not None:
             fields.append(f'dist={self.dist}')
         return f"VectorRow({', '.join(fields)})"
 
@@ -71,7 +73,7 @@ class VectorColumns:
     If the VectorColumns is a response from a query, it may also have a set of distance weightings for each vector.
     """
 
-    ids: List[int]
+    ids: Union[List[int], List[str]]
     vectors: List[Optional[List[float]]]
     attributes: Optional[Dict[str, List[Optional[str]]]] = None
 
