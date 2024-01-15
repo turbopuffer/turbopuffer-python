@@ -219,6 +219,22 @@ def test_query_vectors():
         check_result(row, expected[i])
         i += 1
 
+    # Test query with single filter
+    expected = [
+        tpuf.VectorRow(id=10),
+        tpuf.VectorRow(id=11),
+        tpuf.VectorRow(id=12),
+    ]
+    vector_set = ns.query(
+        top_k=3,
+        include_vectors=False,
+        filters={
+            'id': ['In', [10, 11, 12]]
+        },
+    )
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
+
     # Test query with no vectors
     expected = [
         tpuf.VectorRow(id=10),
