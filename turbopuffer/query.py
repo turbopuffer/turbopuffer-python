@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import sys
 from typing import Optional, List, Tuple, Union, Dict
 from enum import Enum
 
@@ -34,8 +35,12 @@ class VectorQuery:
         )
 
     def __post_init__(self):
-        if self.vector is not None and not isinstance(self.vector, list):
-            raise ValueError('VectorQuery.vector must be a list, got:', type(self.vector))
+        if self.vector is not None:
+            if 'numpy' in sys.modules and isinstance(self.vector, sys.modules['numpy'].ndarray):
+                if self.vector.ndim != 1:
+                    raise ValueError(f'VectorQuery.vector must a 1d-array, got {self.vector.ndim} dimensions')
+            elif not isinstance(self.vector, list):
+                raise ValueError('VectorQuery.vector must be a list, got:', type(self.vector))
         if self.include_attributes is not None and not isinstance(self.include_attributes, list):
             raise ValueError('VectorQuery.include_attributes must be a list, got:', type(self.include_attributes))
         if self.filters is not None and not isinstance(self.filters, dict):
