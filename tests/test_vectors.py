@@ -1,3 +1,4 @@
+import uuid
 import turbopuffer as tpuf
 import tests
 
@@ -245,6 +246,104 @@ def test_list_vectors():
     assert set_str.endswith("', data=VectorColumns(ids=[7], vectors=[[0.7, 0.7]], attributes={'hello': ['world']}))")
 
     assert len(vector_set) == 98
+
+
+def test_string_ids():
+    ns = tpuf.Namespace(tests.test_prefix + 'string_ids')
+
+    vec_ids = [str(uuid.uuid1()) for _ in range(0, 8)]
+    key1 = ["zero", "one", "two", "three"]
+    key2 = [" ", "a", "b", "c"]
+
+    # Test upsert columns
+    ns.upsert(
+        ids=vec_ids[0:4],
+        vectors=[[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
+        attributes={
+            "key1": key1,
+            "key2": key2,
+            "test": ["cols", "cols", "cols", "cols"],
+        }
+    )
+
+    # Test upsert rows
+    ns.upsert([
+        tpuf.VectorRow(
+            id=id,
+            vector=[i/10, i/10],
+            attributes={
+                'test': 'rows',
+                'hello': 'world'
+            }
+        ) for i, id in enumerate(vec_ids)
+    ][4:])
+
+    # Check to make sure the vectors were stored as expected
+    results = ns.vectors()
+    assert len(results) == 8, "Got wrong number of vectors back"
+    for i, row in enumerate(results):
+        if 'test' in row.attributes and row.attributes['test'] == 'cols':
+            assert row == tpuf.VectorRow(
+                id=vec_ids[i],
+                vector=[i/10, i/10],
+                attributes={
+                    "key1": key1[i],
+                    "key2": key2[i],
+                    'test': 'cols'
+                })
+        else:
+            assert row == tpuf.VectorRow(
+                id=vec_ids[i],
+                vector=[i/10, i/10],
+                attributes={
+                    'hello': 'world',
+                    'test': 'rows'
+                })
+
+    # Test query
+    results = ns.query(
+        top_k=5,
+        vector=[0.0, 0.0],
+        distance_metric='euclidean_squared',
+        filters={'id': ['In', vec_ids]}
+    )
+    expected = [
+        tpuf.VectorRow(id=vec_ids[0], dist=0.0),
+        tpuf.VectorRow(id=vec_ids[1], dist=0.02),
+        tpuf.VectorRow(id=vec_ids[2], dist=0.08),
+        tpuf.VectorRow(id=vec_ids[3], dist=0.18),
+        tpuf.VectorRow(id=vec_ids[4], dist=0.32)
+    ]
+    for i, row in enumerate(results):
+        assert row.id == expected[i].id
+        assert row.attributes == expected[i].attributes
+        assert row.vector == expected[i].vector
+        assert abs(row.dist - expected[i].dist) < 0.000001
+
+    # Test delete by string id
+    ns.delete(vec_ids[2])
+
+    # Test query 2
+    results = ns.query(
+        top_k=5,
+        vector=[0.0, 0.0],
+        distance_metric='euclidean_squared',
+        filters={'id': ['In', vec_ids]}
+    )
+    expected = [
+        tpuf.VectorRow(id=vec_ids[0], dist=0.0),
+        tpuf.VectorRow(id=vec_ids[1], dist=0.02),
+        tpuf.VectorRow(id=vec_ids[3], dist=0.18),
+        tpuf.VectorRow(id=vec_ids[4], dist=0.32),
+        tpuf.VectorRow(id=vec_ids[5], dist=0.5)
+    ]
+    for i, row in enumerate(results):
+        assert row.id == expected[i].id
+        assert row.attributes == expected[i].attributes
+        assert row.vector == expected[i].vector
+        assert abs(row.dist - expected[i].dist) < 0.000001
+
+    ns.delete_all()
 
 
 def test_delete_all():

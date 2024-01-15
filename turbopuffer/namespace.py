@@ -31,7 +31,7 @@ class Namespace:
         return f'tpuf-namespace:{self.name}'
 
     @overload
-    def upsert(self, ids: List[int], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
+    def upsert(self, ids: Union[List[int], List[str]], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -144,12 +144,12 @@ class Namespace:
 
         assert response.get('status', '') == 'OK', f'Invalid upsert() response: {response}'
 
-    def delete(self, ids: Union[int, List[int]]) -> None:
+    def delete(self, ids: Union[int, str, List[int], List[str]]) -> None:
         """
         Deletes vectors by id.
         """
 
-        if isinstance(ids, int):
+        if isinstance(ids, int) or isinstance(ids, str):
             response = self.backend.make_api_request('vectors', self.name, payload={
                 'ids': [ids],
                 'vectors': [None],

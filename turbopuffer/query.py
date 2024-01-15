@@ -43,5 +43,16 @@ class VectorQuery:
                 raise ValueError('VectorQuery.vector must be a list, got:', type(self.vector))
         if self.include_attributes is not None and not isinstance(self.include_attributes, list):
             raise ValueError('VectorQuery.include_attributes must be a list, got:', type(self.include_attributes))
-        if self.filters is not None and not isinstance(self.filters, dict):
-            raise ValueError('VectorQuery.filters must be a dict, got:', type(self.filters))
+        if self.filters is not None:
+            if not isinstance(self.filters, dict):
+                raise ValueError('VectorQuery.filters must be a dict, got:', type(self.filters))
+            else:
+                for name, filter in self.filters.items():
+                    if isinstance(filter, list):
+                        if len(filter) == 2 and isinstance(filter[0], str):
+                            # Support passing a single filter instead of a list
+                            self.filters[name] = [filter]
+                        elif len(filter) > 0 and not isinstance(filter[0], list):
+                            raise ValueError(f'VectorQuery.filters expected a list of filters for key {name}, got list of:', type(filter[0]))
+                    else:
+                        raise ValueError(f'VectorQuery.filters expected a list for key {name}, got:', type(filter))
