@@ -5,7 +5,7 @@ upsert_batch_size = 5_000
 
 try:
     import orjson  # extras = ["fast"]
-    def dump_json_bytes(obj): return orjson.dumps(obj)
+    def dump_json_bytes(obj): return orjson.dumps(obj, option=orjson.OPT_SERIALIZE_NUMPY)
 except ImportError:
     import json
     def dump_json_bytes(obj): return json.dumps(obj).encode()
