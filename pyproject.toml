@@ -32,6 +32,8 @@ classifiers = [
 python = "^3.9"
 requests = "^2.31"
 orjson = {version = "^3.9", optional = true}
+numpy = {version = "^1.26.3", optional = true}
+pandas = {version = "^2.1.4", optional = true}
 
 [tool.poetry.extras]
 fast = ["orjson"]
@@ -42,6 +44,13 @@ optional = true
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
 flake8 = "^7.0.0"
+
+[tool.poetry.group.compatibility]
+optional = true
+
+[tool.poetry.group.compatibility.dependencies]
+pandas = "^2.1.4"
+numpy = "^1.26.3"
 
 [build-system]
 requires = ["poetry-core"]
