@@ -92,8 +92,8 @@ class VectorColumns:
         elif not isinstance(self.ids, list):
             raise ValueError('VectorColumns.ids must be a list, got:', type(self.ids))
         if 'numpy' in sys.modules and isinstance(self.vectors, sys.modules['numpy'].ndarray):
-            if self.ids.ndim != 2:
-                raise ValueError(f'VectorColumns.ids must a 2d-array, got {self.ids.ndim} dimensions')
+            if self.vectors.ndim != 2:
+                raise ValueError(f'VectorColumns.ids must a 2d-array, got {self.vectors.ndim} dimensions')
         elif not isinstance(self.vectors, list):
             raise ValueError('VectorColumns.vectors must be a list, got:', type(self.vectors))
         if len(self.ids) != len(self.vectors):

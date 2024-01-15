@@ -39,7 +39,7 @@ jobs:
       run: |
         poetry run pytest
 
-  variants:
+  compatibility:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest poetry
-        poetry install --all-extras --with test
+        poetry install --all-extras --with test --with compatibility
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
