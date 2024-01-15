@@ -41,8 +41,8 @@ class VectorQuery:
                     raise ValueError(f'VectorQuery.vector must a 1d-array, got {self.vector.ndim} dimensions')
             elif not isinstance(self.vector, list):
                 raise ValueError('VectorQuery.vector must be a list, got:', type(self.vector))
-        if self.include_attributes is not None and not isinstance(self.include_attributes, list):
-            raise ValueError('VectorQuery.include_attributes must be a list, got:', type(self.include_attributes))
+        if self.include_attributes is not None and not isinstance(self.include_attributes, list) and not isinstance(self.include_attributes, bool):
+            raise ValueError('VectorQuery.include_attributes must be a list or bool, got:', type(self.include_attributes))
         if self.filters is not None:
             if not isinstance(self.filters, dict):
                 raise ValueError('VectorQuery.filters must be a dict, got:', type(self.filters))

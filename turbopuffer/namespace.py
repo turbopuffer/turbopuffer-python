@@ -170,7 +170,7 @@ class Namespace:
               distance_metric: Optional[str] = None,
               top_k: int = 10,
               include_vectors: bool = False,
-              include_attributes: Optional[List[str]] = None,
+              include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Dict[str, List[FilterTuple]]] = None) -> VectorResult:
         ...
 
