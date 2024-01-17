@@ -7,7 +7,7 @@ def test_upsert_rows():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
     assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
 
-    # Test upsert mutliple dict rows
+    # Test upsert multiple dict rows
     ns.upsert([
         {'id': 2, 'vector': [2, 2]},
         {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}},
