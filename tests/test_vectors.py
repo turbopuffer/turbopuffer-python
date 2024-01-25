@@ -7,7 +7,7 @@ def test_upsert_rows():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
     assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
 
-    # Test upsert mutliple dict rows
+    # Test upsert multiple dict rows
     ns.upsert([
         {'id': 2, 'vector': [2, 2]},
         {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}},
@@ -198,6 +198,24 @@ def test_query_vectors():
         'include_vectors': True,
         'include_attributes': ['hello'],
     })
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
+
+    # Test query with all attributes
+    vector_set = ns.query(
+        top_k=5,
+        vector=[0.8, 0.7],
+        distance_metric='euclidean_squared',
+        include_vectors=True,
+        include_attributes=True
+    )
+    expected = [
+        tpuf.VectorRow(id=7, vector=[0.7, 0.7], dist=0.01, attributes={'hello': 'world'}),
+        tpuf.VectorRow(id=10, vector=[1.0, 1.0], dist=0.13, attributes={'test': 'cols'}),
+        tpuf.VectorRow(id=11, vector=[1.1, 1.1], dist=0.25, attributes={'test': 'cols'}),
+        tpuf.VectorRow(id=3, vector=[0.3, 0.3], dist=0.41, attributes={'test': 'cols', 'key1': 'three', 'key2': 'c'}),
+        tpuf.VectorRow(id=6, vector=[0.3, 0.3], dist=0.41, attributes={'test': 'cols', 'key1': 'three', 'key2': 'c'}),
+    ]
     for i in range(len(vector_set)):  # Use VectorResult in index mode
         check_result(vector_set[i], expected[i])
 

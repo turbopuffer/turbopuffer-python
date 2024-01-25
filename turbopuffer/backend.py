@@ -52,6 +52,8 @@ class Backend:
                 # before = time.monotonic()
                 json_payload = tpuf.dump_json_bytes(payload)
                 # print('Json time:', time.monotonic() - before)
+            elif isinstance(payload, bytes):
+                json_payload = payload
             else:
                 raise ValueError(f'Unsupported POST payload type: {type(payload)}')
 
