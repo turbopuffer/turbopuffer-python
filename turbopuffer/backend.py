@@ -71,7 +71,10 @@ class Backend:
         prepared = self.session.prepare_request(request)
 
         retry_attempts = 0
-        while retry_attempts < 3:
+        while retry_attempts < 6:
+            if retry_attempts > 0:
+                print("retrying...")
+                time.sleep(2 ** retry_attempts) # exponential falloff up to 32 seconds.
             # before = time.monotonic()
             try:
                 # print(f'Sending request:', prepared.path_url, prepared.headers)
@@ -80,6 +83,9 @@ class Backend:
 
                 if response.status_code > 500:
                     response.raise_for_status()
+
+                if method == 'HEAD':
+                    return response.__dict__
 
                 content_type = response.headers.get('Content-Type', 'text/plain')
                 if content_type == 'application/json':
@@ -97,8 +103,6 @@ class Backend:
                     raise APIError(response.status_code, 'Server returned non-JSON response', response.text)
             except requests.HTTPError:
                 print(traceback.format_exc())
-                print("retrying...")
                 retry_attempts += 1
-                time.sleep(2)
         print("Total request time (failed):", time.monotonic() - start)
         raise TurbopufferError('Failed after 3 retries')

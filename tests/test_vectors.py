@@ -99,15 +99,22 @@ def test_delete_vectors():
 def test_upsert_columns():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
-    # Test upsert columns
+    ids = [0, 1, 2, 3]
+    vectors = [[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]]
+    attributes = {
+        "key1": ["zero", "one", "two", "three"],
+        "key2": [" ", "a", "b", "c"],
+        "test": ["cols", "cols", "cols", "cols"],
+    }
+
+    # Test upsert columns with positional args
+    ns.upsert(ids, vectors, attributes)
+
+    # Test upsert columns with named args
     ns.upsert(
-        ids=[0, 1, 2, 3],
-        vectors=[[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
-        attributes={
-            "key1": ["zero", "one", "two", "three"],
-            "key2": [" ", "a", "b", "c"],
-            "test": ["cols", "cols", "cols", "cols"],
-        }
+        ids=ids,
+        vectors=vectors,
+        attributes=attributes
     )
 
     # Test upsert dict columns
@@ -273,6 +280,8 @@ def test_query_vectors():
 def test_list_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
+    assert ns.exists()
+
     vector_set = ns.vectors()
     set_str = str(vector_set)
     assert set_str.startswith(f"VectorResult(namespace='{tests.test_prefix}client_test', offset=0, next_cursor='")
@@ -280,6 +289,28 @@ def test_list_vectors():
     assert set_str.endswith("', data=VectorColumns(ids=[7], vectors=[[0.7, 0.7]], attributes={'hello': ['world']}))")
 
     assert len(vector_set) == 98
+
+
+def test_read_metadata():
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
+
+    assert ns.exists()
+    assert ns.dimensions() == 2
+    assert ns.approx_vector_count() == 92
+
+
+def test_delete_all():
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
+    # print('Recall:', ns.recall())
+
+    assert ns.exists()
+
+    ns.delete_all_indexes()
+    ns.delete_all()
+
+    assert not ns.exists()
+    assert ns.dimensions() == 0
+    assert ns.approx_vector_count() == 0
 
 
 def test_string_ids():
@@ -377,12 +408,4 @@ def test_string_ids():
         assert row.vector == expected[i].vector
         assert abs(row.dist - expected[i].dist) < 0.000001
 
-    ns.delete_all()
-
-
-def test_delete_all():
-    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
-    # print('Recall:', ns.recall())
-
-    ns.delete_all_indexes()
     ns.delete_all()

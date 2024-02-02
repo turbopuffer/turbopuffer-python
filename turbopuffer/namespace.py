@@ -30,6 +30,21 @@ class Namespace:
     def __str__(self) -> str:
         return f'tpuf-namespace:{self.name}'
 
+    def exists(self) -> bool:
+        response = self.backend.make_api_request('vectors', self.name, method='HEAD')
+        if response['status_code'] == 200:
+            return response['headers'].get('x-turbopuffer-dimensions', '0') != '0'
+        else:
+            return False
+
+    def dimensions(self) -> int:
+        response = self.backend.make_api_request('vectors', self.name, method='HEAD')
+        return int(response['headers'].get('x-turbopuffer-dimensions', '0'))
+
+    def approx_vector_count(self) -> int:
+        response = self.backend.make_api_request('vectors', self.name, method='HEAD')
+        return int(response['headers'].get('x-turbopuffer-approx-num-vectors', '0'))
+
     @overload
     def upsert(self, ids: Union[List[int], List[str]], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
         """
@@ -76,6 +91,9 @@ class Namespace:
                 return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes))
             else:
                 raise ValueError('upsert() requires both ids= and vectors= be set.')
+        elif ids is not None and attributes is None:
+            # Offset arguments to handle positional arguments case with no data field.
+            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors))
         elif isinstance(data, VectorColumns):
             # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
             # None == pd.ndarray is an ambiguous comparison in this case.
