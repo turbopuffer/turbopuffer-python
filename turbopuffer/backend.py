@@ -1,4 +1,5 @@
 import json
+import re
 import time
 import traceback
 import requests
@@ -85,6 +86,17 @@ class Backend:
 
                 if response.status_code > 500:
                     response.raise_for_status()
+
+                server_timing_str = response.headers.get('Server-Timing', '')
+                if len(server_timing_str) > 0:
+                    match_data = re.match(r'.*exhaustive_search_count;count=([\d\.]+)?.*processing_time;dur=([\d\.]+)?', server_timing_str)
+                    if match_data:
+                        exhaustive_search_count_str, processing_time_str = match_data.groups()
+                        try:
+                            performance['server_time'] = float(processing_time_str) / 1000.0
+                            performance['exhaustive_search_count'] = int(exhaustive_search_count_str)
+                        except ValueError:
+                            pass
 
                 if method == 'HEAD':
                     return dict(response.__dict__, **{
