@@ -32,18 +32,18 @@ class Namespace:
 
     def exists(self) -> bool:
         response = self.backend.make_api_request('vectors', self.name, method='HEAD')
-        if response['status_code'] == 200:
-            return response['headers'].get('x-turbopuffer-dimensions', '0') != '0'
+        if response.get('status_code') == 200:
+            return response.get('headers', dict()).get('x-turbopuffer-dimensions', '0') != '0'
         else:
             return False
 
     def dimensions(self) -> int:
         response = self.backend.make_api_request('vectors', self.name, method='HEAD')
-        return int(response['headers'].get('x-turbopuffer-dimensions', '0'))
+        return int(response.get('headers', dict()).get('x-turbopuffer-dimensions', '0'))
 
     def approx_vector_count(self) -> int:
         response = self.backend.make_api_request('vectors', self.name, method='HEAD')
-        return int(response['headers'].get('x-turbopuffer-approx-num-vectors', '0'))
+        return int(response.get('headers', dict()).get('x-turbopuffer-approx-num-vectors', '0'))
 
     @overload
     def upsert(self, ids: Union[List[int], List[str]], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
@@ -160,7 +160,7 @@ class Namespace:
         else:
             raise ValueError(f'Unsupported data type: {type(data)}')
 
-        assert response.get('status', '') == 'OK', f'Invalid upsert() response: {response}'
+        assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
 
     def delete(self, ids: Union[int, str, List[int], List[str]]) -> None:
         """
@@ -180,7 +180,7 @@ class Namespace:
         else:
             raise ValueError(f'Unsupported ids type: {type(ids)}')
 
-        assert response.get('status', '') == 'OK', f'Invalid delete() response: {response}'
+        assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid delete() response: {response}'
 
     @overload
     def query(self,
@@ -230,7 +230,9 @@ class Namespace:
                 raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
 
         response = self.backend.make_api_request('vectors', self.name, 'query', payload=query_data.__dict__)
-        return VectorResult(response, namespace=self)
+        result = VectorResult(response.get('content', dict()), namespace=self)
+        result.performance = response.get('performance')
+        return result
 
     def vectors(self, cursor: Optional[Cursor] = None) -> VectorResult:
         """
@@ -241,8 +243,11 @@ class Namespace:
         """
 
         response = self.backend.make_api_request('vectors', self.name, query={'cursor': cursor})
-        next_cursor = response.pop('next_cursor', None)
-        return VectorResult(response, namespace=self, next_cursor=next_cursor)
+        content = response.get('content', dict())
+        next_cursor = content.pop('next_cursor', None)
+        result = VectorResult(content, namespace=self, next_cursor=next_cursor)
+        result.performance = response.get('performance')
+        return result
 
     def delete_all_indexes(self) -> None:
         """
@@ -250,7 +255,7 @@ class Namespace:
         """
 
         response = self.backend.make_api_request('vectors', self.name, 'index', method='DELETE')
-        assert response.get('status', '') == 'ok', f'Invalid delete_all_indexes() response: {response}'
+        assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all_indexes() response: {response}'
 
     def delete_all(self) -> None:
         """
@@ -258,7 +263,7 @@ class Namespace:
         """
 
         response = self.backend.make_api_request('vectors', self.name, method='DELETE')
-        assert response.get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
+        assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
 
     def recall(self, num=20, top_k=10) -> float:
         """
@@ -271,5 +276,6 @@ class Namespace:
         """
 
         response = self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
-        assert 'recall' in response, f'Invalid recall() response: {response}'
-        return float(response.get('recall'))
+        content = response.get('content', dict())
+        assert 'recall' in content, f'Invalid recall() response: {response}'
+        return float(content.get('recall'))
