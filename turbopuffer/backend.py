@@ -89,12 +89,16 @@ class Backend:
 
                 server_timing_str = response.headers.get('Server-Timing', '')
                 if len(server_timing_str) > 0:
-                    match_data = re.match(r'.*exhaustive_search_count;count=([\d\.]+)?.*processing_time;dur=([\d\.]+)?', server_timing_str)
-                    if match_data:
-                        exhaustive_search_count_str, processing_time_str = match_data.groups()
+                    match_processing = re.match(r'.*processing_time;dur=([\d\.]+)', server_timing_str)
+                    if match_processing:
                         try:
-                            performance['server_time'] = float(processing_time_str) / 1000.0
-                            performance['exhaustive_search_count'] = int(exhaustive_search_count_str)
+                            performance['server_time'] = float(match_processing.group(1)) / 1000.0
+                        except ValueError:
+                            pass
+                    match_exhaustive = re.match(r'.*exhaustive_search_count;count=([\d\.]+)', server_timing_str)
+                    if match_exhaustive:
+                        try:
+                            performance['exhaustive_search_count'] = int(match_exhaustive.group(1))
                         except ValueError:
                             pass
 
