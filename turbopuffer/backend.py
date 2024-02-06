@@ -34,6 +34,12 @@ class Backend:
             'User-Agent': f'tpuf-python/{tpuf.VERSION} {requests.utils.default_headers()["User-Agent"]}',
         })
 
+    def __eq__(self, other):
+        if isinstance(other, Backend):
+            return self.api_key == other.api_key and self.api_base_url == other.api_base_url
+        else:
+            return False
+
     def make_api_request(self,
                          *args: List[str],
                          method: Optional[str] = None,

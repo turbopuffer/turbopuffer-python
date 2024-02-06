@@ -1,3 +1,4 @@
+import time
 import uuid
 import turbopuffer as tpuf
 import tests
@@ -296,7 +297,10 @@ def test_read_metadata():
 
     assert ns.exists()
     assert ns.dimensions() == 2
-    assert ns.approx_vector_count() == 92
+    assert ns.approx_count() == 92
+
+    all_ns = tpuf.list_namespaces()
+    assert ns in list(all_ns)
 
 
 def test_delete_all():
@@ -304,13 +308,19 @@ def test_delete_all():
     # print('Recall:', ns.recall())
 
     assert ns.exists()
+    all_ns_start = tpuf.list_namespaces()
+    assert ns in iter(all_ns_start)
 
     ns.delete_all_indexes()
     ns.delete_all()
 
     assert not ns.exists()
     assert ns.dimensions() == 0
-    assert ns.approx_vector_count() == 0
+    assert ns.approx_count() == 0
+
+    # all_ns_end = tpuf.list_namespaces()
+    # assert ns not in iter(all_ns_end)
+    # assert len(all_ns_end) < len(all_ns_start)
 
 
 def test_string_ids():

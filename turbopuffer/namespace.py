@@ -30,6 +30,13 @@ class Namespace:
     def __str__(self) -> str:
         return f'tpuf-namespace:{self.name}'
 
+    def __eq__(self, other):
+        if isinstance(other, Namespace):
+            return self.name == other.name and self.backend == other.backend
+        else:
+            return False
+
+
     def exists(self) -> bool:
         response = self.backend.make_api_request('vectors', self.name, method='HEAD')
         if response.get('status_code') == 200:
@@ -41,7 +48,7 @@ class Namespace:
         response = self.backend.make_api_request('vectors', self.name, method='HEAD')
         return int(response.get('headers', dict()).get('x-turbopuffer-dimensions', '0'))
 
-    def approx_vector_count(self) -> int:
+    def approx_count(self) -> int:
         response = self.backend.make_api_request('vectors', self.name, method='HEAD')
         return int(response.get('headers', dict()).get('x-turbopuffer-approx-num-vectors', '0'))
 
@@ -279,3 +286,95 @@ class Namespace:
         content = response.get('content', dict())
         assert 'recall' in content, f'Invalid recall() response: {response}'
         return float(content.get('recall'))
+
+
+class NamespaceIterator:
+    """
+    The VectorResult type represents a set of vectors that are the result of a query.
+
+    A VectorResult can be treated as either a lazy iterator or a list by the user.
+    Reading the length of the result will internally buffer the full result.
+    """
+
+    backend: Backend
+    namespaces: List[Namespace] = []
+    index: int = -1
+    offset: int = 0
+    next_cursor: Optional[Cursor] = None
+
+    def __init__(self, backend: Backend, initial_set: List[Namespace] = [], next_cursor: Optional[Cursor] = None):
+        self.backend = backend
+        self.namespaces = initial_set
+        self.index = -1
+        self.offset = 0
+        self.next_cursor = next_cursor
+
+    def __str__(self) -> str:
+        str_list = [ns.name for ns in self.namespaces]
+        if not self.next_cursor and self.offset == 0:
+            return str(str_list)
+        else:
+            return ("NamespaceIterator("
+                    f"offset={self.offset}, "
+                    f"next_cursor='{self.next_cursor}', "
+                    f"namespaces={str_list})")
+
+    def __len__(self) -> int:
+        assert self.offset == 0, "Can't call len(NamespaceIterator) after iterating"
+        assert self.index == -1, "Can't call len(NamespaceIterator) after iterating"
+        if not self.next_cursor:
+            return len(self.namespaces)
+        else:
+            it = iter(self)
+            self.namespaces = [next for next in it]
+            self.offset = 0
+            self.index = -1
+            self.next_cursor = None
+            return len(self.namespaces)
+
+    def __getitem__(self, index) -> VectorRow:
+        if index >= len(self.namespaces) and self.next_cursor:
+            it = iter(self)
+            self.namespaces = [next for next in it]
+            self.offset = 0
+            self.index = -1
+            self.next_cursor = None
+        return self.namespaces[index]
+
+    def __iter__(self) -> 'NamespaceIterator':
+        assert self.offset == 0, "Can't iterate over NamespaceIterator multiple times"
+        return NamespaceIterator(self.backend, self.namespaces, self.next_cursor)
+
+    def __next__(self):
+        if self.index + 1 < len(self.namespaces):
+            self.index += 1
+            return self.namespaces[self.index]
+        elif self.next_cursor is None:
+            raise StopIteration
+        else:
+            response = self.backend.make_api_request(
+                'vectors',
+                query={'cursor': self.next_cursor}
+            )
+            content = response.get('content', dict())
+            self.offset += len(self.namespaces)
+            self.index = -1
+            self.next_cursor = content.pop('next_cursor', None)
+            self.namespaces = [tpuf.Namespace(ns['id'], api_key=self.backend.api_key) for ns in content.pop('namespaces', list())]
+            return self.__next__()
+
+
+def list_namespaces(api_key: Optional[str] = None) -> Iterable[Namespace]:
+    """
+    Creates a new turbopuffer.Namespace object for querying the turbopuffer API.
+
+    This function does not make any API calls on its own.
+
+    Specifying an api_key here will override the global configuration for API calls to this namespace.
+    """
+    backend = Backend(api_key)
+    response = backend.make_api_request('vectors')
+    content = response.get('content', dict())
+    next_cursor = content.pop('next_cursor', None)
+    namespaces = [tpuf.Namespace(ns['id'], api_key=backend.api_key) for ns in content.pop('namespaces', list())]
+    return NamespaceIterator(backend, namespaces, next_cursor)

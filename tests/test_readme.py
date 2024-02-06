@@ -5,6 +5,9 @@ import tests
 def test_readme():
     ns = tpuf.Namespace(tests.test_prefix + 'hello_world')
 
+    if ns.exists():
+        print(f'Namespace {ns.name} exists with {ns.dimensions()} dimensions and approximately {ns.approx_count()} vectors.')
+
     ns.upsert(
         ids=[1, 2],
         vectors=[[0.1, 0.2], [0.3, 0.4]],
@@ -28,5 +31,12 @@ def test_readme():
         include_vectors=True
     )
     print(vectors)
+
+    namespaces = tpuf.list_namespaces()
+    print('Total namespaces:', len(namespaces))
+    for ns2 in namespaces:
+        pass # print(ns2.name)
+
+    ns.delete([1, 2])
 
     ns.delete_all()

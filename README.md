@@ -23,6 +23,10 @@ tpuf.api_key = 'your-token' # Alternatively: export=TURBOPUFFER_API_KEY=your-tok
 # Open a namespace
 ns = tpuf.Namespace('hello_world')
 
+# Read namespace metadata
+if ns.exists():
+    print(f'Namespace {ns.name} exists with {ns.dimensions()} dimensions and approximately {ns.approx_count()} vectors.')
+
 # Upsert your dataset
 ns.upsert(
     ids=[1, 2],
@@ -53,6 +57,15 @@ print(vectors)
 #   VectorRow(id=2, vector=[0.30000001192092896, 0.4000000059604645], attributes={'name': 'foos'}, dist=0.001016080379486084),
 #   VectorRow(id=1, vector=[0.10000000149011612, 0.20000000298023224], attributes={'name': 'foo'}, dist=0.009067952632904053)
 # ]
+
+# List all namespaces
+namespaces = tpuf.list_namespaces()
+print('Total namespaces:', len(namespaces))
+for ns2 in namespaces:
+    print(ns2.name)
+
+# Delete vectors using the separate delete method
+ns.delete([1, 2])
 ```
 
 Endpoint Documentation
