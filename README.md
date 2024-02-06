@@ -62,7 +62,7 @@ print(vectors)
 namespaces = tpuf.list_namespaces()
 print('Total namespaces:', len(namespaces))
 for ns2 in namespaces:
-    print(ns2.name)
+    print(f'Namespace {ns2.name} contains approximately {ns2.approx_count()} vectors with {ns2.dimensions()} dimensions.')
 
 # Delete vectors using the separate delete method
 ns.delete([1, 2])

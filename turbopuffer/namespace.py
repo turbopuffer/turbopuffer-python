@@ -16,6 +16,8 @@ class Namespace:
     name: str
     backend: Backend
 
+    metadata: Optional[dict] = None
+
     def __init__(self, name: str, api_key: Optional[str] = None):
         """
         Creates a new turbopuffer.Namespace object for querying the turbopuffer API.
@@ -36,21 +38,38 @@ class Namespace:
         else:
             return False
 
-
-    def exists(self) -> bool:
+    def refresh_metadata(self):
         response = self.backend.make_api_request('vectors', self.name, method='HEAD')
         if response.get('status_code') == 200:
-            return response.get('headers', dict()).get('x-turbopuffer-dimensions', '0') != '0'
+            headers = response.get('headers', dict())
+            dimensions = int(headers.get('x-turbopuffer-dimensions', '0'))
+            approx_count = int(headers.get('x-turbopuffer-approx-num-vectors', '0'))
+            self.metadata = {
+                'exists': dimensions != 0,
+                'dimensions': dimensions,
+                'approx_count': approx_count,
+            }
         else:
-            return False
+            self.metadata = {
+                'exists': False,
+                'dimensions': 0,
+                'approx_count': 0,
+            }
+
+    def exists(self) -> bool:
+        # Always refresh the exists check since metadata from list_namespaces() might be delayed.
+        self.refresh_metadata()
+        return self.metadata['exists']
 
     def dimensions(self) -> int:
-        response = self.backend.make_api_request('vectors', self.name, method='HEAD')
-        return int(response.get('headers', dict()).get('x-turbopuffer-dimensions', '0'))
+        if self.metadata is None:
+            self.refresh_metadata()
+        return self.metadata['dimensions']
 
     def approx_count(self) -> int:
-        response = self.backend.make_api_request('vectors', self.name, method='HEAD')
-        return int(response.get('headers', dict()).get('x-turbopuffer-approx-num-vectors', '0'))
+        if self.metadata is None:
+            self.refresh_metadata()
+        return self.metadata['approx_count']
 
     @overload
     def upsert(self, ids: Union[List[int], List[str]], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
@@ -168,6 +187,7 @@ class Namespace:
             raise ValueError(f'Unsupported data type: {type(data)}')
 
         assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
+        self.metadata = None # Invalidate cached metadata
 
     def delete(self, ids: Union[int, str, List[int], List[str]]) -> None:
         """
@@ -188,6 +208,7 @@ class Namespace:
             raise ValueError(f'Unsupported ids type: {type(ids)}')
 
         assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid delete() response: {response}'
+        self.metadata = None # Invalidate cached metadata
 
     @overload
     def query(self,
@@ -271,6 +292,7 @@ class Namespace:
 
         response = self.backend.make_api_request('vectors', self.name, method='DELETE')
         assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
+        self.metadata = None # Invalidate cached metadata
 
     def recall(self, num=20, top_k=10) -> float:
         """
@@ -302,12 +324,31 @@ class NamespaceIterator:
     offset: int = 0
     next_cursor: Optional[Cursor] = None
 
-    def __init__(self, backend: Backend, initial_set: List[Namespace] = [], next_cursor: Optional[Cursor] = None):
+    def __init__(self, backend: Backend, initial_set: Union[List[Namespace], List[dict]] = [], next_cursor: Optional[Cursor] = None):
         self.backend = backend
-        self.namespaces = initial_set
         self.index = -1
         self.offset = 0
         self.next_cursor = next_cursor
+
+        if len(initial_set):
+            if isinstance(initial_set[0], Namespace):
+                self.namespaces = initial_set
+            else:
+                self.namespaces = NamespaceIterator.load_namespaces(backend.api_key, initial_set)
+
+    def load_namespaces(api_key: Optional[str], initial_set: List[dict]) -> List[Namespace]:
+        output = []
+        for input in initial_set:
+            ns = tpuf.Namespace(input['id'], api_key=api_key)
+            ns.metadata = {
+                'exists': True,
+                'dimensions': input['dimensions'],
+                'approx_count': input['approx_count'],
+                'created_at': input['created_at'],
+            }
+            output.append(ns)
+
+        return output
 
     def __str__(self) -> str:
         str_list = [ns.name for ns in self.namespaces]
@@ -360,21 +401,17 @@ class NamespaceIterator:
             self.offset += len(self.namespaces)
             self.index = -1
             self.next_cursor = content.pop('next_cursor', None)
-            self.namespaces = [tpuf.Namespace(ns['id'], api_key=self.backend.api_key) for ns in content.pop('namespaces', list())]
+            self.namespaces = NamespaceIterator.load_namespaces(self.backend.api_key, content.pop('namespaces', list()))
             return self.__next__()
 
 
 def list_namespaces(api_key: Optional[str] = None) -> Iterable[Namespace]:
     """
-    Creates a new turbopuffer.Namespace object for querying the turbopuffer API.
-
-    This function does not make any API calls on its own.
-
-    Specifying an api_key here will override the global configuration for API calls to this namespace.
+    Lists all turbopuffer namespaces for a given api_key.
+    If no api_key is provided, the globally configured API key will be used.
     """
     backend = Backend(api_key)
     response = backend.make_api_request('vectors')
     content = response.get('content', dict())
     next_cursor = content.pop('next_cursor', None)
-    namespaces = [tpuf.Namespace(ns['id'], api_key=backend.api_key) for ns in content.pop('namespaces', list())]
-    return NamespaceIterator(backend, namespaces, next_cursor)
+    return NamespaceIterator(backend, content.pop('namespaces', list()), next_cursor)
