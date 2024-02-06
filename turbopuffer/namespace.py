@@ -57,16 +57,25 @@ class Namespace:
             }
 
     def exists(self) -> bool:
+        """
+        Returns True if the namespace exists, and False if the namespace is missing or empty.
+        """
         # Always refresh the exists check since metadata from list_namespaces() might be delayed.
         self.refresh_metadata()
         return self.metadata['exists']
 
     def dimensions(self) -> int:
+        """
+        Returns the number of vector dimensions stored in this namespace.
+        """
         if self.metadata is None:
             self.refresh_metadata()
         return self.metadata['dimensions']
 
     def approx_count(self) -> int:
+        """
+        Returns the approximate number of vectors stored in this namespace.
+        """
         if self.metadata is None:
             self.refresh_metadata()
         return self.metadata['approx_count']
