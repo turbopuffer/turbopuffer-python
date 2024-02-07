@@ -298,7 +298,7 @@ def test_read_metadata():
     assert ns.dimensions() == 2
     assert ns.approx_count() == 92
 
-    all_ns = tpuf.list_namespaces()
+    all_ns = tpuf.namespaces()
     assert ns in list(all_ns)
 
 
@@ -307,7 +307,7 @@ def test_delete_all():
     # print('Recall:', ns.recall())
 
     assert ns.exists()
-    all_ns_start = tpuf.list_namespaces()
+    all_ns_start = tpuf.namespaces()
     assert ns in iter(all_ns_start)
 
     ns.delete_all_indexes()
@@ -317,7 +317,7 @@ def test_delete_all():
     assert ns.dimensions() == 0
     assert ns.approx_count() == 0
 
-    # all_ns_end = tpuf.list_namespaces()
+    # all_ns_end = tpuf.namespaces()
     # assert ns not in iter(all_ns_end)
     # assert len(all_ns_end) < len(all_ns_start)
 

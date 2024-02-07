@@ -1,4 +1,5 @@
 import sys
+import iso8601
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, FilterTuple
@@ -60,7 +61,7 @@ class Namespace:
         """
         Returns True if the namespace exists, and False if the namespace is missing or empty.
         """
-        # Always refresh the exists check since metadata from list_namespaces() might be delayed.
+        # Always refresh the exists check since metadata from namespaces() might be delayed.
         self.refresh_metadata()
         return self.metadata['exists']
 
@@ -353,7 +354,8 @@ class NamespaceIterator:
                 'exists': True,
                 'dimensions': input['dimensions'],
                 'approx_count': input['approx_count'],
-                'created_at': input['created_at'],
+                # rfc3339 returned by the server is compatible with iso8601
+                'created_at': iso8601.parse_date(input['created_at']),
             }
             output.append(ns)
 
@@ -414,7 +416,7 @@ class NamespaceIterator:
             return self.__next__()
 
 
-def list_namespaces(api_key: Optional[str] = None) -> Iterable[Namespace]:
+def namespaces(api_key: Optional[str] = None) -> Iterable[Namespace]:
     """
     Lists all turbopuffer namespaces for a given api_key.
     If no api_key is provided, the globally configured API key will be used.
