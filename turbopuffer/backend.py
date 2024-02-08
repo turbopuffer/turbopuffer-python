@@ -5,7 +5,7 @@ import traceback
 import requests
 import turbopuffer as tpuf
 import gzip
-from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
+from turbopuffer.error import AuthenticationError, APIError
 from typing import Optional, List
 
 
@@ -135,4 +135,6 @@ class Backend:
                     time.sleep(2 ** retry_attempt)  # exponential falloff up to 64 seconds for 6 retries.
                 else:
                     print(f'Request failed after {retry_attempt} attempts...')
-                    raise APIError(http_err.response.status_code, f'Request to {http_err.request.url} failed after {retry_attempt} attempts', str(http_err))
+                    raise APIError(http_err.response.status_code,
+                                   f'Request to {http_err.request.url} failed after {retry_attempt} attempts',
+                                   str(http_err))

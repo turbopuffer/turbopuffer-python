@@ -54,6 +54,7 @@ class VectorQuery:
                             # Support passing a single filter instead of a list
                             self.filters[name] = [filter]
                         elif len(filter) > 0 and not isinstance(filter[0], list):
-                            raise ValueError(f'VectorQuery.filters expected a list of filters for key {name}, got list of:', type(filter[0]))
+                            raise ValueError(f'VectorQuery.filters expected a list of filters for key {name}, got list of:',
+                                             type(filter[0]))
                     else:
                         raise ValueError(f'VectorQuery.filters expected a list for key {name}, got:', type(filter))

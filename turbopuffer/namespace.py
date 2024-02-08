@@ -86,7 +86,10 @@ class Namespace:
         return self.metadata.pop('approx_count', 0)
 
     @overload
-    def upsert(self, ids: Union[List[int], List[str]], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
+    def upsert(self,
+               ids: Union[List[int], List[str]],
+               vectors: List[List[float]],
+               attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
         If this call succeeds, data is guaranteed to be durably written to object storage.
