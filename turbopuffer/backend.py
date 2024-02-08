@@ -92,6 +92,12 @@ class Backend:
 
                 server_timing_str = response.headers.get('Server-Timing', '')
                 if len(server_timing_str) > 0:
+                    match_cache_hit_ratio = re.match(r'.*cache_hit_ratio;ratio=([\d\.]+)', server_timing_str)
+                    if match_cache_hit_ratio:
+                        try:
+                            performance['cache_hit_ratio'] = float(match_cache_hit_ratio.group(1))
+                        except ValueError:
+                            pass
                     match_processing = re.match(r'.*processing_time;dur=([\d\.]+)', server_timing_str)
                     if match_processing:
                         try:
