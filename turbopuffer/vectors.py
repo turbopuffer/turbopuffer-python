@@ -264,6 +264,8 @@ class VectorResult:
     offset: int = 0
     next_cursor: Optional[Cursor] = None
 
+    performance: Optional[dict] = None
+
     def __init__(self, initial_data: Optional[DATA] = None, namespace: Optional['Namespace'] = None, next_cursor: Optional[Cursor] = None):
         self.namespace = namespace
         self.index = -1
@@ -340,8 +342,9 @@ class VectorResult:
                 self.namespace.name,
                 query={'cursor': self.next_cursor}
             )
+            content = response.get('content', dict())
             self.offset += len(self.data)
             self.index = -1
-            self.next_cursor = response.pop('next_cursor', None)
-            self.data = VectorResult.load_data(response)
+            self.next_cursor = content.pop('next_cursor', None)
+            self.data = VectorResult.load_data(content)
             return self.__next__()

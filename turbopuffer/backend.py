@@ -1,10 +1,11 @@
 import json
+import re
 import time
 import traceback
 import requests
 import turbopuffer as tpuf
 import gzip
-from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
+from turbopuffer.error import AuthenticationError, APIError
 from typing import Optional, List
 
 
@@ -33,6 +34,12 @@ class Backend:
             'User-Agent': f'tpuf-python/{tpuf.VERSION} {requests.utils.default_headers()["User-Agent"]}',
         })
 
+    def __eq__(self, other):
+        if isinstance(other, Backend):
+            return self.api_key == other.api_key and self.api_base_url == other.api_base_url
+        else:
+            return False
+
     def make_api_request(self,
                          *args: List[str],
                          method: Optional[str] = None,
@@ -46,21 +53,22 @@ class Backend:
         if query is not None:
             request.params = query
 
+        performance = dict()
         if payload is not None:
-            # before = time.monotonic()
+            payload_start = time.monotonic()
             if isinstance(payload, dict):
-                # before = time.monotonic()
                 json_payload = tpuf.dump_json_bytes(payload)
-                # print('Json time:', time.monotonic() - before)
+                performance['json_time'] = time.monotonic() - payload_start
             elif isinstance(payload, bytes):
                 json_payload = payload
             else:
                 raise ValueError(f'Unsupported POST payload type: {type(payload)}')
 
+            gzip_start = time.monotonic()
             gzip_payload = gzip.compress(json_payload, compresslevel=1)
-            # json_mebibytes = len(json_payload) / 1024 / 1024
-            # gzip_mebibytes = len(gzip_payload) / 1024 / 1024
-            # print(f'Gzip time ({json_mebibytes} MiB json / {gzip_mebibytes} MiB gzip):', time.monotonic() - before)
+            performance['gzip_time'] = time.monotonic() - gzip_start
+            if len(gzip_payload) > 0:
+                performance['gzip_ratio'] = len(json_payload) / len(gzip_payload)
 
             request.headers.update({
                 'Content-Type': 'application/json',
@@ -70,16 +78,43 @@ class Backend:
 
         prepared = self.session.prepare_request(request)
 
-        retry_attempts = 0
-        while retry_attempts < 3:
-            # before = time.monotonic()
+        retry_attempt = 0
+        while retry_attempt < tpuf.max_retries:
+            request_start = time.monotonic()
             try:
                 # print(f'Sending request:', prepared.path_url, prepared.headers)
                 response = self.session.send(prepared, allow_redirects=False)
-                # print(f'Request time (HTTP {response.status_code}):', time.monotonic() - before)
+                performance['request_time'] = time.monotonic() - request_start
+                # print(f'Request time (HTTP {response.status_code}):', performance['request_time'])
 
                 if response.status_code > 500:
                     response.raise_for_status()
+
+                server_timing_str = response.headers.get('Server-Timing', '')
+                if len(server_timing_str) > 0:
+                    match_cache_hit_ratio = re.match(r'.*cache_hit_ratio;ratio=([\d\.]+)', server_timing_str)
+                    if match_cache_hit_ratio:
+                        try:
+                            performance['cache_hit_ratio'] = float(match_cache_hit_ratio.group(1))
+                        except ValueError:
+                            pass
+                    match_processing = re.match(r'.*processing_time;dur=([\d\.]+)', server_timing_str)
+                    if match_processing:
+                        try:
+                            performance['server_time'] = float(match_processing.group(1)) / 1000.0
+                        except ValueError:
+                            pass
+                    match_exhaustive = re.match(r'.*exhaustive_search_count;count=([\d\.]+)', server_timing_str)
+                    if match_exhaustive:
+                        try:
+                            performance['exhaustive_search_count'] = int(match_exhaustive.group(1))
+                        except ValueError:
+                            pass
+
+                if method == 'HEAD':
+                    return dict(response.__dict__, **{
+                        'performance': performance,
+                    })
 
                 content_type = response.headers.get('Content-Type', 'text/plain')
                 if content_type == 'application/json':
@@ -89,16 +124,23 @@ class Backend:
                         raise APIError(response.status_code, traceback.format_exception_only(err), response.text)
 
                     if response.ok:
-                        # print("Total request time:", time.monotonic() - start)
-                        return content
+                        performance['total_time'] = time.monotonic() - start
+                        return dict(response.__dict__, **{
+                            'content': content,
+                            'performance': performance,
+                        })
                     else:
                         raise APIError(response.status_code, content.get('status', 'error'), content.get('error', ''))
                 else:
                     raise APIError(response.status_code, 'Server returned non-JSON response', response.text)
-            except requests.HTTPError:
-                print(traceback.format_exc())
-                print("retrying...")
-                retry_attempts += 1
-                time.sleep(2)
-        print("Total request time (failed):", time.monotonic() - start)
-        raise TurbopufferError('Failed after 3 retries')
+            except requests.HTTPError as http_err:
+                retry_attempt += 1
+                # print(traceback.format_exc())
+                if retry_attempt < tpuf.max_retries:
+                    # print(f'Retrying request in {2 ** retry_attempt}s...')
+                    time.sleep(2 ** retry_attempt)  # exponential falloff up to 64 seconds for 6 retries.
+                else:
+                    print(f'Request failed after {retry_attempt} attempts...')
+                    raise APIError(http_err.response.status_code,
+                                   f'Request to {http_err.request.url} failed after {retry_attempt} attempts',
+                                   str(http_err))
