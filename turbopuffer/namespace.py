@@ -1,5 +1,6 @@
 import sys
 import iso8601
+from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, FilterTuple
@@ -41,7 +42,8 @@ class Namespace:
 
     def refresh_metadata(self):
         response = self.backend.make_api_request('vectors', self.name, method='HEAD')
-        if response.get('status_code') == 200:
+        status_code = response.get('status_code')
+        if status_code == 200:
             headers = response.get('headers', dict())
             dimensions = int(headers.get('x-turbopuffer-dimensions', '0'))
             approx_count = int(headers.get('x-turbopuffer-approx-num-vectors', '0'))
@@ -50,12 +52,14 @@ class Namespace:
                 'dimensions': dimensions,
                 'approx_count': approx_count,
             }
-        else:
+        elif status_code == 404:
             self.metadata = {
                 'exists': False,
                 'dimensions': 0,
                 'approx_count': 0,
             }
+        else:
+            raise APIError(response.status_code, 'Unexpected status code', response.get('content'))
 
     def exists(self) -> bool:
         """
@@ -69,17 +73,17 @@ class Namespace:
         """
         Returns the number of vector dimensions stored in this namespace.
         """
-        if self.metadata is None:
+        if self.metadata is None or 'dimensions' not in self.metadata:
             self.refresh_metadata()
-        return self.metadata['dimensions']
+        return self.metadata.pop('dimensions', 0)
 
     def approx_count(self) -> int:
         """
         Returns the approximate number of vectors stored in this namespace.
         """
-        if self.metadata is None:
+        if self.metadata is None or 'approx_count' not in self.metadata:
             self.refresh_metadata()
-        return self.metadata['approx_count']
+        return self.metadata.pop('approx_count', 0)
 
     @overload
     def upsert(self, ids: Union[List[int], List[str]], vectors: List[List[float]], attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
@@ -137,6 +141,9 @@ class Namespace:
                 if vec is None:
                     raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
             response = self.backend.make_api_request('vectors', self.name, payload=data.__dict__)
+
+            assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
+            self.metadata = None  # Invalidate cached metadata
         elif isinstance(data, VectorRow):
             raise ValueError('upsert() should be called on a list of vectors, got single vector.')
         elif isinstance(data, list):
@@ -182,6 +189,7 @@ class Namespace:
                 # time_diff = time.monotonic() - before
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
+            return
         elif isinstance(data, Iterable):
             # start = time.monotonic()
             for batch in batch_iter(data, tpuf.upsert_batch_size):
@@ -195,9 +203,6 @@ class Namespace:
             return
         else:
             raise ValueError(f'Unsupported data type: {type(data)}')
-
-        assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
-        self.metadata = None # Invalidate cached metadata
 
     def delete(self, ids: Union[int, str, List[int], List[str]]) -> None:
         """
@@ -218,7 +223,7 @@ class Namespace:
             raise ValueError(f'Unsupported ids type: {type(ids)}')
 
         assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid delete() response: {response}'
-        self.metadata = None # Invalidate cached metadata
+        self.metadata = None  # Invalidate cached metadata
 
     @overload
     def query(self,
@@ -302,7 +307,7 @@ class Namespace:
 
         response = self.backend.make_api_request('vectors', self.name, method='DELETE')
         assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
-        self.metadata = None # Invalidate cached metadata
+        self.metadata = None  # Invalidate cached metadata
 
     def recall(self, num=20, top_k=10) -> float:
         """

@@ -18,7 +18,7 @@ $ pip install turbopuffer[fast]
 2. Start using the API
 ```py
 import turbopuffer as tpuf
-tpuf.api_key = 'your-token' # Alternatively: export=TURBOPUFFER_API_KEY=your-token
+tpuf.api_key = 'your-token'  # Alternatively: export=TURBOPUFFER_API_KEY=your-token
 
 # Open a namespace
 ns = tpuf.Namespace('hello_world')

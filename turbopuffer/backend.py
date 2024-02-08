@@ -82,7 +82,7 @@ class Backend:
         while retry_attempts < 6:
             if retry_attempts > 0:
                 print("retrying...")
-                time.sleep(2 ** retry_attempts) # exponential falloff up to 32 seconds.
+                time.sleep(2 ** retry_attempts)  # exponential falloff up to 32 seconds.
             request_start = time.monotonic()
             try:
                 # print(f'Sending request:', prepared.path_url, prepared.headers)
