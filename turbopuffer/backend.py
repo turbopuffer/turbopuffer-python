@@ -1,12 +1,14 @@
+import gzip
 import json
 import re
 import time
 import traceback
+from typing import List, Optional
+
 import requests
+
 import turbopuffer as tpuf
-import gzip
-from turbopuffer.error import AuthenticationError, APIError
-from typing import Optional, List
+from turbopuffer.error import APIError, AuthenticationError
 
 
 def find_api_key(api_key: Optional[str] = None) -> str:
@@ -25,10 +27,13 @@ class Backend:
     api_base_url: str
     session: requests.Session
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, session: Optional[requests.Session] = None):
         self.api_key = find_api_key(api_key)
         self.api_base_url = tpuf.api_base_url
-        self.session = requests.Session()
+        if session is not None:
+            self.session = session
+        else:
+            self.session = requests.Session()
         self.session.headers.update({
             'Authorization': f'Bearer {self.api_key}',
             'User-Agent': f'tpuf-python/{tpuf.VERSION} {requests.utils.default_headers()["User-Agent"]}',
@@ -142,5 +147,7 @@ class Backend:
                 else:
                     print(f'Request failed after {retry_attempt} attempts...')
                     raise APIError(http_err.response.status_code,
+                                   f'Request to {http_err.request.url} failed after {retry_attempt} attempts',
+                                   str(http_err))
                                    f'Request to {http_err.request.url} failed after {retry_attempt} attempts',
                                    str(http_err))
