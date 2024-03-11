@@ -216,7 +216,7 @@ class AsyncBackend:
         self.async_client.headers.update(
             {
                 "Authorization": f"Bearer {self.api_key}",
-                "User-Agent": f"tpuf-python/{tpuf.VERSION} {{httpx._client.USER_AGENT}}",
+                "User-Agent": f"tpuf-python/{tpuf.VERSION} {httpx._client.USER_AGENT}",
             }
         )
 
