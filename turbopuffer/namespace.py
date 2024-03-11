@@ -1,11 +1,19 @@
 import sys
+from typing import Dict, Iterable, List, Optional, Union, overload
+
 import iso8601
-from turbopuffer.error import APIError
-from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
-from turbopuffer.backend import Backend
-from turbopuffer.query import VectorQuery, FilterTuple
-from typing import Dict, List, Optional, Iterable, Union, overload
+
 import turbopuffer as tpuf
+from turbopuffer.backend import Backend
+from turbopuffer.error import APIError
+from turbopuffer.query import FilterTuple, VectorQuery
+from turbopuffer.vectors import (
+    Cursor,
+    VectorColumns,
+    VectorResult,
+    VectorRow,
+    batch_iter,
+)
 
 
 class Namespace:
@@ -32,7 +40,7 @@ class Namespace:
         self.backend = Backend(api_key)
 
     def __str__(self) -> str:
-        return f'tpuf-namespace:{self.name}'
+        return f"tpuf-namespace:{self.name}"
 
     def __eq__(self, other):
         if isinstance(other, Namespace):
@@ -41,25 +49,27 @@ class Namespace:
             return False
 
     def refresh_metadata(self):
-        response = self.backend.make_api_request('vectors', self.name, method='HEAD')
-        status_code = response.get('status_code')
+        response = self.backend.make_api_request("vectors", self.name, method="HEAD")
+        status_code = response.get("status_code")
         if status_code == 200:
-            headers = response.get('headers', dict())
-            dimensions = int(headers.get('x-turbopuffer-dimensions', '0'))
-            approx_count = int(headers.get('x-turbopuffer-approx-num-vectors', '0'))
+            headers = response.get("headers", dict())
+            dimensions = int(headers.get("x-turbopuffer-dimensions", "0"))
+            approx_count = int(headers.get("x-turbopuffer-approx-num-vectors", "0"))
             self.metadata = {
-                'exists': dimensions != 0,
-                'dimensions': dimensions,
-                'approx_count': approx_count,
+                "exists": dimensions != 0,
+                "dimensions": dimensions,
+                "approx_count": approx_count,
             }
         elif status_code == 404:
             self.metadata = {
-                'exists': False,
-                'dimensions': 0,
-                'approx_count': 0,
+                "exists": False,
+                "dimensions": 0,
+                "approx_count": 0,
             }
         else:
-            raise APIError(response.status_code, 'Unexpected status code', response.get('content'))
+            raise APIError(
+                response.status_code, "Unexpected status code", response.get("content")
+            )
 
     def exists(self) -> bool:
         """
@@ -67,29 +77,31 @@ class Namespace:
         """
         # Always refresh the exists check since metadata from namespaces() might be delayed.
         self.refresh_metadata()
-        return self.metadata['exists']
+        return self.metadata["exists"]
 
     def dimensions(self) -> int:
         """
         Returns the number of vector dimensions stored in this namespace.
         """
-        if self.metadata is None or 'dimensions' not in self.metadata:
+        if self.metadata is None or "dimensions" not in self.metadata:
             self.refresh_metadata()
-        return self.metadata.pop('dimensions', 0)
+        return self.metadata.pop("dimensions", 0)
 
     def approx_count(self) -> int:
         """
         Returns the approximate number of vectors stored in this namespace.
         """
-        if self.metadata is None or 'approx_count' not in self.metadata:
+        if self.metadata is None or "approx_count" not in self.metadata:
             self.refresh_metadata()
-        return self.metadata.pop('approx_count', 0)
+        return self.metadata.pop("approx_count", 0)
 
     @overload
-    def upsert(self,
-               ids: Union[List[int], List[str]],
-               vectors: List[List[float]],
-               attributes: Optional[Dict[str, List[Optional[str]]]] = None) -> None:
+    def upsert(
+        self,
+        ids: Union[List[int], List[str]],
+        vectors: List[List[float]],
+        attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+    ) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -131,9 +143,11 @@ class Namespace:
     def upsert(self, data=None, ids=None, vectors=None, attributes=None) -> None:
         if data is None:
             if ids is not None and vectors is not None:
-                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes))
+                return self.upsert(
+                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes)
+                )
             else:
-                raise ValueError('upsert() requires both ids= and vectors= be set.')
+                raise ValueError("upsert() requires both ids= and vectors= be set.")
         elif ids is not None and attributes is None:
             # Offset arguments to handle positional arguments case with no data field.
             return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors))
@@ -142,13 +156,21 @@ class Namespace:
             # None == pd.ndarray is an ambiguous comparison in this case.
             for vec in data.vectors:
                 if vec is None:
-                    raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
-            response = self.backend.make_api_request('vectors', self.name, payload=data.__dict__)
+                    raise ValueError(
+                        "upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead."
+                    )
+            response = self.backend.make_api_request(
+                "vectors", self.name, payload=data.__dict__
+            )
 
-            assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
+            assert (
+                response.get("content", dict()).get("status", "") == "OK"
+            ), f"Invalid upsert() response: {response}"
             self.metadata = None  # Invalidate cached metadata
         elif isinstance(data, VectorRow):
-            raise ValueError('upsert() should be called on a list of vectors, got single vector.')
+            raise ValueError(
+                "upsert() should be called on a list of vectors, got single vector."
+            )
         elif isinstance(data, list):
             if isinstance(data[0], dict):
                 return self.upsert(VectorColumns.from_rows(data))
@@ -159,30 +181,34 @@ class Namespace:
                     self.upsert(columns)
                 return
             else:
-                raise ValueError(f'Unsupported list data type: {type(data[0])}')
+                raise ValueError(f"Unsupported list data type: {type(data[0])}")
         elif isinstance(data, dict):
-            if 'id' in data:
-                raise ValueError('upsert() should be called on a list of vectors, got single vector.')
-            elif 'ids' in data:
+            if "id" in data:
+                raise ValueError(
+                    "upsert() should be called on a list of vectors, got single vector."
+                )
+            elif "ids" in data:
                 return self.upsert(VectorColumns.from_dict(data))
             else:
-                raise ValueError('Provided dict is missing ids.')
-        elif 'pandas' in sys.modules and isinstance(data, sys.modules['pandas'].DataFrame):
-            if 'id' not in data.keys():
-                raise ValueError('Provided pd.DataFrame is missing an id column.')
-            if 'vector' not in data.keys():
-                raise ValueError('Provided pd.DataFrame is missing a vector column.')
+                raise ValueError("Provided dict is missing ids.")
+        elif "pandas" in sys.modules and isinstance(
+            data, sys.modules["pandas"].DataFrame
+        ):
+            if "id" not in data.keys():
+                raise ValueError("Provided pd.DataFrame is missing an id column.")
+            if "vector" not in data.keys():
+                raise ValueError("Provided pd.DataFrame is missing a vector column.")
             # start = time.monotonic()
             for i in range(0, len(data), tpuf.upsert_batch_size):
-                batch = data[i:i+tpuf.upsert_batch_size]
+                batch = data[i : i + tpuf.upsert_batch_size]
                 attributes = dict()
                 for key, values in batch.items():
-                    if key != 'id' and key != 'vector':
+                    if key != "id" and key != "vector":
                         attributes[key] = values.tolist()
                 columns = tpuf.VectorColumns(
-                    ids=batch['id'].tolist(),
-                    vectors=batch['vector'].transform(lambda x: x.tolist()).tolist(),
-                    attributes=attributes
+                    ids=batch["id"].tolist(),
+                    vectors=batch["vector"].transform(lambda x: x.tolist()).tolist(),
+                    attributes=attributes,
                 )
                 # time_diff = time.monotonic() - start
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
@@ -205,7 +231,7 @@ class Namespace:
                 # start = time.monotonic()
             return
         else:
-            raise ValueError(f'Unsupported data type: {type(data)}')
+            raise ValueError(f"Unsupported data type: {type(data)}")
 
     def delete(self, ids: Union[int, str, List[int], List[str]]) -> None:
         """
@@ -213,47 +239,58 @@ class Namespace:
         """
 
         if isinstance(ids, int) or isinstance(ids, str):
-            response = self.backend.make_api_request('vectors', self.name, payload={
-                'ids': [ids],
-                'vectors': [None],
-            })
+            response = self.backend.make_api_request(
+                "vectors",
+                self.name,
+                payload={
+                    "ids": [ids],
+                    "vectors": [None],
+                },
+            )
         elif isinstance(ids, list):
-            response = self.backend.make_api_request('vectors', self.name, payload={
-                'ids': ids,
-                'vectors': [None] * len(ids),
-            })
+            response = self.backend.make_api_request(
+                "vectors",
+                self.name,
+                payload={
+                    "ids": ids,
+                    "vectors": [None] * len(ids),
+                },
+            )
         else:
-            raise ValueError(f'Unsupported ids type: {type(ids)}')
+            raise ValueError(f"Unsupported ids type: {type(ids)}")
 
-        assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid delete() response: {response}'
+        assert (
+            response.get("content", dict()).get("status", "") == "OK"
+        ), f"Invalid delete() response: {response}"
         self.metadata = None  # Invalidate cached metadata
 
     @overload
-    def query(self,
-              vector: Optional[List[float]] = None,
-              distance_metric: Optional[str] = None,
-              top_k: int = 10,
-              include_vectors: bool = False,
-              include_attributes: Optional[Union[List[str], bool]] = None,
-              filters: Optional[Dict[str, List[FilterTuple]]] = None) -> VectorResult:
-        ...
+    def query(
+        self,
+        vector: Optional[List[float]] = None,
+        distance_metric: Optional[str] = None,
+        top_k: int = 10,
+        include_vectors: bool = False,
+        include_attributes: Optional[Union[List[str], bool]] = None,
+        filters: Optional[Dict[str, List[FilterTuple]]] = None,
+    ) -> VectorResult: ...
 
     @overload
-    def query(self, query_data: VectorQuery) -> VectorResult:
-        ...
+    def query(self, query_data: VectorQuery) -> VectorResult: ...
 
     @overload
-    def query(self, query_data: dict) -> VectorResult:
-        ...
+    def query(self, query_data: dict) -> VectorResult: ...
 
-    def query(self,
-              query_data=None,
-              vector=None,
-              distance_metric=None,
-              top_k=None,
-              include_vectors=None,
-              include_attributes=None,
-              filters=None) -> VectorResult:
+    def query(
+        self,
+        query_data=None,
+        vector=None,
+        distance_metric=None,
+        top_k=None,
+        include_vectors=None,
+        include_attributes=None,
+        filters=None,
+    ) -> VectorResult:
         """
         Searches vectors matching the search query.
 
@@ -261,23 +298,29 @@ class Namespace:
         """
 
         if query_data is None:
-            return self.query(VectorQuery(
-                vector=vector,
-                distance_metric=distance_metric,
-                top_k=top_k,
-                include_vectors=include_vectors,
-                include_attributes=include_attributes,
-                filters=filters
-            ))
+            return self.query(
+                VectorQuery(
+                    vector=vector,
+                    distance_metric=distance_metric,
+                    top_k=top_k,
+                    include_vectors=include_vectors,
+                    include_attributes=include_attributes,
+                    filters=filters,
+                )
+            )
         if not isinstance(query_data, VectorQuery):
             if isinstance(query_data, dict):
                 query_data = VectorQuery.from_dict(query_data)
             else:
-                raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
+                raise ValueError(
+                    f"query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}"
+                )
 
-        response = self.backend.make_api_request('vectors', self.name, 'query', payload=query_data.__dict__)
-        result = VectorResult(response.get('content', dict()), namespace=self)
-        result.performance = response.get('performance')
+        response = self.backend.make_api_request(
+            "vectors", self.name, "query", payload=query_data.__dict__
+        )
+        result = VectorResult(response.get("content", dict()), namespace=self)
+        result.performance = response.get("performance")
         return result
 
     def vectors(self, cursor: Optional[Cursor] = None) -> VectorResult:
@@ -288,11 +331,13 @@ class Namespace:
         If you want to look up vectors by ID, use the query function with an id filter.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, query={'cursor': cursor})
-        content = response.get('content', dict())
-        next_cursor = content.pop('next_cursor', None)
+        response = self.backend.make_api_request(
+            "vectors", self.name, query={"cursor": cursor}
+        )
+        content = response.get("content", dict())
+        next_cursor = content.pop("next_cursor", None)
         result = VectorResult(content, namespace=self, next_cursor=next_cursor)
-        result.performance = response.get('performance')
+        result.performance = response.get("performance")
         return result
 
     def delete_all_indexes(self) -> None:
@@ -300,16 +345,22 @@ class Namespace:
         Deletes all indexes in a namespace.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, 'index', method='DELETE')
-        assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all_indexes() response: {response}'
+        response = self.backend.make_api_request(
+            "vectors", self.name, "index", method="DELETE"
+        )
+        assert (
+            response.get("content", dict()).get("status", "") == "ok"
+        ), f"Invalid delete_all_indexes() response: {response}"
 
     def delete_all(self) -> None:
         """
         Deletes all data as well as all indexes.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, method='DELETE')
-        assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
+        response = self.backend.make_api_request("vectors", self.name, method="DELETE")
+        assert (
+            response.get("content", dict()).get("status", "") == "ok"
+        ), f"Invalid delete_all() response: {response}"
         self.metadata = None  # Invalidate cached metadata
 
     def recall(self, num=20, top_k=10) -> float:
@@ -322,10 +373,12 @@ class Namespace:
         Recall is calculated as the ratio of matching vectors between the two search results.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
-        content = response.get('content', dict())
-        assert 'recall' in content, f'Invalid recall() response: {response}'
-        return float(content.get('recall'))
+        response = self.backend.make_api_request(
+            "vectors", self.name, "_debug", "recall", query={"num": num, "top_k": top_k}
+        )
+        content = response.get("content", dict())
+        assert "recall" in content, f"Invalid recall() response: {response}"
+        return float(content.get("recall"))
 
 
 class NamespaceIterator:
@@ -342,7 +395,12 @@ class NamespaceIterator:
     offset: int = 0
     next_cursor: Optional[Cursor] = None
 
-    def __init__(self, backend: Backend, initial_set: Union[List[Namespace], List[dict]] = [], next_cursor: Optional[Cursor] = None):
+    def __init__(
+        self,
+        backend: Backend,
+        initial_set: Union[List[Namespace], List[dict]] = [],
+        next_cursor: Optional[Cursor] = None,
+    ):
         self.backend = backend
         self.index = -1
         self.offset = 0
@@ -352,18 +410,22 @@ class NamespaceIterator:
             if isinstance(initial_set[0], Namespace):
                 self.namespaces = initial_set
             else:
-                self.namespaces = NamespaceIterator.load_namespaces(backend.api_key, initial_set)
+                self.namespaces = NamespaceIterator.load_namespaces(
+                    backend.api_key, initial_set
+                )
 
-    def load_namespaces(api_key: Optional[str], initial_set: List[dict]) -> List[Namespace]:
+    def load_namespaces(
+        api_key: Optional[str], initial_set: List[dict]
+    ) -> List[Namespace]:
         output = []
         for input in initial_set:
-            ns = tpuf.Namespace(input['id'], api_key=api_key)
+            ns = tpuf.Namespace(input["id"], api_key=api_key)
             ns.metadata = {
-                'exists': True,
-                'dimensions': input['dimensions'],
-                'approx_count': input['approx_count'],
+                "exists": True,
+                "dimensions": input["dimensions"],
+                "approx_count": input["approx_count"],
                 # rfc3339 returned by the server is compatible with iso8601
-                'created_at': iso8601.parse_date(input['created_at']),
+                "created_at": iso8601.parse_date(input["created_at"]),
             }
             output.append(ns)
 
@@ -374,10 +436,12 @@ class NamespaceIterator:
         if not self.next_cursor and self.offset == 0:
             return str(str_list)
         else:
-            return ("NamespaceIterator("
-                    f"offset={self.offset}, "
-                    f"next_cursor='{self.next_cursor}', "
-                    f"namespaces={str_list})")
+            return (
+                "NamespaceIterator("
+                f"offset={self.offset}, "
+                f"next_cursor='{self.next_cursor}', "
+                f"namespaces={str_list})"
+            )
 
     def __len__(self) -> int:
         assert self.offset == 0, "Can't call len(NamespaceIterator) after iterating"
@@ -401,7 +465,7 @@ class NamespaceIterator:
             self.next_cursor = None
         return self.namespaces[index]
 
-    def __iter__(self) -> 'NamespaceIterator':
+    def __iter__(self) -> "NamespaceIterator":
         assert self.offset == 0, "Can't iterate over NamespaceIterator multiple times"
         return NamespaceIterator(self.backend, self.namespaces, self.next_cursor)
 
@@ -413,14 +477,15 @@ class NamespaceIterator:
             raise StopIteration
         else:
             response = self.backend.make_api_request(
-                'vectors',
-                query={'cursor': self.next_cursor}
+                "vectors", query={"cursor": self.next_cursor}
             )
-            content = response.get('content', dict())
+            content = response.get("content", dict())
             self.offset += len(self.namespaces)
             self.index = -1
-            self.next_cursor = content.pop('next_cursor', None)
-            self.namespaces = NamespaceIterator.load_namespaces(self.backend.api_key, content.pop('namespaces', list()))
+            self.next_cursor = content.pop("next_cursor", None)
+            self.namespaces = NamespaceIterator.load_namespaces(
+                self.backend.api_key, content.pop("namespaces", list())
+            )
             return self.__next__()
 
 
@@ -430,7 +495,7 @@ def namespaces(api_key: Optional[str] = None) -> Iterable[Namespace]:
     If no api_key is provided, the globally configured API key will be used.
     """
     backend = Backend(api_key)
-    response = backend.make_api_request('vectors')
-    content = response.get('content', dict())
-    next_cursor = content.pop('next_cursor', None)
-    return NamespaceIterator(backend, content.pop('namespaces', list()), next_cursor)
+    response = backend.make_api_request("vectors")
+    content = response.get("content", dict())
+    next_cursor = content.pop("next_cursor", None)
+    return NamespaceIterator(backend, content.pop("namespaces", list()), next_cursor)
