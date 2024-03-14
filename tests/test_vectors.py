@@ -11,13 +11,13 @@ def test_upsert_rows():
     ns.upsert([
         {'id': 2, 'vector': [2, 2]},
         {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}},
-    ])
+    ], distance_metric='euclidean_squared')
 
     # Test upsert multiple typed rows
     ns.upsert([
         tpuf.VectorRow(id=2, vector=[2, 2]),
         tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}),
-    ])
+        ], distance_metric='euclidean_squared')
 
     # Test upsert lazy row iterator
     ns.upsert(tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'}) for i in range(10, 100))
@@ -349,8 +349,9 @@ def test_string_ids():
                 'test': 'rows',
                 'hello': 'world'
             }
-        ) for i, id in enumerate(vec_ids)
-    ][4:])
+        ) for i, id in enumerate(vec_ids)][4:],
+        distance_metric='euclidean_squared',
+    )
 
     # Check to make sure the vectors were stored as expected
     results = ns.vectors()
@@ -418,3 +419,31 @@ def test_string_ids():
         assert abs(row.dist - expected[i].dist) < 0.000001
 
     ns.delete_all()
+
+def test_attribute_types():
+    ns = tpuf.Namespace(tests.test_prefix + "client_test_types")
+
+    # Test upsert multiple dict rows
+    ns.upsert(
+        [
+            {
+                "id": 7,
+                "vector": [0.7, 0.7],
+                "attributes": {"count": 1, "users": ["jan", "simon"]},
+            },
+            {
+                "id": 9,
+                "vector": [0.7, 0.7],
+                "attributes": {"count": 2, "users": ["bojan", "morgan", "simon"]},
+            },
+        ],
+        distance_metric='euclidean_squared',
+    )
+
+    results = ns.query(
+        top_k=5,
+        vector=[0.0, 0.0],
+        distance_metric="euclidean_squared",
+        filters={"count": [["Gt", 1]], "users": [["In", "simon"]]},
+    )
+    assert len(results) == 1
