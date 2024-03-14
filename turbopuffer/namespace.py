@@ -156,6 +156,7 @@ class Namespace:
         ids: Union[List[int], List[str]],
         vectors: List[List[float]],
         attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+        distance_metric: Optional[str] = None,
     ) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
@@ -166,7 +167,7 @@ class Namespace:
         ...
 
     @overload
-    def upsert(self, data: Union[dict, VectorColumns]) -> None:
+    def upsert(self, data: Union[dict, VectorColumns], distance_metric: Optional[str] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -176,7 +177,8 @@ class Namespace:
         ...
 
     @overload
-    def upsert(self, data: Union[Iterable[dict], Iterable[VectorRow]]) -> None:
+    def upsert(self, data: Union[Iterable[dict], Iterable[VectorRow]],
+               distance_metric: Optional[str] = None) -> None:
         """
         Creates or updates a multiple vectors provided as a list or iterator.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -186,7 +188,8 @@ class Namespace:
         ...
 
     @overload
-    def upsert(self, data: VectorResult) -> None:
+    def upsert(self, data: VectorResult,
+               distance_metric: Optional[str] = None) -> None:
         """
         Creates or updates multiple vectors.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -195,17 +198,18 @@ class Namespace:
         """
         ...
 
-    def upsert(self, data=None, ids=None, vectors=None, attributes=None) -> None:
+    def upsert(self, data=None, ids=None, vectors=None, attributes=None, distance_metric=None) -> None:
         if data is None:
             if ids is not None and vectors is not None:
                 return self.upsert(
-                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes)
+                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes, distance_metric=distance_metric)
                 )
+                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes), distance_metric=distance_metric)
             else:
                 raise ValueError("upsert() requires both ids= and vectors= be set.")
         elif ids is not None and attributes is None:
             # Offset arguments to handle positional arguments case with no data field.
-            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors))
+            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), distance_metric=distance_metric,)
         elif isinstance(data, VectorColumns):
             # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
             # None == pd.ndarray is an ambiguous comparison in this case.
@@ -214,10 +218,12 @@ class Namespace:
                     raise ValueError(
                         "upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead."
                     )
-            response = self.backend.make_api_request(
-                "vectors", self.name, payload=data.__dict__
+            dist_metric = (
+                {"distance_metric": distance_metric} if distance_metric else {}
             )
-
+            response = self.backend.make_api_request(
+                "vectors", self.name, payload={**data.__dict__, **dist_metric}
+            )
             assert (
                 response.get("content", dict()).get("status", "") == "OK"
             ), f"Invalid upsert() response: {response}"
@@ -228,22 +234,20 @@ class Namespace:
             )
         elif isinstance(data, list):
             if isinstance(data[0], dict):
-                return self.upsert(VectorColumns.from_rows(data))
+                return self.upsert(VectorColumns.from_rows(data), distance_metric=distance_metric)
             elif isinstance(data[0], VectorRow):
-                return self.upsert(VectorColumns.from_rows(data))
+                return self.upsert(VectorColumns.from_rows(data), distance_metric=distance_metric)
             elif isinstance(data[0], VectorColumns):
                 for columns in data:
-                    self.upsert(columns)
+                    self.upsert(columns, distance_metric=distance_metric)
                 return
             else:
                 raise ValueError(f"Unsupported list data type: {type(data[0])}")
         elif isinstance(data, dict):
-            if "id" in data:
-                raise ValueError(
-                    "upsert() should be called on a list of vectors, got single vector."
-                )
-            elif "ids" in data:
-                return self.upsert(VectorColumns.from_dict(data))
+            if 'id' in data:
+                raise ValueError('upsert() should be called on a list of vectors, got single vector.')
+            elif 'ids' in data:
+                return self.upsert(VectorColumns.from_dict(data), distance_metric=distance_metric)
             else:
                 raise ValueError("Provided dict is missing ids.")
         elif "pandas" in sys.modules and isinstance(
@@ -269,7 +273,7 @@ class Namespace:
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
                 # print(columns)
-                self.upsert(columns)
+                self.upsert(columns, distance_metric=distance_metric)
                 # time_diff = time.monotonic() - before
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -280,7 +284,7 @@ class Namespace:
                 # time_diff = time.monotonic() - start
                 # print('Batch begin:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
-                self.upsert(batch)
+                self.upsert(batch, distance_metric=distance_metric)
                 # time_diff = time.monotonic() - before
                 # print('Batch time:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -294,6 +298,7 @@ class Namespace:
         ids: Union[List[int], List[str]],
         vectors: List[List[float]],
         attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+        distance_metric: Optional[str] = None,
     ) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
@@ -336,19 +341,19 @@ class Namespace:
         ...
 
     async def async_upsert(
-        self, data=None, ids=None, vectors=None, attributes=None
+        self, data=None, ids=None, vectors=None, attributes=None, distance_metric=None,
     ) -> None:
         if data is None:
             if ids is not None and vectors is not None:
                 return await self.async_upsert(
-                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes)
+                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes, distance_metric=distance_metric)
                 )
             else:
                 raise ValueError("upsert() requires both ids= and vectors= be set.")
         elif ids is not None and attributes is None:
             # Offset arguments to handle positional arguments case with no data field.
             return await self.async_upsert(
-                VectorColumns(ids=data, vectors=ids, attributes=vectors)
+                VectorColumns(ids=data, vectors=ids, attributes=vectors, distance_metric=distance_metric)
             )
         elif isinstance(data, VectorColumns):
             # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
@@ -358,8 +363,11 @@ class Namespace:
                     raise ValueError(
                         "upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead."
                     )
+            dist_metric = (
+                {"distance_metric": distance_metric} if distance_metric else {}
+            )
             response = await self.async_backend.make_api_request(
-                "vectors", self.name, payload=data.__dict__
+                "vectors", self.name, payload={**data.__dict__, **dist_metric}
             )
 
             assert (
