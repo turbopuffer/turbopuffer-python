@@ -31,7 +31,8 @@ if ns.exists():
 ns.upsert(
     ids=[1, 2],
     vectors=[[0.1, 0.2], [0.3, 0.4]],
-    attributes={'name': ['foo', 'foos']}
+    attributes={'name': ['foo', 'foos']},
+    distance_metric='cosine_distance',
 )
 
 # Alternatively, upsert using a row iterator
@@ -39,8 +40,9 @@ ns.upsert(
     {
         'id': id,
         'vector': [id/10, id/10],
-        'attributes': {'name': 'food'}
-    } for id in range(3, 10)
+        'attributes': {'name': 'food', 'num': 8}
+    } for id in range(3, 10),
+    distance_metric='cosine_distance',
 )
 
 # Query your dataset
