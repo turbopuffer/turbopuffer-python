@@ -50,7 +50,7 @@ vectors = ns.query(
     vector=[0.15, 0.22],
     distance_metric='cosine_distance',
     top_k=10,
-    filters={ 'name': [['Glob', 'foo*'], ['NotEq', 'food']] },
+    filters={ 'name': ['And', [['Glob', 'foo*'], ['NotEq', 'food']]] },
     include_attributes=['name'],
     include_vectors=True
 )
