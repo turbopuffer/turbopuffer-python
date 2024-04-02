@@ -1,18 +1,18 @@
 from dataclasses import dataclass
 import sys
 from typing import Optional, List, Tuple, Union, Dict
-from enum import Enum
 
 # Refer to turbopuffer docs for valid operator names
 FilterOperator = str
 
-FilterValue = str | int | List[str] | List[int]
+FilterValue = Union[str, int, List[str], List[int]]
 FilterCondition = Tuple[str, FilterOperator, FilterValue]
 
 LegacyFilterCondition = Tuple[FilterOperator, FilterValue]
 LegacyFilterDict = Dict[str, List[LegacyFilterCondition]]
 
 Filters = Tuple[str, List["Filters"]] | FilterCondition | LegacyFilterDict
+
 
 @dataclass
 class VectorQuery:
