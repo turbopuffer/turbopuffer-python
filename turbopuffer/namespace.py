@@ -3,7 +3,7 @@ import iso8601
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
-from turbopuffer.query import VectorQuery, FilterTuple
+from turbopuffer.query import VectorQuery, Filters
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 
@@ -241,7 +241,7 @@ class Namespace:
               top_k: int = 10,
               include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
-              filters: Optional[Dict[str, List[FilterTuple]]] = None) -> VectorResult:
+              filters: Optional[Filters] = None) -> VectorResult:
         ...
 
     @overload
