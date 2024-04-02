@@ -447,3 +447,39 @@ def test_attribute_types():
         filters={"count": [["Gt", 1]], "users": [["In", "simon"]]},
     )
     assert len(results) == 1
+
+    results = ns.query(
+        top_k=5,
+        vector=[0.0, 0.0],
+        distance_metric="euclidean_squared",
+        filters=["Or": [
+            ["count", "Eq", 1],
+            ["users", "Contains", "bojan"],
+        ]],
+    )
+    assert len(results) == 2
+
+    results = ns.query(
+        top_k=5,
+        vector=[0.0, 0.0],
+        distance_metric="euclidean_squared",
+        filters=["And": [
+            ["count", "Eq", 1],
+            ["users", "Contains", "bojan"],
+        ]],
+    )
+    assert len(results) == 0
+
+    results = ns.query(
+        top_k=5,
+        vector=[0.0, 0.0],
+        distance_metric="euclidean_squared",
+        filters=["And": [
+            ["count", "Eq", 1],
+            ["Or", [
+                ["users", "Contains", "bojan"],
+                ["count", "Gt", 0],
+            ]],
+        ]],
+    )
+    assert len(results) == 1
