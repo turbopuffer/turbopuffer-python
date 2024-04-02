@@ -452,7 +452,7 @@ def test_attribute_types():
         top_k=5,
         vector=[0.0, 0.0],
         distance_metric="euclidean_squared",
-        filters=["Or": [
+        filters=["Or", [
             ["count", "Eq", 1],
             ["users", "Contains", "bojan"],
         ]],
@@ -463,7 +463,7 @@ def test_attribute_types():
         top_k=5,
         vector=[0.0, 0.0],
         distance_metric="euclidean_squared",
-        filters=["And": [
+        filters=["And", [
             ["count", "Eq", 1],
             ["users", "Contains", "bojan"],
         ]],
@@ -474,7 +474,7 @@ def test_attribute_types():
         top_k=5,
         vector=[0.0, 0.0],
         distance_metric="euclidean_squared",
-        filters=["And": [
+        filters=["And", [
             ["count", "Eq", 1],
             ["Or", [
                 ["users", "Contains", "bojan"],
