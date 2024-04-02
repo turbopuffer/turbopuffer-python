@@ -3,11 +3,11 @@ from typing import Dict, Iterable, List, Optional, Union, overload
 
 import httpx
 import iso8601
-
+from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 from turbopuffer.backend import AsyncBackend, Backend
 from turbopuffer.error import APIError
-from turbopuffer.query import FilterTuple, VectorQuery
+from turbopuffer.query import FilterTuple, VectorQuery, Filters
 from turbopuffer.vectors import (
     Cursor,
     VectorColumns,
@@ -503,15 +503,14 @@ class Namespace:
         self.metadata = None  # Invalidate cached metadata
 
     @overload
-    def query(
-        self,
-        vector: Optional[List[float]] = None,
-        distance_metric: Optional[str] = None,
-        top_k: int = 10,
-        include_vectors: bool = False,
-        include_attributes: Optional[Union[List[str], bool]] = None,
-        filters: Optional[Dict[str, List[FilterTuple]]] = None,
-    ) -> VectorResult: ...
+    def query(self,
+              vector: Optional[List[float]] = None,
+              distance_metric: Optional[str] = None,
+              top_k: int = 10,
+              include_vectors: bool = False,
+              include_attributes: Optional[Union[List[str], bool]] = None,
+              filters: Optional[Filters] = None) -> VectorResult:
+        ...
 
     @overload
     def query(self, query_data: VectorQuery) -> VectorResult: ...
@@ -569,7 +568,7 @@ class Namespace:
         top_k: int = 10,
         include_vectors: bool = False,
         include_attributes: Optional[Union[List[str], bool]] = None,
-        filters: Optional[Dict[str, List[FilterTuple]]] = None,
+        filters: Optional[Filters] = None,
     ) -> VectorResult: ...
 
     @overload

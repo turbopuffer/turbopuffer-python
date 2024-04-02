@@ -34,6 +34,6 @@ except ImportError:
 
 from turbopuffer.error import APIError, AuthenticationError, TurbopufferError
 from turbopuffer.namespace import Namespace, namespaces
-from turbopuffer.query import FilterTuple, VectorQuery
-from turbopuffer.vectors import VectorColumns, VectorResult, VectorRow
-from turbopuffer.version import VERSION
+from turbopuffer.vectors import VectorColumns, VectorRow, VectorResult
+from turbopuffer.query import VectorQuery, Filters
+from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
