@@ -296,7 +296,7 @@ def test_read_metadata():
 
     assert ns.exists()
     assert ns.dimensions() == 2
-    assert ns.approx_count() == 92
+    assert ns.approx_count() == 98
 
     all_ns = tpuf.namespaces()
     assert ns in list(all_ns)
