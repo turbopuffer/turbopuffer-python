@@ -142,12 +142,20 @@ class Namespace:
             await self.async_refresh_metadata()
         return self.metadata.pop("dimensions", 0)
 
-    async def approx_count(self) -> int:
+    async def async_approx_count(self) -> int:
         """
         Returns the approximate number of vectors stored in this namespace.
         """
         if self.metadata is None or "approx_count" not in self.metadata:
             await self.async_refresh_metadata()
+        return self.metadata.pop("approx_count", 0)
+
+    def approx_count(self) -> int:
+        """
+        Returns the approximate number of vectors stored in this namespace"
+        """
+        if self.metadata is None or "approx_count" not in self.metadata:
+            self.refresh_metadata()
         return self.metadata.pop("approx_count", 0)
 
     @overload

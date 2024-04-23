@@ -100,7 +100,7 @@ class Backend:
             self.api_base_url + "/" + "/".join(args),
             params=query,
             headers=updated_headers,
-            data=gzip_payload,
+            content=gzip_payload,
         )
 
         retry_attempt = 0
@@ -277,7 +277,7 @@ class AsyncBackend:
             self.api_base_url + "/" + "/".join(args),
             params=query,
             headers=updated_headers,
-            data=gzip_payload,
+            content=gzip_payload,
         )
 
         retry_attempt = 0
