@@ -67,6 +67,8 @@ class Backend:
         gzip_payload = None
         updated_headers = {}
 
+        print("doing request to", args)
+
         if payload is not None:
             payload_start = time.monotonic()
             if isinstance(payload, dict):
@@ -76,6 +78,7 @@ class Backend:
                 json_payload = payload
             else:
                 raise ValueError(f"Unsupported POST payload type: {type(payload)}")
+            print("json payload", json_payload);
             gzip_start = time.monotonic()
             gzip_payload = gzip.compress(json_payload, compresslevel=1)
             performance["gzip_time"] = time.monotonic() - gzip_start
@@ -88,6 +91,9 @@ class Backend:
                     "Content-Encoding": "gzip",
                 }
             )
+
+        print("headers", updated_headers)
+        print("params", query)
 
         prepared = self.client.build_request(
             method or "GET",

@@ -1,4 +1,5 @@
 import sys
+from dataclasses import dataclass
 from typing import Optional, List, Tuple, Union, Dict
 
 # Refer to turbopuffer docs for valid operator names

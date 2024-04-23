@@ -383,8 +383,11 @@ class VectorResult:
         elif self.next_cursor is None:
             raise StopIteration
         else:
+            query = {}
+            if self.next_cursor is not None:
+                query = {"cursor": self.next_cursor}
             response = self.namespace.backend.make_api_request(
-                "vectors", self.namespace.name, query={"cursor": self.next_cursor}
+                "vectors", self.namespace.name, query=query
             )
             content = response.get("content", dict())
             self.offset += len(self.data)

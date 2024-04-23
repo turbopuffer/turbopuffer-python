@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 from turbopuffer.backend import AsyncBackend, Backend
 from turbopuffer.error import APIError
-from turbopuffer.query import FilterTuple, VectorQuery, Filters
+from turbopuffer.query import VectorQuery, Filters
 from turbopuffer.vectors import (
     Cursor,
     VectorColumns,
@@ -202,14 +202,13 @@ class Namespace:
         if data is None:
             if ids is not None and vectors is not None:
                 return self.upsert(
-                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes, distance_metric=distance_metric)
+                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes), distance_metric=distance_metric
                 )
-                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes), distance_metric=distance_metric)
             else:
                 raise ValueError("upsert() requires both ids= and vectors= be set.")
         elif ids is not None and attributes is None:
             # Offset arguments to handle positional arguments case with no data field.
-            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), distance_metric=distance_metric,)
+            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), distance_metric=distance_metric)
         elif isinstance(data, VectorColumns):
             # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
             # None == pd.ndarray is an ambiguous comparison in this case.
@@ -626,9 +625,11 @@ class Namespace:
 
         If you want to look up vectors by ID, use the query function with an id filter.
         """
-
+        query = {}
+        if cursor is not None:
+            query = {"cursor": cursor}
         response = self.backend.make_api_request(
-            "vectors", self.name, query={"cursor": cursor}
+            "vectors", self.name, query=query
         )
         content = response.get("content", dict())
         next_cursor = content.pop("next_cursor", None)
@@ -643,9 +644,11 @@ class Namespace:
 
         If you want to look up vectors by ID, use the query function with an id filter.
         """
-
+        query = {}
+        if cursor is not None:
+            query = {"cursor": cursor}
         response = await self.async_backend.make_api_request(
-            "vectors", self.name, query={"cursor": cursor}
+            "vectors", self.name, query=query
         )
         content = response.get("content", dict())
         next_cursor = content.pop("next_cursor", None)
@@ -831,8 +834,11 @@ class NamespaceIterator:
         elif self.next_cursor is None:
             raise StopIteration
         else:
+            query = {}
+            if self.next_cursor is not None:
+                query = {"cursor": self.next_cursor}
             response = self.backend.make_api_request(
-                "vectors", query={"cursor": self.next_cursor}
+                "vectors", query=query
             )
             content = response.get("content", dict())
             self.offset += len(self.namespaces)
