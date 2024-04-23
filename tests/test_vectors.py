@@ -17,7 +17,8 @@ def test_upsert_rows():
                 "vector": [0.7, 0.7],
                 "attributes": {"hello": "world", "test": "rows"},
             },
-        ]
+        ],
+        distance_metric='euclidean_squared'
     )
 
     # Test upsert multiple typed rows
@@ -25,7 +26,8 @@ def test_upsert_rows():
         [
             tpuf.VectorRow(id=2, vector=[2, 2]),
             tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={"hello": "world"}),
-        ], distance_metric='euclidean_squared'
+        ],
+        distance_metric='euclidean_squared'
     )
 
     # Test upsert lazy row iterator
