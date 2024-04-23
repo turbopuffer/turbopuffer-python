@@ -228,8 +228,10 @@ class Namespace:
             dist_metric = (
                 {"distance_metric": distance_metric} if distance_metric else {}
             )
+            upsert_dict = data.__dict__
+            del upsert_dict["distances"] # Make sure we don't include this field in the JSON
             response = self.backend.make_api_request(
-                "vectors", self.name, payload={**data.__dict__, **dist_metric}
+                "vectors", self.name, payload={**upsert_dict, **dist_metric}
             )
             assert (
                 response.get("content", dict()).get("status", "") == "OK"
@@ -373,6 +375,8 @@ class Namespace:
             dist_metric = (
                 {"distance_metric": distance_metric} if distance_metric else {}
             )
+            upsert_dict = data.__dict__
+            del upsert_dict["distances"] # Make sure we don't include 'distances' in payload
             response = await self.async_backend.make_api_request(
                 "vectors", self.name, payload={**data.__dict__, **dist_metric}
             )
