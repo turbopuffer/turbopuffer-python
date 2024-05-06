@@ -357,7 +357,7 @@ class AsyncBackend:
             except httpx.HTTPError as http_err:
                 retry_attempt += 1
                 if retry_attempt < tpuf.max_retries:
-                    anyio.sleep(2**retry_attempt)
+                    await anyio.sleep(2**retry_attempt)
                 else:
                     print(f"Request failed after {retry_attempt} attempts...")
                     raise APIError(
