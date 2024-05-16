@@ -377,10 +377,6 @@ class NamespaceIterator:
             ns = tpuf.Namespace(input['id'], api_key=api_key)
             ns.metadata = {
                 'exists': True,
-                'dimensions': input['dimensions'],
-                'approx_count': input['approx_count'],
-                # rfc3339 returned by the server is compatible with iso8601
-                'created_at': iso8601.parse_date(input['created_at']),
             }
             output.append(ns)
 
