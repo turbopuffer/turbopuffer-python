@@ -1,5 +1,6 @@
 import sys
 import iso8601
+from datetime import datetime
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
@@ -51,12 +52,14 @@ class Namespace:
                 'exists': dimensions != 0,
                 'dimensions': dimensions,
                 'approx_count': approx_count,
+                'created_at': iso8601.parse_date(headers.get('x-turbopuffer-created-at')),
             }
         elif status_code == 404:
             self.metadata = {
                 'exists': False,
                 'dimensions': 0,
                 'approx_count': 0,
+                'created_at': None,
             }
         else:
             raise APIError(response.status_code, 'Unexpected status code', response.get('content'))
@@ -84,6 +87,14 @@ class Namespace:
         if self.metadata is None or 'approx_count' not in self.metadata:
             self.refresh_metadata()
         return self.metadata.pop('approx_count', 0)
+
+    def created_at(self) -> Optional[datetime]:
+        """
+        Returns the creation date of this namespace.
+        """
+        if self.metadata is None or 'created_at' not in self.metadata:
+            self.refresh_metadata()
+        return self.metadata.pop('created_at', None)
 
     @overload
     def upsert(self,
@@ -366,10 +377,6 @@ class NamespaceIterator:
             ns = tpuf.Namespace(input['id'], api_key=api_key)
             ns.metadata = {
                 'exists': True,
-                'dimensions': input['dimensions'],
-                'approx_count': input['approx_count'],
-                # rfc3339 returned by the server is compatible with iso8601
-                'created_at': iso8601.parse_date(input['created_at']),
             }
             output.append(ns)
 
