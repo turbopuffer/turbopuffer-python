@@ -2,6 +2,7 @@ import uuid
 import turbopuffer as tpuf
 import tests
 import pytest
+from datetime import datetime
 
 
 def test_upsert_rows():
@@ -298,6 +299,7 @@ def test_read_metadata():
     assert ns.exists()
     assert ns.dimensions() == 2
     assert ns.approx_count() == 98
+    assert type(ns.created_at()) == type(datetime.now())
 
     all_ns = tpuf.namespaces()
     assert ns in list(all_ns)
