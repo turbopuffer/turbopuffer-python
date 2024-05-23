@@ -1,6 +1,7 @@
 import uuid
 import turbopuffer as tpuf
 import tests
+import pytest
 from datetime import datetime
 
 
@@ -485,3 +486,12 @@ def test_attribute_types():
         ]],
     )
     assert len(results) == 1
+
+def test_not_found_error():
+    ns = tpuf.Namespace(tests.test_prefix + 'not_found')
+
+    with pytest.raises(tpuf.NotFoundError):
+        ns.query(
+            top_k=5,
+            vector=[0.0, 0.0],
+        )
