@@ -711,7 +711,7 @@ class Namespace:
         assert "recall" in content, f"Invalid recall() response: {response}"
         return float(content.get("recall"))
 
-    async def recall(self, num=20, top_k=10) -> float:
+    async def async_recall(self, num=20, top_k=10) -> float:
         """
         This function evaluates the recall performance of ANN queries in this namespace.
 
