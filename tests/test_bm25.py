@@ -66,3 +66,18 @@ def test_bm25():
         rank_by=["Sum", [["blabla", "BM25", "walrus tusk"], ["blabla", "BM25", "jumping fox"]]]
     )
     assert [item.id for item in results] == [2, 6]
+
+    # Upsert with row-based upsert format
+    ns.upsert(
+        [
+            tpuf.VectorRow(id=8, vector=[0.8, 0.8], attributes={ "blabla": "row based upsert format is cool" }),
+        ],
+        schema=schema,
+    )
+
+    # Query to make sure the new row is there
+    results = ns.query({
+        "top_k": 10,
+        "rank_by": ["blabla", "BM25", "row based upsert"]
+    })
+    assert [item.id for item in results] == [8]
