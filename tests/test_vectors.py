@@ -2,6 +2,8 @@ import uuid
 
 import tests
 import turbopuffer as tpuf
+import pytest
+from datetime import datetime
 
 
 def test_upsert_rows():
@@ -381,6 +383,7 @@ def test_read_metadata():
     assert ns.exists()
     assert ns.dimensions() == 2
     assert ns.approx_count() == 98
+    assert type(ns.created_at()) == type(datetime.now())
 
     all_ns = tpuf.namespaces()
     assert ns in list(all_ns)
@@ -562,3 +565,12 @@ def test_attribute_types():
         ]],
     )
     assert len(results) == 1
+
+def test_not_found_error():
+    ns = tpuf.Namespace(tests.test_prefix + 'not_found')
+
+    with pytest.raises(tpuf.NotFoundError):
+        ns.query(
+            top_k=5,
+            vector=[0.0, 0.0],
+        )

@@ -22,15 +22,17 @@ class VectorQuery:
     include_vectors: bool = False
     include_attributes: Optional[Union[List[str], bool]] = None
     filters: Optional[Filters] = None
+    rank_by: Optional[List[Union[str, List[str]]]] = None
 
     def from_dict(source: dict) -> "VectorQuery":
         return VectorQuery(
-            vector=source.get("vector"),
-            distance_metric=source.get("distance_metric"),
-            top_k=source.get("top_k"),
-            include_vectors=source.get("include_vectors"),
-            include_attributes=source.get("include_attributes"),
-            filters=source.get("filters"),
+            vector=source.get('vector'),
+            distance_metric=source.get('distance_metric'),
+            top_k=source.get('top_k'),
+            include_vectors=source.get('include_vectors'),
+            include_attributes=source.get('include_attributes'),
+            filters=source.get('filters'),
+            rank_by=source.get('rank_by'),
         )
 
     def __post_init__(self):
@@ -39,9 +41,7 @@ class VectorQuery:
                 self.vector, sys.modules["numpy"].ndarray
             ):
                 if self.vector.ndim != 1:
-                    raise ValueError(
-                        f"VectorQuery.vector must a 1d-array, got {self.vector.ndim} dimensions"
-                    )
+                    raise ValueError(f'VectorQuery.vector must be a 1d array, got {self.vector.ndim} dimensions')
             elif not isinstance(self.vector, list):
                 raise ValueError(
                     "VectorQuery.vector must be a list, got:", type(self.vector)
@@ -57,3 +57,9 @@ class VectorQuery:
         if self.filters is not None:
             if not isinstance(self.filters, dict) and not isinstance(self.filters, list):
                 raise ValueError('VectorQuery.filters must be a dict or list, got:', type(self.filters))
+        if self.rank_by is not None:
+            if not isinstance(self.rank_by, list):
+                raise ValueError('VectorQuery.rank_by must be a list, got:', type(self.rank_by))
+            for item in self.rank_by:
+                if not isinstance(item, str) and not isinstance(item, list):
+                    raise ValueError('VectorQuery.rank_by elements must be strings or lists, got:', type(item))

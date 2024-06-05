@@ -47,9 +47,7 @@ class VectorRow:
                 self.vector, sys.modules["numpy"].ndarray
             ):
                 if self.vector.ndim != 1:
-                    raise ValueError(
-                        f"VectorRow.vector must a 1d-array, got {self.vector.ndim} dimensions"
-                    )
+                    raise ValueError(f'VectorRow.vector must be a 1d array, got {self.vector.ndim} dimensions')
             elif not isinstance(self.vector, list):
                 raise ValueError(
                     "VectorRow.vector must be a list, got:", type(self.vector)
@@ -100,18 +98,14 @@ class VectorColumns:
             self.ids, sys.modules["numpy"].ndarray
         ):
             if self.ids.ndim != 1:
-                raise ValueError(
-                    f"VectorColumns.ids must a 1d-array, got {self.ids.ndim} dimensions"
-                )
+                raise ValueError(f'VectorColumns.ids must be a 1d array, got {self.ids.ndim} dimensions')
         elif not isinstance(self.ids, list):
             raise ValueError("VectorColumns.ids must be a list, got:", type(self.ids))
         if "numpy" in sys.modules and isinstance(
             self.vectors, sys.modules["numpy"].ndarray
         ):
             if self.vectors.ndim != 2:
-                raise ValueError(
-                    f"VectorColumns.ids must a 2d-array, got {self.vectors.ndim} dimensions"
-                )
+                raise ValueError(f'VectorColumns.ids must be a 2d array, got {self.vectors.ndim} dimensions')
         elif not isinstance(self.vectors, list):
             raise ValueError(
                 "VectorColumns.vectors must be a list, got:", type(self.vectors)

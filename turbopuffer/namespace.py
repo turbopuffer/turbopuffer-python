@@ -3,6 +3,7 @@ from typing import Dict, Iterable, List, Optional, Union, overload
 
 import httpx
 import iso8601
+from datetime import datetime
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 from turbopuffer.backend import AsyncBackend, Backend
@@ -95,15 +96,17 @@ class Namespace:
             dimensions = int(headers.get("x-turbopuffer-dimensions", "0"))
             approx_count = int(headers.get("x-turbopuffer-approx-num-vectors", "0"))
             self.metadata = {
-                "exists": dimensions != 0,
-                "dimensions": dimensions,
-                "approx_count": approx_count,
+                'exists': dimensions != 0,
+                'dimensions': dimensions,
+                'approx_count': approx_count,
+                'created_at': iso8601.parse_date(headers.get('x-turbopuffer-created-at')),
             }
         elif status_code == 404:
             self.metadata = {
-                "exists": False,
-                "dimensions": 0,
-                "approx_count": 0,
+                'exists': False,
+                'dimensions': 0,
+                'approx_count': 0,
+                'created_at': None,
             }
         else:
             raise APIError(
@@ -158,14 +161,21 @@ class Namespace:
             self.refresh_metadata()
         return self.metadata.pop("approx_count", 0)
 
+    def created_at(self) -> Optional[datetime]:
+        """
+        Returns the creation date of this namespace.
+        """
+        if self.metadata is None or 'created_at' not in self.metadata:
+            self.refresh_metadata()
+        return self.metadata.pop('created_at', None)
+
     @overload
-    def upsert(
-        self,
-        ids: Union[List[int], List[str]],
-        vectors: List[List[float]],
-        attributes: Optional[Dict[str, List[Optional[str]]]] = None,
-        distance_metric: Optional[str] = None,
-    ) -> None:
+    def upsert(self,
+               ids: Union[List[int], List[str]],
+               vectors: List[List[float]],
+               attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+               schema: Optional[Dict] = None,
+               distance_metric: Optional[str] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -206,36 +216,33 @@ class Namespace:
         """
         ...
 
-    def upsert(self, data=None, ids=None, vectors=None, attributes=None, distance_metric=None) -> None:
+    def upsert(self, data=None, ids=None, vectors=None, attributes=None, schema=None, distance_metric=None) -> None:
         if data is None:
             if ids is not None and vectors is not None:
-                return self.upsert(
-                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes), distance_metric=distance_metric
-                )
+                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes), schema=schema, distance_metric=distance_metric)
             else:
-                raise ValueError("upsert() requires both ids= and vectors= be set.")
-        elif ids is not None and attributes is None:
+                raise ValueError('upsert() requires both ids= and vectors= be set.')
+        elif (ids is not None and attributes is None) or (attributes is not None and schema is None):
             # Offset arguments to handle positional arguments case with no data field.
-            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), distance_metric=distance_metric)
+            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), schema=attributes, distance_metric=distance_metric,)
         elif isinstance(data, VectorColumns):
             # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
             # None == pd.ndarray is an ambiguous comparison in this case.
             for vec in data.vectors:
                 if vec is None:
-                    raise ValueError(
-                        "upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead."
-                    )
-            dist_metric = (
-                {"distance_metric": distance_metric} if distance_metric else {}
-            )
-            upsert_dict = data.__dict__
-            del upsert_dict["distances"] # Make sure we don't include this field in the JSON
-            response = self.backend.make_api_request(
-                "vectors", self.name, payload={**upsert_dict, **dist_metric}
-            )
-            assert (
-                response.get("content", dict()).get("status", "") == "OK"
-            ), f"Invalid upsert() response: {response}"
+                    raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
+
+            payload = {**data.__dict__}
+
+            if distance_metric is not None:
+                payload["distance_metric"] = distance_metric
+
+            if schema is not None:
+                payload["schema"] = schema
+
+            response = self.backend.make_api_request('vectors', self.name, payload=payload)
+
+            assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
             self.metadata = None  # Invalidate cached metadata
         elif isinstance(data, VectorRow):
             raise ValueError(
@@ -243,12 +250,12 @@ class Namespace:
             )
         elif isinstance(data, list):
             if isinstance(data[0], dict):
-                return self.upsert(VectorColumns.from_rows(data), distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric)
             elif isinstance(data[0], VectorRow):
-                return self.upsert(VectorColumns.from_rows(data), distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric)
             elif isinstance(data[0], VectorColumns):
                 for columns in data:
-                    self.upsert(columns, distance_metric=distance_metric)
+                    self.upsert(columns, schema=schema, distance_metric=distance_metric)
                 return
             else:
                 raise ValueError(f"Unsupported list data type: {type(data[0])}")
@@ -256,7 +263,7 @@ class Namespace:
             if 'id' in data:
                 raise ValueError('upsert() should be called on a list of vectors, got single vector.')
             elif 'ids' in data:
-                return self.upsert(VectorColumns.from_dict(data), distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_dict(data), schema=data.get('schema', None), distance_metric=distance_metric)
             else:
                 raise ValueError("Provided dict is missing ids.")
         elif "pandas" in sys.modules and isinstance(
@@ -282,7 +289,7 @@ class Namespace:
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
                 # print(columns)
-                self.upsert(columns, distance_metric=distance_metric)
+                self.upsert(columns, schema=schema, distance_metric=distance_metric)
                 # time_diff = time.monotonic() - before
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -293,7 +300,7 @@ class Namespace:
                 # time_diff = time.monotonic() - start
                 # print('Batch begin:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
-                self.upsert(batch, distance_metric=distance_metric)
+                self.upsert(batch, schema=schema, distance_metric=distance_metric)
                 # time_diff = time.monotonic() - before
                 # print('Batch time:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -520,7 +527,9 @@ class Namespace:
               top_k: int = 10,
               include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
-              filters: Optional[Filters] = None) -> VectorResult:
+              filters: Optional[Filters] = None,
+              rank_by: Optional[List[Union[str, List[str]]]] = None,
+              ) -> VectorResult:
         ...
 
     @overload
@@ -528,49 +537,43 @@ class Namespace:
 
     @overload
     def query(self, query_data: dict) -> VectorResult: ...
+      
+    def query(self,
+            query_data=None,
+            vector=None,
+            distance_metric=None,
+            top_k=None,
+            include_vectors=None,
+            include_attributes=None,
+            filters=None,
+            rank_by=None) -> VectorResult:
+      """
+      Searches vectors matching the search query.
 
-    def query(
-        self,
-        query_data=None,
-        vector=None,
-        distance_metric=None,
-        top_k=None,
-        include_vectors=None,
-        include_attributes=None,
-        filters=None,
-    ) -> VectorResult:
-        """
-        Searches vectors matching the search query.
+      See https://turbopuffer.com/docs/reference/query for query filter parameters.
+      """
 
-        See https://turbopuffer.com/docs/reference/query for query filter parameters.
-        """
+      if query_data is None:
+          return self.query(VectorQuery(
+              vector=vector,
+              distance_metric=distance_metric,
+              top_k=top_k,
+              include_vectors=include_vectors,
+              include_attributes=include_attributes,
+              filters=filters,
+              rank_by=rank_by
+          ))
+      if not isinstance(query_data, VectorQuery):
+          if isinstance(query_data, dict):
+              query_data = VectorQuery.from_dict(query_data)
+          else:
+              raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
 
-        if query_data is None:
-            return self.query(
-                VectorQuery(
-                    vector=vector,
-                    distance_metric=distance_metric,
-                    top_k=top_k,
-                    include_vectors=include_vectors,
-                    include_attributes=include_attributes,
-                    filters=filters,
-                )
-            )
-        if not isinstance(query_data, VectorQuery):
-            if isinstance(query_data, dict):
-                query_data = VectorQuery.from_dict(query_data)
-            else:
-                raise ValueError(
-                    f"query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}"
-                )
-
-        response = self.backend.make_api_request(
-            "vectors", self.name, "query", payload=query_data.__dict__
-        )
-        result = VectorResult(response.get("content", dict()), namespace=self)
-        result.performance = response.get("performance")
-        return result
-
+      response = self.backend.make_api_request('vectors', self.name, 'query', payload=query_data.__dict__)
+      result = VectorResult(response.get('content', dict()), namespace=self)
+      result.performance = response.get('performance')
+      return result
+    
     @overload
     async def async_query(
         self,
@@ -580,6 +583,7 @@ class Namespace:
         include_vectors: bool = False,
         include_attributes: Optional[Union[List[str], bool]] = None,
         filters: Optional[Filters] = None,
+        rank_by: Optional[List[Union[str, List[str]]]] = None,
     ) -> VectorResult: ...
 
     @overload
@@ -597,6 +601,7 @@ class Namespace:
         include_vectors=None,
         include_attributes=None,
         filters=None,
+        rank_by=None,
     ) -> VectorResult:
         """
         Searches vectors matching the search query.
@@ -613,6 +618,7 @@ class Namespace:
                     include_vectors=include_vectors,
                     include_attributes=include_attributes,
                     filters=filters,
+                    rank_by=rank_by
                 )
             )
         if not isinstance(query_data, VectorQuery):
@@ -791,11 +797,7 @@ class NamespaceIterator:
         for input in initial_set:
             ns = tpuf.Namespace(input["id"], api_key=api_key)
             ns.metadata = {
-                "exists": True,
-                "dimensions": input["dimensions"],
-                "approx_count": input["approx_count"],
-                # rfc3339 returned by the server is compatible with iso8601
-                "created_at": iso8601.parse_date(input["created_at"]),
+                'exists': True,
             }
             output.append(ns)
 

@@ -9,8 +9,9 @@ import anyio
 import httpx
 
 import turbopuffer as tpuf
-from turbopuffer.error import APIError, AuthenticationError
-
+import gzip
+from turbopuffer.error import AuthenticationError, raise_api_error
+from typing import Optional, List
 
 def find_api_key(api_key: Optional[str] = None) -> str:
     if api_key is not None:
@@ -155,34 +156,19 @@ class Backend:
                     try:
                         content = response.json()
                     except json.JSONDecodeError as err:
-                        raise APIError(
-                            response.status_code,
-                            traceback.format_exception_only(err),
-                            response.text,
-                        )
+                        raise_api_error(response.status_code, traceback.format_exception_only(err), response.text)
 
-                    if response.is_success:
-                        performance["total_time"] = time.monotonic() - start
-                        return dict(
-                            response.__dict__,
-                            **{
-                                "content": content,
-                                "performance": performance,
-                            },
-                        )
+                    if response.ok:
+                        performance['total_time'] = time.monotonic() - start
+                        return dict(response.__dict__, **{
+                            'content': content,
+                            'performance': performance,
+                        })
                     else:
-                        raise APIError(
-                            response.status_code,
-                            content.get("status", "error"),
-                            content.get("error", ""),
-                        )
+                        raise_api_error(response.status_code, content.get('status', 'error'), content.get('error', ''))
                 else:
-                    raise APIError(
-                        response.status_code,
-                        "Server returned non-JSON response",
-                        response.text,
-                    )
-            except httpx.HTTPError as http_err:
+                    raise_api_error(response.status_code, 'Server returned non-JSON response', response.text)
+            except requests.HTTPError as http_err:
                 retry_attempt += 1
                 # print(traceback.format_exc())
                 if retry_attempt < tpuf.max_retries:
@@ -359,9 +345,7 @@ class AsyncBackend:
                 if retry_attempt < tpuf.max_retries:
                     anyio.sleep(2**retry_attempt)
                 else:
-                    print(f"Request failed after {retry_attempt} attempts...")
-                    raise APIError(
-                        http_err.response.status_code,
-                        f"Request to {http_err.request.url} failed after {retry_attempt} attempts",
-                        str(http_err),
-                    )
+                    print(f'Request failed after {retry_attempt} attempts...')
+                    raise_api_error(http_err.response.status_code,
+                                   f'Request to {http_err.request.url} failed after {retry_attempt} attempts',
+                                   str(http_err))

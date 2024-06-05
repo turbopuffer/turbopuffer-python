@@ -36,4 +36,4 @@ from turbopuffer.error import APIError, AuthenticationError, TurbopufferError
 from turbopuffer.namespace import Namespace, namespaces
 from turbopuffer.vectors import VectorColumns, VectorRow, VectorResult
 from turbopuffer.query import VectorQuery, Filters
-from turbopuffer.error import TurbopufferError, AuthenticationError, APIError
+from turbopuffer.error import TurbopufferError, AuthenticationError, APIError, NotFoundError
