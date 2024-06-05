@@ -74,12 +74,14 @@ class Namespace:
                 "exists": dimensions != 0,
                 "dimensions": dimensions,
                 "approx_count": approx_count,
+                'created_at': iso8601.parse_date(headers.get('x-turbopuffer-created-at')),
             }
         elif status_code == 404:
             self.metadata = {
                 "exists": False,
                 "dimensions": 0,
                 "approx_count": 0,
+                'created_at': None,
             }
         else:
             raise APIError(

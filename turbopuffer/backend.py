@@ -158,7 +158,7 @@ class Backend:
                     except json.JSONDecodeError as err:
                         raise_api_error(response.status_code, traceback.format_exception_only(err), response.text)
 
-                    if response.ok:
+                    if response.is_success:
                         performance['total_time'] = time.monotonic() - start
                         return dict(response.__dict__, **{
                             'content': content,
@@ -168,7 +168,7 @@ class Backend:
                         raise_api_error(response.status_code, content.get('status', 'error'), content.get('error', ''))
                 else:
                     raise_api_error(response.status_code, 'Server returned non-JSON response', response.text)
-            except requests.HTTPError as http_err:
+            except httpx.HTTPError as http_err:
                 retry_attempt += 1
                 # print(traceback.format_exc())
                 if retry_attempt < tpuf.max_retries:
