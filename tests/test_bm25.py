@@ -75,9 +75,17 @@ def test_bm25():
         schema=schema,
     )
 
-    # Query to make sure the new row is there
+    # Upsert with the dict format
+    ns.upsert(
+        [
+            {'id': 9, 'vector': [0.9, 0.9], 'attributes': {"blabla": "dict format of row based upsert also works, but isn't typed as well"}},
+        ],
+        schema=schema,
+    )
+
+    # Query to make sure the new row(s) is there
     results = ns.query({
         "top_k": 10,
         "rank_by": ["blabla", "BM25", "row based upsert"]
     })
-    assert [item.id for item in results] == [8]
+    assert [item.id for item in results] == [8, 9]

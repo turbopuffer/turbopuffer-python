@@ -100,7 +100,7 @@ class Namespace:
     def upsert(self,
                ids: Union[List[int], List[str]],
                vectors: List[List[float]],
-               attributes: Optional[Dict[str, List[Optional[str | int]]]] = None,
+               attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None,
                schema: Optional[Dict] = None,
                distance_metric: Optional[str] = None) -> None:
         """
@@ -112,7 +112,7 @@ class Namespace:
         ...
 
     @overload
-    def upsert(self, data: Union[dict, VectorColumns], distance_metric: Optional[str] = None) -> None:
+    def upsert(self, data: Union[dict, VectorColumns], distance_metric: Optional[str] = None, schema: Optional[Dict] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -123,7 +123,7 @@ class Namespace:
 
     @overload
     def upsert(self, data: Union[Iterable[dict], Iterable[VectorRow]],
-               distance_metric: Optional[str] = None) -> None:
+               distance_metric: Optional[str] = None, schema: Optional[Dict] = None) -> None:
         """
         Creates or updates a multiple vectors provided as a list or iterator.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -134,7 +134,7 @@ class Namespace:
 
     @overload
     def upsert(self, data: VectorResult,
-               distance_metric: Optional[str] = None) -> None:
+               distance_metric: Optional[str] = None, schema: Optional[Dict] = None) -> None:
         """
         Creates or updates multiple vectors.
         If this call succeeds, data is guaranteed to be durably written to object storage.
