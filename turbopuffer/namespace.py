@@ -101,6 +101,7 @@ class Namespace:
                ids: Union[List[int], List[str]],
                vectors: List[List[float]],
                attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+               schema: Optional[Dict] = None,
                distance_metric: Optional[str] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
@@ -142,25 +143,31 @@ class Namespace:
         """
         ...
 
-    def upsert(self, data=None, ids=None, vectors=None, attributes=None, distance_metric=None) -> None:
+    def upsert(self, data=None, ids=None, vectors=None, attributes=None, schema=None, distance_metric=None) -> None:
         if data is None:
             if ids is not None and vectors is not None:
-                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes), distance_metric=distance_metric)
+                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes), schema=schema, distance_metric=distance_metric)
             else:
                 raise ValueError('upsert() requires both ids= and vectors= be set.')
-        elif ids is not None and attributes is None:
+        elif (ids is not None and attributes is None) or (attributes is not None and schema is None):
             # Offset arguments to handle positional arguments case with no data field.
-            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), distance_metric=distance_metric,)
+            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), schema=attributes, distance_metric=distance_metric,)
         elif isinstance(data, VectorColumns):
             # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
             # None == pd.ndarray is an ambiguous comparison in this case.
             for vec in data.vectors:
                 if vec is None:
                     raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
-            dist_metric = (
-                {"distance_metric": distance_metric} if distance_metric else {}
-            )
-            response = self.backend.make_api_request('vectors', self.name, payload={**data.__dict__, **dist_metric})
+
+            payload = {**data.__dict__}
+
+            if distance_metric is not None:
+                payload["distance_metric"] = distance_metric
+
+            if schema is not None:
+                payload["schema"] = schema
+
+            response = self.backend.make_api_request('vectors', self.name, payload=payload)
 
             assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
             self.metadata = None  # Invalidate cached metadata
@@ -168,12 +175,12 @@ class Namespace:
             raise ValueError('upsert() should be called on a list of vectors, got single vector.')
         elif isinstance(data, list):
             if isinstance(data[0], dict):
-                return self.upsert(VectorColumns.from_rows(data), distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric)
             elif isinstance(data[0], VectorRow):
-                return self.upsert(VectorColumns.from_rows(data), distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric)
             elif isinstance(data[0], VectorColumns):
                 for columns in data:
-                    self.upsert(columns, distance_metric=distance_metric)
+                    self.upsert(columns, schema=schema, distance_metric=distance_metric)
                 return
             else:
                 raise ValueError(f'Unsupported list data type: {type(data[0])}')
@@ -181,7 +188,7 @@ class Namespace:
             if 'id' in data:
                 raise ValueError('upsert() should be called on a list of vectors, got single vector.')
             elif 'ids' in data:
-                return self.upsert(VectorColumns.from_dict(data), distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_dict(data), schema=data.get('schema', None), distance_metric=distance_metric)
             else:
                 raise ValueError('Provided dict is missing ids.')
         elif 'pandas' in sys.modules and isinstance(data, sys.modules['pandas'].DataFrame):
@@ -205,7 +212,7 @@ class Namespace:
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
                 # print(columns)
-                self.upsert(columns, distance_metric=distance_metric)
+                self.upsert(columns, schema=schema, distance_metric=distance_metric)
                 # time_diff = time.monotonic() - before
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -216,7 +223,7 @@ class Namespace:
                 # time_diff = time.monotonic() - start
                 # print('Batch begin:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
-                self.upsert(batch, distance_metric=distance_metric)
+                self.upsert(batch, schema=schema, distance_metric=distance_metric)
                 # time_diff = time.monotonic() - before
                 # print('Batch time:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -252,7 +259,9 @@ class Namespace:
               top_k: int = 10,
               include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
-              filters: Optional[Filters] = None) -> VectorResult:
+              filters: Optional[Filters] = None,
+              rank_by: Optional[List[Union[str, List[str]]]] = None,
+              ) -> VectorResult:
         ...
 
     @overload
@@ -270,7 +279,8 @@ class Namespace:
               top_k=None,
               include_vectors=None,
               include_attributes=None,
-              filters=None) -> VectorResult:
+              filters=None,
+              rank_by=None) -> VectorResult:
         """
         Searches vectors matching the search query.
 
@@ -284,7 +294,8 @@ class Namespace:
                 top_k=top_k,
                 include_vectors=include_vectors,
                 include_attributes=include_attributes,
-                filters=filters
+                filters=filters,
+                rank_by=rank_by
             ))
         if not isinstance(query_data, VectorQuery):
             if isinstance(query_data, dict):
