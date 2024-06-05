@@ -100,7 +100,7 @@ class Namespace:
     def upsert(self,
                ids: Union[List[int], List[str]],
                vectors: List[List[float]],
-               attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+               attributes: Optional[Dict[str, List[Optional[str | int]]]] = None,
                schema: Optional[Dict] = None,
                distance_metric: Optional[str] = None) -> None:
         """

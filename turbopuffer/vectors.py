@@ -27,7 +27,7 @@ class VectorRow:
 
     id: Union[int, str]
     vector: Optional[List[float]] = None
-    attributes: Optional[Dict[str, Optional[str]]] = None
+    attributes: Optional[Dict[str, Optional[str | int]]] = None
 
     dist: Optional[float] = None
 
@@ -75,7 +75,7 @@ class VectorColumns:
 
     ids: Union[List[int], List[str]]
     vectors: List[Optional[List[float]]]
-    attributes: Optional[Dict[str, List[Optional[str]]]] = None
+    attributes: Optional[Dict[str, List[Optional[str | int]]]] = None
 
     distances: Optional[List[float]] = None
 
