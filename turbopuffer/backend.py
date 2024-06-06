@@ -178,7 +178,7 @@ class Backend:
                     )  # exponential falloff up to 64 seconds for 6 retries.
                 else:
                     print(f"Request failed after {retry_attempt} attempts...")
-                    raise_api_error(
+                    raise APIError(
                         http_err.response.status_code,
                         f"Request to {http_err.request.url} failed after {retry_attempt} attempts",
                         str(http_err),
@@ -313,7 +313,11 @@ class AsyncBackend:
                     try:
                         content = response.json()
                     except json.JSONDecodeError as err:
-                        raise_api_error(response.status_code, traceback.format_exception_only(err), response.text)
+                        raise APIError(
+                            response.status_code,
+                            traceback.format_exception_only(err),
+                            response.text,
+                        )
 
                     if response.is_success:
                         performance["total_time"] = time.monotonic() - start
@@ -325,9 +329,13 @@ class AsyncBackend:
                             },
                         )
                     else:
-                        raise_api_error(response.status_code, content.get("status", "error"), content.get("error", ""))
+                        raise APIError(
+                            response.status_code,
+                            content.get("status", "error"),
+                            content.get("error", ""),
+                        )
                 else:
-                    raise_api_error(
+                    raise APIError(
                         response.status_code,
                         "Server returned non-JSON response",
                         response.text,
