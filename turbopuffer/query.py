@@ -1,5 +1,5 @@
-import sys
 from dataclasses import dataclass
+import sys
 from typing import Optional, List, Tuple, Union, Dict
 
 # Refer to turbopuffer docs for valid operator names
@@ -24,7 +24,7 @@ class VectorQuery:
     filters: Optional[Filters] = None
     rank_by: Optional[List[Union[str, List[str]]]] = None
 
-    def from_dict(source: dict) -> "VectorQuery":
+    def from_dict(source: dict) -> 'VectorQuery':
         return VectorQuery(
             vector=source.get('vector'),
             distance_metric=source.get('distance_metric'),
@@ -37,23 +37,14 @@ class VectorQuery:
 
     def __post_init__(self):
         if self.vector is not None:
-            if "numpy" in sys.modules and isinstance(
-                self.vector, sys.modules["numpy"].ndarray
-            ):
+            if 'numpy' in sys.modules and isinstance(self.vector, sys.modules['numpy'].ndarray):
                 if self.vector.ndim != 1:
                     raise ValueError(f'VectorQuery.vector must be a 1d array, got {self.vector.ndim} dimensions')
             elif not isinstance(self.vector, list):
-                raise ValueError(
-                    "VectorQuery.vector must be a list, got:", type(self.vector)
-                )
+                raise ValueError('VectorQuery.vector must be a list, got:', type(self.vector))
         if self.include_attributes is not None:
-            if not isinstance(self.include_attributes, list) and not isinstance(
-                self.include_attributes, bool
-            ):
-                raise ValueError(
-                    "VectorQuery.include_attributes must be a list or bool, got:",
-                    type(self.include_attributes),
-                )
+            if not isinstance(self.include_attributes, list) and not isinstance(self.include_attributes, bool):
+                raise ValueError('VectorQuery.include_attributes must be a list or bool, got:', type(self.include_attributes))
         if self.filters is not None:
             if not isinstance(self.filters, dict) and not isinstance(self.filters, list):
                 raise ValueError('VectorQuery.filters must be a dict or list, got:', type(self.filters))
