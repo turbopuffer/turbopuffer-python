@@ -46,8 +46,8 @@ class VectorQuery:
             if not isinstance(self.include_attributes, list) and not isinstance(self.include_attributes, bool):
                 raise ValueError('VectorQuery.include_attributes must be a list or bool, got:', type(self.include_attributes))
         if self.filters is not None:
-            if not isinstance(self.filters, dict) and not isinstance(self.filters, list):
-                raise ValueError('VectorQuery.filters must be a dict or list, got:', type(self.filters))
+            if not isinstance(self.filters, dict) and not isinstance(self.filters, list) and not isinstance(self.filters, tuple):
+                raise ValueError('VectorQuery.filters must be a dict, tuple, or list, got:', type(self.filters))
         if self.rank_by is not None:
             if not isinstance(self.rank_by, list):
                 raise ValueError('VectorQuery.rank_by must be a list, got:', type(self.rank_by))
