@@ -35,7 +35,7 @@ def test_bm25():
     # Query with dict
     results = ns.query({
         "top_k": 10,
-        "rank_by": ["blabla", "BM25", "fox jumping"]
+        "rank_by": ("blabla", "BM25", "fox jumping")
     })
     assert [item.id for item in results] == [2, 1]
 
@@ -63,7 +63,8 @@ def test_bm25():
     # Query with named args (and combined ranking)
     results = ns.query(
         top_k=2,
-        rank_by=["Sum", [["blabla", "BM25", "walrus tusk"], ["blabla", "BM25", "jumping fox"]]]
+        rank_by=("Sum", [("blabla", "BM25", "walrus tusk"), ("blabla", "BM25", "jumping fox")]),
+        filters=("blabla", "NotEq", "hello"),
     )
     assert [item.id for item in results] == [2, 6]
 
@@ -86,6 +87,6 @@ def test_bm25():
     # Query to make sure the new row(s) is there
     results = ns.query({
         "top_k": 10,
-        "rank_by": ["blabla", "BM25", "row based upsert"]
+        "rank_by": ["blabla", "BM25", "row based upsert"],
     })
     assert [item.id for item in results] == [8, 9]
