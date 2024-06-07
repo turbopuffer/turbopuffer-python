@@ -49,8 +49,8 @@ class VectorQuery:
             if not isinstance(self.filters, dict) and not isinstance(self.filters, list) and not isinstance(self.filters, tuple):
                 raise ValueError('VectorQuery.filters must be a dict, tuple, or list, got:', type(self.filters))
         if self.rank_by is not None:
-            if not isinstance(self.rank_by, list):
-                raise ValueError('VectorQuery.rank_by must be a list, got:', type(self.rank_by))
+            if not isinstance(self.rank_by, list) and not isinstance(self.rank_by, tuple):
+                raise ValueError('VectorQuery.rank_by must be a list or tuple, got:', type(self.rank_by))
             for item in self.rank_by:
-                if not isinstance(item, str) and not isinstance(item, list):
-                    raise ValueError('VectorQuery.rank_by elements must be strings or lists, got:', type(item))
+                if not isinstance(item, str) and not isinstance(item, list) and not isinstance(item, tuple):
+                    raise ValueError('VectorQuery.rank_by elements must be strings, tuples or lists, got:', type(item))
