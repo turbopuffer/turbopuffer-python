@@ -31,7 +31,7 @@ classifiers = [
 python = "^3.9"
 requests = "^2.31"
 iso8601 = "^2.1.0"
-orjson = {version = "^3.9", optional = true}
+orjson = {version = ">=3.9, <=3.10.3", optional = true} # 3.10.4 errors on install
 numpy = {version = "^1.26.3", optional = true}
 pandas = {version = "^2.1.4", optional = true}
 
