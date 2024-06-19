@@ -1,22 +1,16 @@
 import turbopuffer as tpuf
 
 
-# Helper to convert the results to a dictionary with ranks
-def results_to_ranks(results, reverse=False):
-    if reverse:
-        results = sorted(results, key=lambda item: item.dist, reverse=True)
+# Converts a search result set to a dict of ID -> rank
+def results_to_ranks(results):
     return {item.id: rank for rank, item in enumerate(results, start=1)}
-
 
 # Fuses two search result sets together into one
 # Uses reciprocal rank fusion
 def rank_fusion(bm25_results, vector_results, k=60):
     # Compute the ranks of all docs
-    # Note: a higher score in bm25 denotes a better result, whereas a higher score
-    # with vector euclidean distance indicates a worse result. When computing RRF,
-    # we reverse the order of vector results so that higher = better.
     bm25_ranks = results_to_ranks(bm25_results)
-    vector_ranks = results_to_ranks(vector_results, reverse=True)
+    vector_ranks = results_to_ranks(vector_results)
 
     print("bm25_ranks:", bm25_ranks)
     print("vector ranks", vector_ranks)
