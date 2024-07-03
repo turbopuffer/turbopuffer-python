@@ -23,6 +23,7 @@ class VectorQuery:
     include_vectors: bool = False
     include_attributes: Optional[Union[List[str], bool]] = None
     filters: Optional[Dict[str, List[FilterTuple]]] = None
+    rank_by: Optional[List[Union[str, List[str]]]] = None
 
     def from_dict(source: dict) -> "VectorQuery":
         return VectorQuery(
@@ -32,6 +33,7 @@ class VectorQuery:
             include_vectors=source.get("include_vectors"),
             include_attributes=source.get("include_attributes"),
             filters=source.get("filters"),
+            rank_by=source.get('rank_by')
         )
 
     def __post_init__(self):
@@ -76,3 +78,9 @@ class VectorQuery:
                             f"VectorQuery.filters expected a list for key {name}, got:",
                             type(filter),
                         )
+        if self.rank_by is not None:
+            if not isinstance(self.rank_by, list):
+                raise ValueError('VectorQuery.rank_by must be a list, got:', type(self.rank_by))
+            for item in self.rank_by:
+                if not isinstance(item, str) and not isinstance(item, list):
+                    raise ValueError('VectorQuery.rank_by elements must be strings or lists, got:', type(item))

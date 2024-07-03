@@ -31,12 +31,12 @@ class Namespace:
     metadata: Optional[dict] = None
 
     def __init__(
-        self,
-        name: str,
-        api_key: Optional[str] = None,
-        *,
-        client: Optional[httpx.Client] = None,
-        async_client: Optional[httpx.AsyncClient] = None,
+            self,
+            name: str,
+            api_key: Optional[str] = None,
+            *,
+            client: Optional[httpx.Client] = None,
+            async_client: Optional[httpx.AsyncClient] = None,
     ):
         """
         Creates a new turbopuffer.Namespace object for querying the turbopuffer API.
@@ -55,9 +55,9 @@ class Namespace:
     def __eq__(self, other):
         if isinstance(other, Namespace):
             return (
-                self.name == other.name
-                and self.backend == other.backend
-                and self.async_backend == other.async_backend
+                    self.name == other.name
+                    and self.backend == other.backend
+                    and self.async_backend == other.async_backend
             )
         else:
             return False
@@ -152,10 +152,10 @@ class Namespace:
 
     @overload
     def upsert(
-        self,
-        ids: Union[List[int], List[str]],
-        vectors: List[List[float]],
-        attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+            self,
+            ids: Union[List[int], List[str]],
+            vectors: List[List[float]],
+            attributes: Optional[Dict[str, List[Optional[str]]]] = None,
     ) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
@@ -219,7 +219,7 @@ class Namespace:
             )
 
             assert (
-                response.get("content", dict()).get("status", "") == "OK"
+                    response.get("content", dict()).get("status", "") == "OK"
             ), f"Invalid upsert() response: {response}"
             self.metadata = None  # Invalidate cached metadata
         elif isinstance(data, VectorRow):
@@ -247,7 +247,7 @@ class Namespace:
             else:
                 raise ValueError("Provided dict is missing ids.")
         elif "pandas" in sys.modules and isinstance(
-            data, sys.modules["pandas"].DataFrame
+                data, sys.modules["pandas"].DataFrame
         ):
             if "id" not in data.keys():
                 raise ValueError("Provided pd.DataFrame is missing an id column.")
@@ -255,7 +255,7 @@ class Namespace:
                 raise ValueError("Provided pd.DataFrame is missing a vector column.")
             # start = time.monotonic()
             for i in range(0, len(data), tpuf.upsert_batch_size):
-                batch = data[i : i + tpuf.upsert_batch_size]
+                batch = data[i: i + tpuf.upsert_batch_size]
                 attributes = dict()
                 for key, values in batch.items():
                     if key != "id" and key != "vector":
@@ -290,10 +290,11 @@ class Namespace:
 
     @overload
     async def async_upsert(
-        self,
-        ids: Union[List[int], List[str]],
-        vectors: List[List[float]],
-        attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+            self,
+            ids: Union[List[int], List[str]],
+            vectors: List[List[float]],
+            attributes: Optional[Dict[str, List[Optional[str]]]] = None,
+            schema: Optional[Dict] = None
     ) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
@@ -315,7 +316,7 @@ class Namespace:
 
     @overload
     async def async_upsert(
-        self, data: Union[Iterable[dict], Iterable[VectorRow]]
+            self, data: Union[Iterable[dict], Iterable[VectorRow]]
     ) -> None:
         """
         Creates or updates a multiple vectors provided as a list or iterator.
@@ -336,19 +337,20 @@ class Namespace:
         ...
 
     async def async_upsert(
-        self, data=None, ids=None, vectors=None, attributes=None
+            self, data=None, ids=None, vectors=None, schema=None, attributes=None
     ) -> None:
         if data is None:
             if ids is not None and vectors is not None:
                 return await self.async_upsert(
-                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes)
+                    VectorColumns(ids=ids, vectors=vectors, attributes=attributes), schema=schema
                 )
             else:
                 raise ValueError("upsert() requires both ids= and vectors= be set.")
         elif ids is not None and attributes is None:
             # Offset arguments to handle positional arguments case with no data field.
             return await self.async_upsert(
-                VectorColumns(ids=data, vectors=ids, attributes=vectors)
+                VectorColumns(ids=data, vectors=ids, attributes=vectors), schema=schema
+
             )
         elif isinstance(data, VectorColumns):
             # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
@@ -358,12 +360,17 @@ class Namespace:
                     raise ValueError(
                         "upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead."
                     )
+
+            payload = {**data.__dict__}
+            if schema is not None:
+                payload["schema"] = schema
+
             response = await self.async_backend.make_api_request(
-                "vectors", self.name, payload=data.__dict__
+                "vectors", self.name, payload=payload
             )
 
             assert (
-                response.get("content", dict()).get("status", "") == "OK"
+                    response.get("content", dict()).get("status", "") == "OK"
             ), f"Invalid upsert() response: {response}"
             self.metadata = None  # Invalidate cached metadata
         elif isinstance(data, VectorRow):
@@ -372,12 +379,12 @@ class Namespace:
             )
         elif isinstance(data, list):
             if isinstance(data[0], dict):
-                return await self.async_upsert(VectorColumns.from_rows(data))
+                return await self.async_upsert(VectorColumns.from_rows(data), schema=schema)
             elif isinstance(data[0], VectorRow):
-                return await self.async_upsert(VectorColumns.from_rows(data))
+                return await self.async_upsert(VectorColumns.from_rows(data), schema=schema)
             elif isinstance(data[0], VectorColumns):
                 for columns in data:
-                    await self.async_upsert(columns)
+                    await self.async_upsert(columns, schema=schema)
                 return
             else:
                 raise ValueError(f"Unsupported list data type: {type(data[0])}")
@@ -387,11 +394,11 @@ class Namespace:
                     "upsert() should be called on a list of vectors, got single vector."
                 )
             elif "ids" in data:
-                return await self.async_upsert(VectorColumns.from_dict(data))
+                return await self.async_upsert(VectorColumns.from_dict(data), schema=schema)
             else:
                 raise ValueError("Provided dict is missing ids.")
         elif "pandas" in sys.modules and isinstance(
-            data, sys.modules["pandas"].DataFrame
+                data, sys.modules["pandas"].DataFrame
         ):
             if "id" not in data.keys():
                 raise ValueError("Provided pd.DataFrame is missing an id column.")
@@ -399,7 +406,7 @@ class Namespace:
                 raise ValueError("Provided pd.DataFrame is missing a vector column.")
             # start = time.monotonic()
             for i in range(0, len(data), tpuf.upsert_batch_size):
-                batch = data[i : i + tpuf.upsert_batch_size]
+                batch = data[i: i + tpuf.upsert_batch_size]
                 attributes = dict()
                 for key, values in batch.items():
                     if key != "id" and key != "vector":
@@ -413,7 +420,7 @@ class Namespace:
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
                 # print(columns)
-                await self.async_upsert(columns)
+                await self.async_upsert(columns, schema=schema)
                 # time_diff = time.monotonic() - before
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -424,7 +431,7 @@ class Namespace:
                 # time_diff = time.monotonic() - start
                 # print('Batch begin:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
-                await self.async_upsert(batch)
+                await self.async_upsert(batch, schema=schema)
                 # time_diff = time.monotonic() - before
                 # print('Batch time:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -459,7 +466,7 @@ class Namespace:
             raise ValueError(f"Unsupported ids type: {type(ids)}")
 
         assert (
-            response.get("content", dict()).get("status", "") == "OK"
+                response.get("content", dict()).get("status", "") == "OK"
         ), f"Invalid delete() response: {response}"
         self.metadata = None  # Invalidate cached metadata
 
@@ -490,36 +497,39 @@ class Namespace:
             raise ValueError(f"Unsupported ids type: {type(ids)}")
 
         assert (
-            response.get("content", dict()).get("status", "") == "OK"
+                response.get("content", dict()).get("status", "") == "OK"
         ), f"Invalid delete() response: {response}"
         self.metadata = None  # Invalidate cached metadata
 
     @overload
     def query(
-        self,
-        vector: Optional[List[float]] = None,
-        distance_metric: Optional[str] = None,
-        top_k: int = 10,
-        include_vectors: bool = False,
-        include_attributes: Optional[Union[List[str], bool]] = None,
-        filters: Optional[Dict[str, List[FilterTuple]]] = None,
-    ) -> VectorResult: ...
+            self,
+            vector: Optional[List[float]] = None,
+            distance_metric: Optional[str] = None,
+            top_k: int = 10,
+            include_vectors: bool = False,
+            include_attributes: Optional[Union[List[str], bool]] = None,
+            filters: Optional[Dict[str, List[FilterTuple]]] = None,
+    ) -> VectorResult:
+        ...
 
     @overload
-    def query(self, query_data: VectorQuery) -> VectorResult: ...
+    def query(self, query_data: VectorQuery) -> VectorResult:
+        ...
 
     @overload
-    def query(self, query_data: dict) -> VectorResult: ...
+    def query(self, query_data: dict) -> VectorResult:
+        ...
 
     def query(
-        self,
-        query_data=None,
-        vector=None,
-        distance_metric=None,
-        top_k=None,
-        include_vectors=None,
-        include_attributes=None,
-        filters=None,
+            self,
+            query_data=None,
+            vector=None,
+            distance_metric=None,
+            top_k=None,
+            include_vectors=None,
+            include_attributes=None,
+            filters=None,
     ) -> VectorResult:
         """
         Searches vectors matching the search query.
@@ -555,30 +565,35 @@ class Namespace:
 
     @overload
     async def async_query(
-        self,
-        vector: Optional[List[float]] = None,
-        distance_metric: Optional[str] = None,
-        top_k: int = 10,
-        include_vectors: bool = False,
-        include_attributes: Optional[Union[List[str], bool]] = None,
-        filters: Optional[Dict[str, List[FilterTuple]]] = None,
-    ) -> VectorResult: ...
+            self,
+            vector: Optional[List[float]] = None,
+            distance_metric: Optional[str] = None,
+            top_k: int = 10,
+            include_vectors: bool = False,
+            include_attributes: Optional[Union[List[str], bool]] = None,
+            filters: Optional[Dict[str, List[FilterTuple]]] = None,
+            rank_by: Optional[List[Union[str, List[str]]]] = None,
+    ) -> VectorResult:
+        ...
 
     @overload
-    async def async_query(self, query_data: VectorQuery) -> VectorResult: ...
+    async def async_query(self, query_data: VectorQuery) -> VectorResult:
+        ...
 
     @overload
-    async def async_query(self, query_data: dict) -> VectorResult: ...
+    async def async_query(self, query_data: dict) -> VectorResult:
+        ...
 
     async def async_query(
-        self,
-        query_data=None,
-        vector=None,
-        distance_metric=None,
-        top_k=None,
-        include_vectors=None,
-        include_attributes=None,
-        filters=None,
+            self,
+            query_data=None,
+            vector=None,
+            distance_metric=None,
+            top_k=None,
+            include_vectors=None,
+            include_attributes=None,
+            filters=None,
+            rank_by=None
     ) -> VectorResult:
         """
         Searches vectors matching the search query.
@@ -595,6 +610,7 @@ class Namespace:
                     include_vectors=include_vectors,
                     include_attributes=include_attributes,
                     filters=filters,
+                    rank_by=rank_by
                 )
             )
         if not isinstance(query_data, VectorQuery):
@@ -655,7 +671,7 @@ class Namespace:
             "vectors", self.name, "index", method="DELETE"
         )
         assert (
-            response.get("content", dict()).get("status", "") == "ok"
+                response.get("content", dict()).get("status", "") == "ok"
         ), f"Invalid delete_all_indexes() response: {response}"
 
     async def async_delete_all_indexes(self) -> None:
@@ -667,7 +683,7 @@ class Namespace:
             "vectors", self.name, "index", method="DELETE"
         )
         assert (
-            response.get("content", dict()).get("status", "") == "ok"
+                response.get("content", dict()).get("status", "") == "ok"
         ), f"Invalid delete_all_indexes() response: {response}"
 
     def delete_all(self) -> None:
@@ -677,7 +693,7 @@ class Namespace:
 
         response = self.backend.make_api_request("vectors", self.name, method="DELETE")
         assert (
-            response.get("content", dict()).get("status", "") == "ok"
+                response.get("content", dict()).get("status", "") == "ok"
         ), f"Invalid delete_all() response: {response}"
         self.metadata = None  # Invalidate cached metadata
 
@@ -690,7 +706,7 @@ class Namespace:
             "vectors", self.name, method="DELETE"
         )
         assert (
-            response.get("content", dict()).get("status", "") == "ok"
+                response.get("content", dict()).get("status", "") == "ok"
         ), f"Invalid delete_all() response: {response}"
         self.metadata = None  # Invalidate cached metadata
 
@@ -744,10 +760,10 @@ class NamespaceIterator:
     next_cursor: Optional[Cursor] = None
 
     def __init__(
-        self,
-        backend: Backend,
-        initial_set: Union[List[Namespace], List[dict]] = [],
-        next_cursor: Optional[Cursor] = None,
+            self,
+            backend: Backend,
+            initial_set: Union[List[Namespace], List[dict]] = [],
+            next_cursor: Optional[Cursor] = None,
     ):
         self.backend = backend
         self.index = -1
@@ -763,7 +779,7 @@ class NamespaceIterator:
                 )
 
     def load_namespaces(
-        api_key: Optional[str], initial_set: List[dict]
+            api_key: Optional[str], initial_set: List[dict]
     ) -> List[Namespace]:
         output = []
         for input in initial_set:
