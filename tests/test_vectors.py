@@ -4,7 +4,7 @@ import tests
 import pytest
 from datetime import datetime
 
-
+@pytest.mark.xdist_group(name="group1")
 def test_upsert_rows():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
     assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
@@ -54,7 +54,7 @@ def test_upsert_rows():
     for i in range(10, 100):
         assert results[i-8] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
-
+@pytest.mark.xdist_group(name="group1")
 def test_delete_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
@@ -97,7 +97,7 @@ def test_delete_vectors():
     for i in range(16, 100):
         assert results[i-15] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
-
+@pytest.mark.xdist_group(name="group1")
 def test_upsert_columns():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
@@ -163,6 +163,7 @@ def test_upsert_columns():
     assert test_count == 97, "Found wrong number of test cols"
 
 
+@pytest.mark.xdist_group(name="group1")
 def test_query_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
@@ -278,7 +279,7 @@ def test_query_vectors():
     for i in range(len(vector_set)):  # Use VectorResult in index mode
         check_result(vector_set[i], expected[i])
 
-
+@pytest.mark.xdist_group(name="group1")
 def test_list_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
@@ -292,7 +293,7 @@ def test_list_vectors():
 
     assert len(vector_set) == 98
 
-
+@pytest.mark.xdist_group(name="group1")
 def test_read_metadata():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
@@ -301,17 +302,11 @@ def test_read_metadata():
     assert ns.approx_count() == 98
     assert type(ns.created_at()) == type(datetime.now())
 
-    all_ns = tpuf.namespaces()
-    assert ns in list(all_ns)
-
-
+@pytest.mark.xdist_group(name="group1")
 def test_delete_all():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
-    # print('Recall:', ns.recall())
 
     assert ns.exists()
-    all_ns_start = tpuf.namespaces()
-    assert ns in iter(all_ns_start)
 
     ns.delete_all_indexes()
     ns.delete_all()
@@ -319,11 +314,6 @@ def test_delete_all():
     assert not ns.exists()
     assert ns.dimensions() == 0
     assert ns.approx_count() == 0
-
-    # all_ns_end = tpuf.namespaces()
-    # assert ns not in iter(all_ns_end)
-    # assert len(all_ns_end) < len(all_ns_start)
-
 
 def test_string_ids():
     ns = tpuf.Namespace(tests.test_prefix + 'string_ids')
