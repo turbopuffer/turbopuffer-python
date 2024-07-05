@@ -35,13 +35,6 @@ def test_readme():
     )
     print(vectors)
 
-    namespaces = tpuf.namespaces()
-    print('Total namespaces:', len(namespaces))
-    for namespace in namespaces:
-        # print('Namespace', namespace.name, 'contains approximately', namespace.approx_count(),
-        #       'vectors with', namespace.dimensions(), 'dimensions.')
-        pass
-
     ns.delete([1, 2])
 
     ns.delete_all()
