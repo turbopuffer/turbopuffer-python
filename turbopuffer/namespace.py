@@ -308,6 +308,62 @@ class Namespace:
         result.performance = response.get('performance')
         return result
 
+    @overload
+    async def aquery(self,
+                     vector: List[float],
+                     distance_metric: Optional[str] = None,
+                     top_k: Optional[int] = None,
+                     include_vectors: Optional[bool] = None,
+                     include_attributes: Optional[Union[List[str], bool]] = None,
+                     filters: Optional[Filters] = None,
+                     rank_by: Optional[List[Union[str, List[str]]]] = None,
+                     ) -> VectorResult:
+        ...
+
+    @overload
+    async def aquery(self, query_data: VectorQuery) -> VectorResult:
+        ...
+
+    @overload
+    async def aquery(self, query_data: dict) -> VectorResult:
+        ...
+
+    async def aquery(self,
+                     query_data=None,
+                     vector=None,
+                     distance_metric=None,
+                     top_k=None,
+                     include_vectors=None,
+                     include_attributes=None,
+                     filters=None,
+                     rank_by=None) -> VectorResult:
+        """
+        Asynchronously searches vectors matching the search query.
+
+        See https://turbopuffer.com/docs/reference/query for query filter parameters.
+        """
+
+        if query_data is None:
+            query_data = VectorQuery(
+                vector=vector,
+                distance_metric=distance_metric,
+                top_k=top_k,
+                include_vectors=include_vectors,
+                include_attributes=include_attributes,
+                filters=filters,
+                rank_by=rank_by
+            )
+        elif not isinstance(query_data, VectorQuery):
+            if isinstance(query_data, dict):
+                query_data = VectorQuery.from_dict(query_data)
+            else:
+                raise ValueError(f'aquery() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
+
+        response = await self.backend.make_api_request_async('vectors', self.name, 'query', payload=query_data.__dict__)
+        result = VectorResult(response.get('content', dict()), namespace=self)
+        result.performance = response.get('performance')
+        return result
+
     def vectors(self, cursor: Optional[Cursor] = None) -> VectorResult:
         """
         This function exports the entire dataset at full precision.
