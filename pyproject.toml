@@ -34,6 +34,7 @@ iso8601 = "^2.1.0"
 orjson = {version = ">=3.9, <=3.10.3", optional = true} # 3.10.4 errors on install
 numpy = {version = "^1.26.3", optional = true}
 pandas = {version = "^2.1.4", optional = true}
+aiohttp = "^3.9.5"
 
 
 [tool.poetry.extras]
@@ -46,6 +47,7 @@ optional = true
 pytest = "^7.4.3"
 flake8 = "^7.0.0"
 pytest-xdist = "^3.6.1"
+pytest-asyncio = "^0.23.7"
 
 [tool.poetry.group.compatibility]
 optional = true
