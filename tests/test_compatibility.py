@@ -46,3 +46,9 @@ try:
     print('Loaded numpy tests')
 except ImportError:
     print('Skipped numpy tests')
+
+def test_base_url_compatibility():
+    assert tpuf.backend.clean_api_base_url("https://domain/v1/") == "https://domain"
+    assert tpuf.backend.clean_api_base_url("https://domain/v1") == "https://domain"
+    assert tpuf.backend.clean_api_base_url("https://domain/") == "https://domain"
+    assert tpuf.backend.clean_api_base_url("https://domain") == "https://domain"
