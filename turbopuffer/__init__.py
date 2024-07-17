@@ -1,7 +1,7 @@
 import os
 import sys
 api_key = os.environ.get('TURBOPUFFER_API_KEY')
-api_base_url = os.environ.get('TURBOPUFFER_API_BASE_URL', 'https://api.turbopuffer.com/v1')
+api_base_url = os.environ.get('TURBOPUFFER_API_BASE_URL', 'https://api.turbopuffer.com')
 upsert_batch_size = 10_000
 max_retries = 6
 

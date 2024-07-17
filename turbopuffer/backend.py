@@ -19,6 +19,12 @@ def find_api_key(api_key: Optional[str] = None) -> str:
                                   "Set the TURBOPUFFER_API_KEY environment variable, "
                                   "or pass `api_key=` when creating a Namespace.")
 
+def clean_api_base_url(base_url: str) -> str:
+    if base_url.endswith(('/v1', '/v1/', '/')):
+        return re.sub('(/v1|/v1/|/)$', '', base_url)
+    else:
+        return base_url
+
 
 class Backend:
     api_key: str
@@ -27,7 +33,7 @@ class Backend:
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = find_api_key(api_key)
-        self.api_base_url = tpuf.api_base_url
+        self.api_base_url = clean_api_base_url(tpuf.api_base_url)
         self.session = requests.Session()
         self.session.headers.update({
             'Authorization': f'Bearer {self.api_key}',
@@ -48,7 +54,8 @@ class Backend:
         start = time.monotonic()
         if method is None and payload is not None:
             method = 'POST'
-        request = requests.Request(method or 'GET', self.api_base_url + '/' + '/'.join(args))
+
+        request = requests.Request(method or 'GET', self.api_base_url + '/v1/' + '/'.join(args))
 
         if query is not None:
             request.params = query
