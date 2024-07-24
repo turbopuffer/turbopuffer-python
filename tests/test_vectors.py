@@ -279,6 +279,123 @@ def test_query_vectors():
     for i in range(len(vector_set)):  # Use VectorResult in index mode
         check_result(vector_set[i], expected[i])
 
+@pytest.mark.asyncio
+@pytest.mark.xdist_group(name="group1")
+async def test_async_query():
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
+
+    def check_result(row, expected):
+        assert row.id == expected.id
+        assert row.attributes == expected.attributes
+        if isinstance(expected.vector, list):
+            assert isinstance(row.vector, list)
+            assert abs(row.vector[0] - expected.vector[0]) < 0.000001
+            assert abs(row.vector[1] - expected.vector[1]) < 0.000001
+        else:
+            assert row.vector == expected.vector
+        if isinstance(expected.dist, float):
+            assert abs(row.dist - expected.dist) < 0.000001
+        else:
+            assert row.dist == expected.dist
+
+    expected = [
+        tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}, dist=0.01),
+        tpuf.VectorRow(id=10, vector=[1.0, 1.0], dist=0.13),
+        tpuf.VectorRow(id=11, vector=[1.1, 1.1], dist=0.25),
+        tpuf.VectorRow(id=3, vector=[0.3, 0.3], dist=0.41),
+        tpuf.VectorRow(id=6, vector=[0.3, 0.3], dist=0.41),
+    ]
+
+    # Test normal query
+    vector_set = await ns.aquery(
+        top_k=5,
+        vector=[0.8, 0.7],
+        distance_metric='euclidean_squared',
+        include_vectors=True,
+        include_attributes=['hello'],
+    )
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
+
+    # Test query with dict
+    vector_set = await ns.aquery({
+        'top_k': 5,
+        'vector': [0.8, 0.7],
+        'distance_metric': 'euclidean_squared',
+        'include_vectors': True,
+        'include_attributes': ['hello'],
+    })
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
+
+    # Test query with all attributes
+    vector_set = await ns.aquery(
+        top_k=5,
+        vector=[0.8, 0.7],
+        distance_metric='euclidean_squared',
+        include_vectors=True,
+        include_attributes=True
+    )
+    expected = [
+        tpuf.VectorRow(id=7, vector=[0.7, 0.7], dist=0.01, attributes={'hello': 'world'}),
+        tpuf.VectorRow(id=10, vector=[1.0, 1.0], dist=0.13, attributes={'test': 'cols'}),
+        tpuf.VectorRow(id=11, vector=[1.1, 1.1], dist=0.25, attributes={'test': 'cols'}),
+        tpuf.VectorRow(id=3, vector=[0.3, 0.3], dist=0.41, attributes={'test': 'cols', 'key1': 'three', 'key2': 'c'}),
+        tpuf.VectorRow(id=6, vector=[0.3, 0.3], dist=0.41, attributes={'test': 'cols', 'key1': 'three', 'key2': 'c'}),
+    ]
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
+
+    # Test query with typed query
+    vector_set = await ns.aquery(tpuf.VectorQuery(
+        top_k=5,
+        vector=[1.5, 1.6],
+        distance_metric='euclidean_squared',
+    ))
+    expected = [
+        tpuf.VectorRow(id=15, dist=0.01),
+        tpuf.VectorRow(id=16, dist=0.01),
+        tpuf.VectorRow(id=14, dist=0.05),
+        tpuf.VectorRow(id=17, dist=0.05),
+        tpuf.VectorRow(id=18, dist=0.13),
+    ]
+    i = 0
+    for row in vector_set:  # Use VectorResult in iterator mode
+        check_result(row, expected[i])
+        i += 1
+
+    # Test query with single filter
+    expected = [
+        tpuf.VectorRow(id=10),
+        tpuf.VectorRow(id=11),
+        tpuf.VectorRow(id=12),
+    ]
+    vector_set = await ns.aquery(
+        top_k=3,
+        include_vectors=False,
+        filters={
+            'id': ['In', [10, 11, 12]]
+        },
+    )
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
+
+    # Test query with no vectors
+    expected = [
+        tpuf.VectorRow(id=10),
+        tpuf.VectorRow(id=11),
+        tpuf.VectorRow(id=12),
+    ]
+    vector_set = await ns.aquery(
+        top_k=3,
+        include_vectors=False,
+        filters={
+            'id': [['In', [10, 11, 12]]]
+        },
+    )
+    for i in range(len(vector_set)):  # Use VectorResult in index mode
+        check_result(vector_set[i], expected[i])
+
 @pytest.mark.xdist_group(name="group1")
 def test_list_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
