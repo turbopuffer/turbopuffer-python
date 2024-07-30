@@ -94,7 +94,7 @@ class Backend:
                 performance['request_time'] = time.monotonic() - request_start
                 # print(f'Request time (HTTP {response.status_code}):', performance['request_time'])
 
-                if response.status_code > 500:
+                if response.status_code >= 500 or response.status_code == 408 or response.status_code == 429:
                     response.raise_for_status()
 
                 server_timing_str = response.headers.get('Server-Timing', '')
@@ -140,7 +140,7 @@ class Backend:
                         raise_api_error(response.status_code, content.get('status', 'error'), content.get('error', ''))
                 else:
                     raise_api_error(response.status_code, 'Server returned non-JSON response', response.text)
-            except requests.HTTPError as http_err:
+            except (requests.HTTPError, requests.ConnectionError, requests.Timeout) as err:
                 retry_attempt += 1
                 # print(traceback.format_exc())
                 if retry_attempt < tpuf.max_retries:
@@ -148,6 +148,10 @@ class Backend:
                     time.sleep(2 ** retry_attempt)  # exponential falloff up to 64 seconds for 6 retries.
                 else:
                     print(f'Request failed after {retry_attempt} attempts...')
-                    raise_api_error(http_err.response.status_code,
-                                   f'Request to {http_err.request.url} failed after {retry_attempt} attempts',
-                                   str(http_err))
+
+                    if isinstance(err, requests.HTTPError):
+                        raise_api_error(err.response.status_code,
+                                   f'Request to {err.request.url} failed after {retry_attempt} attempts',
+                                   str(err))
+                    else:
+                        raise
