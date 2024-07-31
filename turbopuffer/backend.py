@@ -86,11 +86,12 @@ class Backend:
         prepared = self.session.prepare_request(request)
 
         retry_attempt = 0
+        timeouts = (tpuf.connect_timeout, tpuf.read_timeout)
         while retry_attempt < tpuf.max_retries:
             request_start = time.monotonic()
             try:
                 # print(f'Sending request:', prepared.path_url, prepared.headers)
-                response = self.session.send(prepared, allow_redirects=False)
+                response = self.session.send(prepared, allow_redirects=False, timeout=timeouts)
                 performance['request_time'] = time.monotonic() - request_start
                 # print(f'Request time (HTTP {response.status_code}):', performance['request_time'])
 
