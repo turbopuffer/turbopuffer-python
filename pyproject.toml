@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "turbopuffer"
-version = "0.1.16"
+version = "0.1.17"
 description = "Python Client for accessing the turbopuffer API"
 authors = ["turbopuffer Inc. <info@turbopuffer.com>"]
 homepage = "https://turbopuffer.com"
