@@ -8,6 +8,58 @@ from turbopuffer.query import VectorQuery, Filters
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 
+class BM25Params:
+    """
+    Used for configuring BM25 full-text indexing for a given attribute.
+    """
+
+    language: str
+    stemming: bool
+    remove_stopwords: bool
+    case_sensitive: bool
+
+    def __init__(self, language: str, stemming: bool, remove_stopwords: bool, case_sensitive: bool):
+        self.language = language
+        self.stemming = stemming
+        self.remove_stopwords = remove_stopwords
+        self.case_sensitive = case_sensitive
+
+class AttributeSchema:
+    """
+    The schema for a particular attribute within a namespace.
+    """
+
+    type: str # one of: '?string', '?uint', '[]string', '[]uint'
+    filterable: bool
+    bm25: Optional[BM25Params] = None
+
+    def __init__(self, type: str, filterable: bool, bm25: Optional[BM25Params] = None):
+        self.type = type
+        self.filterable = filterable
+        self.bm25 = bm25
+
+# Type alias for a namespace schema
+NamespaceSchema = Dict[str, AttributeSchema]
+
+def parse_namespace_schema(data: dict) -> NamespaceSchema:
+    namespace_schema = {}
+    for key, value in data.items():
+        bm25_params = value.get('bm25')
+        bm25_instance = None
+        if bm25_params:
+            bm25_instance = BM25Params(
+                language=bm25_params['language'],
+                stemming=bm25_params['stemming'],
+                remove_stopwords=bm25_params['remove_stopwords'],
+                case_sensitive=bm25_params['case_sensitive']
+            )
+        attribute_schema = AttributeSchema(
+            type=value['type'],
+            filterable=value['filterable'],
+            bm25=bm25_instance
+        )
+        namespace_schema[key] = attribute_schema
+    return namespace_schema
 
 class Namespace:
     """
@@ -63,6 +115,13 @@ class Namespace:
             }
         else:
             raise APIError(response.status_code, 'Unexpected status code', response.get('content'))
+    
+    def schema(self) -> NamespaceSchema:
+        """
+        Returns the current schema for the namespace.
+        """
+        response = self.backend.make_api_request('vectors', self.name, 'schema', method='GET')
+        return parse_namespace_schema(response["content"])
 
     def exists(self) -> bool:
         """
@@ -354,7 +413,7 @@ class Namespace:
         content = response.get('content', dict())
         assert 'recall' in content, f'Invalid recall() response: {response}'
         return float(content.get('recall'))
-
+        
 
 class NamespaceIterator:
     """
