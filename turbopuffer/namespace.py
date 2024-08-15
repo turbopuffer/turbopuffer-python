@@ -53,7 +53,7 @@ class AttributeSchema:
             "filterable": self.filterable,
         }
         if self.full_text_search:
-            result["full_text_search"] = self.bm25.as_dict()
+            result["full_text_search"] = self.full_text_search.as_dict()
         return result
 
 # Type alias for a namespace schema
