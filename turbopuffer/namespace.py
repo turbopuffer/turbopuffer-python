@@ -9,7 +9,7 @@ from turbopuffer.query import VectorQuery, Filters
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 
-class BM25Params:
+class FullTextSearchParams:
     """
     Used for configuring BM25 full-text indexing for a given attribute.
     """
@@ -40,20 +40,20 @@ class AttributeSchema:
 
     type: str # one of: '?string', '?uint', '[]string', '[]uint'
     filterable: bool
-    bm25: Optional[BM25Params] = None
+    full_text_search: Optional[FullTextSearchParams] = None
 
-    def __init__(self, type: str, filterable: bool, bm25: Optional[BM25Params] = None):
+    def __init__(self, type: str, filterable: bool, full_text_search: Optional[FullTextSearchParams] = None):
         self.type = type
         self.filterable = filterable
-        self.bm25 = bm25
+        self.full_text_search = full_text_search
 
     def as_dict(self) -> dict:
         result = {
             "type": self.type,
             "filterable": self.filterable,
         }
-        if self.bm25:
-            result["bm25"] = self.bm25.as_dict()
+        if self.full_text_search:
+            result["full_text_search"] = self.bm25.as_dict()
         return result
 
 # Type alias for a namespace schema
@@ -62,19 +62,19 @@ NamespaceSchema = Dict[str, AttributeSchema]
 def parse_namespace_schema(data: dict) -> NamespaceSchema:
     namespace_schema = {}
     for key, value in data.items():
-        bm25_params = value.get('bm25')
-        bm25_instance = None
-        if bm25_params:
-            bm25_instance = BM25Params(
-                language=bm25_params['language'],
-                stemming=bm25_params['stemming'],
-                remove_stopwords=bm25_params['remove_stopwords'],
-                case_sensitive=bm25_params['case_sensitive']
+        fts_params = value.get('full_text_search')
+        fts_instance = None
+        if fts_params:
+            fts_instance = FullTextSearchParams(
+                language=fts_params['language'],
+                stemming=fts_params['stemming'],
+                remove_stopwords=fts_params['remove_stopwords'],
+                case_sensitive=fts_params['case_sensitive']
             )
         attribute_schema = AttributeSchema(
             type=value['type'],
             filterable=value['filterable'],
-            bm25=bm25_instance
+            full_text_search=fts_instance
         )
         namespace_schema[key] = attribute_schema
     return namespace_schema

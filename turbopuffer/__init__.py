@@ -27,7 +27,7 @@ except ImportError:
     def dump_json_bytes(obj): return json.dumps(obj, cls=NumpyEncoder).encode()
 
 from turbopuffer.version import VERSION
-from turbopuffer.namespace import Namespace, namespaces, AttributeSchema, BM25Params
+from turbopuffer.namespace import Namespace, namespaces, AttributeSchema, FullTextSearchParams
 from turbopuffer.vectors import VectorColumns, VectorRow, VectorResult
 from turbopuffer.query import VectorQuery, Filters
 from turbopuffer.error import TurbopufferError, AuthenticationError, APIError, NotFoundError
