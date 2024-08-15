@@ -1,5 +1,6 @@
 import sys
 import iso8601
+import json
 from datetime import datetime
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
@@ -24,6 +25,14 @@ class BM25Params:
         self.remove_stopwords = remove_stopwords
         self.case_sensitive = case_sensitive
 
+    def as_dict(self) -> dict:
+        return {
+            "language": self.language,
+            "stemming": self.stemming,
+            "remove_stopwords": self.remove_stopwords,
+            "case_sensitive": self.case_sensitive,
+        }
+
 class AttributeSchema:
     """
     The schema for a particular attribute within a namespace.
@@ -37,6 +46,15 @@ class AttributeSchema:
         self.type = type
         self.filterable = filterable
         self.bm25 = bm25
+
+    def as_dict(self) -> dict:
+        result = {
+            "type": self.type,
+            "filterable": self.filterable,
+        }
+        if self.bm25:
+            result["bm25"] = self.bm25.as_dict()
+        return result
 
 # Type alias for a namespace schema
 NamespaceSchema = Dict[str, AttributeSchema]
@@ -121,6 +139,17 @@ class Namespace:
         Returns the current schema for the namespace.
         """
         response = self.backend.make_api_request('vectors', self.name, 'schema', method='GET')
+        return parse_namespace_schema(response["content"])
+
+    def update_schema(self, schema_updates: NamespaceSchema):
+        """
+        Writes updates to the schema for a namespace.
+        Returns the final schema after updates are done.
+
+        See https://turbopuffer.com/docs/schema for specifics on allowed updates.
+        """
+        request_payload = json.dumps({key: value.as_dict() for key, value in schema_updates.items()}).encode()
+        response = self.backend.make_api_request('vectors', self.name, 'schema', method='POST', payload=request_payload)
         return parse_namespace_schema(response["content"])
 
     def exists(self) -> bool:

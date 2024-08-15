@@ -17,5 +17,9 @@ def test_schema():
         assert schema.get(attr).filterable
         assert schema.get(attr).bm25 is None
     
-    # todo patch schema
-
+    # Write an update to the schema making 'hello' not filterable
+    updated_hello_schema = tpuf.AttributeSchema(type="?string", filterable=False, bm25=None)
+    updated_schema = ns.update_schema({
+        'hello': updated_hello_schema
+    })
+    assert not updated_schema.get('hello').filterable
