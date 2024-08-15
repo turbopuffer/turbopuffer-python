@@ -442,7 +442,7 @@ class Namespace:
         content = response.get('content', dict())
         assert 'recall' in content, f'Invalid recall() response: {response}'
         return float(content.get('recall'))
-        
+
 
 class NamespaceIterator:
     """
