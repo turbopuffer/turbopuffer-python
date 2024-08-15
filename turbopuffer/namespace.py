@@ -1,5 +1,6 @@
 import sys
 import iso8601
+import json
 from datetime import datetime
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
@@ -8,6 +9,75 @@ from turbopuffer.query import VectorQuery, Filters
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 
+class FullTextSearchParams:
+    """
+    Used for configuring BM25 full-text indexing for a given attribute.
+    """
+
+    language: str
+    stemming: bool
+    remove_stopwords: bool
+    case_sensitive: bool
+
+    def __init__(self, language: str, stemming: bool, remove_stopwords: bool, case_sensitive: bool):
+        self.language = language
+        self.stemming = stemming
+        self.remove_stopwords = remove_stopwords
+        self.case_sensitive = case_sensitive
+
+    def as_dict(self) -> dict:
+        return {
+            "language": self.language,
+            "stemming": self.stemming,
+            "remove_stopwords": self.remove_stopwords,
+            "case_sensitive": self.case_sensitive,
+        }
+
+class AttributeSchema:
+    """
+    The schema for a particular attribute within a namespace.
+    """
+
+    type: str # one of: '?string', '?uint', '[]string', '[]uint'
+    filterable: bool
+    full_text_search: Optional[FullTextSearchParams] = None
+
+    def __init__(self, type: str, filterable: bool, full_text_search: Optional[FullTextSearchParams] = None):
+        self.type = type
+        self.filterable = filterable
+        self.full_text_search = full_text_search
+
+    def as_dict(self) -> dict:
+        result = {
+            "type": self.type,
+            "filterable": self.filterable,
+        }
+        if self.full_text_search:
+            result["full_text_search"] = self.full_text_search.as_dict()
+        return result
+
+# Type alias for a namespace schema
+NamespaceSchema = Dict[str, AttributeSchema]
+
+def parse_namespace_schema(data: dict) -> NamespaceSchema:
+    namespace_schema = {}
+    for key, value in data.items():
+        fts_params = value.get('full_text_search')
+        fts_instance = None
+        if fts_params:
+            fts_instance = FullTextSearchParams(
+                language=fts_params['language'],
+                stemming=fts_params['stemming'],
+                remove_stopwords=fts_params['remove_stopwords'],
+                case_sensitive=fts_params['case_sensitive']
+            )
+        attribute_schema = AttributeSchema(
+            type=value['type'],
+            filterable=value['filterable'],
+            full_text_search=fts_instance
+        )
+        namespace_schema[key] = attribute_schema
+    return namespace_schema
 
 class Namespace:
     """
@@ -95,6 +165,24 @@ class Namespace:
         if self.metadata is None or 'created_at' not in self.metadata:
             self.refresh_metadata()
         return self.metadata.pop('created_at', None)
+
+    def schema(self) -> NamespaceSchema:
+        """
+        Returns the current schema for the namespace.
+        """
+        response = self.backend.make_api_request('vectors', self.name, 'schema', method='GET')
+        return parse_namespace_schema(response["content"])
+
+    def update_schema(self, schema_updates: NamespaceSchema):
+        """
+        Writes updates to the schema for a namespace.
+        Returns the final schema after updates are done.
+
+        See https://turbopuffer.com/docs/schema for specifics on allowed updates.
+        """
+        request_payload = json.dumps({key: value.as_dict() for key, value in schema_updates.items()}).encode()
+        response = self.backend.make_api_request('vectors', self.name, 'schema', method='POST', payload=request_payload)
+        return parse_namespace_schema(response["content"])
 
     @overload
     def upsert(self,
