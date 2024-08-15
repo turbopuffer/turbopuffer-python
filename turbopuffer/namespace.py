@@ -133,24 +133,6 @@ class Namespace:
             }
         else:
             raise APIError(response.status_code, 'Unexpected status code', response.get('content'))
-    
-    def schema(self) -> NamespaceSchema:
-        """
-        Returns the current schema for the namespace.
-        """
-        response = self.backend.make_api_request('vectors', self.name, 'schema', method='GET')
-        return parse_namespace_schema(response["content"])
-
-    def update_schema(self, schema_updates: NamespaceSchema):
-        """
-        Writes updates to the schema for a namespace.
-        Returns the final schema after updates are done.
-
-        See https://turbopuffer.com/docs/schema for specifics on allowed updates.
-        """
-        request_payload = json.dumps({key: value.as_dict() for key, value in schema_updates.items()}).encode()
-        response = self.backend.make_api_request('vectors', self.name, 'schema', method='POST', payload=request_payload)
-        return parse_namespace_schema(response["content"])
 
     def exists(self) -> bool:
         """
@@ -183,6 +165,24 @@ class Namespace:
         if self.metadata is None or 'created_at' not in self.metadata:
             self.refresh_metadata()
         return self.metadata.pop('created_at', None)
+
+    def schema(self) -> NamespaceSchema:
+        """
+        Returns the current schema for the namespace.
+        """
+        response = self.backend.make_api_request('vectors', self.name, 'schema', method='GET')
+        return parse_namespace_schema(response["content"])
+
+    def update_schema(self, schema_updates: NamespaceSchema):
+        """
+        Writes updates to the schema for a namespace.
+        Returns the final schema after updates are done.
+
+        See https://turbopuffer.com/docs/schema for specifics on allowed updates.
+        """
+        request_payload = json.dumps({key: value.as_dict() for key, value in schema_updates.items()}).encode()
+        response = self.backend.make_api_request('vectors', self.name, 'schema', method='POST', payload=request_payload)
+        return parse_namespace_schema(response["content"])
 
     @overload
     def upsert(self,
