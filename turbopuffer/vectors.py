@@ -81,8 +81,8 @@ class VectorColumns:
 
     def from_dict(source: dict) -> 'VectorColumns':
         return VectorColumns(
-            ids=source.get('ids'),
-            vectors=source.get('vectors'),
+            ids=source.get('ids') or [],
+            vectors=source.get('vectors') or [],
             attributes=source.get('attributes'),
             distances=source.get('distances'),
         )
