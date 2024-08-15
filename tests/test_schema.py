@@ -1,5 +1,6 @@
 import turbopuffer as tpuf
 import tests
+import pytest
 
 def test_schema():
     ns = tpuf.Namespace(tests.test_prefix + "schema")
@@ -23,3 +24,14 @@ def test_schema():
         'hello': updated_hello_schema
     })
     assert not updated_schema.get('hello').filterable
+
+    # If we try to query using a filter on 'hello', we should get an error
+    # since it's not filterable anymore
+    with pytest.raises(tpuf.TurbopufferError):
+        ns.query(
+            vector=[2, 2],
+            top_k=10,
+            filters={
+                'hello': ['Eq', 'foobar']
+            }
+        )
