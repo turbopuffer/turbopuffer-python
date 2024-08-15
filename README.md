@@ -84,4 +84,4 @@ For more details on request parameters and query options, check the docs at http
 1. `poetry run pytest`
 2.  Bump version in `turbopuffer/version.py` and `pyproject.toml`
 3. `poetry build`
-4. `poetry publish`
+4. `poetry publish` (will need to set `POETRY_PYPI_TOKEN_PYPI` in your environment)
