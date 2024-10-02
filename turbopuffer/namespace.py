@@ -57,11 +57,17 @@ class AttributeSchema:
         return result
 
 # Type alias for a namespace schema
-NamespaceSchema = Dict[str, AttributeSchema]
+# If the key is `id`, the value is a string representing the ID type,
+# otherwise the value is an AttributeSchema
+NamespaceSchema = Dict[str, Union[AttributeSchema, str]]
 
 def parse_namespace_schema(data: dict) -> NamespaceSchema:
     namespace_schema = {}
     for key, value in data.items():
+        if key == 'id':
+            namespace_schema[key] = value
+            continue
+
         fts_params = value.get('full_text_search')
         fts_instance = None
         if fts_params:
