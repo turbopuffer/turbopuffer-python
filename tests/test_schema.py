@@ -14,12 +14,12 @@ def test_schema():
     # Get the schema for the namespace
     schema = ns.schema()
     for attr in ['hello', 'test']:
-        assert schema.get(attr).type == "?string"
+        assert schema.get(attr).type == "string"
         assert schema.get(attr).filterable
         assert schema.get(attr).full_text_search is None
     
     # Write an update to the schema making 'hello' not filterable
-    updated_hello_schema = tpuf.AttributeSchema(type="?string", filterable=False, full_text_search=None)
+    updated_hello_schema = tpuf.AttributeSchema(type="string", filterable=False, full_text_search=None)
     updated_schema = ns.update_schema({
         'hello': updated_hello_schema
     })

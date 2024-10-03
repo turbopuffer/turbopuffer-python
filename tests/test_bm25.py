@@ -7,7 +7,7 @@ def test_bm25():
 
     schema = {
         "blabla": {
-            "type": "?string",
+            "type": "string",
             "bm25": {
                 "language": "english",
                 "stemming": True,
