@@ -38,7 +38,7 @@ class AttributeSchema:
     The schema for a particular attribute within a namespace.
     """
 
-    type: str # one of: '?string', '?uint', '[]string', '[]uint'
+    type: str # one of: 'string', 'uint', '[]string', '[]uint'
     filterable: bool
     full_text_search: Optional[FullTextSearchParams] = None
 
