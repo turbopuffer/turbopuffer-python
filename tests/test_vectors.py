@@ -249,9 +249,9 @@ def test_query_vectors():
 
     # Test query with single filter
     expected = [
-        tpuf.VectorRow(id=10),
-        tpuf.VectorRow(id=11),
-        tpuf.VectorRow(id=12),
+        tpuf.VectorRow(id=10, dist=0.0),
+        tpuf.VectorRow(id=11, dist=0.0),
+        tpuf.VectorRow(id=12, dist=0.0),
     ]
     vector_set = ns.query(
         top_k=3,
@@ -265,9 +265,9 @@ def test_query_vectors():
 
     # Test query with no vectors
     expected = [
-        tpuf.VectorRow(id=10),
-        tpuf.VectorRow(id=11),
-        tpuf.VectorRow(id=12),
+        tpuf.VectorRow(id=10, dist=0.0),
+        tpuf.VectorRow(id=11, dist=0.0),
+        tpuf.VectorRow(id=12, dist=0.0),
     ]
     vector_set = ns.query(
         top_k=3,
