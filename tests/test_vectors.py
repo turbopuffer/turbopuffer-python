@@ -54,6 +54,9 @@ def test_upsert_rows():
     for i in range(10, 100):
         assert results[i-8] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
+    # Check to ensure recall is working
+    ns.recall()
+
 @pytest.mark.xdist_group(name="group1")
 def test_delete_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')

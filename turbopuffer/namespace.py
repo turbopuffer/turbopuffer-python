@@ -440,8 +440,8 @@ class Namespace:
 
         response = self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
         content = response.get('content', dict())
-        assert 'recall' in content, f'Invalid recall() response: {response}'
-        return float(content.get('recall'))
+        assert 'avg_recall' in content, f'Invalid recall() response: {response}'
+        return float(content.get('avg_recall'))
 
 
 class NamespaceIterator:
