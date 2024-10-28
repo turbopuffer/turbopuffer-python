@@ -85,5 +85,6 @@ For more details on request parameters and query options, check the docs at http
 
 1. `poetry run pytest`
 2.  Bump version in `turbopuffer/version.py` and `pyproject.toml`
+3. `git tag vX.Y.Z && git push --tags`
 3. `poetry build`
 4. `poetry publish`
