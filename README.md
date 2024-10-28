@@ -19,7 +19,7 @@ $ pip install turbopuffer[fast]
 ```py
 import turbopuffer as tpuf
 tpuf.api_key = 'your-token'  # Alternatively: export=TURBOPUFFER_API_KEY=your-token
-// Choose the best region for your data https://turbopuffer.com/docs/regions
+# Choose the best region for your data https://turbopuffer.com/docs/regions
 tpuf.api_base_url = "https://gcp-us-east4.turbopuffer.com"
 
 # Open a namespace
