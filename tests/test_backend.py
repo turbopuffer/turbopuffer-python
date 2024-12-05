@@ -20,7 +20,6 @@ def mock_response_returning(status_code, reason):
     return response
 
 
-@pytest.mark.xdist_group(name="group1")
 def test_500_retried():
     backend = tpuf_backend.Backend("fake_api_key")
     backend.session.send = mock.MagicMock()
@@ -32,7 +31,6 @@ def test_500_retried():
         assert sleep.call_count == tpuf.max_retries - 1
 
 
-@pytest.mark.xdist_group(name="group1")
 def test_429_retried():
     backend = tpuf_backend.Backend("fake_api_key")
     backend.session.send = mock.MagicMock()
