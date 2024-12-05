@@ -83,6 +83,8 @@ For more details on request parameters and query options, check the docs at http
 
 ## Development
 
+Run `poetry install --with=test` to set up the project and dependencies.
+
 1. `poetry run pytest`
 2.  Bump version in `turbopuffer/version.py` and `pyproject.toml`
 3. `git tag vX.Y.Z && git push --tags`
