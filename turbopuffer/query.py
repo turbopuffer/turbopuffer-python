@@ -12,11 +12,10 @@ LegacyFilterCondition = Tuple[FilterOperator, FilterValue]
 LegacyFilterDict = Dict[str, List[LegacyFilterCondition]]
 
 Filters = Union[
-    Union[List[str | List], Tuple[str, List['Filters']]], 
+    Union[List[Union[str, List]], Tuple[str, List['Filters']]], 
     FilterCondition,
     LegacyFilterDict
 ]
-
 
 @dataclass
 class VectorQuery:
