@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import sys
-from typing import TypeAlias, Optional, List, Tuple, Union, Dict
+from typing import Optional, List, Tuple, Union, Dict
 
 # Refer to turbopuffer docs for valid operator names
 FilterOperator = str
@@ -11,8 +11,11 @@ FilterCondition = Tuple[str, FilterOperator, FilterValue]
 LegacyFilterCondition = Tuple[FilterOperator, FilterValue]
 LegacyFilterDict = Dict[str, List[LegacyFilterCondition]]
 
-FilterTuple: TypeAlias = Union[List[str | List], Tuple[str, List["Filters"]]]
-Filters = Union[FilterTuple, FilterCondition, LegacyFilterDict]
+Filters = Union[
+    Union[List[str | List], Tuple[str, List['Filters']]], 
+    FilterCondition,
+    LegacyFilterDict
+]
 
 
 @dataclass
