@@ -502,8 +502,8 @@ def test_list_in_empty_namespace():
     assert list(ns.vectors()) == []
 
 def test_query_and_delete():
-    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
-    assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
+    ns = tpuf.Namespace(tests.test_prefix + 'query_and_delete')
+    assert str(ns) == f'tpuf-namespace:{tests.test_prefix}query_and_delete'
 
     ns.upsert([
         {'id': 0, 'vector': [2, 2], 'attributes': {'timestamp': 2}},

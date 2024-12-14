@@ -319,7 +319,7 @@ class Namespace:
         else:
             raise ValueError(f'Unsupported data type: {type(data)}')
 
-    def delete(self, ids: Union[int, str, List[int], List[str], List[int | str]]) -> None:
+    def delete(self, ids: Union[int, str, List[int], List[str], List[Union[int, str]]]) -> None:
         """
         Deletes vectors by id.
         """
