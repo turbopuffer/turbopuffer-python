@@ -500,3 +500,26 @@ def test_list_in_empty_namespace():
     ns.delete([2, 7])
 
     assert list(ns.vectors()) == []
+
+def test_query_and_delete():
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
+    assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
+
+    ns.upsert([
+        {'id': 0, 'vector': [2, 2], 'attributes': {'timestamp': 2}},
+        {'id': 1, 'vector': [1, 1], 'attributes': {'timestamp': 1}},
+        {'id': 2, 'vector': [1, 2], 'attributes': {'timestamp': 0}},
+    ], distance_metric='cosine_distance')
+
+    last_id = None
+    while True:
+        results = ns.query(
+            top_k=1,
+            filters=["And", [["timestamp", "Gte", 1], ["id", "Gte" if last_id is None else "Gt", last_id or 0]]]
+        )
+        if not results:
+            break
+        ns.delete([doc.id for doc in results])
+        last_id = results[-1].id
+
+    assert [doc.id for doc in ns.vectors()] == [2]

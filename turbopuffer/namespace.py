@@ -188,7 +188,7 @@ class Namespace:
     def upsert(self,
                ids: Union[List[int], List[str]],
                vectors: List[List[float]],
-               attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None,
+               attributes: Optional[Dict[str, List[Optional[Union[str, int, List[str], List[int]]]]]] = None,
                schema: Optional[Dict] = None,
                distance_metric: Optional[str] = None) -> None:
         """
@@ -319,10 +319,18 @@ class Namespace:
         else:
             raise ValueError(f'Unsupported data type: {type(data)}')
 
-    def delete(self, ids: Union[int, str, List[int], List[str]]) -> None:
+    def delete(self, ids: Union[int, str, List[int], List[str], List[int | str]]) -> None:
         """
         Deletes vectors by id.
         """
+        # If it's list[int | str], we need to convert to list[int] and list[str]
+        if isinstance(ids, list):
+            if all(isinstance(id, int) for id in ids):
+                ids = [int(id) for id in ids]  # type: List[int]
+            elif all(isinstance(id, str) for id in ids):
+                ids = [str(id) for id in ids]  # type: List[str] 
+            else:
+                raise ValueError(f'Unsupported id type: {type(ids[0])}')
 
         if isinstance(ids, int) or isinstance(ids, str):
             response = self.backend.make_api_request('vectors', self.name, payload={
@@ -348,7 +356,7 @@ class Namespace:
               include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Filters] = None,
-              rank_by: Optional[List[Union[str, List[str]]]] = None,
+              rank_by: Optional[Filters] = None,
               ) -> VectorResult:
         ...
 
