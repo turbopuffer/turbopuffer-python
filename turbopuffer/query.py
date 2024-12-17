@@ -14,20 +14,10 @@ LegacyFilterDict = Dict[str, List[LegacyFilterCondition]]
 
 Filters = Union[Tuple[str, List["Filters"]], FilterCondition, LegacyFilterDict]
 
-RankInputOrderByAttribute = Union[
-    List[str], # ["attribute", "asc"]
-    Tuple[str, str], # ("attribute", "asc")
-]
-
-RankInputTextQuery = Union[
-    List[str], # ["text", "BM25", "query"]
-    Tuple[str, str, str], # ("text", "BM25", "query")
-    Tuple[str, Iterable['RankInputTextQuery']], # ["Sum", [["title", "BM25", "query"], ["content", "BM25", "query"]]
-]
-
 RankInput = Union[
-    RankInputOrderByAttribute,
-    RankInputTextQuery,
+   List[Union[str, List[str]]],
+   Tuple[str, Union[str, Iterable['RankInput']]],
+   Tuple[str, str, str],
 ]
 
 
