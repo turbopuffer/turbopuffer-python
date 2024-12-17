@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 import sys
 from typing import Optional, List, Tuple, Union, Dict
+from typing import Iterable
+from typing_extensions import Literal
 
 # Refer to turbopuffer docs for valid operator names
 FilterOperator = str
@@ -13,6 +15,25 @@ LegacyFilterDict = Dict[str, List[LegacyFilterCondition]]
 
 Filters = Union[Tuple[str, List["Filters"]], FilterCondition, LegacyFilterDict]
 
+TextQueryOp = Union[Literal['BM25']]
+TextAggQueryOp = Union[Literal['Sum']]
+
+RankInputTextQuery = Union[
+    Tuple[str, TextQueryOp, str],
+    Tuple[TextAggQueryOp, Iterable['RankInputTextQuery']],
+]
+
+AttributeOrdering = Union[Literal['asc'], Literal['desc']]
+
+RankInputOrderByAttribute = Tuple[str, AttributeOrdering]
+
+# Uses tuples for nice typing, but also allows arrays for backwards compatibility
+RankInput = Union[
+    RankInputTextQuery,
+    RankInputOrderByAttribute,
+    List[Union[str, List[str]]],
+]
+
 
 @dataclass
 class VectorQuery:
@@ -22,7 +43,7 @@ class VectorQuery:
     include_vectors: bool = False
     include_attributes: Optional[Union[List[str], bool]] = None
     filters: Optional[Filters] = None
-    rank_by: Optional[List[Union[str, List[str]]]] = None
+    rank_by: Optional[RankInput] = None
 
     def from_dict(source: dict) -> 'VectorQuery':
         return VectorQuery(
