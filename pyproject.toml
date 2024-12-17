@@ -53,6 +53,10 @@ optional = true
 pandas = "^2.1.4"
 numpy = "^1.26.3"
 
+
+[tool.poetry.group.dev.dependencies]
+typing-extensions = "^4.12.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
