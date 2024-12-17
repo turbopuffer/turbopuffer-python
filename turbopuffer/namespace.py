@@ -8,6 +8,7 @@ from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
+from turbopuffer.query import RankInput
 
 class FullTextSearchParams:
     """
@@ -348,7 +349,7 @@ class Namespace:
               include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Filters] = None,
-              rank_by: Optional[List[Union[str, List[str]]]] = None,
+              rank_by: Optional[RankInput] = None,
               ) -> VectorResult:
         ...
 
