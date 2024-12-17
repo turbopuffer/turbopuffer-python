@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import sys
 from typing import Optional, List, Tuple, Union, Dict
 from typing import Iterable
+from typing_extensions import Literal
 
 # Refer to turbopuffer docs for valid operator names
 FilterOperator = str
@@ -14,10 +15,23 @@ LegacyFilterDict = Dict[str, List[LegacyFilterCondition]]
 
 Filters = Union[Tuple[str, List["Filters"]], FilterCondition, LegacyFilterDict]
 
+TextQueryOp = Union[Literal['BM25']]
+TextAggQueryOp = Union[Literal['Sum']]
+
+RankInputTextQuery = Union[
+    Tuple[str, TextQueryOp, str],
+    Tuple[TextAggQueryOp, Iterable['RankInputTextQuery']],
+]
+
+AttributeOrdering = Union[Literal['asc'], Literal['desc']]
+
+RankInputOrderByAttribute = Tuple[str, AttributeOrdering]
+
+# Uses tuples for nice typing, but also allows arrays for backwards compatibility
 RankInput = Union[
-   List[Union[str, List[str]]],
-   Tuple[str, Union[str, Iterable['RankInput']]],
-   Tuple[str, str, str],
+    RankInputTextQuery,
+    RankInputOrderByAttribute,
+    List[Union[str, List[str]]],
 ]
 
 
