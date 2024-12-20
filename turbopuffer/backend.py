@@ -167,7 +167,7 @@ class Backend:
         start = time.monotonic()
         if method is None and payload is not None:
             method = 'POST'
-        url = self.api_base_url + '/' + '/'.join(args)
+        url = self.api_base_url + '/v1/' + '/'.join(args)
 
         headers = {}
         performance = dict()
@@ -205,11 +205,11 @@ class Backend:
                     async with session.request(method or 'GET', url, params=query, headers=headers, data=data) as response:
                         performance['request_time'] = time.monotonic() - request_start
 
-                        if response.status > 500:
+                        if response.status >= 500 or response.status == 408 or response.status == 429:
                             response.raise_for_status()
 
                         server_timing_str = response.headers.get('Server-Timing', '')
-                        if server_timing_str:
+                        if len(server_timing_str) > 0:
                             match_cache_hit_ratio = re.match(r'.*cache_hit_ratio;ratio=([\d\.]+)', server_timing_str)
                             if match_cache_hit_ratio:
                                 try:
