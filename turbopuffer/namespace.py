@@ -1,5 +1,6 @@
 import sys
 import iso8601
+import json
 from datetime import datetime
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
@@ -7,7 +8,77 @@ from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
+from turbopuffer.query import RankInput
 
+class FullTextSearchParams:
+    """
+    Used for configuring BM25 full-text indexing for a given attribute.
+    """
+
+    language: str
+    stemming: bool
+    remove_stopwords: bool
+    case_sensitive: bool
+
+    def __init__(self, language: str, stemming: bool, remove_stopwords: bool, case_sensitive: bool):
+        self.language = language
+        self.stemming = stemming
+        self.remove_stopwords = remove_stopwords
+        self.case_sensitive = case_sensitive
+
+    def as_dict(self) -> dict:
+        return {
+            "language": self.language,
+            "stemming": self.stemming,
+            "remove_stopwords": self.remove_stopwords,
+            "case_sensitive": self.case_sensitive,
+        }
+
+class AttributeSchema:
+    """
+    The schema for a particular attribute within a namespace.
+    """
+
+    type: str # one of: 'string', 'uint', '[]string', '[]uint'
+    filterable: bool
+    full_text_search: Optional[FullTextSearchParams] = None
+
+    def __init__(self, type: str, filterable: bool, full_text_search: Optional[FullTextSearchParams] = None):
+        self.type = type
+        self.filterable = filterable
+        self.full_text_search = full_text_search
+
+    def as_dict(self) -> dict:
+        result = {
+            "type": self.type,
+            "filterable": self.filterable,
+        }
+        if self.full_text_search:
+            result["full_text_search"] = self.full_text_search.as_dict()
+        return result
+
+# Type alias for a namespace schema
+NamespaceSchema = Dict[str, AttributeSchema]
+
+def parse_namespace_schema(data: dict) -> NamespaceSchema:
+    namespace_schema = {}
+    for key, value in data.items():
+        fts_params = value.get('full_text_search')
+        fts_instance = None
+        if fts_params:
+            fts_instance = FullTextSearchParams(
+                language=fts_params['language'],
+                stemming=fts_params['stemming'],
+                remove_stopwords=fts_params['remove_stopwords'],
+                case_sensitive=fts_params['case_sensitive']
+            )
+        attribute_schema = AttributeSchema(
+            type=value['type'],
+            filterable=value['filterable'],
+            full_text_search=fts_instance
+        )
+        namespace_schema[key] = attribute_schema
+    return namespace_schema
 
 class Namespace:
     """
@@ -42,7 +113,7 @@ class Namespace:
             return False
 
     def refresh_metadata(self):
-        response = self.backend.make_api_request('vectors', self.name, method='HEAD')
+        response = self.backend.make_api_request('namespaces', self.name, method='HEAD')
         status_code = response.get('status_code')
         if status_code == 200:
             headers = response.get('headers', dict())
@@ -95,6 +166,24 @@ class Namespace:
         if self.metadata is None or 'created_at' not in self.metadata:
             self.refresh_metadata()
         return self.metadata.pop('created_at', None)
+
+    def schema(self) -> NamespaceSchema:
+        """
+        Returns the current schema for the namespace.
+        """
+        response = self.backend.make_api_request('namespaces', self.name, 'schema', method='GET')
+        return parse_namespace_schema(response["content"])
+
+    def update_schema(self, schema_updates: NamespaceSchema):
+        """
+        Writes updates to the schema for a namespace.
+        Returns the final schema after updates are done.
+
+        See https://turbopuffer.com/docs/schema for specifics on allowed updates.
+        """
+        request_payload = json.dumps({key: value.as_dict() for key, value in schema_updates.items()}).encode()
+        response = self.backend.make_api_request('namespaces', self.name, 'schema', method='POST', payload=request_payload)
+        return parse_namespace_schema(response["content"])
 
     @overload
     def upsert(self,
@@ -167,7 +256,7 @@ class Namespace:
             if schema is not None:
                 payload["schema"] = schema
 
-            response = self.backend.make_api_request('vectors', self.name, payload=payload)
+            response = self.backend.make_api_request('namespaces', self.name, payload=payload)
 
             assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
             self.metadata = None  # Invalidate cached metadata
@@ -237,12 +326,12 @@ class Namespace:
         """
 
         if isinstance(ids, int) or isinstance(ids, str):
-            response = self.backend.make_api_request('vectors', self.name, payload={
+            response = self.backend.make_api_request('namespaces', self.name, payload={
                 'ids': [ids],
                 'vectors': [None],
             })
         elif isinstance(ids, list):
-            response = self.backend.make_api_request('vectors', self.name, payload={
+            response = self.backend.make_api_request('namespaces', self.name, payload={
                 'ids': ids,
                 'vectors': [None] * len(ids),
             })
@@ -260,7 +349,7 @@ class Namespace:
               include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Filters] = None,
-              rank_by: Optional[List[Union[str, List[str]]]] = None,
+              rank_by: Optional[RankInput] = None,
               ) -> VectorResult:
         ...
 
@@ -303,7 +392,7 @@ class Namespace:
             else:
                 raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
 
-        response = self.backend.make_api_request('vectors', self.name, 'query', payload=query_data.__dict__)
+        response = self.backend.make_api_request('namespaces', self.name, 'query', payload=query_data.__dict__)
         result = VectorResult(response.get('content', dict()), namespace=self)
         result.performance = response.get('performance')
         return result
@@ -372,7 +461,7 @@ class Namespace:
         If you want to look up vectors by ID, use the query function with an id filter.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, query={'cursor': cursor})
+        response = self.backend.make_api_request('namespaces', self.name, query={'cursor': cursor})
         content = response.get('content', dict())
         next_cursor = content.pop('next_cursor', None)
         result = VectorResult(content, namespace=self, next_cursor=next_cursor)
@@ -384,7 +473,7 @@ class Namespace:
         Deletes all indexes in a namespace.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, 'index', method='DELETE')
+        response = self.backend.make_api_request('namespaces', self.name, 'index', method='DELETE')
         assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all_indexes() response: {response}'
 
     def delete_all(self) -> None:
@@ -392,7 +481,7 @@ class Namespace:
         Deletes all data as well as all indexes.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, method='DELETE')
+        response = self.backend.make_api_request('namespaces', self.name, method='DELETE')
         assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
         self.metadata = None  # Invalidate cached metadata
 
@@ -406,10 +495,10 @@ class Namespace:
         Recall is calculated as the ratio of matching vectors between the two search results.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
+        response = self.backend.make_api_request('namespaces', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
         content = response.get('content', dict())
-        assert 'recall' in content, f'Invalid recall() response: {response}'
-        return float(content.get('recall'))
+        assert 'avg_recall' in content, f'Invalid recall() response: {response}'
+        return float(content.get('avg_recall'))
 
 
 class NamespaceIterator:
@@ -493,7 +582,7 @@ class NamespaceIterator:
             raise StopIteration
         else:
             response = self.backend.make_api_request(
-                'vectors',
+                'namespaces',
                 query={'cursor': self.next_cursor}
             )
             content = response.get('content', dict())
@@ -510,7 +599,7 @@ def namespaces(api_key: Optional[str] = None) -> Iterable[Namespace]:
     If no api_key is provided, the globally configured API key will be used.
     """
     backend = Backend(api_key)
-    response = backend.make_api_request('vectors')
+    response = backend.make_api_request('namespaces')
     content = response.get('content', dict())
     next_cursor = content.pop('next_cursor', None)
     return NamespaceIterator(backend, content.pop('namespaces', list()), next_cursor)

@@ -19,6 +19,8 @@ $ pip install turbopuffer[fast]
 ```py
 import turbopuffer as tpuf
 tpuf.api_key = 'your-token'  # Alternatively: export=TURBOPUFFER_API_KEY=your-token
+# Choose the best region for your data https://turbopuffer.com/docs/regions
+tpuf.api_base_url = "https://gcp-us-east4.turbopuffer.com"
 
 # Open a namespace
 ns = tpuf.Namespace('hello_world')
@@ -78,3 +80,13 @@ Endpoint Documentation
 ----------------------
 
 For more details on request parameters and query options, check the docs at https://turbopuffer.com/docs
+
+## Development
+
+Run `poetry install --with=test` to set up the project and dependencies.
+
+1. `poetry run pytest`
+2.  Bump version in `turbopuffer/version.py` and `pyproject.toml`
+3. `git tag vX.Y.Z && git push --tags`
+3. `poetry build`
+4. `poetry publish`

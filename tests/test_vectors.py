@@ -54,6 +54,9 @@ def test_upsert_rows():
     for i in range(10, 100):
         assert results[i-8] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
+    # Check to ensure recall is working
+    ns.recall()
+
 @pytest.mark.xdist_group(name="group1")
 def test_delete_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
@@ -600,3 +603,17 @@ def test_not_found_error():
             top_k=5,
             vector=[0.0, 0.0],
         )
+
+def test_list_in_empty_namespace():
+    ns = tpuf.Namespace(tests.test_prefix + 'client_test')
+    assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
+
+    # Test upsert multiple dict rows
+    ns.upsert([
+        {'id': 2, 'vector': [2, 2]},
+        {'id': 7, 'vector': [1, 1]},
+    ], distance_metric='euclidean_squared')
+
+    ns.delete([2, 7])
+
+    assert list(ns.vectors()) == []

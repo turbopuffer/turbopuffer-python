@@ -21,6 +21,12 @@ def find_api_key(api_key: Optional[str] = None) -> str:
                                   "Set the TURBOPUFFER_API_KEY environment variable, "
                                   "or pass `api_key=` when creating a Namespace.")
 
+def clean_api_base_url(base_url: str) -> str:
+    if base_url.endswith(('/v1', '/v1/', '/')):
+        return re.sub('(/v1|/v1/|/)$', '', base_url)
+    else:
+        return base_url
+
 
 class Backend:
     api_key: str
@@ -29,7 +35,7 @@ class Backend:
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = find_api_key(api_key)
-        self.api_base_url = tpuf.api_base_url
+        self.api_base_url = clean_api_base_url(tpuf.api_base_url)
         self.session = requests.Session()
         self.session.headers.update({
             'Authorization': f'Bearer {self.api_key}',
@@ -50,7 +56,8 @@ class Backend:
         start = time.monotonic()
         if method is None and payload is not None:
             method = 'POST'
-        request = requests.Request(method or 'GET', self.api_base_url + '/' + '/'.join(args))
+
+        request = requests.Request(method or 'GET', self.api_base_url + '/v1/' + '/'.join(args))
 
         if query is not None:
             request.params = query
@@ -81,15 +88,16 @@ class Backend:
         prepared = self.session.prepare_request(request)
 
         retry_attempt = 0
+        timeouts = (tpuf.connect_timeout, tpuf.read_timeout)
         while retry_attempt < tpuf.max_retries:
             request_start = time.monotonic()
             try:
                 # print(f'Sending request:', prepared.path_url, prepared.headers)
-                response = self.session.send(prepared, allow_redirects=False)
+                response = self.session.send(prepared, allow_redirects=False, timeout=timeouts)
                 performance['request_time'] = time.monotonic() - request_start
                 # print(f'Request time (HTTP {response.status_code}):', performance['request_time'])
 
-                if response.status_code > 500:
+                if response.status_code >= 500 or response.status_code == 408 or response.status_code == 429:
                     response.raise_for_status()
 
                 server_timing_str = response.headers.get('Server-Timing', '')
@@ -135,7 +143,7 @@ class Backend:
                         raise_api_error(response.status_code, content.get('status', 'error'), content.get('error', ''))
                 else:
                     raise_api_error(response.status_code, 'Server returned non-JSON response', response.text)
-            except requests.HTTPError as http_err:
+            except (requests.HTTPError, requests.ConnectionError, requests.Timeout) as err:
                 retry_attempt += 1
                 # print(traceback.format_exc())
                 if retry_attempt < tpuf.max_retries:
@@ -143,9 +151,13 @@ class Backend:
                     time.sleep(2 ** retry_attempt)  # exponential falloff up to 64 seconds for 6 retries.
                 else:
                     print(f'Request failed after {retry_attempt} attempts...')
-                    raise_api_error(http_err.response.status_code,
-                                   f'Request to {http_err.request.url} failed after {retry_attempt} attempts',
-                                   str(http_err))
+
+                    if isinstance(err, requests.HTTPError):
+                        raise_api_error(err.response.status_code,
+                                   f'Request to {err.request.url} failed after {retry_attempt} attempts',
+                                   str(err))
+                    else:
+                        raise
 
     async def make_api_request_async(self,
                                      *args: List[str],
@@ -244,3 +256,10 @@ class Backend:
                         raise_api_error(getattr(http_err, 'status', None),
                                         f'Request to {url} failed after {retry_attempt} attempts',
                                         str(http_err))
+
+                    if isinstance(err, requests.HTTPError):
+                        raise_api_error(err.response.status_code,
+                                   f'Request to {err.request.url} failed after {retry_attempt} attempts',
+                                   str(err))
+                    else:
+                        raise
