@@ -515,11 +515,12 @@ def test_query_and_delete():
     while True:
         results = ns.query(
             top_k=1,
-            filters=["And", [["timestamp", "Gte", 1], ["id", "Gte" if last_id is None else "Gt", last_id or 0]]]
+            filters=["And", [["timestamp", "Gte", 1], ["id", "Gte" if last_id is None else "Gt", last_id or 0]]],
+            rank_by=["Sum", [["text", "BM25", "fox jumping"], ["name", "BM25", "fox jumping"]]]
         )
         if not results:
             break
-        ns.delete([doc.id for doc in results])
+        ns.delete([int(doc.id) for doc in results])
         last_id = results[-1].id
 
     assert [doc.id for doc in ns.vectors()] == [2]

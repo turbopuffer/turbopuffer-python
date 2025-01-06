@@ -5,7 +5,7 @@ from datetime import datetime
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
-from turbopuffer.query import VectorQuery, Filters
+from turbopuffer.query import VectorQuery, Filters, RankBy
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 
@@ -319,19 +319,10 @@ class Namespace:
         else:
             raise ValueError(f'Unsupported data type: {type(data)}')
 
-    def delete(self, ids: Union[int, str, List[int], List[str], List[Union[int, str]]]) -> None:
+    def delete(self, ids: Union[int, str, List[int], List[str]]) -> None:
         """
         Deletes vectors by id.
         """
-        # If it's list[int | str], we need to convert to list[int] and list[str]
-        if isinstance(ids, list):
-            if all(isinstance(id, int) for id in ids):
-                ids = [int(id) for id in ids]  # type: List[int]
-            elif all(isinstance(id, str) for id in ids):
-                ids = [str(id) for id in ids]  # type: List[str] 
-            else:
-                raise ValueError(f'Unsupported id type: {type(ids[0])}')
-
         if isinstance(ids, int) or isinstance(ids, str):
             response = self.backend.make_api_request('vectors', self.name, payload={
                 'ids': [ids],
@@ -356,7 +347,7 @@ class Namespace:
               include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Filters] = None,
-              rank_by: Optional[Filters] = None,
+              rank_by: Optional[RankBy] = None,
               ) -> VectorResult:
         ...
 

@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 import sys
-from typing import Optional, List, Tuple, Union, Dict
+from typing import Optional, List, Tuple, Union, Dict, Literal
 
-# Refer to turbopuffer docs for valid operator names
-FilterOperator = str
+FilterOperator = str # https://turbopuffer.com/docs/query
 
 FilterValue = Union[str, int, List[str], List[int]]
 FilterCondition = Tuple[str, FilterOperator, FilterValue]
@@ -17,6 +16,31 @@ Filters = Union[
     LegacyFilterDict
 ]
 
+# We might type these into literals in the future, similar to FilterOperator
+OrderOperator = str # https://turbopuffer.com/docs/query
+RankByOperator = str # https://turbopuffer.com/docs/query
+SearchOperator = str # https://turbopuffer.com/docs/query
+
+RankByTupleSearch = Tuple[str, SearchOperator, str]
+RankByTupleOrder = Tuple[str, OrderOperator]
+RankByTupleSum   = Tuple[RankByOperator, List[RankByTupleSearch]]
+
+RankByListSearch  = List[Union[str, SearchOperator]]                # e.g. ["text", "BM25", "foo"]
+RankByListOrder   = List[Union[str, OrderOperator]]                 # e.g. ["id", "asc"]
+RankByListSum     = List[Union[RankByOperator, List[RankByTupleSearch]]]  # e.g. ["Sum", [["text", "BM25", "foo"]]]
+RankByListSumList = List[Union[RankByOperator, List[RankByListSearch]]]  # e.g. ["Sum", [["text", "BM25", "foo"]]]
+
+RankBy = Union[
+    RankByTupleSearch,
+    RankByTupleOrder,
+    RankByTupleSum,
+
+    RankByListSearch,
+    RankByListOrder,
+    RankByListSum,
+    RankByListSumList,
+]
+
 @dataclass
 class VectorQuery:
     vector: Optional[List[float]] = None
@@ -25,7 +49,7 @@ class VectorQuery:
     include_vectors: bool = False
     include_attributes: Optional[Union[List[str], bool]] = None
     filters: Optional[Filters] = None
-    rank_by: Optional[List[Union[str, List[str]]]] = None
+    rank_by: Optional[RankBy] = None
 
     def from_dict(source: dict) -> 'VectorQuery':
         return VectorQuery(
