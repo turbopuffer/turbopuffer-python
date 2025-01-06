@@ -8,6 +8,7 @@ from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankBy
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
+from turbopuffer.query import RankInput
 
 class FullTextSearchParams:
     """
@@ -112,7 +113,7 @@ class Namespace:
             return False
 
     def refresh_metadata(self):
-        response = self.backend.make_api_request('vectors', self.name, method='HEAD')
+        response = self.backend.make_api_request('namespaces', self.name, method='HEAD')
         status_code = response.get('status_code')
         if status_code == 200:
             headers = response.get('headers', dict())
@@ -170,7 +171,7 @@ class Namespace:
         """
         Returns the current schema for the namespace.
         """
-        response = self.backend.make_api_request('vectors', self.name, 'schema', method='GET')
+        response = self.backend.make_api_request('namespaces', self.name, 'schema', method='GET')
         return parse_namespace_schema(response["content"])
 
     def update_schema(self, schema_updates: NamespaceSchema):
@@ -181,7 +182,7 @@ class Namespace:
         See https://turbopuffer.com/docs/schema for specifics on allowed updates.
         """
         request_payload = json.dumps({key: value.as_dict() for key, value in schema_updates.items()}).encode()
-        response = self.backend.make_api_request('vectors', self.name, 'schema', method='POST', payload=request_payload)
+        response = self.backend.make_api_request('namespaces', self.name, 'schema', method='POST', payload=request_payload)
         return parse_namespace_schema(response["content"])
 
     @overload
@@ -255,7 +256,7 @@ class Namespace:
             if schema is not None:
                 payload["schema"] = schema
 
-            response = self.backend.make_api_request('vectors', self.name, payload=payload)
+            response = self.backend.make_api_request('namespaces', self.name, payload=payload)
 
             assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
             self.metadata = None  # Invalidate cached metadata
@@ -324,12 +325,12 @@ class Namespace:
         Deletes vectors by id.
         """
         if isinstance(ids, int) or isinstance(ids, str):
-            response = self.backend.make_api_request('vectors', self.name, payload={
+            response = self.backend.make_api_request('namespaces', self.name, payload={
                 'ids': [ids],
                 'vectors': [None],
             })
         elif isinstance(ids, list):
-            response = self.backend.make_api_request('vectors', self.name, payload={
+            response = self.backend.make_api_request('namespaces', self.name, payload={
                 'ids': ids,
                 'vectors': [None] * len(ids),
             })
@@ -390,7 +391,7 @@ class Namespace:
             else:
                 raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
 
-        response = self.backend.make_api_request('vectors', self.name, 'query', payload=query_data.__dict__)
+        response = self.backend.make_api_request('namespaces', self.name, 'query', payload=query_data.__dict__)
         result = VectorResult(response.get('content', dict()), namespace=self)
         result.performance = response.get('performance')
         return result
@@ -403,7 +404,7 @@ class Namespace:
         If you want to look up vectors by ID, use the query function with an id filter.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, query={'cursor': cursor})
+        response = self.backend.make_api_request('namespaces', self.name, query={'cursor': cursor})
         content = response.get('content', dict())
         next_cursor = content.pop('next_cursor', None)
         result = VectorResult(content, namespace=self, next_cursor=next_cursor)
@@ -415,7 +416,7 @@ class Namespace:
         Deletes all indexes in a namespace.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, 'index', method='DELETE')
+        response = self.backend.make_api_request('namespaces', self.name, 'index', method='DELETE')
         assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all_indexes() response: {response}'
 
     def delete_all(self) -> None:
@@ -423,7 +424,7 @@ class Namespace:
         Deletes all data as well as all indexes.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, method='DELETE')
+        response = self.backend.make_api_request('namespaces', self.name, method='DELETE')
         assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
         self.metadata = None  # Invalidate cached metadata
 
@@ -437,7 +438,7 @@ class Namespace:
         Recall is calculated as the ratio of matching vectors between the two search results.
         """
 
-        response = self.backend.make_api_request('vectors', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
+        response = self.backend.make_api_request('namespaces', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
         content = response.get('content', dict())
         assert 'avg_recall' in content, f'Invalid recall() response: {response}'
         return float(content.get('avg_recall'))
@@ -524,7 +525,7 @@ class NamespaceIterator:
             raise StopIteration
         else:
             response = self.backend.make_api_request(
-                'vectors',
+                'namespaces',
                 query={'cursor': self.next_cursor}
             )
             content = response.get('content', dict())
@@ -541,7 +542,7 @@ def namespaces(api_key: Optional[str] = None) -> Iterable[Namespace]:
     If no api_key is provided, the globally configured API key will be used.
     """
     backend = Backend(api_key)
-    response = backend.make_api_request('vectors')
+    response = backend.make_api_request('namespaces')
     content = response.get('content', dict())
     next_cursor = content.pop('next_cursor', None)
     return NamespaceIterator(backend, content.pop('namespaces', list()), next_cursor)
