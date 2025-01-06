@@ -32,8 +32,14 @@ class VectorRow:
     dist: Optional[float] = None
 
     def from_dict(source: dict) -> 'VectorRow':
+        id_value = source.get('id')
+        if id_value is None:
+            raise ValueError("id is must always be set")
+        if not isinstance(id_value, (int, str)):
+            raise TypeError("id must be either int or str")
+
         return VectorRow(
-            id=source.get('id'),
+            id=id_value,
             vector=source.get('vector'),
             attributes=source.get('attributes'),
             dist=source.get('dist'),
@@ -330,7 +336,7 @@ class VectorResult:
         assert self.offset == 0, "Can't iterate over VectorResult multiple times"
         return VectorResult(self.data, self.namespace, self.next_cursor)
 
-    def __next__(self):
+    def __next__(self) -> VectorRow:
         if self.data is not None and self.index + 1 < len(self.data):
             self.index += 1
             return self.data[self.index]

@@ -5,10 +5,9 @@ from datetime import datetime
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
-from turbopuffer.query import VectorQuery, Filters
+from turbopuffer.query import VectorQuery, Filters, RankBy
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
-from turbopuffer.query import RankInput
 
 class FullTextSearchParams:
     """
@@ -189,7 +188,7 @@ class Namespace:
     def upsert(self,
                ids: Union[List[int], List[str]],
                vectors: List[List[float]],
-               attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None,
+               attributes: Optional[Dict[str, List[Optional[Union[str, int, List[str], List[int]]]]]] = None,
                schema: Optional[Dict] = None,
                distance_metric: Optional[str] = None) -> None:
         """
@@ -324,7 +323,6 @@ class Namespace:
         """
         Deletes vectors by id.
         """
-
         if isinstance(ids, int) or isinstance(ids, str):
             response = self.backend.make_api_request('namespaces', self.name, payload={
                 'ids': [ids],
@@ -349,7 +347,7 @@ class Namespace:
               include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Filters] = None,
-              rank_by: Optional[RankInput] = None,
+              rank_by: Optional[RankBy] = None,
               ) -> VectorResult:
         ...
 
