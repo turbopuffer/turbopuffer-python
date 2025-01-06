@@ -8,7 +8,6 @@ from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankBy
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
-from turbopuffer.query import RankInput
 
 class FullTextSearchParams:
     """
