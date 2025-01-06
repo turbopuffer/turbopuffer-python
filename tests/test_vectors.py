@@ -516,7 +516,6 @@ def test_query_and_delete():
         results = ns.query(
             top_k=1,
             filters=["And", [["timestamp", "Gte", 1], ["id", "Gte" if last_id is None else "Gt", last_id or 0]]],
-            rank_by=["Sum", [["text", "BM25", "fox jumping"], ["name", "BM25", "fox jumping"]]]
         )
         if not results:
             break
