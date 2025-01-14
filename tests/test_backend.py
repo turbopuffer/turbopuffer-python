@@ -40,3 +40,24 @@ def test_429_retried():
         with pytest.raises(tpuf.error.APIError):
             backend.make_api_request('namespaces', payload={})
         assert sleep.call_count == tpuf.max_retries - 1
+
+
+def test_custom_headers():
+    backend = tpuf_backend.Backend("fake_api_key", headers = {"foo": "bar"})
+    assert backend.session.headers["foo"] == "bar"
+
+    ns = tpuf.Namespace('fake_namespace', headers = {"foo": "bar"})
+    assert ns.backend.session.headers["foo"] == "bar"
+
+
+def test_backend_eq():
+    backend = tpuf_backend.Backend("fake_api_key", headers = {"foo": "bar"})
+
+    backend2 = tpuf_backend.Backend("fake_api_key", headers = {"foo": "notbar"})
+    assert backend != backend2
+
+    backend2 = tpuf_backend.Backend("fake_api_key", headers = {"foo": "bar"})
+    assert backend == backend2
+
+    backend2 = tpuf_backend.Backend("fake_api_key2", headers = {"foo": "bar"})
+    assert backend != backend2
