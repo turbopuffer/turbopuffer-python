@@ -31,18 +31,22 @@ class Backend:
     api_base_url: str
     session: requests.Session
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, headers: Optional[dict] = None):
         self.api_key = find_api_key(api_key)
         self.api_base_url = clean_api_base_url(tpuf.api_base_url)
+        self.headers = headers
         self.session = requests.Session()
         self.session.headers.update({
             'Authorization': f'Bearer {self.api_key}',
             'User-Agent': f'tpuf-python/{tpuf.VERSION} {requests.utils.default_headers()["User-Agent"]}',
         })
 
+        if headers is not None:
+            self.session.headers.update(headers)
+
     def __eq__(self, other):
         if isinstance(other, Backend):
-            return self.api_key == other.api_key and self.api_base_url == other.api_base_url
+            return self.api_key == other.api_key and self.api_base_url == other.api_base_url and self.headers == other.headers
         else:
             return False
 

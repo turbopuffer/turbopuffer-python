@@ -92,7 +92,7 @@ class Namespace:
 
     metadata: Optional[dict] = None
 
-    def __init__(self, name: str, api_key: Optional[str] = None):
+    def __init__(self, name: str, api_key: Optional[str] = None, headers: Optional[dict] = None):
         """
         Creates a new turbopuffer.Namespace object for querying the turbopuffer API.
 
@@ -101,7 +101,7 @@ class Namespace:
         Specifying an api_key here will override the global configuration for API calls to this namespace.
         """
         self.name = name
-        self.backend = Backend(api_key)
+        self.backend = Backend(api_key, headers)
 
     def __str__(self) -> str:
         return f'tpuf-namespace:{self.name}'
