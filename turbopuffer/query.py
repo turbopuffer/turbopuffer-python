@@ -1,11 +1,8 @@
 from dataclasses import dataclass
 import sys
-from typing import Optional, List, Tuple, Union, Dict
-from typing import Iterable
-from typing_extensions import Literal
+from typing import Optional, List, Tuple, Union, Dict, Literal
 
-# Refer to turbopuffer docs for valid operator names
-FilterOperator = str
+FilterOperator = str # https://turbopuffer.com/docs/query
 
 FilterValue = Union[str, int, List[str], List[int]]
 FilterCondition = Tuple[str, FilterOperator, FilterValue]
@@ -13,27 +10,36 @@ FilterCondition = Tuple[str, FilterOperator, FilterValue]
 LegacyFilterCondition = Tuple[FilterOperator, FilterValue]
 LegacyFilterDict = Dict[str, List[LegacyFilterCondition]]
 
-Filters = Union[Tuple[str, List["Filters"]], FilterCondition, LegacyFilterDict]
-
-TextQueryOp = Union[Literal['BM25']]
-TextAggQueryOp = Union[Literal['Sum']]
-
-RankInputTextQuery = Union[
-    Tuple[str, TextQueryOp, str],
-    Tuple[TextAggQueryOp, Iterable['RankInputTextQuery']],
+Filters = Union[
+    Union[List[Union[str, List]], Tuple[str, List['Filters']]], 
+    FilterCondition,
+    LegacyFilterDict
 ]
 
-AttributeOrdering = Union[Literal['asc'], Literal['desc']]
+# We might type these into literals in the future, similar to FilterOperator
+OrderOperator = str # https://turbopuffer.com/docs/query
+RankByOperator = str # https://turbopuffer.com/docs/query
+SearchOperator = str # https://turbopuffer.com/docs/query
 
-RankInputOrderByAttribute = Tuple[str, AttributeOrdering]
+RankByTupleSearch = Tuple[str, SearchOperator, str]
+RankByTupleOrder = Tuple[str, OrderOperator]
+RankByTupleSum   = Tuple[RankByOperator, List[RankByTupleSearch]]
 
-# Uses tuples for nice typing, but also allows arrays for backwards compatibility
-RankInput = Union[
-    RankInputTextQuery,
-    RankInputOrderByAttribute,
-    List[Union[str, List[str]]],
+RankByListSearch  = List[Union[str, SearchOperator]]                # e.g. ["text", "BM25", "foo"]
+RankByListOrder   = List[Union[str, OrderOperator]]                 # e.g. ["id", "asc"]
+RankByListSum     = List[Union[RankByOperator, List[RankByTupleSearch]]]  # e.g. ["Sum", [["text", "BM25", "foo"]]]
+RankByListSumList = List[Union[RankByOperator, List[RankByListSearch]]]  # e.g. ["Sum", [["text", "BM25", "foo"]]]
+
+RankBy = Union[
+    RankByTupleSearch,
+    RankByTupleOrder,
+    RankByTupleSum,
+
+    RankByListSearch,
+    RankByListOrder,
+    RankByListSum,
+    RankByListSumList,
 ]
-
 
 @dataclass
 class VectorQuery:
@@ -43,7 +49,7 @@ class VectorQuery:
     include_vectors: bool = False
     include_attributes: Optional[Union[List[str], bool]] = None
     filters: Optional[Filters] = None
-    rank_by: Optional[RankInput] = None
+    rank_by: Optional[RankBy] = None
 
     def from_dict(source: dict) -> 'VectorQuery':
         return VectorQuery(
