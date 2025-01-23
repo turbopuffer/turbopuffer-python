@@ -512,6 +512,11 @@ def test_delete_by_filter():
         {'id': 9, 'vector': [0.7, 0.7], 'attributes': {'a': 3}},
     ], distance_metric='euclidean_squared')
 
+    ns.delete_by_filter(['a', 'Eq', 42]) # no-op, nothing matches
+
+    results = ns.vectors()
+    assert len(results) == 5, "Got wrong number of vectors back"
+
     ns.delete_by_filter(['a', 'Eq', 1])
 
     results = ns.vectors()
