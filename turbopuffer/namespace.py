@@ -341,6 +341,13 @@ class Namespace:
         assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid delete() response: {response}'
         self.metadata = None  # Invalidate cached metadata
 
+    def delete_by_filter(self, filters: Filters) -> None:
+        response = self.backend.make_api_request('namespaces', self.name, payload={
+            'delete_by_filter': filters
+        })
+        assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid delete_by_filter() response: {response}'
+        self.metadata = None  # Invalidate cached metadata
+
     @overload
     def query(self,
               vector: Optional[List[float]] = None,
