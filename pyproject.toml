@@ -45,6 +45,7 @@ optional = true
 pytest = "^7.4.3"
 flake8 = "^7.0.0"
 pytest-xdist = "^3.6.1"
+pytest-asyncio = "^0.23.7"
 
 [tool.poetry.group.compatibility]
 optional = true
