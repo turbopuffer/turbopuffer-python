@@ -4,8 +4,9 @@ from typing import Optional
 
 from .._models import BaseModel
 
-__all__ = ["NamespaceUpsertResponse"]
+__all__ = ["NamespaceSummary"]
 
 
-class NamespaceUpsertResponse(BaseModel):
-    status: Optional[str] = None
+class NamespaceSummary(BaseModel):
+    id: Optional[str] = None
+    """The namespace ID."""

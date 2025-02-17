@@ -7,9 +7,9 @@ import pytest
 import pydantic
 from pydantic import Field
 
-from turbopuffer._utils import PropertyInfo
-from turbopuffer._compat import PYDANTIC_V2, parse_obj, model_dump, model_json
-from turbopuffer._models import BaseModel, construct_type
+from turbopuffer_api._utils import PropertyInfo
+from turbopuffer_api._compat import PYDANTIC_V2, parse_obj, model_dump, model_json
+from turbopuffer_api._models import BaseModel, construct_type
 
 
 class BasicModel(BaseModel):

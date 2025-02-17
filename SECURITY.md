@@ -20,7 +20,7 @@ or products provided by Turbopuffer please follow the respective company's secur
 
 ### Turbopuffer Terms and Policies
 
-Please contact dev-feedback@turbopuffer.com for any questions or concerns regarding security of our services.
+Please contact info@turbopuffer.com for any questions or concerns regarding security of our services.
 
 ---
 

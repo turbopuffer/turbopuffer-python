@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from turbopuffer._utils import required_args
+from turbopuffer_api._utils import required_args
 
 
 def test_too_many_positional_params() -> None:
