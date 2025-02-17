@@ -248,7 +248,11 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        all_of: object | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        vectors: Iterable[Union[float, Iterable[float], None]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -260,6 +264,20 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
+          attributes: The attributes attached to each of the documents.
+
+          distance_metric: A function used to calculate vector similarity.
+
+              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+                Lower is better.
+              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
+
+          ids: The IDs of the documents.
+
+          schema: The schema of the attributes attached to the documents.
+
+          vectors: Vectors describing each of the documents.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -367,9 +385,11 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        all_of: object | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
         distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[namespace_upsert_params.UpsertRowBasedSchema]] | NotGiven = NOT_GIVEN,
+        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        vectors: Iterable[Union[float, Iterable[float], None]] | NotGiven = NOT_GIVEN,
         upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
         delete_by_filter: object | NotGiven = NOT_GIVEN,
@@ -386,9 +406,11 @@ class NamespacesResource(SyncAPIResource):
             f"/v1/namespaces/{namespace}",
             body=maybe_transform(
                 {
-                    "all_of": all_of,
+                    "attributes": attributes,
                     "distance_metric": distance_metric,
+                    "ids": ids,
                     "schema": schema,
+                    "vectors": vectors,
                     "upserts": upserts,
                     "copy_from_namespace": copy_from_namespace,
                     "delete_by_filter": delete_by_filter,
@@ -617,7 +639,11 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        all_of: object | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        vectors: Iterable[Union[float, Iterable[float], None]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -629,6 +655,20 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
+          attributes: The attributes attached to each of the documents.
+
+          distance_metric: A function used to calculate vector similarity.
+
+              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+                Lower is better.
+              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
+
+          ids: The IDs of the documents.
+
+          schema: The schema of the attributes attached to the documents.
+
+          vectors: Vectors describing each of the documents.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -736,9 +776,11 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        all_of: object | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
         distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[namespace_upsert_params.UpsertRowBasedSchema]] | NotGiven = NOT_GIVEN,
+        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        vectors: Iterable[Union[float, Iterable[float], None]] | NotGiven = NOT_GIVEN,
         upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
         delete_by_filter: object | NotGiven = NOT_GIVEN,
@@ -755,9 +797,11 @@ class AsyncNamespacesResource(AsyncAPIResource):
             f"/v1/namespaces/{namespace}",
             body=await async_maybe_transform(
                 {
-                    "all_of": all_of,
+                    "attributes": attributes,
                     "distance_metric": distance_metric,
+                    "ids": ids,
                     "schema": schema,
+                    "vectors": vectors,
                     "upserts": upserts,
                     "copy_from_namespace": copy_from_namespace,
                     "delete_by_filter": delete_by_filter,

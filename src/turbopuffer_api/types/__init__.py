@@ -6,6 +6,7 @@ from .document_row import DocumentRow as DocumentRow
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .document_row_param import DocumentRowParam as DocumentRowParam
 from .namespace_list_params import NamespaceListParams as NamespaceListParams
+from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .namespace_upsert_params import NamespaceUpsertParams as NamespaceUpsertParams
 from .namespace_query_response import NamespaceQueryResponse as NamespaceQueryResponse

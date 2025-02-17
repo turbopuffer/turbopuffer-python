@@ -2,15 +2,20 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union, Iterable
-from typing_extensions import Literal, Annotated, TypeAlias, TypedDict
+from typing import Dict, List, Union, Iterable
+from typing_extensions import Literal, TypeAlias, TypedDict
 
-from .._utils import PropertyInfo
 from .document_row_param import DocumentRowParam
 
 __all__ = [
     "NamespaceUpsertParams",
     "UpsertColumnar",
+    "UpsertColumnarAttribute",
+    "UpsertColumnarAttributeFullTextSearch",
+    "UpsertColumnarAttributeFullTextSearchFullTextSearchConfig",
+    "UpsertColumnarSchema",
+    "UpsertColumnarSchemaFullTextSearch",
+    "UpsertColumnarSchemaFullTextSearchFullTextSearchConfig",
     "UpsertRowBased",
     "UpsertRowBasedSchema",
     "UpsertRowBasedSchemaFullTextSearch",
@@ -21,7 +26,149 @@ __all__ = [
 
 
 class UpsertColumnar(TypedDict, total=False):
-    all_of: Annotated[object, PropertyInfo(alias="allOf")]
+    attributes: Dict[str, Iterable[UpsertColumnarAttribute]]
+    """The attributes attached to each of the documents."""
+
+    distance_metric: Literal["cosine_distance", "euclidean_squared"]
+    """A function used to calculate vector similarity.
+
+    - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+      Lower is better.
+    - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
+    """
+
+    ids: List[Union[str, int]]
+    """The IDs of the documents."""
+
+    schema: Dict[str, Iterable[UpsertColumnarSchema]]
+    """The schema of the attributes attached to the documents."""
+
+    vectors: Iterable[Union[float, Iterable[float], None]]
+    """Vectors describing each of the documents."""
+
+
+class UpsertColumnarAttributeFullTextSearchFullTextSearchConfig(TypedDict, total=False):
+    case_sensitive: bool
+    """Whether searching is case-sensitive.
+
+    Defaults to `false` (i.e. case-insensitive).
+    """
+
+    language: Literal[
+        "arabic",
+        "danish",
+        "dutch",
+        "english",
+        "finnish",
+        "french",
+        "german",
+        "greek",
+        "hungarian",
+        "italian",
+        "norwegian",
+        "portuguese",
+        "romanian",
+        "russian",
+        "spanish",
+        "swedish",
+        "tamil",
+        "turkish",
+    ]
+    """The language of the text. Defaults to `english`."""
+
+    remove_stopwords: bool
+    """Removes common words from the text based on language.
+
+    Defaults to `true` (i.e. remove common words).
+    """
+
+    stemming: bool
+    """Language-specific stemming for the text.
+
+    Defaults to `false` (i.e., do not stem).
+    """
+
+
+UpsertColumnarAttributeFullTextSearch: TypeAlias = Union[
+    bool, UpsertColumnarAttributeFullTextSearchFullTextSearchConfig
+]
+
+
+class UpsertColumnarAttribute(TypedDict, total=False):
+    filterable: bool
+    """Whether or not the attributes can be used in filters/WHERE clauses."""
+
+    full_text_search: UpsertColumnarAttributeFullTextSearch
+    """Whether this attribute can be used as part of a BM25 full-text search.
+
+    Requires the `string` or `[]string` type, and by default, BM25-enabled
+    attributes are not filterable. You can override this by setting
+    `filterable: true`.
+    """
+
+    type: Literal["string", "uint", "uuid", "bool", "[]string", "[]uint", "[]uuid"]
+    """The data type of the attribute."""
+
+
+class UpsertColumnarSchemaFullTextSearchFullTextSearchConfig(TypedDict, total=False):
+    case_sensitive: bool
+    """Whether searching is case-sensitive.
+
+    Defaults to `false` (i.e. case-insensitive).
+    """
+
+    language: Literal[
+        "arabic",
+        "danish",
+        "dutch",
+        "english",
+        "finnish",
+        "french",
+        "german",
+        "greek",
+        "hungarian",
+        "italian",
+        "norwegian",
+        "portuguese",
+        "romanian",
+        "russian",
+        "spanish",
+        "swedish",
+        "tamil",
+        "turkish",
+    ]
+    """The language of the text. Defaults to `english`."""
+
+    remove_stopwords: bool
+    """Removes common words from the text based on language.
+
+    Defaults to `true` (i.e. remove common words).
+    """
+
+    stemming: bool
+    """Language-specific stemming for the text.
+
+    Defaults to `false` (i.e., do not stem).
+    """
+
+
+UpsertColumnarSchemaFullTextSearch: TypeAlias = Union[bool, UpsertColumnarSchemaFullTextSearchFullTextSearchConfig]
+
+
+class UpsertColumnarSchema(TypedDict, total=False):
+    filterable: bool
+    """Whether or not the attributes can be used in filters/WHERE clauses."""
+
+    full_text_search: UpsertColumnarSchemaFullTextSearch
+    """Whether this attribute can be used as part of a BM25 full-text search.
+
+    Requires the `string` or `[]string` type, and by default, BM25-enabled
+    attributes are not filterable. You can override this by setting
+    `filterable: true`.
+    """
+
+    type: Literal["string", "uint", "uuid", "bool", "[]string", "[]uint", "[]uuid"]
+    """The data type of the attribute."""
 
 
 class UpsertRowBased(TypedDict, total=False):

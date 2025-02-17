@@ -198,7 +198,27 @@ class TestNamespaces:
     def test_method_upsert_with_all_params_overload_1(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.upsert(
             namespace="namespace",
-            all_of={},
+            attributes={
+                "foo": [
+                    {
+                        "filterable": True,
+                        "full_text_search": True,
+                        "type": "string",
+                    }
+                ]
+            },
+            distance_metric="cosine_distance",
+            ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            schema={
+                "foo": [
+                    {
+                        "filterable": True,
+                        "full_text_search": True,
+                        "type": "string",
+                    }
+                ]
+            },
+            vectors=[0],
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
 
@@ -571,7 +591,27 @@ class TestAsyncNamespaces:
     async def test_method_upsert_with_all_params_overload_1(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.upsert(
             namespace="namespace",
-            all_of={},
+            attributes={
+                "foo": [
+                    {
+                        "filterable": True,
+                        "full_text_search": True,
+                        "type": "string",
+                    }
+                ]
+            },
+            distance_metric="cosine_distance",
+            ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+            schema={
+                "foo": [
+                    {
+                        "filterable": True,
+                        "full_text_search": True,
+                        "type": "string",
+                    }
+                ]
+            },
+            vectors=[0],
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
 
