@@ -10,3 +10,5 @@ __all__ = ["NamespaceSummary"]
 class NamespaceSummary(BaseModel):
     id: Optional[str] = None
     """The namespace ID."""
+
+    required: Optional[object] = None
