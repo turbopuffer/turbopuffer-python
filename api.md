@@ -8,6 +8,7 @@ from turbopuffer.types import (
     DistanceMetric,
     DocumentColumns,
     DocumentRow,
+    DocumentRowWithScore,
     FullTextSearchConfig,
     ID,
     NamespaceSummary,
