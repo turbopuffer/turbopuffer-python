@@ -3,8 +3,8 @@
 from typing import List
 from typing_extensions import TypeAlias
 
-from .document_row_response import DocumentRowResponse
+from .document_row import DocumentRow
 
 __all__ = ["NamespaceQueryResponse"]
 
-NamespaceQueryResponse: TypeAlias = List[DocumentRowResponse]
+NamespaceQueryResponse: TypeAlias = List[DocumentRow]

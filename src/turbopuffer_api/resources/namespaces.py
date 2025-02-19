@@ -2,16 +2,12 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Iterable
+from typing import Dict, List, Union, Iterable
+from typing_extensions import Literal, overload
 
 import httpx
 
-from ..types import (
-    DistanceMetric,
-    namespace_list_params,
-    namespace_query_params,
-    namespace_upsert_params,
-)
+from ..types import namespace_list_params, namespace_query_params, namespace_upsert_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import (
     maybe_transform,
@@ -27,8 +23,8 @@ from .._response import (
 )
 from ..pagination import SyncListNamespaces, AsyncListNamespaces
 from .._base_client import AsyncPaginator, make_request_options
-from ..types.distance_metric import DistanceMetric
 from ..types.namespace_summary import NamespaceSummary
+from ..types.document_row_param import DocumentRowParam
 from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_upsert_response import NamespaceUpsertResponse
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
@@ -71,7 +67,7 @@ class NamespacesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> SyncListNamespaces[NamespaceSummary]:
         """
-        List namespaces
+        List namespaces.
 
         Args:
           cursor: Retrieve the next page of results.
@@ -120,7 +116,7 @@ class NamespacesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> NamespaceDeleteAllResponse:
         """
-        Delete namespace
+        Delete namespace.
 
         Args:
           extra_headers: Send extra headers
@@ -179,7 +175,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str,
         *,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
         filter: object | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         include_vectors: bool | NotGiven = NOT_GIVEN,
@@ -194,8 +190,16 @@ class NamespacesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> NamespaceQueryResponse:
         """
+        Query, filter, full-text search and vector search documents.
+
         Args:
+          consistency: The consistency level for a query.
+
           distance_metric: A function used to calculate vector similarity.
+
+              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+                Lower is better.
+              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
 
           filter: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
@@ -243,11 +247,16 @@ class NamespacesResource(SyncAPIResource):
             cast_to=NamespaceQueryResponse,
         )
 
+    @overload
     def upsert(
         self,
         namespace: str,
         *,
-        documents: namespace_upsert_params.Documents,
+        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        vectors: Iterable[Union[float, Iterable[float], None]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -259,7 +268,19 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          documents: Upsert documents in columnar format.
+          attributes: The attributes attached to each of the documents.
+
+          distance_metric: A function used to calculate vector similarity.
+
+              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+                Lower is better.
+              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
+
+          ids: The IDs of the documents.
+
+          schema: The schema of the attributes attached to the documents.
+
+          vectors: Vectors describing each of the documents.
 
           extra_headers: Send extra headers
 
@@ -269,11 +290,137 @@ class NamespacesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        ...
+
+    @overload
+    def upsert(
+        self,
+        namespace: str,
+        *,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertRowBasedSchema]] | NotGiven = NOT_GIVEN,
+        upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpsertResponse:
+        """
+        Create, update, or delete documents.
+
+        Args:
+          distance_metric: A function used to calculate vector similarity.
+
+              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+                Lower is better.
+              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
+
+          schema: The schema of the attributes attached to the documents.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    def upsert(
+        self,
+        namespace: str,
+        *,
+        copy_from_namespace: str | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpsertResponse:
+        """
+        Create, update, or delete documents.
+
+        Args:
+          copy_from_namespace: The namespace to copy documents from.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    def upsert(
+        self,
+        namespace: str,
+        *,
+        delete_by_filter: object | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpsertResponse:
+        """
+        Create, update, or delete documents.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    def upsert(
+        self,
+        namespace: str,
+        *,
+        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        vectors: Iterable[Union[float, Iterable[float], None]] | NotGiven = NOT_GIVEN,
+        upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        copy_from_namespace: str | NotGiven = NOT_GIVEN,
+        delete_by_filter: object | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpsertResponse:
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             f"/v1/namespaces/{namespace}",
-            body=maybe_transform(documents, namespace_upsert_params.NamespaceUpsertParams),
+            body=maybe_transform(
+                {
+                    "attributes": attributes,
+                    "distance_metric": distance_metric,
+                    "ids": ids,
+                    "schema": schema,
+                    "vectors": vectors,
+                    "upserts": upserts,
+                    "copy_from_namespace": copy_from_namespace,
+                    "delete_by_filter": delete_by_filter,
+                },
+                namespace_upsert_params.NamespaceUpsertParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -315,7 +462,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncPaginator[NamespaceSummary, AsyncListNamespaces[NamespaceSummary]]:
         """
-        List namespaces
+        List namespaces.
 
         Args:
           cursor: Retrieve the next page of results.
@@ -364,7 +511,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> NamespaceDeleteAllResponse:
         """
-        Delete namespace
+        Delete namespace.
 
         Args:
           extra_headers: Send extra headers
@@ -423,7 +570,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str,
         *,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
         filter: object | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         include_vectors: bool | NotGiven = NOT_GIVEN,
@@ -438,8 +585,16 @@ class AsyncNamespacesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> NamespaceQueryResponse:
         """
+        Query, filter, full-text search and vector search documents.
+
         Args:
+          consistency: The consistency level for a query.
+
           distance_metric: A function used to calculate vector similarity.
+
+              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+                Lower is better.
+              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
 
           filter: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
@@ -487,11 +642,16 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceQueryResponse,
         )
 
+    @overload
     async def upsert(
         self,
         namespace: str,
         *,
-        documents: namespace_upsert_params.Documents,
+        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        vectors: Iterable[Union[float, Iterable[float], None]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -503,7 +663,19 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          documents: Upsert documents in columnar format.
+          attributes: The attributes attached to each of the documents.
+
+          distance_metric: A function used to calculate vector similarity.
+
+              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+                Lower is better.
+              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
+
+          ids: The IDs of the documents.
+
+          schema: The schema of the attributes attached to the documents.
+
+          vectors: Vectors describing each of the documents.
 
           extra_headers: Send extra headers
 
@@ -513,11 +685,137 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        ...
+
+    @overload
+    async def upsert(
+        self,
+        namespace: str,
+        *,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertRowBasedSchema]] | NotGiven = NOT_GIVEN,
+        upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpsertResponse:
+        """
+        Create, update, or delete documents.
+
+        Args:
+          distance_metric: A function used to calculate vector similarity.
+
+              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
+                Lower is better.
+              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
+
+          schema: The schema of the attributes attached to the documents.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    async def upsert(
+        self,
+        namespace: str,
+        *,
+        copy_from_namespace: str | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpsertResponse:
+        """
+        Create, update, or delete documents.
+
+        Args:
+          copy_from_namespace: The namespace to copy documents from.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    async def upsert(
+        self,
+        namespace: str,
+        *,
+        delete_by_filter: object | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpsertResponse:
+        """
+        Create, update, or delete documents.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    async def upsert(
+        self,
+        namespace: str,
+        *,
+        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
+        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        vectors: Iterable[Union[float, Iterable[float], None]] | NotGiven = NOT_GIVEN,
+        upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        copy_from_namespace: str | NotGiven = NOT_GIVEN,
+        delete_by_filter: object | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpsertResponse:
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             f"/v1/namespaces/{namespace}",
-            body=await async_maybe_transform(documents, namespace_upsert_params.NamespaceUpsertParams),
+            body=await async_maybe_transform(
+                {
+                    "attributes": attributes,
+                    "distance_metric": distance_metric,
+                    "ids": ids,
+                    "schema": schema,
+                    "vectors": vectors,
+                    "upserts": upserts,
+                    "copy_from_namespace": copy_from_namespace,
+                    "delete_by_filter": delete_by_filter,
+                },
+                namespace_upsert_params.NamespaceUpsertParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

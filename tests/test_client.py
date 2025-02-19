@@ -21,19 +21,19 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from turbopuffer import Turbopuffer, AsyncTurbopuffer, APIResponseValidationError
-from turbopuffer._types import Omit
-from turbopuffer._utils import maybe_transform
-from turbopuffer._models import BaseModel, FinalRequestOptions
-from turbopuffer._constants import RAW_RESPONSE_HEADER
-from turbopuffer._exceptions import APIStatusError, APITimeoutError, TurbopufferError, APIResponseValidationError
-from turbopuffer._base_client import (
+from turbopuffer_api import Turbopuffer, AsyncTurbopuffer, APIResponseValidationError
+from turbopuffer_api._types import Omit
+from turbopuffer_api._utils import maybe_transform
+from turbopuffer_api._models import BaseModel, FinalRequestOptions
+from turbopuffer_api._constants import RAW_RESPONSE_HEADER
+from turbopuffer_api._exceptions import APIStatusError, APITimeoutError, TurbopufferError, APIResponseValidationError
+from turbopuffer_api._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     BaseClient,
     make_request_options,
 )
-from turbopuffer.types.namespace_query_params import NamespaceQueryParams
+from turbopuffer_api.types.namespace_query_params import NamespaceQueryParams
 
 from .utils import update_env
 
@@ -232,10 +232,10 @@ class TestTurbopuffer:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "turbopuffer/_legacy_response.py",
-                        "turbopuffer/_response.py",
+                        "turbopuffer_api/_legacy_response.py",
+                        "turbopuffer_api/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "turbopuffer/_compat.py",
+                        "turbopuffer_api/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -721,7 +721,7 @@ class TestTurbopuffer:
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/v1/namespaces/namespace/query").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -736,7 +736,7 @@ class TestTurbopuffer:
 
         assert _get_open_connections(self.client) == 0
 
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/v1/namespaces/namespace/query").mock(return_value=httpx.Response(500))
@@ -752,7 +752,7 @@ class TestTurbopuffer:
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     def test_retries_taken(
@@ -783,7 +783,7 @@ class TestTurbopuffer:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_omit_retry_count_header(
         self, client: Turbopuffer, failures_before_success: int, respx_mock: MockRouter
@@ -808,7 +808,7 @@ class TestTurbopuffer:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_overwrite_retry_count_header(
         self, client: Turbopuffer, failures_before_success: int, respx_mock: MockRouter
@@ -1008,10 +1008,10 @@ class TestAsyncTurbopuffer:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "turbopuffer/_legacy_response.py",
-                        "turbopuffer/_response.py",
+                        "turbopuffer_api/_legacy_response.py",
+                        "turbopuffer_api/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "turbopuffer/_compat.py",
+                        "turbopuffer_api/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -1501,7 +1501,7 @@ class TestAsyncTurbopuffer:
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/v1/namespaces/namespace/query").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -1516,7 +1516,7 @@ class TestAsyncTurbopuffer:
 
         assert _get_open_connections(self.client) == 0
 
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.post("/v1/namespaces/namespace/query").mock(return_value=httpx.Response(500))
@@ -1532,7 +1532,7 @@ class TestAsyncTurbopuffer:
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
@@ -1564,7 +1564,7 @@ class TestAsyncTurbopuffer:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_omit_retry_count_header(
@@ -1590,7 +1590,7 @@ class TestAsyncTurbopuffer:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("turbopuffer_api._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_overwrite_retry_count_header(
@@ -1626,8 +1626,8 @@ class TestAsyncTurbopuffer:
         import nest_asyncio
         import threading
 
-        from turbopuffer._utils import asyncify
-        from turbopuffer._base_client import get_platform 
+        from turbopuffer_api._utils import asyncify
+        from turbopuffer_api._base_client import get_platform 
 
         async def test_main() -> None:
             result = await asyncify(get_platform)()

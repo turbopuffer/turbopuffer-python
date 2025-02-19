@@ -4,8 +4,8 @@ from typing import Sequence
 
 import pytest
 
-from turbopuffer._types import FileTypes
-from turbopuffer._utils import extract_files
+from turbopuffer_api._types import FileTypes
+from turbopuffer_api._utils import extract_files
 
 
 def test_removes_files_from_input() -> None:
