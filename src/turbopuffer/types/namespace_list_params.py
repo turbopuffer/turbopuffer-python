@@ -15,4 +15,4 @@ class NamespaceListParams(TypedDict, total=False):
     """Limit the number of results per page."""
 
     prefix: str
-    """Retrieve only the namespaces that match the prefix."""
+    """Retrieve only namespaces that match the prefix."""
