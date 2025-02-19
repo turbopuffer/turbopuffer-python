@@ -11,7 +11,7 @@ __all__ = ["DocumentColumnsParam"]
 
 
 class DocumentColumnsParam(TypedDict, total=False):
-    attributes: Dict[str, Iterable[object]]
+    attributes: Dict[str, Iterable[Dict[str, object]]]
     """The attributes attached to each of the documents."""
 
     ids: List[IDParam]

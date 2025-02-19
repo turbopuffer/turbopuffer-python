@@ -33,7 +33,6 @@ from ..types.id_param import IDParam
 from ..types.distance_metric import DistanceMetric
 from ..types.namespace_summary import NamespaceSummary
 from ..types.document_row_param import DocumentRowParam
-from ..types.attribute_schema_param import AttributeSchemaParam
 from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_upsert_response import NamespaceUpsertResponse
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
@@ -254,9 +253,9 @@ class NamespacesResource(SyncAPIResource):
         namespace: str,
         *,
         distance_metric: DistanceMetric,
-        attributes: Dict[str, Iterable[object]] | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[Dict[str, object]]] | NotGiven = NOT_GIVEN,
         ids: List[IDParam] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -296,7 +295,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         distance_metric: DistanceMetric,
         upserts: Iterable[DocumentRowParam],
-        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertRowBasedSchema]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -384,9 +383,9 @@ class NamespacesResource(SyncAPIResource):
         namespace: str,
         *,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        attributes: Dict[str, Iterable[object]] | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[Dict[str, object]]] | NotGiven = NOT_GIVEN,
         ids: List[IDParam] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
         upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
@@ -634,9 +633,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str,
         *,
         distance_metric: DistanceMetric,
-        attributes: Dict[str, Iterable[object]] | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[Dict[str, object]]] | NotGiven = NOT_GIVEN,
         ids: List[IDParam] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -676,7 +675,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         distance_metric: DistanceMetric,
         upserts: Iterable[DocumentRowParam],
-        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertRowBasedSchema]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -764,9 +763,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str,
         *,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        attributes: Dict[str, Iterable[object]] | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[Dict[str, object]]] | NotGiven = NOT_GIVEN,
         ids: List[IDParam] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
         upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,

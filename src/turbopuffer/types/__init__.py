@@ -6,11 +6,9 @@ from .id import ID as ID
 from .id_param import IDParam as IDParam
 from .document_row import DocumentRow as DocumentRow
 from .distance_metric import DistanceMetric as DistanceMetric
-from .attribute_schema import AttributeSchema as AttributeSchema
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .document_row_param import DocumentRowParam as DocumentRowParam
 from .namespace_list_params import NamespaceListParams as NamespaceListParams
-from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .full_text_search_config import FullTextSearchConfig as FullTextSearchConfig

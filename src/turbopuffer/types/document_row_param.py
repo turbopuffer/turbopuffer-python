@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Iterable, Optional
+from typing import Dict, Iterable, Optional
 from typing_extensions import TypedDict
 
 from .id_param import IDParam
@@ -14,7 +14,7 @@ class DocumentRowParam(TypedDict, total=False):
     id: IDParam
     """An identifier for a document."""
 
-    attributes: object
+    attributes: Dict[str, object]
     """The attributes attached to the document."""
 
     vector: Optional[Iterable[float]]
