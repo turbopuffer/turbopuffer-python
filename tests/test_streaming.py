@@ -5,8 +5,8 @@ from typing import Iterator, AsyncIterator
 import httpx
 import pytest
 
-from turbopuffer_api import Turbopuffer, AsyncTurbopuffer
-from turbopuffer_api._streaming import Stream, AsyncStream, ServerSentEvent
+from turbopuffer import Turbopuffer, AsyncTurbopuffer
+from turbopuffer._streaming import Stream, AsyncStream, ServerSentEvent
 
 
 @pytest.mark.asyncio

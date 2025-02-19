@@ -8,15 +8,15 @@ from typing import Any, cast
 import pytest
 
 from tests.utils import assert_matches_type
-from turbopuffer_api import Turbopuffer, AsyncTurbopuffer
-from turbopuffer_api.types import (
+from turbopuffer import Turbopuffer, AsyncTurbopuffer
+from turbopuffer.types import (
     NamespaceSummary,
     NamespaceQueryResponse,
     NamespaceUpsertResponse,
     NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,
 )
-from turbopuffer_api.pagination import SyncListNamespaces, AsyncListNamespaces
+from turbopuffer.pagination import SyncListNamespaces, AsyncListNamespaces
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 

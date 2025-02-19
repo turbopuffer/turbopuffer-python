@@ -2,7 +2,7 @@ import operator
 from typing import Any
 from typing_extensions import override
 
-from turbopuffer_api._utils import LazyProxy
+from turbopuffer._utils import LazyProxy
 
 
 class RecursiveLazyProxy(LazyProxy[Any]):

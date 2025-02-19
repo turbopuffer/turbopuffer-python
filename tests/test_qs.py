@@ -4,7 +4,7 @@ from urllib.parse import unquote
 
 import pytest
 
-from turbopuffer_api._qs import Querystring, stringify
+from turbopuffer._qs import Querystring, stringify
 
 
 def test_empty() -> None:

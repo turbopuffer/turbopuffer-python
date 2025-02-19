@@ -7,14 +7,14 @@ from typing import TYPE_CHECKING, Iterator, AsyncIterator
 import pytest
 from pytest_asyncio import is_async_test
 
-from turbopuffer_api import Turbopuffer, AsyncTurbopuffer
+from turbopuffer import Turbopuffer, AsyncTurbopuffer
 
 if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest
 
 pytest.register_assert_rewrite("tests.utils")
 
-logging.getLogger("turbopuffer_api").setLevel(logging.DEBUG)
+logging.getLogger("turbopuffer").setLevel(logging.DEBUG)
 
 
 # automatically add `pytest.mark.asyncio()` to all of our async tests
