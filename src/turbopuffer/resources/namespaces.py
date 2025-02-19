@@ -15,6 +15,7 @@ from ..types import (
 )
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import (
+    required_args,
     maybe_transform,
     async_maybe_transform,
 )
@@ -252,8 +253,8 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        attributes: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric,
+        attributes: Dict[str, Iterable[object]] | NotGiven = NOT_GIVEN,
         ids: List[IDParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
@@ -268,9 +269,9 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          attributes: The attributes attached to each of the documents.
-
           distance_metric: A function used to calculate vector similarity.
+
+          attributes: The attributes attached to each of the documents.
 
           ids: The IDs of the documents.
 
@@ -293,9 +294,9 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric,
+        upserts: Iterable[DocumentRowParam],
         schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
-        upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -326,7 +327,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        copy_from_namespace: str | NotGiven = NOT_GIVEN,
+        copy_from_namespace: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -355,7 +356,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        delete_by_filter: object | NotGiven = NOT_GIVEN,
+        delete_by_filter: object,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -377,12 +378,13 @@ class NamespacesResource(SyncAPIResource):
         """
         ...
 
+    @required_args(["distance_metric"], ["distance_metric", "upserts"], ["copy_from_namespace"], ["delete_by_filter"])
     def upsert(
         self,
         namespace: str,
         *,
-        attributes: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[object]] | NotGiven = NOT_GIVEN,
         ids: List[IDParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
@@ -402,8 +404,8 @@ class NamespacesResource(SyncAPIResource):
             f"/v1/namespaces/{namespace}",
             body=maybe_transform(
                 {
-                    "attributes": attributes,
                     "distance_metric": distance_metric,
+                    "attributes": attributes,
                     "ids": ids,
                     "schema": schema,
                     "vectors": vectors,
@@ -631,8 +633,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        attributes: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric,
+        attributes: Dict[str, Iterable[object]] | NotGiven = NOT_GIVEN,
         ids: List[IDParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
@@ -647,9 +649,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          attributes: The attributes attached to each of the documents.
-
           distance_metric: A function used to calculate vector similarity.
+
+          attributes: The attributes attached to each of the documents.
 
           ids: The IDs of the documents.
 
@@ -672,9 +674,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric,
+        upserts: Iterable[DocumentRowParam],
         schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
-        upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -705,7 +707,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        copy_from_namespace: str | NotGiven = NOT_GIVEN,
+        copy_from_namespace: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -734,7 +736,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        delete_by_filter: object | NotGiven = NOT_GIVEN,
+        delete_by_filter: object,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -756,12 +758,13 @@ class AsyncNamespacesResource(AsyncAPIResource):
         """
         ...
 
+    @required_args(["distance_metric"], ["distance_metric", "upserts"], ["copy_from_namespace"], ["delete_by_filter"])
     async def upsert(
         self,
         namespace: str,
         *,
-        attributes: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[object]] | NotGiven = NOT_GIVEN,
         ids: List[IDParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
@@ -781,8 +784,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
             f"/v1/namespaces/{namespace}",
             body=await async_maybe_transform(
                 {
-                    "attributes": attributes,
                     "distance_metric": distance_metric,
+                    "attributes": attributes,
                     "ids": ids,
                     "schema": schema,
                     "vectors": vectors,
