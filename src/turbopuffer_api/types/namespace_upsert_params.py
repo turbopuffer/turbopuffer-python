@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Union, Iterable
+from typing import Dict, List, Union, Iterable, Optional
 from typing_extensions import Literal, TypeAlias, TypedDict
 
 from .document_row_param import DocumentRowParam
@@ -43,7 +43,7 @@ class UpsertColumnar(TypedDict, total=False):
     schema: Dict[str, Iterable[UpsertColumnarSchema]]
     """The schema of the attributes attached to the documents."""
 
-    vectors: Iterable[Union[float, Iterable[float], None]]
+    vectors: Iterable[Optional[Iterable[float]]]
     """Vectors describing each of the documents."""
 
 

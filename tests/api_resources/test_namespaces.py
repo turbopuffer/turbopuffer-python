@@ -218,7 +218,7 @@ class TestNamespaces:
                     }
                 ]
             },
-            vectors=[0],
+            vectors=[[0]],
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
 
@@ -611,7 +611,7 @@ class TestAsyncNamespaces:
                     }
                 ]
             },
-            vectors=[0],
+            vectors=[[0]],
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
 

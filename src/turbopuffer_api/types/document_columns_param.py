@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Union, Iterable
+from typing import Dict, List, Union, Iterable, Optional
 from typing_extensions import Literal, TypeAlias, TypedDict
 
 __all__ = [
@@ -81,5 +81,5 @@ class DocumentColumnsParam(TypedDict, total=False):
     ids: List[Union[str, int]]
     """The IDs of the documents."""
 
-    vectors: Iterable[Union[float, Iterable[float], None]]
+    vectors: Iterable[Optional[Iterable[float]]]
     """Vectors describing each of the documents."""
