@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 from typing import Dict, List, Union, Iterable, Optional
-from typing_extensions import Literal, overload
+from typing_extensions import overload
 
 import httpx
 
-from ..types import namespace_list_params, namespace_query_params, namespace_upsert_params
+from ..types import (
+    DistanceMetric,
+    namespace_list_params,
+    namespace_query_params,
+    namespace_upsert_params,
+)
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import (
     maybe_transform,
@@ -23,8 +28,11 @@ from .._response import (
 )
 from ..pagination import SyncListNamespaces, AsyncListNamespaces
 from .._base_client import AsyncPaginator, make_request_options
+from ..types.id_param import IDParam
+from ..types.distance_metric import DistanceMetric
 from ..types.namespace_summary import NamespaceSummary
 from ..types.document_row_param import DocumentRowParam
+from ..types.attribute_schema_param import AttributeSchemaParam
 from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_upsert_response import NamespaceUpsertResponse
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
@@ -175,7 +183,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str,
         *,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filter: object | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         include_vectors: bool | NotGiven = NOT_GIVEN,
@@ -192,10 +200,6 @@ class NamespacesResource(SyncAPIResource):
         """
         Args:
           distance_metric: A function used to calculate vector similarity.
-
-              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
-                Lower is better.
-              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
 
           filter: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
@@ -248,10 +252,10 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
-        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
-        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        ids: List[IDParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -267,10 +271,6 @@ class NamespacesResource(SyncAPIResource):
           attributes: The attributes attached to each of the documents.
 
           distance_metric: A function used to calculate vector similarity.
-
-              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
-                Lower is better.
-              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
 
           ids: The IDs of the documents.
 
@@ -293,8 +293,8 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[namespace_upsert_params.UpsertRowBasedSchema]] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -308,10 +308,6 @@ class NamespacesResource(SyncAPIResource):
 
         Args:
           distance_metric: A function used to calculate vector similarity.
-
-              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
-                Lower is better.
-              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
 
           schema: The schema of the attributes attached to the documents.
 
@@ -385,10 +381,10 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
-        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
-        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        ids: List[IDParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
         upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
@@ -566,7 +562,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str,
         *,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filter: object | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         include_vectors: bool | NotGiven = NOT_GIVEN,
@@ -583,10 +579,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
         """
         Args:
           distance_metric: A function used to calculate vector similarity.
-
-              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
-                Lower is better.
-              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
 
           filter: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
@@ -639,10 +631,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
-        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
-        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        ids: List[IDParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -658,10 +650,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
           attributes: The attributes attached to each of the documents.
 
           distance_metric: A function used to calculate vector similarity.
-
-              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
-                Lower is better.
-              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
 
           ids: The IDs of the documents.
 
@@ -684,8 +672,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[namespace_upsert_params.UpsertRowBasedSchema]] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -699,10 +687,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
         Args:
           distance_metric: A function used to calculate vector similarity.
-
-              - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
-                Lower is better.
-              - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
 
           schema: The schema of the attributes attached to the documents.
 
@@ -776,10 +760,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        attributes: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarAttribute]] | NotGiven = NOT_GIVEN,
-        distance_metric: Literal["cosine_distance", "euclidean_squared"] | NotGiven = NOT_GIVEN,
-        ids: List[Union[str, int]] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, Iterable[namespace_upsert_params.UpsertColumnarSchema]] | NotGiven = NOT_GIVEN,
+        attributes: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        ids: List[IDParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, Iterable[AttributeSchemaParam]] | NotGiven = NOT_GIVEN,
         vectors: Iterable[Optional[Iterable[float]]] | NotGiven = NOT_GIVEN,
         upserts: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,

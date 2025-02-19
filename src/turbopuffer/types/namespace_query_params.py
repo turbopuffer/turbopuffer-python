@@ -5,19 +5,16 @@ from __future__ import annotations
 from typing import List, Union, Iterable
 from typing_extensions import Literal, TypedDict
 
+from .distance_metric import DistanceMetric
+
 __all__ = ["NamespaceQueryParams", "Consistency"]
 
 
 class NamespaceQueryParams(TypedDict, total=False):
     consistency: Consistency
 
-    distance_metric: Literal["cosine_distance", "euclidean_squared"]
-    """A function used to calculate vector similarity.
-
-    - `cosine_distance` - Defined as `1 - cosine_similarity` and ranges from 0 to 2.
-      Lower is better.
-    - `euclidean_squared` - Defined as `sum((x - y)^2)`. Lower is better.
-    """
+    distance_metric: DistanceMetric
+    """A function used to calculate vector similarity."""
 
     filter: object
     """Exact filters for attributes to refine search results for.

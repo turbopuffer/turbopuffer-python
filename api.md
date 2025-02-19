@@ -4,8 +4,12 @@ Types:
 
 ```python
 from turbopuffer.types import (
+    AttributeSchema,
+    DistanceMetric,
     DocumentColumns,
     DocumentRow,
+    FullTextSearchConfig,
+    ID,
     NamespaceSummary,
     NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,
