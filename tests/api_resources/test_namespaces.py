@@ -206,113 +206,42 @@ class TestNamespaces:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_upsert_overload_1(self, client: Turbopuffer) -> None:
+    def test_method_upsert(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.upsert(
             namespace="namespace",
-            distance_metric="cosine_distance",
+            documents={"distance_metric": "cosine_distance"},
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_upsert_with_all_params_overload_1(self, client: Turbopuffer) -> None:
+    def test_method_upsert_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.upsert(
             namespace="namespace",
-            distance_metric="cosine_distance",
-            attributes={"foo": [{"foo": "bar"}]},
-            ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            schema={
-                "foo": [
-                    {
-                        "filterable": True,
-                        "full_text_search": True,
-                        "type": "string",
-                    }
-                ]
-            },
-            vectors=[[0]],
-        )
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_raw_response_upsert_overload_1(self, client: Turbopuffer) -> None:
-        response = client.namespaces.with_raw_response.upsert(
-            namespace="namespace",
-            distance_metric="cosine_distance",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        namespace = response.parse()
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_streaming_response_upsert_overload_1(self, client: Turbopuffer) -> None:
-        with client.namespaces.with_streaming_response.upsert(
-            namespace="namespace",
-            distance_metric="cosine_distance",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            namespace = response.parse()
-            assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_path_params_upsert_overload_1(self, client: Turbopuffer) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespaces.with_raw_response.upsert(
-                namespace="",
-                distance_metric="cosine_distance",
-            )
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_method_upsert_overload_2(self, client: Turbopuffer) -> None:
-        namespace = client.namespaces.upsert(
-            namespace="namespace",
-            distance_metric="cosine_distance",
-            upserts=[{}],
-        )
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_method_upsert_with_all_params_overload_2(self, client: Turbopuffer) -> None:
-        namespace = client.namespaces.upsert(
-            namespace="namespace",
-            distance_metric="cosine_distance",
-            upserts=[
-                {
-                    "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-                    "attributes": {"foo": "bar"},
-                    "vector": [0],
-                }
-            ],
-            schema={
-                "foo": [
-                    {
-                        "filterable": True,
-                        "full_text_search": True,
-                        "type": "string",
-                    }
-                ]
+            documents={
+                "attributes": {"foo": [{"foo": "bar"}]},
+                "ids": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                "vectors": [[0]],
+                "distance_metric": "cosine_distance",
+                "schema": {
+                    "foo": [
+                        {
+                            "filterable": True,
+                            "full_text_search": True,
+                            "type": "string",
+                        }
+                    ]
+                },
             },
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_upsert_overload_2(self, client: Turbopuffer) -> None:
+    def test_raw_response_upsert(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.upsert(
             namespace="namespace",
-            distance_metric="cosine_distance",
-            upserts=[{}],
+            documents={"distance_metric": "cosine_distance"},
         )
 
         assert response.is_closed is True
@@ -322,11 +251,10 @@ class TestNamespaces:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_upsert_overload_2(self, client: Turbopuffer) -> None:
+    def test_streaming_response_upsert(self, client: Turbopuffer) -> None:
         with client.namespaces.with_streaming_response.upsert(
             namespace="namespace",
-            distance_metric="cosine_distance",
-            upserts=[{}],
+            documents={"distance_metric": "cosine_distance"},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -338,104 +266,11 @@ class TestNamespaces:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_upsert_overload_2(self, client: Turbopuffer) -> None:
+    def test_path_params_upsert(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespaces.with_raw_response.upsert(
                 namespace="",
-                distance_metric="cosine_distance",
-                upserts=[{}],
-            )
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_method_upsert_overload_3(self, client: Turbopuffer) -> None:
-        namespace = client.namespaces.upsert(
-            namespace="namespace",
-            copy_from_namespace="copy_from_namespace",
-        )
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_raw_response_upsert_overload_3(self, client: Turbopuffer) -> None:
-        response = client.namespaces.with_raw_response.upsert(
-            namespace="namespace",
-            copy_from_namespace="copy_from_namespace",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        namespace = response.parse()
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_streaming_response_upsert_overload_3(self, client: Turbopuffer) -> None:
-        with client.namespaces.with_streaming_response.upsert(
-            namespace="namespace",
-            copy_from_namespace="copy_from_namespace",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            namespace = response.parse()
-            assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_path_params_upsert_overload_3(self, client: Turbopuffer) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespaces.with_raw_response.upsert(
-                namespace="",
-                copy_from_namespace="copy_from_namespace",
-            )
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_method_upsert_overload_4(self, client: Turbopuffer) -> None:
-        namespace = client.namespaces.upsert(
-            namespace="namespace",
-            delete_by_filter={},
-        )
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_raw_response_upsert_overload_4(self, client: Turbopuffer) -> None:
-        response = client.namespaces.with_raw_response.upsert(
-            namespace="namespace",
-            delete_by_filter={},
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        namespace = response.parse()
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_streaming_response_upsert_overload_4(self, client: Turbopuffer) -> None:
-        with client.namespaces.with_streaming_response.upsert(
-            namespace="namespace",
-            delete_by_filter={},
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            namespace = response.parse()
-            assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_path_params_upsert_overload_4(self, client: Turbopuffer) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespaces.with_raw_response.upsert(
-                namespace="",
-                delete_by_filter={},
+                documents={"distance_metric": "cosine_distance"},
             )
 
 
@@ -624,113 +459,42 @@ class TestAsyncNamespaces:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_upsert_overload_1(self, async_client: AsyncTurbopuffer) -> None:
+    async def test_method_upsert(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.upsert(
             namespace="namespace",
-            distance_metric="cosine_distance",
+            documents={"distance_metric": "cosine_distance"},
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_upsert_with_all_params_overload_1(self, async_client: AsyncTurbopuffer) -> None:
+    async def test_method_upsert_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.upsert(
             namespace="namespace",
-            distance_metric="cosine_distance",
-            attributes={"foo": [{"foo": "bar"}]},
-            ids=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-            schema={
-                "foo": [
-                    {
-                        "filterable": True,
-                        "full_text_search": True,
-                        "type": "string",
-                    }
-                ]
-            },
-            vectors=[[0]],
-        )
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_raw_response_upsert_overload_1(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespaces.with_raw_response.upsert(
-            namespace="namespace",
-            distance_metric="cosine_distance",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        namespace = await response.parse()
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_streaming_response_upsert_overload_1(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespaces.with_streaming_response.upsert(
-            namespace="namespace",
-            distance_metric="cosine_distance",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            namespace = await response.parse()
-            assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_path_params_upsert_overload_1(self, async_client: AsyncTurbopuffer) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespaces.with_raw_response.upsert(
-                namespace="",
-                distance_metric="cosine_distance",
-            )
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_method_upsert_overload_2(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespaces.upsert(
-            namespace="namespace",
-            distance_metric="cosine_distance",
-            upserts=[{}],
-        )
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_method_upsert_with_all_params_overload_2(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespaces.upsert(
-            namespace="namespace",
-            distance_metric="cosine_distance",
-            upserts=[
-                {
-                    "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-                    "attributes": {"foo": "bar"},
-                    "vector": [0],
-                }
-            ],
-            schema={
-                "foo": [
-                    {
-                        "filterable": True,
-                        "full_text_search": True,
-                        "type": "string",
-                    }
-                ]
+            documents={
+                "attributes": {"foo": [{"foo": "bar"}]},
+                "ids": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                "vectors": [[0]],
+                "distance_metric": "cosine_distance",
+                "schema": {
+                    "foo": [
+                        {
+                            "filterable": True,
+                            "full_text_search": True,
+                            "type": "string",
+                        }
+                    ]
+                },
             },
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_upsert_overload_2(self, async_client: AsyncTurbopuffer) -> None:
+    async def test_raw_response_upsert(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.upsert(
             namespace="namespace",
-            distance_metric="cosine_distance",
-            upserts=[{}],
+            documents={"distance_metric": "cosine_distance"},
         )
 
         assert response.is_closed is True
@@ -740,11 +504,10 @@ class TestAsyncNamespaces:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_upsert_overload_2(self, async_client: AsyncTurbopuffer) -> None:
+    async def test_streaming_response_upsert(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespaces.with_streaming_response.upsert(
             namespace="namespace",
-            distance_metric="cosine_distance",
-            upserts=[{}],
+            documents={"distance_metric": "cosine_distance"},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -756,102 +519,9 @@ class TestAsyncNamespaces:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_upsert_overload_2(self, async_client: AsyncTurbopuffer) -> None:
+    async def test_path_params_upsert(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespaces.with_raw_response.upsert(
                 namespace="",
-                distance_metric="cosine_distance",
-                upserts=[{}],
-            )
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_method_upsert_overload_3(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespaces.upsert(
-            namespace="namespace",
-            copy_from_namespace="copy_from_namespace",
-        )
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_raw_response_upsert_overload_3(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespaces.with_raw_response.upsert(
-            namespace="namespace",
-            copy_from_namespace="copy_from_namespace",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        namespace = await response.parse()
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_streaming_response_upsert_overload_3(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespaces.with_streaming_response.upsert(
-            namespace="namespace",
-            copy_from_namespace="copy_from_namespace",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            namespace = await response.parse()
-            assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_path_params_upsert_overload_3(self, async_client: AsyncTurbopuffer) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespaces.with_raw_response.upsert(
-                namespace="",
-                copy_from_namespace="copy_from_namespace",
-            )
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_method_upsert_overload_4(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespaces.upsert(
-            namespace="namespace",
-            delete_by_filter={},
-        )
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_raw_response_upsert_overload_4(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespaces.with_raw_response.upsert(
-            namespace="namespace",
-            delete_by_filter={},
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        namespace = await response.parse()
-        assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_streaming_response_upsert_overload_4(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespaces.with_streaming_response.upsert(
-            namespace="namespace",
-            delete_by_filter={},
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            namespace = await response.parse()
-            assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_path_params_upsert_overload_4(self, async_client: AsyncTurbopuffer) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespaces.with_raw_response.upsert(
-                namespace="",
-                delete_by_filter={},
+                documents={"distance_metric": "cosine_distance"},
             )
