@@ -36,7 +36,7 @@ client = Turbopuffer(
 
 response = client.namespaces.upsert(
     namespace="products",
-    documents={},
+    documents={"distance_metric": "cosine_distance"},
 )
 print(response.status)
 ```
@@ -63,7 +63,7 @@ client = AsyncTurbopuffer(
 async def main() -> None:
     response = await client.namespaces.upsert(
         namespace="products",
-        documents={},
+        documents={"distance_metric": "cosine_distance"},
     )
     print(response.status)
 
