@@ -9,7 +9,6 @@ from .distance_metric import DistanceMetric as DistanceMetric
 from .attribute_schema import AttributeSchema as AttributeSchema
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .document_row_param import DocumentRowParam as DocumentRowParam
-from .document_row_response import DocumentRowResponse as DocumentRowResponse
 from .namespace_list_params import NamespaceListParams as NamespaceListParams
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
