@@ -78,7 +78,7 @@ class NamespacesResource(SyncAPIResource):
 
           page_size: Limit the number of results per page.
 
-          prefix: Retrieve only the namespaces that match the prefix.
+          prefix: Retrieve only namespaces that match the prefix.
 
           extra_headers: Send extra headers
 
@@ -326,7 +326,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           page_size: Limit the number of results per page.
 
-          prefix: Retrieve only the namespaces that match the prefix.
+          prefix: Retrieve only namespaces that match the prefix.
 
           extra_headers: Send extra headers
 
