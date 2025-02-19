@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from turbopuffer_api._types import Base64FileInput
-from turbopuffer_api._utils import (
+from turbopuffer._types import Base64FileInput
+from turbopuffer._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from turbopuffer_api._compat import PYDANTIC_V2
-from turbopuffer_api._models import BaseModel
+from turbopuffer._compat import PYDANTIC_V2
+from turbopuffer._models import BaseModel
 
 _T = TypeVar("_T")
 

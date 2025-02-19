@@ -1,6 +1,6 @@
 # Turbopuffer Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/turbopuffer-api.svg)](https://pypi.org/project/turbopuffer-api/)
+[![PyPI version](https://img.shields.io/pypi/v/turbopuffer.svg)](https://pypi.org/project/turbopuffer/)
 
 The Turbopuffer Python library provides convenient access to the Turbopuffer REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -20,7 +20,7 @@ pip install git+ssh://git@github.com/stainless-sdks/turbopuffer-python.git
 ```
 
 > [!NOTE]
-> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre turbopuffer-api`
+> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre turbopuffer`
 
 ## Usage
 
@@ -28,7 +28,7 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from turbopuffer_api import Turbopuffer
+from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
@@ -36,6 +36,7 @@ client = Turbopuffer(
 
 response = client.namespaces.upsert(
     namespace="products",
+    documents={},
 )
 print(response.status)
 ```
@@ -52,7 +53,7 @@ Simply import `AsyncTurbopuffer` instead of `Turbopuffer` and use `await` with e
 ```python
 import os
 import asyncio
-from turbopuffer_api import AsyncTurbopuffer
+from turbopuffer import AsyncTurbopuffer
 
 client = AsyncTurbopuffer(
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
@@ -62,6 +63,7 @@ client = AsyncTurbopuffer(
 async def main() -> None:
     response = await client.namespaces.upsert(
         namespace="products",
+        documents={},
     )
     print(response.status)
 
@@ -87,7 +89,7 @@ List methods in the Turbopuffer API are paginated.
 This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
 
 ```python
-from turbopuffer_api import Turbopuffer
+from turbopuffer import Turbopuffer
 
 client = Turbopuffer()
 
@@ -105,7 +107,7 @@ Or, asynchronously:
 
 ```python
 import asyncio
-from turbopuffer_api import AsyncTurbopuffer
+from turbopuffer import AsyncTurbopuffer
 
 client = AsyncTurbopuffer()
 
@@ -153,16 +155,16 @@ for namespace in first_page.namespaces:
 
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `turbopuffer_api.APIConnectionError` is raised.
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `turbopuffer.APIConnectionError` is raised.
 
 When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `turbopuffer_api.APIStatusError` is raised, containing `status_code` and `response` properties.
+response), a subclass of `turbopuffer.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-All errors inherit from `turbopuffer_api.APIError`.
+All errors inherit from `turbopuffer.APIError`.
 
 ```python
-import turbopuffer_api
-from turbopuffer_api import Turbopuffer
+import turbopuffer
+from turbopuffer import Turbopuffer
 
 client = Turbopuffer()
 
@@ -170,12 +172,12 @@ try:
     client.namespaces.query(
         namespace="products",
     )
-except turbopuffer_api.APIConnectionError as e:
+except turbopuffer.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except turbopuffer_api.RateLimitError as e:
+except turbopuffer.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
-except turbopuffer_api.APIStatusError as e:
+except turbopuffer.APIStatusError as e:
     print("Another non-200-range status code was received")
     print(e.status_code)
     print(e.response)
@@ -203,7 +205,7 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from turbopuffer_api import Turbopuffer
+from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
@@ -223,7 +225,7 @@ By default requests time out after 1 minute. You can configure this with a `time
 which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
 
 ```python
-from turbopuffer_api import Turbopuffer
+from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
@@ -277,7 +279,7 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from turbopuffer_api import Turbopuffer
+from turbopuffer import Turbopuffer
 
 client = Turbopuffer()
 response = client.namespaces.with_raw_response.query(
@@ -289,9 +291,9 @@ namespace = response.parse()  # get the object that `namespaces.query()` would h
 print(namespace)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/turbopuffer-python/tree/main/src/turbopuffer_api/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/turbopuffer-python/tree/main/src/turbopuffer/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/turbopuffer-python/tree/main/src/turbopuffer_api/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/turbopuffer-python/tree/main/src/turbopuffer/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -355,7 +357,7 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 ```python
 import httpx
-from turbopuffer_api import Turbopuffer, DefaultHttpxClient
+from turbopuffer import Turbopuffer, DefaultHttpxClient
 
 client = Turbopuffer(
     # Or use the `TURBOPUFFER_BASE_URL` env var
@@ -378,7 +380,7 @@ client.with_options(http_client=DefaultHttpxClient(...))
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
 ```py
-from turbopuffer_api import Turbopuffer
+from turbopuffer import Turbopuffer
 
 with Turbopuffer() as client:
   # make requests here
@@ -406,8 +408,8 @@ If you've upgraded to the latest version but aren't seeing any new features you 
 You can determine the version that is being used at runtime with:
 
 ```py
-import turbopuffer_api
-print(turbopuffer_api.__version__)
+import turbopuffer
+print(turbopuffer.__version__)
 ```
 
 ## Requirements
