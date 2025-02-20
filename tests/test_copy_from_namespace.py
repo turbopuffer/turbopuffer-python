@@ -3,9 +3,9 @@ import tests
 
 
 def test_copy_from_namespace():
-    ns1_name = tests.test_prefix + "order_by_attribute_1"
+    ns1_name = tests.test_prefix + "copy_from_namespace_1"
     ns1 = tpuf.Namespace(ns1_name)
-    ns2 = tpuf.Namespace(tests.test_prefix + "order_by_attribute_2")
+    ns2 = tpuf.Namespace(tests.test_prefix + "copy_from_namespace_2")
 
     ns1.upsert(
         {
