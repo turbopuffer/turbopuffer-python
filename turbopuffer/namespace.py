@@ -185,7 +185,7 @@ class Namespace:
         response = self.backend.make_api_request('namespaces', self.name, 'schema', method='POST', payload=request_payload)
         return parse_namespace_schema(response["content"])
 
-    def copy_from_namespace(self, other_namespace: str):
+    def copy_from_namespace(self, source_namespace: str):
         """
         Copies all documents from another namespace to this namespace.
 
@@ -193,7 +193,7 @@ class Namespace:
         for specifics on how this works.
         """
         payload = {
-            "copy_from_namespace": other_namespace
+            "copy_from_namespace": source_namespace
         }
         response = self.backend.make_api_request('namespaces', self.name, payload=payload)
         assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid copy_from_namespace() response: {response}'
