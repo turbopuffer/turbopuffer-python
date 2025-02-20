@@ -185,6 +185,19 @@ class Namespace:
         response = self.backend.make_api_request('namespaces', self.name, 'schema', method='POST', payload=request_payload)
         return parse_namespace_schema(response["content"])
 
+    def copy_from_namespace(self, other_namespace: str):
+        """
+        Copies all documents from another namespace to this namespace.
+
+        See: https://turbopuffer.com/docs/upsert#parameters `copy_from_namespace`
+        for specifics on how this works.
+        """
+        payload = {
+            "copy_from_namespace": other_namespace
+        }
+        response = self.backend.make_api_request('namespaces', self.name, payload=payload)
+        assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid copy_from_namespace() response: {response}'
+
     @overload
     def upsert(self,
                ids: Union[List[int], List[str]],
