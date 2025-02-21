@@ -21,7 +21,7 @@ __all__ = [
 
 
 class NamespaceUpsertParams(TypedDict, total=False):
-    documents: Required[Documents]
+    documents: Documents
     """Upsert documents in columnar format."""
 
 
