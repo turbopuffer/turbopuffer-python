@@ -5,10 +5,9 @@ from datetime import datetime
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
-from turbopuffer.query import VectorQuery, Filters
+from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict
 from typing import Dict, List, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
-from turbopuffer.query import RankInput
 
 class FullTextSearchParams:
     """
@@ -372,6 +371,7 @@ class Namespace:
               include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Filters] = None,
               rank_by: Optional[RankInput] = None,
+              consistency: Optional[ConsistencyDict] = None
               ) -> VectorResult:
         ...
 
@@ -391,7 +391,8 @@ class Namespace:
               include_vectors=None,
               include_attributes=None,
               filters=None,
-              rank_by=None) -> VectorResult:
+              rank_by=None,
+              consistency=None) -> VectorResult:
         """
         Searches vectors matching the search query.
 
@@ -406,7 +407,8 @@ class Namespace:
                 include_vectors=include_vectors,
                 include_attributes=include_attributes,
                 filters=filters,
-                rank_by=rank_by
+                rank_by=rank_by,
+                consistency=consistency
             ))
         if not isinstance(query_data, VectorQuery):
             if isinstance(query_data, dict):
