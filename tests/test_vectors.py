@@ -282,6 +282,33 @@ def test_query_vectors():
     for i in range(len(vector_set)):  # Use VectorResult in index mode
         check_result(vector_set[i], expected[i])
 
+    # Test query with 'eventual' consistency
+    vector_set = ns.query(
+        top_k=3,
+        consistency={'level': 'eventual'}
+    )
+    assert len(vector_set) == 3
+
+    # Test query with no consistency dict key should fail
+    try:
+        ns.query(
+            top_k=3,
+            consistency='eventual'
+        )
+        assert False, "Using consistency without a dict that has a 'level' key should not be allowed"
+    except ValueError as err:
+        assert err.args == ("VectorQuery.consistency must be a dict with a 'level' key",)
+
+    # Test query with 'nonexistentvalue' consistency should fail
+    try:
+        ns.query(
+            top_k=3,
+            consistency={'level': 'nonexistentvalue'}
+        )
+        assert False, "Using consistency level other than 'strong' or 'eventual' should not be allowed"
+    except ValueError as err:
+        assert err.args == ("VectorQuery.consistency level must be 'strong' or 'eventual', got:", 'nonexistentvalue')
+
 @pytest.mark.xdist_group(name="group1")
 def test_list_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
