@@ -6,8 +6,11 @@ from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict
-from typing import Dict, List, Optional, Iterable, Union, overload
+from typing import Dict, List, Literal, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
+
+CmekDict = Dict[Literal['key_name'], str]
+EncryptionDict = Dict[Literal['cmek'], CmekDict]
 
 class FullTextSearchParams:
     """
@@ -203,7 +206,8 @@ class Namespace:
                vectors: List[List[float]],
                attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None,
                schema: Optional[Dict] = None,
-               distance_metric: Optional[str] = None) -> None:
+               distance_metric: Optional[str] = None,
+               encryption: Optional[EncryptionDict] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -213,7 +217,11 @@ class Namespace:
         ...
 
     @overload
-    def upsert(self, data: Union[dict, VectorColumns], distance_metric: Optional[str] = None, schema: Optional[Dict] = None) -> None:
+    def upsert(self,
+               data: Union[dict, VectorColumns],
+               distance_metric: Optional[str] = None,
+               schema: Optional[Dict] = None,
+               encryption: Optional[EncryptionDict] = None) -> None:
         """
         Creates or updates multiple vectors provided in a column-oriented layout.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -223,8 +231,11 @@ class Namespace:
         ...
 
     @overload
-    def upsert(self, data: Union[Iterable[dict], Iterable[VectorRow]],
-               distance_metric: Optional[str] = None, schema: Optional[Dict] = None) -> None:
+    def upsert(self,
+               data: Union[Iterable[dict], Iterable[VectorRow]],
+               distance_metric: Optional[str] = None,
+               schema: Optional[Dict] = None,
+               encryption: Optional[EncryptionDict] = None) -> None:
         """
         Creates or updates a multiple vectors provided as a list or iterator.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -234,8 +245,11 @@ class Namespace:
         ...
 
     @overload
-    def upsert(self, data: VectorResult,
-               distance_metric: Optional[str] = None, schema: Optional[Dict] = None) -> None:
+    def upsert(self,
+               data: VectorResult,
+               distance_metric: Optional[str] = None,
+               schema: Optional[Dict] = None,
+               encryption: Optional[EncryptionDict] = None) -> None:
         """
         Creates or updates multiple vectors.
         If this call succeeds, data is guaranteed to be durably written to object storage.
@@ -244,15 +258,22 @@ class Namespace:
         """
         ...
 
-    def upsert(self, data=None, ids=None, vectors=None, attributes=None, schema=None, distance_metric=None) -> None:
+    def upsert(self,
+               data=None,
+               ids=None,
+               vectors=None,
+               attributes=None,
+               schema=None,
+               distance_metric=None,
+               encryption= None) -> None:
         if data is None:
             if ids is not None and vectors is not None:
-                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes), schema=schema, distance_metric=distance_metric)
+                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes), schema=schema, distance_metric=distance_metric, encryption=encryption)
             else:
                 raise ValueError('upsert() requires both ids= and vectors= be set.')
         elif (ids is not None and attributes is None) or (attributes is not None and schema is None):
             # Offset arguments to handle positional arguments case with no data field.
-            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), schema=attributes, distance_metric=distance_metric,)
+            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), schema=attributes, distance_metric=distance_metric, encryption=encryption)
         elif isinstance(data, VectorColumns):
             # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
             # None == pd.ndarray is an ambiguous comparison in this case.
@@ -267,6 +288,9 @@ class Namespace:
 
             if schema is not None:
                 payload["schema"] = schema
+            
+            if encryption is not None:
+                payload["encryption"] = encryption
 
             response = self.backend.make_api_request('namespaces', self.name, payload=payload)
 
@@ -276,12 +300,12 @@ class Namespace:
             raise ValueError('upsert() should be called on a list of vectors, got single vector.')
         elif isinstance(data, list):
             if isinstance(data[0], dict):
-                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric, encryption=encryption)
             elif isinstance(data[0], VectorRow):
-                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric, encryption=encryption)
             elif isinstance(data[0], VectorColumns):
                 for columns in data:
-                    self.upsert(columns, schema=schema, distance_metric=distance_metric)
+                    self.upsert(columns, schema=schema, distance_metric=distance_metric, encryption=encryption)
                 return
             else:
                 raise ValueError(f'Unsupported list data type: {type(data[0])}')
@@ -289,7 +313,7 @@ class Namespace:
             if 'id' in data:
                 raise ValueError('upsert() should be called on a list of vectors, got single vector.')
             elif 'ids' in data:
-                return self.upsert(VectorColumns.from_dict(data), schema=data.get('schema', None), distance_metric=distance_metric)
+                return self.upsert(VectorColumns.from_dict(data), schema=data.get('schema', None), distance_metric=distance_metric, encryption=encryption)
             else:
                 raise ValueError('Provided dict is missing ids.')
         elif 'pandas' in sys.modules and isinstance(data, sys.modules['pandas'].DataFrame):
@@ -313,7 +337,7 @@ class Namespace:
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
                 # print(columns)
-                self.upsert(columns, schema=schema, distance_metric=distance_metric)
+                self.upsert(columns, schema=schema, distance_metric=distance_metric, encryption=encryption)
                 # time_diff = time.monotonic() - before
                 # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
@@ -324,7 +348,7 @@ class Namespace:
                 # time_diff = time.monotonic() - start
                 # print('Batch begin:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # before = time.monotonic()
-                self.upsert(batch, schema=schema, distance_metric=distance_metric)
+                self.upsert(batch, schema=schema, distance_metric=distance_metric, encryption=encryption)
                 # time_diff = time.monotonic() - before
                 # print('Batch time:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
                 # start = time.monotonic()
