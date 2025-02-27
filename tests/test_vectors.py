@@ -62,43 +62,40 @@ def test_delete_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
     # Test upsert delete columns
-    try:
-        ns.upsert(ids=[6], vectors=[None])
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
+    ns.upsert(ids=[2], vectors=[None])
+    results = ns.vectors()
+    assert len(results) == 91, "Got wrong number of vectors back"
+    assert results[0] == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
 
     # Test upsert delete typed row
-    try:
-        ns.upsert([tpuf.VectorRow(id=2)])
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
+    ns.upsert([tpuf.VectorRow(id=10)])
+    results = ns.vectors()
+    assert len(results) == 90, "Got wrong number of vectors back"
+    assert results[1] == tpuf.VectorRow(id=11, vector=[1.1, 1.1], attributes={'test': 'rows'})
 
-    try:
-        ns.upsert([tpuf.VectorRow(id=2, dist=5)])
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
+    ns.upsert([tpuf.VectorRow(id=11, dist=5)])
+    results = ns.vectors()
+    assert len(results) == 89, "Got wrong number of vectors back"
+    assert results[1] == tpuf.VectorRow(id=12, vector=[1.2, 1.2], attributes={'test': 'rows'})
 
     # Test upsert delete dict row
-    try:
-        ns.upsert([{'id': 6}])
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
+    ns.upsert([{'id': 12}])
+    results = ns.vectors()
+    assert len(results) == 88, "Got wrong number of vectors back"
+    assert results[1] == tpuf.VectorRow(id=13, vector=[1.3, 1.3], attributes={'test': 'rows'})
 
     # Test delete single row
-    ns.delete(2)
+    ns.delete(13)
     # Test delete multi row
-    ns.delete([10, 11, 12, 13, 14, 15])
+    ns.delete([14, 15, 16])
 
     # Check to make sure the vectors were removed
     results = ns.vectors()
-    assert len(results) == 85, "Got wrong number of vectors back"
+    assert len(results) == 84, "Got wrong number of vectors back"
     assert results[0] == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
-    for i in range(16, 100):
-        assert results[i-15] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
+    for i in range(17, 100):
+        assert results[i-16] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
+
 
 @pytest.mark.xdist_group(name="group1")
 def test_upsert_columns():
