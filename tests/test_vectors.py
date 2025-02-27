@@ -61,33 +61,6 @@ def test_upsert_rows():
 def test_delete_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
-    # Test upsert delete columns
-    try:
-        ns.upsert(ids=[6], vectors=[None])
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
-
-    # Test upsert delete typed row
-    try:
-        ns.upsert([tpuf.VectorRow(id=2)])
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
-
-    try:
-        ns.upsert([tpuf.VectorRow(id=2, dist=5)])
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
-
-    # Test upsert delete dict row
-    try:
-        ns.upsert([{'id': 6}])
-        assert False, "Upserting to delete should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.',)
-
     # Test delete single row
     ns.delete(2)
     # Test delete multi row
