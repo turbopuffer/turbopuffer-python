@@ -777,12 +777,6 @@ class AsyncNamespace:
             # Offset arguments to handle positional arguments case with no data field.
             return await self.aupsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), schema=attributes, distance_metric=distance_metric, encryption=encryption)
         elif isinstance(data, VectorColumns):
-            # "if None in data.vectors:" is not supported because data.vectors might be a list of np.ndarray
-            # None == pd.ndarray is an ambiguous comparison in this case.
-            for vec in data.vectors:
-                if vec is None:
-                    raise ValueError('upsert() call would result in a vector deletion, use Namespace.delete([ids...]) instead.')
-
             payload = {**data.__dict__}
 
             if distance_metric is not None:
