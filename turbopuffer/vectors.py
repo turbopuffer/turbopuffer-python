@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import sys
-from typing import Optional, Union, List, Iterable, Dict, overload
+import asyncio
+from typing import Optional, Union, List, Iterable, Dict, overload, AsyncIterator, TypeVar, Generic
 from itertools import islice
 
 
@@ -11,6 +12,27 @@ def batch_iter(iterable, n):
         if not batch:
             return
         yield batch
+
+async def abatch_iter(async_iterable, n):
+    """Async version of batch_iter that works with async iterables."""
+    batch = []
+    # Handle both async iterables and regular iterables
+    if hasattr(async_iterable, '__aiter__'):
+        async for item in async_iterable:
+            batch.append(item)
+            if len(batch) >= n:
+                yield batch
+                batch = []
+        if batch:
+            yield batch
+    else:
+        # Handle regular iterables by converting to list and using batch_iter
+        try:
+            for items in batch_iter(async_iterable, n):
+                yield items
+        except TypeError:
+            # If we can't iterate, treat as a single item
+            yield [async_iterable]
 
 
 class Cursor(str):
@@ -274,9 +296,12 @@ class VectorResult:
 
         self.data = VectorResult.load_data(initial_data)
 
+    @staticmethod
     def load_data(initial_data: DATA) -> SET_DATA:
         if initial_data:
             if isinstance(initial_data, list):
+                if len(initial_data) == 0:
+                    return []
                 if isinstance(initial_data[0], dict):
                     return [VectorRow.from_dict(row) for row in initial_data]
                 elif isinstance(initial_data[0], VectorRow):
@@ -291,6 +316,7 @@ class VectorResult:
                 raise ValueError('VectorResult from Iterable not yet supported.')
             else:
                 raise ValueError(f'Unsupported data type: {type(initial_data)}')
+        return []
 
     def __str__(self) -> str:
         if not self.next_cursor and self.offset == 0:
@@ -348,3 +374,101 @@ class VectorResult:
             self.next_cursor = content.pop('next_cursor', None)
             self.data = VectorResult.load_data(content)
             return self.__next__()
+            
+            
+class AsyncVectorResult:
+    """
+    The AsyncVectorResult type represents a set of vectors that are the result of an async query.
+
+    AsyncVectorResult implements an async iterator interface, allowing you to use it with
+    async for loops. For full buffer access, await the load() method to retrieve all results.
+    """
+
+    namespace: Optional['AsyncNamespace'] = None
+    data: Optional[SET_DATA] = None
+    index: int = -1
+    offset: int = 0
+    next_cursor: Optional[Cursor] = None
+
+    performance: Optional[dict] = None
+
+    def __init__(self, initial_data: Optional[DATA] = None, namespace: Optional['AsyncNamespace'] = None, next_cursor: Optional[Cursor] = None):
+        self.namespace = namespace
+        self.index = -1
+        self.offset = 0
+        self.next_cursor = next_cursor
+
+        self.data = VectorResult.load_data(initial_data)
+
+    def __str__(self) -> str:
+        if not self.next_cursor and self.offset == 0:
+            return str(self.data)
+        else:
+            return ("AsyncVectorResult("
+                    f"namespace='{self.namespace.name}', "
+                    f"offset={self.offset}, "
+                    f"next_cursor='{self.next_cursor}', "
+                    f"data={self.data})")
+
+    async def load(self) -> List[VectorRow]:
+        """
+        Loads and returns all results, fetching additional pages as needed.
+        
+        This method buffers all data in memory. For large result sets, consider
+        using the async iterator interface instead.
+        """
+        if not self.next_cursor:
+            if isinstance(self.data, list):
+                return self.data
+            elif isinstance(self.data, VectorColumns):
+                return [self.data[i] for i in range(len(self.data))]
+            return []
+            
+        # Create new iterator and exhaust it to load all results
+        result = []
+        async for item in self.__aiter__():
+            result.append(item)
+            
+        # Update our state with the fully loaded data
+        self.data = result
+        self.offset = 0
+        self.index = -1
+        self.next_cursor = None
+        
+        return result
+
+    def __aiter__(self) -> 'AsyncVectorResult':
+        # Reset state to start fresh iteration
+        return AsyncVectorResult(self.data, self.namespace, self.next_cursor)
+
+    async def __anext__(self) -> VectorRow:
+        # Handle the case where we have data in memory
+        if self.data is not None and self.index + 1 < len(self.data):
+            self.index += 1
+            if isinstance(self.data, list):
+                return self.data[self.index]
+            elif isinstance(self.data, VectorColumns):
+                return self.data[self.index]
+            else:
+                raise ValueError(f'Unsupported data type: {type(self.data)}')
+        # Handle the case where we're at the end of our data
+        elif self.next_cursor is None:
+            raise StopAsyncIteration
+        # Handle the case where we need to fetch more data
+        else:
+            response = await self.namespace.backend.amake_api_request(
+                'vectors',
+                self.namespace.name,
+                query={'cursor': self.next_cursor}
+            )
+            content = response.get('content', dict())
+            
+            # Update our state
+            if self.data is not None:
+                self.offset += len(self.data)
+            self.index = -1
+            self.next_cursor = content.pop('next_cursor', None)
+            self.data = VectorResult.load_data(content)
+            
+            # Recursively call __anext__ to handle the case where data is empty
+            return await self.__anext__()

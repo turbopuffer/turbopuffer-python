@@ -76,6 +76,106 @@ for namespace in namespaces:
 ns.delete([1, 2])
 ```
 
+Async API
+-------
+
+The turbopuffer client also provides a fully-featured async API for use with asyncio-based applications. The async API follows the same patterns as the synchronous API but with async/await syntax.
+
+```py
+import asyncio
+import turbopuffer as tpuf
+
+async def main():
+    # Set API key and base URL
+    tpuf.api_key = 'your-token'
+    tpuf.api_base_url = "https://gcp-us-east4.turbopuffer.com"
+    
+    # Create an AsyncNamespace instance
+    async_ns = tpuf.AsyncNamespace('hello_world')
+    
+    # Check if namespace exists
+    if await async_ns.aexists():
+        print(f'Namespace {async_ns.name} exists with {await async_ns.adimensions()} dimensions')
+        print(f'and approximately {await async_ns.aapprox_count()} vectors.')
+    
+    # Upsert data asynchronously
+    await async_ns.aupsert(
+        ids=[1, 2, 3],
+        vectors=[[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]],
+        attributes={'name': ['foo', 'bar', 'baz']},
+        distance_metric='cosine_distance',
+    )
+    
+    # Upsert using row iterator or generator
+    await async_ns.aupsert(
+        {
+            'id': id,
+            'vector': [id/10, id/10],
+            'attributes': {'name': f'item_{id}', 'value': id*10}
+        } for id in range(4, 10)
+    )
+    
+    # Query vectors asynchronously
+    result = await async_ns.aquery(
+        vector=[0.2, 0.3],
+        distance_metric='cosine_distance',
+        top_k=5,
+        include_vectors=True,
+        include_attributes=True,
+    )
+    
+    # AsyncVectorResult can be used with async for
+    async for row in result:
+        print(f"ID: {row.id}, Distance: {row.dist}")
+        
+    # Or loaded completely into memory
+    all_results = await result.load()
+    print(f"Found {len(all_results)} results")
+    
+    # List all vectors in the namespace
+    all_vectors = await async_ns.avectors()
+    # Load all vectors into memory
+    vectors_list = await all_vectors.load()
+    print(f"Namespace contains {len(vectors_list)} vectors")
+    
+    # Delete vectors asynchronously
+    await async_ns.adelete([1, 2])
+    
+    # List all namespaces asynchronously
+    namespaces_iterator = await tpuf.anamespaces()
+    # Use async for to iterate through namespaces
+    async for namespace in namespaces_iterator:
+        print(f"Namespace: {namespace.name}")
+    
+    # Or load all namespaces at once
+    all_namespaces = await namespaces_iterator.load()
+    print(f"Total namespaces: {len(all_namespaces)}")
+
+# Run the async main function
+asyncio.run(main())
+```
+
+### Context Manager Support
+
+AsyncNamespace instances can be used as async context managers to ensure proper resource cleanup:
+
+```py
+async def process_data():
+    async with tpuf.AsyncNamespace('my_data') as ns:
+        # Perform operations
+        await ns.aupsert(ids=[1, 2], vectors=[[0.1, 0.2], [0.3, 0.4]])
+        results = await ns.aquery(vector=[0.15, 0.25], top_k=5)
+        # Resources will be cleaned up when exiting the context
+```
+
+### Converting Between Sync and Async APIs
+
+The synchronous Namespace methods internally use the async methods by running them in an event loop. If you're mixing sync and async code, be aware of these considerations:
+
+- Synchronous methods create an event loop if needed
+- For best performance in async applications, use the async API directly
+- In async contexts, avoid calling synchronous methods as they may cause event loop issues
+
 Endpoint Documentation
 ----------------------
 
