@@ -15,12 +15,11 @@ LegacyFilterDict = Dict[str, List[LegacyFilterCondition]]
 
 Filters = Union[Tuple[str, List["Filters"]], FilterCondition, LegacyFilterDict]
 
-TextQueryOp = Union[Literal['BM25']]
-TextAggQueryOp = Union[Literal['Sum']]
-
 RankInputTextQuery = Union[
-    Tuple[str, TextQueryOp, str],
-    Tuple[TextAggQueryOp, Iterable['RankInputTextQuery']],
+    Tuple[str, Literal['BM25'], str],
+    Tuple[Literal['Sum'], Iterable['RankInputTextQuery']],
+    Tuple[Literal['Product'], Tuple[float, Iterable['RankInputTextQuery']]],
+    Tuple[Literal['Product'], Tuple[Iterable['RankInputTextQuery'], float]],
 ]
 
 AttributeOrdering = Union[Literal['asc'], Literal['desc']]
