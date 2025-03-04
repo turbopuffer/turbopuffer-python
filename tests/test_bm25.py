@@ -110,3 +110,79 @@ def test_bm25():
         }
     )
     assert [item.id for item in results] == [8, 9]
+
+
+def test_bm25_product_operator():
+    ns = tpuf.Namespace(tests.test_prefix + "bm25_product_operator")
+
+    try:
+        ns.delete_all()
+    except tpuf.NotFoundError:
+        pass
+
+    schema = {
+        "title": {
+            "type": "string",
+            "full_text_search": True,
+        },
+        "content": {
+            "type": "string",
+            "full_text_search": True,
+        },
+    }
+
+    # Upsert a few docs
+    ns.upsert(
+        [
+            tpuf.VectorRow(
+                id=1,
+                vector=[0.1, 0.1],
+                attributes={
+                    "title": "the quick brown fox",
+                    "content": "jumped over the lazy dog",
+                },
+            ),
+            tpuf.VectorRow(
+                id=2,
+                vector=[0.2, 0.2],
+                attributes={
+                    "title": "the lazy dog",
+                    "content": "is brown",
+                },
+            ),
+        ],
+        schema=schema,
+    )
+
+    # Try out a bunch of query variations
+    queries: list[tpuf.RankInput] = [
+        ("Product", (0.5, ("title", "BM25", "quick brown"))),
+        ("Product", (("title", "BM25", "quick brown"), 0.5)),
+        (
+            "Sum",
+            [
+                ("Product", (0.5, ("title", "BM25", "quick brown"))),
+                ("content", "BM25", "brown"),
+            ],
+        ),
+        (
+            "Product",
+            [
+                0.5,
+                (
+                    "Sum",
+                    [
+                        ("Product", (0.5, ("title", "BM25", "quick brown"))),
+                        ("content", "BM25", "brown"),
+                    ],
+                ),
+            ],
+        ),
+    ]
+
+    for query in queries:
+        results = ns.query(
+            rank_by=query,
+            top_k=10,
+        )
+        assert len(results) > 0
