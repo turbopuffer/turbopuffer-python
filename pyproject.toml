@@ -34,6 +34,7 @@ iso8601 = "^2.1.0"
 orjson = { version = ">=3.9, <=3.10.3", optional = true } # 3.10.4 errors on install
 numpy = { version = ">=1.24.0", optional = true }
 pandas = { version = ">=2.0.0", optional = true }
+typing-extensions = "^4.12.2"
 
 [tool.poetry.extras]
 fast = ["orjson"]
@@ -55,7 +56,6 @@ numpy = "^1.26.3"
 
 
 [tool.poetry.group.dev.dependencies]
-typing-extensions = "^4.12.2"
 
 [build-system]
 requires = ["poetry-core"]
