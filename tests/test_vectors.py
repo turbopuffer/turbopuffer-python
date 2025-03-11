@@ -315,6 +315,8 @@ def test_list_vectors():
     vector_set = ns.vectors()
 
     assert len(vector_set) == 98
+    assert any(row.id == 7 for row in vector_set)
+    assert any(row.vector == [0.7, 0.7] for row in vector_set)
 
 @pytest.mark.xdist_group(name="group1")
 def test_read_metadata():
