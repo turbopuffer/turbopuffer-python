@@ -153,6 +153,22 @@ for namespace in first_page.namespaces:
 # Remove `await` for non-async usage.
 ```
 
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from turbopuffer import Turbopuffer
+
+client = Turbopuffer()
+
+document_row_with_scores = client.namespaces.query(
+    namespace="namespace",
+    consistency={"level": "strong"},
+)
+print(document_row_with_scores.consistency)
+```
+
 ## Handling errors
 
 When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `turbopuffer.APIConnectionError` is raised.
