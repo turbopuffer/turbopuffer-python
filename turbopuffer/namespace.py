@@ -2,6 +2,7 @@ import sys
 import iso8601
 import json
 from datetime import datetime
+import threading
 from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
 from turbopuffer.backend import Backend
@@ -83,6 +84,7 @@ def parse_namespace_schema(data: dict) -> NamespaceSchema:
     return namespace_schema
 
 MONOMORPHIZED_BACKENDS = {}
+MONOMORPHIZED_BACKENDS_LOCK = threading.Lock()
 
 class Namespace:
     """
@@ -109,11 +111,12 @@ class Namespace:
         # Backends are individual requests.Session() objects, i.e. have their own
         # connection pool etc. - reusing them is _super_ beneficial.
         backend_monomorphization_key = f'{api_key}:{headers}'
-        if backend_monomorphization_key in MONOMORPHIZED_BACKENDS:
-            self.backend = MONOMORPHIZED_BACKENDS[backend_monomorphization_key]
-        else:
-            self.backend = Backend(api_key, headers)
-            MONOMORPHIZED_BACKENDS[backend_monomorphization_key] = self.backend
+        with MONOMORPHIZED_BACKENDS_LOCK:
+            if backend_monomorphization_key in MONOMORPHIZED_BACKENDS:
+                self.backend = MONOMORPHIZED_BACKENDS[backend_monomorphization_key]
+            else:
+                self.backend = Backend(api_key, headers)
+                MONOMORPHIZED_BACKENDS[backend_monomorphization_key] = self.backend
 
     def __str__(self) -> str:
         return f'tpuf-namespace:{self.name}'
