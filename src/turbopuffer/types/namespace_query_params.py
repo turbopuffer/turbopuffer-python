@@ -17,7 +17,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    filter: object
+    filters: object
     """Exact filters for attributes to refine search results for.
 
     Think of it as a SQL WHERE clause.

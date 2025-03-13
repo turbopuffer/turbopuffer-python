@@ -180,7 +180,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        filter: object | NotGiven = NOT_GIVEN,
+        filters: object | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         include_vectors: bool | NotGiven = NOT_GIVEN,
         rank_by: object | NotGiven = NOT_GIVEN,
@@ -201,7 +201,7 @@ class NamespacesResource(SyncAPIResource):
 
           distance_metric: A function used to calculate vector similarity.
 
-          filter: Exact filters for attributes to refine search results for. Think of it as a SQL
+          filters: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
 
           include_attributes: Whether to include attributes in the response.
@@ -232,7 +232,7 @@ class NamespacesResource(SyncAPIResource):
                 {
                     "consistency": consistency,
                     "distance_metric": distance_metric,
-                    "filter": filter,
+                    "filters": filters,
                     "include_attributes": include_attributes,
                     "include_vectors": include_vectors,
                     "rank_by": rank_by,
@@ -428,7 +428,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        filter: object | NotGiven = NOT_GIVEN,
+        filters: object | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         include_vectors: bool | NotGiven = NOT_GIVEN,
         rank_by: object | NotGiven = NOT_GIVEN,
@@ -449,7 +449,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           distance_metric: A function used to calculate vector similarity.
 
-          filter: Exact filters for attributes to refine search results for. Think of it as a SQL
+          filters: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
 
           include_attributes: Whether to include attributes in the response.
@@ -480,7 +480,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 {
                     "consistency": consistency,
                     "distance_metric": distance_metric,
-                    "filter": filter,
+                    "filters": filters,
                     "include_attributes": include_attributes,
                     "include_vectors": include_vectors,
                     "rank_by": rank_by,
