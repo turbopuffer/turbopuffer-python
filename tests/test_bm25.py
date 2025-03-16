@@ -186,3 +186,48 @@ def test_bm25_product_operator():
             top_k=10,
         )
         assert len(results) > 0
+
+def test_bm25_ContainsAllTokens():
+    ns = tpuf.Namespace(tests.test_prefix + "bm25_ContainsAllTokens")
+
+    try:
+        ns.delete_all()
+    except tpuf.NotFoundError:
+        pass
+
+    ns.upsert(
+        [
+            tpuf.VectorRow(
+                id=1,
+                vector=[0.1, 0.1],
+                attributes={
+                    "text": "Walruses are large marine mammals with long tusks and whiskers",
+                },
+            ),
+        ],
+        schema={
+            "text": {
+                "type": "string",
+                "full_text_search": {
+                    "stemming": True,
+                },
+            },
+        },
+        distance_metric="cosine_distance",
+    )
+
+    results = ns.query(
+        {
+            "rank_by": ["text", "BM25", "walrus whisker"],
+            "filters": ["text", "ContainsAllTokens", "marine mammals"],
+        }
+    )
+    assert len(results) == 1
+
+    missing = ns.query(
+        {
+            "rank_by": ["text", "BM25", "walrus whisker"],
+            "filters": ["text", "ContainsAllTokens", "marine mammals short"],
+        }
+    )
+    assert len(missing) == 0
