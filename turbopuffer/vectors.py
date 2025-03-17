@@ -46,8 +46,8 @@ class VectorRow:
             if 'numpy' in sys.modules and isinstance(self.vector, sys.modules['numpy'].ndarray):
                 if self.vector.ndim != 1:
                     raise ValueError(f'VectorRow.vector must be a 1d array, got {self.vector.ndim} dimensions')
-            elif not isinstance(self.vector, list):
-                raise ValueError('VectorRow.vector must be a list, got:', type(self.vector))
+            elif not isinstance(self.vector, list) and not isinstance(self.vector, str):
+                raise ValueError('VectorRow.vector must be a list or string, got:', type(self.vector))
         if self.attributes is not None and not isinstance(self.attributes, dict):
             raise ValueError('VectorRow.attributes must be a dict, got:', type(self.attributes))
 
@@ -74,7 +74,7 @@ class VectorColumns:
     """
 
     ids: Union[List[int], List[str]]
-    vectors: List[Optional[List[float]]]
+    vectors: List[Optional[Union[List[float], str]]]
     attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None
 
     distances: Optional[List[float]] = None

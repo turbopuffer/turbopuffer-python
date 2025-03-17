@@ -203,7 +203,7 @@ class Namespace:
     @overload
     def upsert(self,
                ids: Union[List[int], List[str]],
-               vectors: List[List[float]],
+               vectors: List[Union[List[float], str]],
                attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None,
                schema: Optional[Dict] = None,
                distance_metric: Optional[str] = None,
@@ -315,7 +315,6 @@ class Namespace:
                 raise ValueError('Provided pd.DataFrame is missing an id column.')
             if 'vector' not in data.keys():
                 raise ValueError('Provided pd.DataFrame is missing a vector column.')
-            # start = time.monotonic()
             for i in range(0, len(data), tpuf.upsert_batch_size):
                 batch = data[i:i+tpuf.upsert_batch_size]
                 attributes = dict()
@@ -327,25 +326,11 @@ class Namespace:
                     vectors=batch['vector'].transform(lambda x: x.tolist()).tolist(),
                     attributes=attributes
                 )
-                # time_diff = time.monotonic() - start
-                # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                # before = time.monotonic()
-                # print(columns)
                 self.upsert(columns, schema=schema, distance_metric=distance_metric, encryption=encryption)
-                # time_diff = time.monotonic() - before
-                # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                # start = time.monotonic()
             return
         elif isinstance(data, Iterable):
-            # start = time.monotonic()
             for batch in batch_iter(data, tpuf.upsert_batch_size):
-                # time_diff = time.monotonic() - start
-                # print('Batch begin:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                # before = time.monotonic()
                 self.upsert(batch, schema=schema, distance_metric=distance_metric, encryption=encryption)
-                # time_diff = time.monotonic() - before
-                # print('Batch time:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                # start = time.monotonic()
             return
         else:
             raise ValueError(f'Unsupported data type: {type(data)}')

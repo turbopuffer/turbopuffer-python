@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "turbopuffer"
-version = "0.1.33"
+version = "0.1.34"
 description = "Python Client for accessing the turbopuffer API"
 authors = ["turbopuffer Inc. <info@turbopuffer.com>"]
 homepage = "https://turbopuffer.com"
@@ -45,6 +45,7 @@ optional = true
 pytest = "^7.4.3"
 flake8 = "^7.0.0"
 pytest-xdist = "^3.6.1"
+numpy = "^1.26.3"
 
 [tool.poetry.group.compatibility]
 optional = true
