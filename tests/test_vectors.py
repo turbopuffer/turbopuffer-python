@@ -1,5 +1,6 @@
 import uuid
 import turbopuffer as tpuf
+from turbopuffer.vectors import b64encode_vector
 import tests
 import pytest
 from datetime import datetime
@@ -562,25 +563,18 @@ def test_delete_by_filter():
     ns.delete_all()
 
 def test_upsert_base64_vectors():
-    import base64
-    import numpy as np
-
     ns = tpuf.Namespace(tests.test_prefix + 'base64_test')
     assert str(ns) == f'tpuf-namespace:{tests.test_prefix}base64_test'
 
-    def b64encode(vector: List[float]) -> str:
-        bytes = np.array(vector, dtype=np.float32).tobytes()
-        return base64.b64encode(bytes).decode('utf-8')
-
     # Test upsert multiple typed rows
     ns.upsert([
-        tpuf.VectorRow(id=2, vector=b64encode([2, 2])),
-        tpuf.VectorRow(id=3, vector=b64encode([0.7, 0.7]), attributes={'hello': 'world'}),
+        tpuf.VectorRow(id=2, vector=b64encode_vector([2, 2])),
+        tpuf.VectorRow(id=3, vector=b64encode_vector([0.7, 0.7]), attributes={'hello': 'world'}),
     ], distance_metric='euclidean_squared')
 
     # Test upsert columns with positional args
     ids = [4, 5]
-    vectors = [b64encode([0.1, 0.1]), b64encode([0.2, 0.2])]
+    vectors = [b64encode_vector([0.1, 0.1]), b64encode_vector([0.2, 0.2])]
     attributes = {
         "key1": ["zero", "one"],
         "key2": [" ", "a"],
@@ -588,7 +582,7 @@ def test_upsert_base64_vectors():
     ns.upsert(ids, vectors, attributes)
 
     # Test upsert lazy row iterator
-    ns.upsert(tpuf.VectorRow(id=i, vector=b64encode([i/10, i/10]), attributes={'test': 'rows'}) for i in range(10, 100))
+    ns.upsert(tpuf.VectorRow(id=i, vector=b64encode_vector([i/10, i/10]), attributes={'test': 'rows'}) for i in range(10, 100))
 
     # Check to make sure the vectors were stored as expected
     results = ns.vectors()

@@ -34,9 +34,10 @@ iso8601 = "^2.1.0"
 orjson = { version = ">=3.9, <=3.10.3", optional = true } # 3.10.4 errors on install
 numpy = { version = ">=1.24.0", optional = true }
 pandas = { version = ">=2.0.0", optional = true }
+pybase64 = { version = ">=1.4.1", optional = true }
 
 [tool.poetry.extras]
-fast = ["orjson"]
+fast = ["orjson", "pybase64"]
 
 [tool.poetry.group.test]
 optional = true
@@ -45,7 +46,6 @@ optional = true
 pytest = "^7.4.3"
 flake8 = "^7.0.0"
 pytest-xdist = "^3.6.1"
-numpy = "^1.26.3"
 
 [tool.poetry.group.compatibility]
 optional = true

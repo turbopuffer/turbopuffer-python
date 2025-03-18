@@ -3,7 +3,7 @@ import iso8601
 import json
 from datetime import datetime
 from turbopuffer.error import APIError
-from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
+from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter, b64encode_vector
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict
 from typing import Dict, List, Literal, Optional, Iterable, Union, overload
@@ -276,6 +276,13 @@ class Namespace:
             return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), schema=attributes, distance_metric=distance_metric, encryption=encryption)
         elif isinstance(data, VectorColumns):
             payload = {**data.__dict__}
+
+            # Convert List[float] vectors to base64-encoded strings, if enabled.
+            if tpuf.upsert_vectors_as_base64 and payload["vectors"] is not None:
+                payload["vectors"] = [
+                    b64encode_vector(vector) if isinstance(vector, list) else vector
+                    for vector in payload["vectors"]
+                ]
 
             if distance_metric is not None:
                 payload["distance_metric"] = distance_metric

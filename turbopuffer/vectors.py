@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+import struct
 import sys
+import turbopuffer as tpuf
 from typing import Optional, Union, List, Iterable, Dict, overload
 from itertools import islice
 
@@ -15,6 +17,21 @@ def batch_iter(iterable, n):
 
 class Cursor(str):
     pass
+
+
+def b64encode_vector(vector: List[float]) -> str:
+    """
+    Encodes a list of floats into a base64 string representation of the float
+    array in a little-endian binary format.
+
+    Args:
+        vector (List[float]): The list of floats to encode.
+
+    Returns:
+        str: The base64 encoded string representation of the vector.
+    """
+    bytes = struct.pack(f'<{len(vector)}f', *vector)
+    return tpuf.b64encode_as_string(bytes)
 
 
 @dataclass
