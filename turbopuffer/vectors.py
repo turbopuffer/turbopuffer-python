@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import lru_cache
 import struct
 import sys
 import turbopuffer as tpuf
@@ -19,6 +20,11 @@ class Cursor(str):
     pass
 
 
+@lru_cache(maxsize=64)
+def _get_struct(vector_length: int) -> struct.Struct:
+    return struct.Struct(f'<{vector_length}f')
+
+
 def b64encode_vector(vector: List[float]) -> str:
     """
     Encodes a list of floats into a base64 string representation of the float
@@ -30,8 +36,8 @@ def b64encode_vector(vector: List[float]) -> str:
     Returns:
         str: The base64 encoded string representation of the vector.
     """
-    bytes = struct.pack(f'<{len(vector)}f', *vector)
-    return tpuf.b64encode_as_string(bytes)
+    packed = _get_struct(len(vector)).pack(*vector)
+    return tpuf.b64encode_as_string(packed)
 
 
 @dataclass
