@@ -1,8 +1,10 @@
 import uuid
 import turbopuffer as tpuf
+from turbopuffer.vectors import b64encode_vector
 import tests
 import pytest
 from datetime import datetime
+from typing import List
 
 @pytest.mark.xdist_group(name="group1")
 def test_upsert_rows():
@@ -19,7 +21,7 @@ def test_upsert_rows():
     ns.upsert([
         tpuf.VectorRow(id=2, vector=[2, 2]),
         tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}),
-        ], distance_metric='euclidean_squared')
+    ], distance_metric='euclidean_squared')
 
     # Test upsert lazy row iterator
     ns.upsert(tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'}) for i in range(10, 100))
@@ -559,3 +561,35 @@ def test_delete_by_filter():
     assert results[0].id == 5
 
     ns.delete_all()
+
+def test_upsert_base64_vectors():
+    ns = tpuf.Namespace(tests.test_prefix + 'base64_test')
+    assert str(ns) == f'tpuf-namespace:{tests.test_prefix}base64_test'
+
+    # Test upsert multiple typed rows
+    ns.upsert([
+        tpuf.VectorRow(id=2, vector=b64encode_vector([2, 2])),
+        tpuf.VectorRow(id=3, vector=b64encode_vector([0.7, 0.7]), attributes={'hello': 'world'}),
+    ], distance_metric='euclidean_squared')
+
+    # Test upsert columns with positional args
+    ids = [4, 5]
+    vectors = [b64encode_vector([0.1, 0.1]), b64encode_vector([0.2, 0.2])]
+    attributes = {
+        "key1": ["zero", "one"],
+        "key2": [" ", "a"],
+    }
+    ns.upsert(ids, vectors, attributes)
+
+    # Test upsert lazy row iterator
+    ns.upsert(tpuf.VectorRow(id=i, vector=b64encode_vector([i/10, i/10]), attributes={'test': 'rows'}) for i in range(10, 100))
+
+    # Check to make sure the vectors were stored as expected
+    results = ns.vectors()
+    assert len(results) == 94, "Got wrong number of vectors back"
+    assert results[0] == tpuf.VectorRow(id=2, vector=[2.0, 2.0], attributes={})
+    assert results[1] == tpuf.VectorRow(id=3, vector=[0.7, 0.7], attributes={'hello': 'world'})
+    assert results[2] == tpuf.VectorRow(id=4, vector=[0.1, 0.1], attributes={'key1': 'zero', 'key2': ' '})
+    assert results[3] == tpuf.VectorRow(id=5, vector=[0.2, 0.2], attributes={'key1': 'one', 'key2': 'a'})
+    for i in range(10, 100):
+        assert results[i-6] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})

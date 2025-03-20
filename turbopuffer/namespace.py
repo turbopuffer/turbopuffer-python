@@ -3,7 +3,7 @@ import iso8601
 import json
 from datetime import datetime
 from turbopuffer.error import APIError
-from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter
+from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter, b64encode_vector
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict
 from typing import Dict, List, Literal, Optional, Iterable, Union, overload
@@ -203,7 +203,7 @@ class Namespace:
     @overload
     def upsert(self,
                ids: Union[List[int], List[str]],
-               vectors: List[List[float]],
+               vectors: List[Union[List[float], str]],
                attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None,
                schema: Optional[Dict] = None,
                distance_metric: Optional[str] = None,
@@ -277,6 +277,13 @@ class Namespace:
         elif isinstance(data, VectorColumns):
             payload = {**data.__dict__}
 
+            # Convert List[float] vectors to base64-encoded strings, if enabled.
+            if tpuf.upsert_vectors_as_base64 and payload["vectors"] is not None:
+                payload["vectors"] = [
+                    b64encode_vector(vector) if isinstance(vector, list) else vector
+                    for vector in payload["vectors"]
+                ]
+
             if distance_metric is not None:
                 payload["distance_metric"] = distance_metric
 
@@ -315,7 +322,6 @@ class Namespace:
                 raise ValueError('Provided pd.DataFrame is missing an id column.')
             if 'vector' not in data.keys():
                 raise ValueError('Provided pd.DataFrame is missing a vector column.')
-            # start = time.monotonic()
             for i in range(0, len(data), tpuf.upsert_batch_size):
                 batch = data[i:i+tpuf.upsert_batch_size]
                 attributes = dict()
@@ -327,25 +333,11 @@ class Namespace:
                     vectors=batch['vector'].transform(lambda x: x.tolist()).tolist(),
                     attributes=attributes
                 )
-                # time_diff = time.monotonic() - start
-                # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} begin:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                # before = time.monotonic()
-                # print(columns)
                 self.upsert(columns, schema=schema, distance_metric=distance_metric, encryption=encryption)
-                # time_diff = time.monotonic() - before
-                # print(f"Batch {columns.ids[0]}..{columns.ids[-1]} time:", time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                # start = time.monotonic()
             return
         elif isinstance(data, Iterable):
-            # start = time.monotonic()
             for batch in batch_iter(data, tpuf.upsert_batch_size):
-                # time_diff = time.monotonic() - start
-                # print('Batch begin:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                # before = time.monotonic()
                 self.upsert(batch, schema=schema, distance_metric=distance_metric, encryption=encryption)
-                # time_diff = time.monotonic() - before
-                # print('Batch time:', time_diff, '/', len(batch), '=', len(batch)/time_diff)
-                # start = time.monotonic()
             return
         else:
             raise ValueError(f'Unsupported data type: {type(data)}')

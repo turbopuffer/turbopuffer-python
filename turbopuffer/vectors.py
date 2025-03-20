@@ -1,5 +1,8 @@
 from dataclasses import dataclass
+from functools import lru_cache
+import struct
 import sys
+import turbopuffer as tpuf
 from typing import Optional, Union, List, Iterable, Dict, overload
 from itertools import islice
 
@@ -15,6 +18,26 @@ def batch_iter(iterable, n):
 
 class Cursor(str):
     pass
+
+
+@lru_cache(maxsize=64)
+def _get_struct(vector_length: int) -> struct.Struct:
+    return struct.Struct(f'<{vector_length}f')
+
+
+def b64encode_vector(vector: List[float]) -> str:
+    """
+    Encodes a list of floats into a base64 string representation of the float
+    array in a little-endian binary format.
+
+    Args:
+        vector (List[float]): The list of floats to encode.
+
+    Returns:
+        str: The base64 encoded string representation of the vector.
+    """
+    packed = _get_struct(len(vector)).pack(*vector)
+    return tpuf.b64encode_as_string(packed)
 
 
 @dataclass
@@ -46,8 +69,8 @@ class VectorRow:
             if 'numpy' in sys.modules and isinstance(self.vector, sys.modules['numpy'].ndarray):
                 if self.vector.ndim != 1:
                     raise ValueError(f'VectorRow.vector must be a 1d array, got {self.vector.ndim} dimensions')
-            elif not isinstance(self.vector, list):
-                raise ValueError('VectorRow.vector must be a list, got:', type(self.vector))
+            elif not isinstance(self.vector, list) and not isinstance(self.vector, str):
+                raise ValueError('VectorRow.vector must be a list or string, got:', type(self.vector))
         if self.attributes is not None and not isinstance(self.attributes, dict):
             raise ValueError('VectorRow.attributes must be a dict, got:', type(self.attributes))
 
@@ -74,7 +97,7 @@ class VectorColumns:
     """
 
     ids: Union[List[int], List[str]]
-    vectors: List[Optional[List[float]]]
+    vectors: List[Optional[Union[List[float], str]]]
     attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None
 
     distances: Optional[List[float]] = None
