@@ -25,7 +25,7 @@ tpuf.api_key = 'your-token'  # Alternatively: export=TURBOPUFFER_API_KEY=your-to
 # tpuf.api_base_url = "https://gcp-us-east4.turbopuffer.com"
 
 # Open a namespace
-# Setting base URL, option 2 (per namespace):
+# Setting base URL, option 2 (per namespace. If specified, this will override the global api_base_url):
 ns = tpuf.Namespace('hello_world', base_url="https://gcp-us-east4.turbopuffer.com")
 
 # Read namespace metadata
