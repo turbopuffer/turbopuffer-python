@@ -94,16 +94,18 @@ class Namespace:
 
     metadata: Optional[dict] = None
 
-    def __init__(self, name: str, api_key: Optional[str] = None, headers: Optional[dict] = None):
+    def __init__(self, name: str, api_key: Optional[str] = None, base_url: Optional[str] = None, headers: Optional[dict] = None):
         """
         Creates a new turbopuffer.Namespace object for querying the turbopuffer API.
 
         This function does not make any API calls on its own.
 
         Specifying an api_key here will override the global configuration for API calls to this namespace.
+
+        Specifying a base_url here will override the global configuration api_base_url for this namespace.
         """
         self.name = name
-        self.backend = Backend(api_key, headers)
+        self.backend = Backend(api_key, base_url, headers)
 
     def __str__(self) -> str:
         return f'tpuf-namespace:{self.name}'
@@ -571,12 +573,13 @@ class NamespaceIterator:
             return self.__next__()
 
 
-def namespaces(api_key: Optional[str] = None) -> Iterable[Namespace]:
+def namespaces(api_key: Optional[str] = None, base_url: Optional[str] = None) -> Iterable[Namespace]:
     """
     Lists all turbopuffer namespaces for a given api_key.
     If no api_key is provided, the globally configured API key will be used.
+    If no base_url is provided, the globally configured api_base_url will be used.
     """
-    backend = Backend(api_key)
+    backend = Backend(api_key, base_url)
     response = backend.make_api_request('namespaces')
     content = response.get('content', dict())
     next_cursor = content.pop('next_cursor', None)
