@@ -31,7 +31,10 @@ class Backend:
     base_url: str
     session: requests.Session
 
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = tpuf.api_base_url, headers: Optional[dict] = None):
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None, headers: Optional[dict] = None):
+        if base_url is None:
+            base_url = tpuf.api_base_url
+
         self.api_key = find_api_key(api_key)
         self.base_url = clean_base_url(base_url)
         self.headers = headers
