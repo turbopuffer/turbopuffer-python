@@ -1,6 +1,6 @@
 import turbopuffer as tpuf
 import tests
-
+import pytest
 
 def test_bm25():
     ns = tpuf.Namespace(tests.test_prefix + "bm25")
@@ -231,3 +231,61 @@ def test_bm25_ContainsAllTokens():
         }
     )
     assert len(missing) == 0
+
+
+def test_bm25_pre_tokenized_array():
+    ns = tpuf.Namespace(tests.test_prefix + "bm25_pre_tokenized_array")
+
+    try:
+        ns.delete_all()
+    except tpuf.NotFoundError:
+        pass
+
+    schema = {
+        "content": {
+            "type": "[]string",
+            "full_text_search": {
+                "tokenizer": "pre_tokenized_array",
+            },
+        },
+    }
+
+    ns.upsert(
+        [
+            tpuf.VectorRow(
+                id=1,
+                vector=[0.1, 0.1],
+                attributes={
+                    "content": ["jumped", "over", "the", "lazy", "dog"],
+                },
+            ),
+            tpuf.VectorRow(
+                id=2,
+                vector=[0.2, 0.2],
+                attributes={
+                    "content": ["the", "lazy", "dog", "is", "brown"],
+                },
+            ),
+        ],
+        schema=schema,
+    )
+
+    results = ns.query(
+        rank_by=["content", "BM25", ["jumped"]],
+        top_k=10,
+    )
+    assert len(results) == 1
+    assert results[0].id == 1
+
+    results = ns.query(
+        rank_by=["content", "BM25", ["dog"]],
+        top_k=10,
+    )
+    assert len(results) == 2
+
+    with pytest.raises(tpuf.APIError, match="invalid input 'jumped' for rank_by field \"content\", expecting \\[\\]string"):
+        # Query must be an array.
+        ns.query(
+            rank_by=["content", "BM25", "jumped"],
+            top_k=10,
+        )
