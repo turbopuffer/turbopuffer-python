@@ -25,7 +25,7 @@ class NamespaceUpsertParams(TypedDict, total=False):
     """Upsert documents in columnar format."""
 
 
-class DocumentsUpsertColumnar(DocumentColumnsParam):
+class DocumentsUpsertColumnar(DocumentColumnsParam, total=False):
     distance_metric: Required[DistanceMetric]
     """A function used to calculate vector similarity."""
 
