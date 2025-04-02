@@ -116,7 +116,14 @@ class Backend:
                     match_processing = re.match(r'.*processing_time;dur=([\d\.]+)', server_timing_str)
                     if match_processing:
                         try:
+                            # todo: update this to `processing_time`?
                             performance['server_time'] = float(match_processing.group(1)) / 1000.0
+                        except ValueError:
+                            pass
+                    match_query_execution = re.match(r'.*query_execution_time;dur=([\d\.]+)', server_timing_str)
+                    if match_query_execution:
+                        try:
+                            performance['query_execution_time'] = float(match_query_execution.group(1)) / 1000.0
                         except ValueError:
                             pass
                     match_exhaustive = re.match(r'.*exhaustive_search_count;count=([\d\.]+)', server_timing_str)
