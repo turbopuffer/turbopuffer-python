@@ -19,5 +19,6 @@ def test_perf_metrics():
 
     metrics = results.performance
 
+    assert metrics['exhaustive_search_count'] == 2
     assert metrics['server_time'] > 0.010
     assert metrics['query_execution_time'] > 0.010
