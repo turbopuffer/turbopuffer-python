@@ -107,22 +107,30 @@ class Backend:
 
                 server_timing_str = response.headers.get('Server-Timing', '')
                 if len(server_timing_str) > 0:
-                    match_cache_hit_ratio = re.match(r'.*cache_hit_ratio;ratio=([\d\.]+)', server_timing_str)
-                    if match_cache_hit_ratio:
+                    match_cache = re.match(r'.*cache;hit_ratio=([\d\.]+);temperature=(\w+)', server_timing_str)
+                    if match_cache:
                         try:
-                            performance['cache_hit_ratio'] = float(match_cache_hit_ratio.group(1))
+                            performance['cache_hit_ratio'] = float(match_cache.group(1))
+                            performance['cache_temperature'] = match_cache.group(2)
+                        except ValueError:
+                            pass
+                    match_exhaustive_search = re.match(r'.*exhaustive_search;count=([\d\.]+)', server_timing_str)
+                    if match_exhaustive_search:
+                        try:
+                            performance['exhaustive_search_count'] = int(match_exhaustive_search.group(1))
                         except ValueError:
                             pass
                     match_processing = re.match(r'.*processing_time;dur=([\d\.]+)', server_timing_str)
                     if match_processing:
                         try:
+                            # todo: update this to `processing_time`?
                             performance['server_time'] = float(match_processing.group(1)) / 1000.0
                         except ValueError:
                             pass
-                    match_exhaustive = re.match(r'.*exhaustive_search_count;count=([\d\.]+)', server_timing_str)
-                    if match_exhaustive:
+                    match_query_execution = re.match(r'.*query_execution_time;dur=([\d\.]+)', server_timing_str)
+                    if match_query_execution:
                         try:
-                            performance['exhaustive_search_count'] = int(match_exhaustive.group(1))
+                            performance['query_execution_time'] = float(match_query_execution.group(1)) / 1000.0
                         except ValueError:
                             pass
 
