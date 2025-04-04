@@ -1627,7 +1627,7 @@ class TestAsyncTurbopuffer:
         import threading
 
         from turbopuffer._utils import asyncify
-        from turbopuffer._base_client import get_platform 
+        from turbopuffer._base_client import get_platform
 
         async def test_main() -> None:
             result = await asyncify(get_platform)()
