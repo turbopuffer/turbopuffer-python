@@ -133,12 +133,6 @@ class Backend:
                             performance['query_execution_time'] = float(match_query_execution.group(1)) / 1000.0
                         except ValueError:
                             pass
-                    match_exhaustive = re.match(r'.*exhaustive_search_count;count=([\d\.]+)', server_timing_str)
-                    if match_exhaustive:
-                        try:
-                            performance['exhaustive_search_count'] = int(match_exhaustive.group(1))
-                        except ValueError:
-                            pass
 
                 if method == 'HEAD':
                     return dict(response.__dict__, **{
