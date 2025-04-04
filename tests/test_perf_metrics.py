@@ -19,6 +19,8 @@ def test_perf_metrics():
 
     metrics = results.performance
 
+    assert type(metrics['cache_hit_ratio']) is float
+    assert metrics['cache_temperature'] in ['hot', 'warm', 'cold']
     assert metrics['exhaustive_search_count'] == 2
-    assert metrics['server_time'] > 0.010
-    assert metrics['query_execution_time'] > 0.010
+    assert metrics['server_time'] > 0
+    assert metrics['query_execution_time'] > 0

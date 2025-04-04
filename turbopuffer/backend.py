@@ -111,7 +111,7 @@ class Backend:
                     if match_cache:
                         try:
                             performance['cache_hit_ratio'] = float(match_cache.group(1))
-                            performance['cache_temperature'] = float(match_cache.group(2))
+                            performance['cache_temperature'] = match_cache.group(2)
                         except ValueError:
                             pass
                     match_exhaustive_search = re.match(r'.*exhaustive_search;count=([\d\.]+)', server_timing_str)
