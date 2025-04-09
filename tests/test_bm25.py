@@ -18,46 +18,33 @@ def test_bm25():
     }
 
     # Upsert with dict
-    ns.upsert(
-        {
-            "ids": [1, 2, 3, 4],
-            "vectors": [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]],
-            "attributes": {
-                "blabla": [
-                    "the fox is quick and brown",
-                    "fox jumped over the lazy dog",
-                    "the dog is lazy and brown",
-                    "walrus is slow and inferior",
-                ],
-                "fact_id": ["a", "b", "c", "d"],
-            },
-            "schema": schema,
-        }
+    ns.write(
+        upsert_columns={
+            "id": [1, 2, 3, 4],
+            "vector": [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]],
+            "blabla": [
+                "the fox is quick and brown",
+                "fox jumped over the lazy dog",
+                "the dog is lazy and brown",
+                "walrus is slow and inferior",
+            ],
+            "fact_id": ["a", "b", "c", "d"],
+        },
+        schema=schema,
     )
 
     # Query with dict
     results = ns.query({"top_k": 10, "rank_by": ("blabla", "BM25", "fox jumping")})
     assert [item.id for item in results] == [2, 1]
 
-    # Upsert with positional args
-    ns.upsert(
-        [5, 6],
-        [[0.5, 0.5], [0.6, 0.6]],
-        {
-            "blabla": [
-                "Male Pacific walruses can be over 3.6m long and weigh over 1500kg",
-                "Female walruses have tusks too",
-            ],
-            "fact_id": ["e", "f"],
-        },
-        schema,
-    )
-
     # Upsert with named args
-    ns.upsert(
-        ids=[7],
-        vectors=[[0.7, 0.7]],
-        attributes={"blabla": ["walruses can live up to 40 years"], "fact_id": ["g"]},
+    ns.write(
+        upsert_columns={
+            "id": [7],
+            "vector": [[0.7, 0.7]],
+            "blabla": ["walruses can live up to 40 years"],
+            "fact_id": ["g"],
+        },
         schema=schema,
     )
 
@@ -70,35 +57,21 @@ def test_bm25():
         ),
         filters=("fact_id", "NotEq", "z"),
     )
-    assert [item.id for item in results] == [2, 6]
+    assert [item.id for item in results] == [2, 4]
 
     # Upsert with row-based upsert format
-    ns.upsert(
-        [
-            tpuf.VectorRow(
-                id=8,
-                vector=[0.8, 0.8],
-                attributes={
-                    "blabla": "row based upsert format is cool",
-                    "fact_id": "h",
-                },
-            ),
-        ],
-        schema=schema,
-    )
-
-    # Upsert with the dict format
-    ns.upsert(
-        [
-            {
-                "id": 9,
-                "vector": [0.9, 0.9],
-                "attributes": {
-                    "blabla": "dict format of row based upsert also works, but isn't typed as well",
-                    "fact_id": "i",
-                },
-            },
-        ],
+    ns.write(
+        upsert_rows=[{
+            "id": 8,
+            "vector": [0.8, 0.8],
+            "blabla": "row based upsert format is cool",
+            "fact_id": "h",
+        }, {
+            "id": 9,
+            "vector": [0.9, 0.9],
+            "blabla": "dict format of row based upsert also works, but isn't typed as well",
+            "fact_id": "i",
+        }],
         schema=schema,
     )
 
@@ -132,25 +105,18 @@ def test_bm25_product_operator():
     }
 
     # Upsert a few docs
-    ns.upsert(
-        [
-            tpuf.VectorRow(
-                id=1,
-                vector=[0.1, 0.1],
-                attributes={
-                    "title": "the quick brown fox",
-                    "content": "jumped over the lazy dog",
-                },
-            ),
-            tpuf.VectorRow(
-                id=2,
-                vector=[0.2, 0.2],
-                attributes={
-                    "title": "the lazy dog",
-                    "content": "is brown",
-                },
-            ),
-        ],
+    ns.write(
+        upsert_rows=[{
+            "id": 1,
+            "vector": [0.1, 0.1],
+            "title": "the quick brown fox",
+            "content": "jumped over the lazy dog",
+        }, {
+            "id": 2,
+            "vector": [0.2, 0.2],
+            "title": "the lazy dog",
+            "content": "is brown",
+        }],
         schema=schema,
     )
 
@@ -195,16 +161,12 @@ def test_bm25_ContainsAllTokens():
     except tpuf.NotFoundError:
         pass
 
-    ns.upsert(
-        [
-            tpuf.VectorRow(
-                id=1,
-                vector=[0.1, 0.1],
-                attributes={
-                    "text": "Walruses are large marine mammals with long tusks and whiskers",
-                },
-            ),
-        ],
+    ns.write(
+        upsert_rows=[{
+            "id": 1,
+            "vector": [0.1, 0.1],
+            "text": "Walruses are large marine mammals with long tusks and whiskers",
+        }],
         schema={
             "text": {
                 "type": "string",
@@ -250,23 +212,14 @@ def test_bm25_pre_tokenized_array():
         },
     }
 
-    ns.upsert(
-        [
-            tpuf.VectorRow(
-                id=1,
-                vector=[0.1, 0.1],
-                attributes={
-                    "content": ["jumped", "over", "the", "lazy", "dog"],
-                },
-            ),
-            tpuf.VectorRow(
-                id=2,
-                vector=[0.2, 0.2],
-                attributes={
-                    "content": ["the", "lazy", "dog", "is", "brown"],
-                },
-            ),
-        ],
+    ns.write(
+        upsert_rows=[{
+            "id": 1,
+            "content": ["jumped", "over", "the", "lazy", "dog"],
+        }, {
+            "id": 2,
+            "content": ["the", "lazy", "dog", "is", "brown"],
+        }],
         schema=schema,
     )
 

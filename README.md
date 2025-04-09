@@ -33,21 +33,21 @@ if ns.exists():
     print(f'Namespace {ns.name} exists with {ns.dimensions()} dimensions and approximately {ns.approx_count()} vectors.')
 
 # Upsert your dataset
-ns.upsert(
-    ids=[1, 2],
-    vectors=[[0.1, 0.2], [0.3, 0.4]],
-    attributes={'name': ['foo', 'foos']},
-    distance_metric='cosine_distance',
+ns.write(
+    upsert_columns={
+        "id": [1, 2],
+        "vector": [[0.1, 0.2], [0.3, 0.4]],
+        "name": ["foo", "foos"]
+    }
 )
 
 # Alternatively, upsert using a row iterator
-ns.upsert(
-    {
-        'id': id,
-        'vector': [id/10, id/10],
-        'attributes': {'name': 'food', 'num': 8}
-    } for id in range(3, 10),
-    distance_metric='cosine_distance',
+ns.write(
+    upsert_rows=[{
+        "id": id,
+        "vector": [id/10, id/10],
+        "name": "food"
+    } for id in range(3, 10)]
 )
 
 # Query your dataset
@@ -76,7 +76,9 @@ for namespace in namespaces:
             'vectors with', namespace.dimensions(), 'dimensions.')
 
 # Delete vectors using the separate delete method
-ns.delete([1, 2])
+ns.write(
+    deletes=[1, 2]
+)
 ```
 
 Endpoint Documentation

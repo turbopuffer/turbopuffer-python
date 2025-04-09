@@ -23,6 +23,23 @@ except ImportError:
                     return float(obj)
                 elif isinstance(obj, sys.modules['numpy'].ndarray):
                     return obj.tolist()
+
+            if isinstance(obj, VectorRow):
+                o = {
+                    'id': obj.id,
+                    'vector': obj.vector,
+                }
+                if obj.attributes is not None:
+                    o.update(obj.attributes)
+                return o
+            elif isinstance(obj, VectorColumns):
+                o = {
+                    'id': obj.ids,
+                    'vector': obj.vectors,
+                }
+                if obj.attributes is not None:
+                    o.update(obj.attributes)
+                return o
             return json.JSONEncoder.default(self, obj)
 
     def dump_json_bytes(obj): return json.dumps(obj, cls=NumpyEncoder).encode()

@@ -7,13 +7,11 @@ def test_copy_from_namespace():
     ns1 = tpuf.Namespace(ns1_name)
     ns2 = tpuf.Namespace(tests.test_prefix + "copy_from_namespace_2")
 
-    ns1.upsert(
-        {
-            "ids": [1, 2, 3, 4],
-            "vectors": [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]],
-            "attributes": {
-                "fact_id": ["a", "b", "c", "d"],
-            },
+    ns1.write(
+        upsert_columns={
+            "id": [1, 2, 3, 4],
+            "vector": [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]],
+            "fact_id": ["a", "b", "c", "d"],
         },
         distance_metric="euclidean_squared",
     )

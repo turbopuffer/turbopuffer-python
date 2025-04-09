@@ -4,13 +4,11 @@ import tests
 def test_order_by_attribute():
     ns = tpuf.Namespace(tests.test_prefix + "order_by_attribute")
 
-    ns.upsert(
-        {
-            "ids": [1, 2, 3, 4],
-            "vectors": [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]],
-            "attributes": {
-                "fact_id": ["a", "b", "c", "d"],
-            },
+    ns.write(
+        upsert_columns={
+            "id": [1, 2, 3, 4],
+            "vector": [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]],
+            "fact_id": ["a", "b", "c", "d"],
         }
     )
 

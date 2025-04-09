@@ -232,7 +232,7 @@ class VectorColumns:
         else:
             raise ValueError('VectorColumns.append unsupported type:', type(other))
 
-    def from_rows(row_data: Union[VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
+    def from_rows(row_data: Union[List, VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
         ids = []
         vectors = []
         attributes = {}
@@ -361,7 +361,7 @@ class VectorResult:
             raise StopIteration
         else:
             response = self.namespace.backend.make_api_request(
-                'vectors',
+                '/v1/namespaces',
                 self.namespace.name,
                 query={'cursor': self.next_cursor}
             )

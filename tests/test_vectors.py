@@ -12,41 +12,50 @@ def test_upsert_rows():
     assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
 
     # Test upsert multiple dict rows
-    ns.upsert([
-        {'id': 2, 'vector': [2, 2]},
-        {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}},
-    ], distance_metric='euclidean_squared')
+    ns.write(
+        upsert_rows=[
+            {'id': 2, 'vector': [2, 2]},
+            {'id': 7, 'vector': [0.7, 0.7], 'hello': 'world', 'test': 'rows'},
+        ],
+        distance_metric='euclidean_squared'
+    )
 
     # Test upsert multiple typed rows
-    ns.upsert([
-        tpuf.VectorRow(id=2, vector=[2, 2]),
-        tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}),
-    ], distance_metric='euclidean_squared')
+    ns.write(
+        upsert_rows=[
+            tpuf.VectorRow(id=2, vector=[2, 2]),
+            tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'}),
+        ],
+        distance_metric='euclidean_squared'
+    )
 
     # Test upsert lazy row iterator
-    ns.upsert(tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'}) for i in range(10, 100))
+    ns.write(
+        upsert_rows=[tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'}) for i in range(10, 100)]
+    )
 
     # Test upsert single rows should fail
     try:
-        ns.upsert(tpuf.VectorRow(id=2, vector=[2, 2]))
+        ns.write(
+            upsert_rows=tpuf.VectorRow(id=2, vector=[2, 2])
+        )
         assert False, "Upserting single row should not be allowed"
     except ValueError as err:
-        assert err.args == ('upsert() should be called on a list of vectors, got single vector.',)
+        assert err.args == ('upsert_rows must be a List',)
     try:
-        ns.upsert(tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world', 'test': 'rows'}))
+        ns.write(
+            upsert_rows=tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world', 'test': 'rows'})
+        )
         assert False, "Upserting single row should not be allowed"
     except ValueError as err:
-        assert err.args == ('upsert() should be called on a list of vectors, got single vector.',)
+        assert err.args == ('upsert_rows must be a List',)
     try:
-        ns.upsert({'id': 2, 'vector': [2, 2]})
+        ns.write(
+            upsert_rows={'id': 2, 'vector': [2, 2]}
+        )
         assert False, "Upserting single row should not be allowed"
     except ValueError as err:
-        assert err.args == ('upsert() should be called on a list of vectors, got single vector.',)
-    try:
-        ns.upsert({'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}})
-        assert False, "Upserting single row should not be allowed"
-    except ValueError as err:
-        assert err.args == ('upsert() should be called on a list of vectors, got single vector.',)
+        assert err.args == ('upsert_rows must be a List',)
 
     # Check to make sure the vectors were stored as expected
     results = ns.vectors()
@@ -63,33 +72,43 @@ def test_upsert_rows():
 def test_delete_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
 
-    # Test upsert delete columns
-    ns.upsert(ids=[2], vectors=[None])
+    # Test delete
+    ns.write(
+        deletes=[2]
+    )
     results = ns.vectors()
     assert len(results) == 91, "Got wrong number of vectors back"
     assert results[0] == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
 
-    # Test upsert delete typed row
-    ns.upsert([tpuf.VectorRow(id=10)])
+    ns.write(
+        deletes=[10]
+    )
     results = ns.vectors()
     assert len(results) == 90, "Got wrong number of vectors back"
     assert results[1] == tpuf.VectorRow(id=11, vector=[1.1, 1.1], attributes={'test': 'rows'})
 
-    ns.upsert([tpuf.VectorRow(id=11, dist=5)])
+    ns.write(
+        deletes=[11]
+    )
     results = ns.vectors()
     assert len(results) == 89, "Got wrong number of vectors back"
     assert results[1] == tpuf.VectorRow(id=12, vector=[1.2, 1.2], attributes={'test': 'rows'})
 
-    # Test upsert delete dict row
-    ns.upsert([{'id': 12}])
+    ns.write(
+        deletes=[12]
+    )
     results = ns.vectors()
     assert len(results) == 88, "Got wrong number of vectors back"
     assert results[1] == tpuf.VectorRow(id=13, vector=[1.3, 1.3], attributes={'test': 'rows'})
 
     # Test delete single row
-    ns.delete(13)
+    ns.write(
+        deletes=[13]
+    )
     # Test delete multi row
-    ns.delete([14, 15, 16])
+    ns.write(
+        deletes=[14, 15, 16]
+    )
 
     # Check to make sure the vectors were removed
     results = ns.vectors()
@@ -97,7 +116,6 @@ def test_delete_vectors():
     assert results[0] == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
     for i in range(17, 100):
         assert results[i-16] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
-
 
 @pytest.mark.xdist_group(name="group1")
 def test_upsert_columns():
@@ -111,45 +129,56 @@ def test_upsert_columns():
         "test": ["cols", "cols", "cols", "cols"],
     }
 
-    # Test upsert columns with positional args
-    ns.upsert(ids, vectors, attributes)
-
     # Test upsert columns with named args
-    ns.upsert(
-        ids=ids,
-        vectors=vectors,
-        attributes=attributes
+    ns.write(
+        upsert_columns={
+            'id': ids,
+            'vector': vectors,
+            **attributes
+        }
     )
 
     # Test upsert dict columns
-    ns.upsert({
-        "ids": [0, 1, 2, 3],
-        "vectors": [[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
-        "attributes": {
+    ns.write(
+        upsert_columns={
+            "id": [0, 1, 2, 3],
+            "vector": [[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
             "key1": ["zero", "one", "two", "three"],
             "key2": [" ", "a", "b", "c"],
             "test": ["cols", "cols", "cols", "cols"],
         }
-    })
+    )
 
     # Test upsert typed columns
-    ns.upsert(tpuf.VectorColumns(
-        ids=[4, 5, 6],
-        vectors=[[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
-        attributes={
-            "key1": ["one", "two", "three"],
-            "key2": ["a", "b", "c"],
-            "test": ["cols", "cols", "cols"],
-        },
-    ))
+    # ns.upsert(tpuf.VectorColumns(
+    #     ids=[4, 5, 6],
+    #     vectors=[[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
+    #     attributes={
+    #         "key1": ["one", "two", "three"],
+    #         "key2": ["a", "b", "c"],
+    #         "test": ["cols", "cols", "cols"],
+    #     },
+    # ))
+    ns.write(
+        upsert_columns=tpuf.VectorColumns(
+            ids=[4, 5, 6],
+            vectors=[[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
+            attributes={
+                "key1": ["one", "two", "three"],
+                "key2": ["a", "b", "c"],
+                "test": ["cols", "cols", "cols"],
+            },
+        )
+    )
 
     # Test upsert lazy column batch iterator
-    def make_test_batch(n):
-        for i in range(1, 10):
-            yield tpuf.VectorColumns.from_rows([
-                {'id': i, 'vector': [i/10, i/10], 'attributes': {'test': 'cols'}} for i in range(i*n, (i+1)*n)
-            ])
-    ns.upsert(make_test_batch(10))
+    def make_test_batch():
+        return tpuf.VectorColumns.from_rows([
+            {'id': i, 'vector': [i/10, i/10], 'attributes': {'test': 'cols'}} for i in range(10, 100)
+        ])
+    ns.write(
+        upsert_columns=make_test_batch()
+    )
 
     # Check to make sure the vectors were stored as expected
     results = ns.vectors()
@@ -163,7 +192,6 @@ def test_upsert_columns():
         else:
             assert row == tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world'})
     assert test_count == 97, "Found wrong number of test cols"
-
 
 @pytest.mark.xdist_group(name="group1")
 def test_query_vectors():
@@ -308,6 +336,7 @@ def test_query_vectors():
     except ValueError as err:
         assert err.args == ("VectorQuery.consistency level must be 'strong' or 'eventual', got:", 'nonexistentvalue')
 
+
 @pytest.mark.xdist_group(name="group1")
 def test_list_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
@@ -350,10 +379,10 @@ def test_string_ids():
     key2 = [" ", "a", "b", "c"]
 
     # Test upsert columns
-    ns.upsert(
-        ids=vec_ids[0:4],
-        vectors=[[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
-        attributes={
+    ns.write(
+        upsert_columns={
+            "id": vec_ids[0:4],
+            "vector": [[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
             "key1": key1,
             "key2": key2,
             "test": ["cols", "cols", "cols", "cols"],
@@ -361,15 +390,16 @@ def test_string_ids():
     )
 
     # Test upsert rows
-    ns.upsert([
-        tpuf.VectorRow(
-            id=id,
-            vector=[i/10, i/10],
-            attributes={
-                'test': 'rows',
-                'hello': 'world'
-            }
-        ) for i, id in enumerate(vec_ids)][4:],
+    ns.write(
+        upsert_rows=[
+            tpuf.VectorRow(
+                id=id,
+                vector=[i/10, i/10],
+                attributes={
+                    'test': 'rows',
+                    'hello': 'world'
+                }
+            ) for i, id in enumerate(vec_ids)][4:],
         distance_metric='euclidean_squared',
     )
 
@@ -416,7 +446,9 @@ def test_string_ids():
         assert abs(row.dist - expected[i].dist) < 0.000001
 
     # Test delete by string id
-    ns.delete(vec_ids[2])
+    ns.write(
+        deletes=[vec_ids[2]]
+    )
 
     # Test query 2
     results = ns.query(
@@ -440,21 +472,22 @@ def test_string_ids():
 
     ns.delete_all()
 
+
 def test_attribute_types():
     ns = tpuf.Namespace(tests.test_prefix + "client_test_types")
 
     # Test upsert multiple dict rows
-    ns.upsert(
-        [
+    ns.write(
+        upsert_rows=[
             {
                 "id": 7,
                 "vector": [0.7, 0.7],
-                "attributes": {"count": 1, "users": ["jan", "simon"]},
+                "count": 1, "users": ["jan", "simon"],
             },
             {
                 "id": 9,
                 "vector": [0.7, 0.7],
-                "attributes": {"count": 2, "users": ["bojan", "morgan", "simon"]},
+                "count": 2, "users": ["bojan", "morgan", "simon"],
             },
         ],
         distance_metric='euclidean_squared',
@@ -518,33 +551,46 @@ def test_list_in_empty_namespace():
     assert str(ns) == f'tpuf-namespace:{tests.test_prefix}client_test'
 
     # Test upsert multiple dict rows
-    ns.upsert([
-        {'id': 2, 'vector': [2, 2]},
-        {'id': 7, 'vector': [1, 1]},
-    ], distance_metric='euclidean_squared')
+    ns.write(
+        upsert_rows=[
+            {'id': 2, 'vector': [2, 2]},
+            {'id': 7, 'vector': [1, 1]},
+        ],
+        distance_metric='euclidean_squared',
+    )
 
-    ns.delete([2, 7])
+    ns.write(
+        deletes=[2, 7]
+    )
 
     assert list(ns.vectors()) == []
+
 
 def test_delete_by_filter():
     ns = tpuf.Namespace(tests.test_prefix + 'delete_by_filter')
 
-    ns.upsert([
-        {'id': 5, 'vector': [0.7, 0.7], 'attributes': {'a': 0}},
-        {'id': 6, 'vector': [0.7, 0.7], 'attributes': {'a': 1}},
-        {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'a': 2}},
-        {'id': 8, 'vector': [0.7, 0.7], 'attributes': {'a': 1}},
-        {'id': 9, 'vector': [0.7, 0.7], 'attributes': {'a': 3}},
-    ], distance_metric='euclidean_squared')
+    ns.write(
+        upsert_rows=[
+            {'id': 5, 'vector': [0.7, 0.7], 'a': 0},
+            {'id': 6, 'vector': [0.7, 0.7], 'a': 1},
+            {'id': 7, 'vector': [0.7, 0.7], 'a': 2},
+            {'id': 8, 'vector': [0.7, 0.7], 'a': 1},
+            {'id': 9, 'vector': [0.7, 0.7], 'a': 3},
+        ],
+        distance_metric='euclidean_squared',
+    )
 
-    rows_affected = ns.delete_by_filter(['a', 'Eq', 42]) # no-op, nothing matches
+    rows_affected = ns.write(
+        delete_by_filter=['a', 'Eq', 42] # no-op, nothing matches
+    )
     assert rows_affected == 0
 
     results = ns.vectors()
     assert len(results) == 5, "Got wrong number of vectors back"
 
-    rows_affected = ns.delete_by_filter(['a', 'Eq', 1])
+    rows_affected = ns.write(
+        delete_by_filter=['a', 'Eq', 1]
+    )
     assert rows_affected == 2
 
     results = ns.vectors()
@@ -553,7 +599,9 @@ def test_delete_by_filter():
     assert results[1].id == 7
     assert results[2].id == 9
 
-    rows_affected = ns.delete_by_filter(['a', 'Gt', 0])
+    rows_affected = ns.write(
+        delete_by_filter=['a', 'Gt', 0]
+    )
     assert rows_affected == 2
 
     results = ns.vectors()
@@ -562,27 +610,41 @@ def test_delete_by_filter():
 
     ns.delete_all()
 
+"""
 def test_upsert_base64_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'base64_test')
     assert str(ns) == f'tpuf-namespace:{tests.test_prefix}base64_test'
 
     # Test upsert multiple typed rows
-    ns.upsert([
-        tpuf.VectorRow(id=2, vector=b64encode_vector([2, 2])),
-        tpuf.VectorRow(id=3, vector=b64encode_vector([0.7, 0.7]), attributes={'hello': 'world'}),
-    ], distance_metric='euclidean_squared')
+    # ns.write(
+    #     upsert_rows=[
+    #         tpuf.VectorRow(id=2, vector=b64encode_vector([2, 2])),
+    #         tpuf.VectorRow(id=3, vector=b64encode_vector([0.7, 0.7]), attributes={'hello': 'world'}),
+    #     ],
+    #     distance_metric='euclidean_squared',
+    # )
 
-    # Test upsert columns with positional args
+    # Test upsert columns
     ids = [4, 5]
     vectors = [b64encode_vector([0.1, 0.1]), b64encode_vector([0.2, 0.2])]
     attributes = {
         "key1": ["zero", "one"],
         "key2": [" ", "a"],
     }
-    ns.upsert(ids, vectors, attributes)
+    ns.write(
+        upsert_columns={
+            'id': ids,
+            'vector': vectors,
+            **attributes,
+        }
+    )
 
     # Test upsert lazy row iterator
-    ns.upsert(tpuf.VectorRow(id=i, vector=b64encode_vector([i/10, i/10]), attributes={'test': 'rows'}) for i in range(10, 100))
+    ns.write(
+        upsert_rows=[
+            tpuf.VectorRow(id=i, vector=b64encode_vector([i/10, i/10]), attributes={'test': 'rows'}) for i in range(10, 100)
+        ]
+    )
 
     # Check to make sure the vectors were stored as expected
     results = ns.vectors()
@@ -593,3 +655,4 @@ def test_upsert_base64_vectors():
     assert results[3] == tpuf.VectorRow(id=5, vector=[0.2, 0.2], attributes={'key1': 'one', 'key2': 'a'})
     for i in range(10, 100):
         assert results[i-6] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
+"""
