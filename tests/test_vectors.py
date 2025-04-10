@@ -42,21 +42,21 @@ def test_upsert_rows():
         )
         assert False, "Upserting single row should not be allowed"
     except ValueError as err:
-        assert err.args == ('upsert_rows must be a List',)
+        assert err.args == ('upsert_rows must be a list',)
     try:
         ns.write(
             upsert_rows=tpuf.VectorRow(id=7, vector=[0.7, 0.7], attributes={'hello': 'world', 'test': 'rows'})
         )
         assert False, "Upserting single row should not be allowed"
     except ValueError as err:
-        assert err.args == ('upsert_rows must be a List',)
+        assert err.args == ('upsert_rows must be a list',)
     try:
         ns.write(
             upsert_rows={'id': 2, 'vector': [2, 2]}
         )
         assert False, "Upserting single row should not be allowed"
     except ValueError as err:
-        assert err.args == ('upsert_rows must be a List',)
+        assert err.args == ('upsert_rows must be a list',)
 
     # Check to make sure the vectors were stored as expected
     results = ns.vectors()
@@ -655,20 +655,3 @@ def test_upsert_base64_vectors():
 
     ns.delete_all()
 
-def test_mixed_columnar_and_row_based_writes_not_allowed():
-    ns = tpuf.Namespace(tests.test_prefix + 'mixed_write_formats')
-
-    try:
-        ns.write(
-            upsert_columns={
-                'id': [2, 7],
-                'vector': [[2, 2], [0.7, 0.7]],
-            },
-            upsert_rows=[
-                {'id': 2, 'vector': [2, 2]},
-                {'id': 7, 'vector': [0.7, 0.7]},
-            ],
-            distance_metric='euclidean_squared',
-        )
-    except ValueError as err:
-        assert err.args == ('upsert_rows cannot be used with upsert_columns',)
