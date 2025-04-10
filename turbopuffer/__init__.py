@@ -27,16 +27,18 @@ except ImportError:
             if isinstance(obj, VectorRow):
                 o = {
                     'id': obj.id,
-                    'vector': obj.vector,
                 }
+                if obj.vector is not None:
+                    o['vector'] = obj.vector
                 if obj.attributes is not None:
                     o.update(obj.attributes)
                 return o
             elif isinstance(obj, VectorColumns):
                 o = {
                     'id': obj.ids,
-                    'vector': obj.vectors,
                 }
+                if obj.vectors is not None:
+                    o['vector'] = obj.vectors
                 if obj.attributes is not None:
                     o.update(obj.attributes)
                 return o

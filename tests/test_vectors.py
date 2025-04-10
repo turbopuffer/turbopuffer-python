@@ -6,6 +6,7 @@ import pytest
 from datetime import datetime
 from typing import List
 
+
 @pytest.mark.xdist_group(name="group1")
 def test_upsert_rows():
     ns = tpuf.Namespace(tests.test_prefix + 'client_test')
@@ -171,13 +172,10 @@ def test_upsert_columns():
         )
     )
 
-    # Test upsert lazy column batch iterator
-    def make_test_batch():
-        return tpuf.VectorColumns.from_rows([
-            {'id': i, 'vector': [i/10, i/10], 'attributes': {'test': 'cols'}} for i in range(10, 100)
-        ])
     ns.write(
-        upsert_columns=make_test_batch()
+        upsert_rows=[
+            {'id': i, 'vector': [i/10, i/10], 'test': 'cols'} for i in range(10, 100)
+        ]
     )
 
     # Check to make sure the vectors were stored as expected
@@ -610,19 +608,18 @@ def test_delete_by_filter():
 
     ns.delete_all()
 
-"""
 def test_upsert_base64_vectors():
     ns = tpuf.Namespace(tests.test_prefix + 'base64_test')
     assert str(ns) == f'tpuf-namespace:{tests.test_prefix}base64_test'
 
     # Test upsert multiple typed rows
-    # ns.write(
-    #     upsert_rows=[
-    #         tpuf.VectorRow(id=2, vector=b64encode_vector([2, 2])),
-    #         tpuf.VectorRow(id=3, vector=b64encode_vector([0.7, 0.7]), attributes={'hello': 'world'}),
-    #     ],
-    #     distance_metric='euclidean_squared',
-    # )
+    ns.write(
+        upsert_rows=[
+            tpuf.VectorRow(id=2, vector=b64encode_vector([2, 2])),
+            tpuf.VectorRow(id=3, vector=b64encode_vector([0.7, 0.7]), attributes={'hello': 'world'}),
+        ],
+        distance_metric='euclidean_squared',
+    )
 
     # Test upsert columns
     ids = [4, 5]
@@ -655,4 +652,38 @@ def test_upsert_base64_vectors():
     assert results[3] == tpuf.VectorRow(id=5, vector=[0.2, 0.2], attributes={'key1': 'one', 'key2': 'a'})
     for i in range(10, 100):
         assert results[i-6] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
-"""
+
+    ns.delete_all()
+
+def test_mixed_columnar_and_row_based_writes_not_allowed():
+    ns = tpuf.Namespace(tests.test_prefix + 'mixed_write_formats')
+
+    try:
+        ns.write(
+            upsert_columns={
+                'id': [2, 7],
+                'vector': [[2, 2], [0.7, 0.7]],
+            },
+            upsert_rows=[
+                {'id': 2, 'vector': [2, 2]},
+                {'id': 7, 'vector': [0.7, 0.7]},
+            ],
+            distance_metric='euclidean_squared',
+        )
+    except ValueError as err:
+        assert err.args == ('upsert_rows cannot be used with upsert_columns',)
+
+    try:
+        ns.write(
+            patch_columns={
+                'id': [2, 7],
+                'foo': [1, 2],
+            },
+            patch_rows=[
+                {'id': 2, 'foo': 1},
+                {'id': 7, 'foo': 2},
+            ],
+            distance_metric='euclidean_squared',
+        )
+    except ValueError as err:
+        assert err.args == ('patch_rows cannot be used with patch_columns',)

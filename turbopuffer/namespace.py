@@ -230,12 +230,20 @@ class Namespace:
         if upsert_rows is not None:
             if not isinstance(upsert_rows, List):
                 raise ValueError("upsert_rows must be a List")
-            payload["upsert_rows"] = upsert_rows
+
+            if "upsert_columns" in payload:
+                raise ValueError("upsert_rows cannot be used with upsert_columns")
+            else:
+                payload["upsert_columns"] = VectorColumns.from_rows_for_write(upsert_rows)
 
         if patch_rows is not None:
             if not isinstance(patch_rows, List):
                 raise ValueError("patch_rows must be a List")
-            payload["patch_rows"] = patch_rows
+
+            if "patch_columns" in payload:
+                raise ValueError("patch_rows cannot be used with patch_columns")
+            else:
+                payload["patch_columns"] = VectorColumns.from_rows_for_write(patch_rows)
 
         if deletes is not None:
             if not isinstance(deletes, List):
