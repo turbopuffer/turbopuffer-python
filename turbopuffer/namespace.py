@@ -6,7 +6,7 @@ from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter, b64encode_vector
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict
-from typing import Dict, List, Literal, Optional, Iterable, Union, overload
+from typing import Any, Dict, List, Literal, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 
 CmekDict = Dict[Literal['key_name'], str]
@@ -203,10 +203,10 @@ class Namespace:
         assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid copy_from_namespace() response: {response}'
 
     def write(self,
-          upsert_columns: Optional[Dict[str, List]] = None,
+          upsert_columns: Optional[Dict[str, List] | VectorColumns] = None,
           patch_columns: Optional[Dict[str, List]] = None,
-          upsert_rows: Optional[List[Dict]] = None,
-          patch_rows: Optional[List[Dict]] = None,
+          upsert_rows: Optional[List[Dict[str, Any] | VectorRow]] = None,
+          patch_rows: Optional[List[Dict[str, Any]]] = None,
           deletes: Optional[List[Union[int, str]]] = None,
           delete_by_filter: Optional[Filters] = None,
           distance_metric: Optional[Literal["cosine_distance", "euclidean_squared"]] = None,
@@ -218,47 +218,16 @@ class Namespace:
         payload = {}
 
         if upsert_columns is not None:
-            if isinstance(upsert_columns, VectorColumns):
-                payload["upsert_columns"] = upsert_columns.to_dict_for_write()
-            elif isinstance(upsert_columns, Dict):
-                payload["upsert_columns"] = upsert_columns
-            else:
-                raise ValueError("upsert_columns must be a Dict or VectorColumns")
-
-            if "id" not in payload["upsert_columns"]:
-                raise ValueError("upsert_columns must have an id column")
+            payload["upsert_columns"] = encode_columns("upsert_columns", upsert_columns)
 
         if patch_columns is not None:
-            if isinstance(patch_columns, VectorColumns):
-                payload["patch_columns"] = patch_columns.to_dict_for_write()
-            elif isinstance(patch_columns, Dict):
-                payload["patch_columns"] = patch_columns
-            else:
-                raise ValueError("patch_columns must be a Dict or VectorColumns")
-
-            if "id" not in payload["patch_columns"]:
-                raise ValueError("patch_columns must have an id column")
+            payload["patch_columns"] = encode_columns("patch_columns", patch_columns)
 
         if upsert_rows is not None:
-            if not isinstance(upsert_rows, List):
-                raise ValueError("upsert_rows must be a List")
-
-            if "upsert_columns" in payload:
-                raise ValueError("upsert_rows cannot be used with upsert_columns")
-            else:
-                payload["upsert_columns"] = VectorColumns.from_rows_for_write(upsert_rows).to_dict_for_write()
+            payload["upsert_rows"] = encode_rows("upsert_rows", upsert_rows)
 
         if patch_rows is not None:
-            if not isinstance(patch_rows, List):
-                raise ValueError("patch_rows must be a list of dicts")
-
-            for row in patch_rows:
-                if not isinstance(row, dict):
-                    raise ValueError("patch_rows must be a list of dicts")
-                if "id" not in row:
-                    raise ValueError("each patch row must have an id")
-
-            payload["patch_rows"] = patch_rows
+            payload["patch_rows"] = encode_rows("patch_rows", patch_rows)
 
         if deletes is not None:
             if not isinstance(deletes, List):
@@ -493,3 +462,48 @@ def namespaces(api_key: Optional[str] = None, base_url: Optional[str] = None) ->
     content = response.get('content', dict())
     next_cursor = content.pop('next_cursor', None)
     return NamespaceIterator(backend, content.pop('namespaces', list()), next_cursor)
+
+def encode_row(field: str, row: Dict[str, Any] | VectorRow) -> dict:
+    if isinstance(row, VectorRow):
+        return row.to_dict_for_write()
+    elif isinstance(row, Dict):
+        if "id" not in row:
+            raise ValueError(f"each row in {field} must have an id")
+
+        # server-side doesn't support base64 encoding for row-based vectors yet
+        # if tpuf.upsert_vectors_as_base64:
+        #     vector = output.get('vector')
+        #     if isinstance(vector, list):
+        #         row = row.copy()
+        #         row['vector'] = b64encode_vector(vector)
+
+        return row
+    else:
+        raise ValueError(f"{field} must be a dict or VectorRow")
+
+def encode_rows(field: str, rows: List[Dict[str, Any] | VectorRow]) -> List[dict]:
+    if not isinstance(rows, List):
+        raise ValueError(f"{field} must be a list")
+
+    return [encode_row(field, row) for row in rows]
+
+def encode_columns(field: str, column_dict: Dict[str, List] | VectorColumns) -> dict:
+    if isinstance(column_dict, VectorColumns):
+        output = column_dict.to_dict_for_write()
+    elif isinstance(column_dict, Dict):
+        output = column_dict
+        if "id" not in output:
+            raise ValueError(f"{field} must have an id column")
+
+        if tpuf.upsert_vectors_as_base64:
+            vectors = output.get('vector')
+            if isinstance(vectors, list):
+                output = output.copy()
+                output['vector'] = [
+                    b64encode_vector(vector) if isinstance(vector, list) else vector
+                    for vector in vectors
+                ]
+    else:
+        raise ValueError(f"{field} must be a dict or VectorColumns")
+
+    return output

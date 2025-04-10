@@ -87,6 +87,22 @@ class VectorRow:
             fields.append(f'dist={self.dist}')
         return f"VectorRow({', '.join(fields)})"
 
+    def to_dict_for_write(self) -> dict:
+        o = { 'id': self.id }
+
+        if self.vector is not None:
+            # server-side doesn't support base64 encoding for row-based vectors yet
+            # if tpuf.upsert_vectors_as_base64 and isinstance(self.vector, list):
+            #     o['vector'] = b64encode_vector(self.vector)
+            # else:
+            #     o['vector'] = self.vector
+            o['vector'] = self.vector
+
+        if self.attributes is not None:
+            o.update(self.attributes)
+
+        return o
+
 
 @dataclass
 class VectorColumns:
@@ -179,64 +195,6 @@ class VectorColumns:
             o.update(self.attributes)
 
         return o
-
-    def from_rows_for_write(row_data: Union[List, VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
-        ids = []
-        vectors = []
-        has_vectors = False
-        attributes = {}
-        if isinstance(row_data, VectorRow):
-            ids = [row_data.id]
-            vectors = [row_data.vector]
-            if row_data.attributes:
-                for k, v in row_data.attributes.items():
-                    attributes[k] = [v]
-            return VectorColumns(ids=ids, vectors=vectors, attributes=attributes)
-        elif isinstance(row_data, list):
-            col_count = len(row_data)
-            for i, row in enumerate(row_data):
-                if isinstance(row, dict):
-                    this_row_has_vector = False
-                    for k, v in row.items():
-                        if k == 'id':
-                            ids.append(v)
-                        elif k == 'vector':
-                            this_row_has_vector = True
-                            if has_vectors or i == 0:
-                                vectors.append(row.get('vector'))
-                                has_vectors = True
-                            else:
-                                raise ValueError('if any rows have a vector, all rows must have a vector')
-                        else:
-                            attrs = attributes.setdefault(k, [None]*col_count)
-                            attrs[i] = v
-                    if this_row_has_vector and not has_vectors:
-                        raise ValueError('if any rows have a vector, all rows must have a vector')
-                elif isinstance(row, VectorRow):
-                    ids += [row.id]
-                    if row.vector is not None:
-                        if has_vectors or i == 0:
-                            vectors.append(row.vector)
-                            has_vectors = True
-                        else:
-                            raise ValueError('if any rows have a vector, all rows must have a vector')
-                    elif has_vectors:
-                        raise ValueError('if any rows have a vector, all rows must have a vector')
-
-                    if row.attributes:
-                        for k, v in row.attributes.items():
-                            attrs = attributes.setdefault(k, [None]*col_count)
-                            attrs[i] = v
-                else:
-                    raise ValueError(f'Unsupported row data type: {type(row)}')
-        elif isinstance(row_data, Iterable):
-            raise ValueError('VectorColumns from Iterable not yet supported.')
-        else:
-            raise ValueError(f'Unsupported row data type: {type(row_data)}')
-
-        if len(vectors) == 0:
-            vectors = None
-        return VectorColumns(ids=ids, vectors=vectors, attributes=attributes)
 
 
 SET_DATA = Union[Iterable[VectorRow], VectorColumns]
