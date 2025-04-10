@@ -163,13 +163,22 @@ class VectorColumns:
                         row.attributes[key] = values[index]
         return row
 
-    def from_columns_for_write(column_data: Union[Dict, 'VectorColumns']) -> 'VectorColumns':
-        if isinstance(column_data, VectorColumns):
-            return column_data
+    def to_dict_for_write(self) -> dict:
+        o = { 'id': self.ids }
 
-        ids = column_data.pop('id')
-        vectors = column_data.pop('vector', None)
-        return VectorColumns(ids=ids, vectors=vectors, attributes=column_data)
+        if self.vectors is not None:
+            if tpuf.upsert_vectors_as_base64:
+                o['vector'] = [
+                    b64encode_vector(vector) if isinstance(vector, list) else vector
+                    for vector in self.vectors
+                ]
+            else:
+                o['vector'] = self.vectors
+
+        if self.attributes is not None:
+            o.update(self.attributes)
+
+        return o
 
     def from_rows_for_write(row_data: Union[List, VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
         ids = []

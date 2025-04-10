@@ -8,46 +8,10 @@ max_retries = 6
 connect_timeout = 10 # seconds
 read_timeout = 180 # seconds
 
-def encode_internal_types(obj):
-    if isinstance(obj, VectorRow):
-        o = {
-            'id': obj.id,
-        }
-        if obj.vector is not None:
-            if upsert_vectors_as_base64 and isinstance(obj.vector, list):
-                o['vector'] = b64encode_vector(obj.vector)
-            else:
-                o['vector'] = obj.vector
-        if obj.attributes is not None:
-            o.update(obj.attributes)
-        return o
-    elif isinstance(obj, VectorColumns):
-        o = {
-            'id': obj.ids,
-        }
-        if obj.vectors is not None:
-            if upsert_vectors_as_base64:
-                o['vector'] = [
-                    b64encode_vector(vector) if isinstance(vector, list) else vector
-                    for vector in obj.vectors
-                ]
-            else:
-                o['vector'] = obj.vectors
-        if obj.attributes is not None:
-            o.update(obj.attributes)
-        return o
-
 try:
     import orjson  # extras = ["fast"]
 
-    def orjson_default(obj):
-        mapped = encode_internal_types(obj)
-        if mapped is not None:
-            return mapped
-        return obj
-
-    def dump_json_bytes(obj):
-        return orjson.dumps(obj, default=orjson_default, option=orjson.OPT_SERIALIZE_NUMPY)
+    def dump_json_bytes(obj): return orjson.dumps(obj, option=orjson.OPT_SERIALIZE_NUMPY)
 except ImportError:
     import json
 
@@ -60,10 +24,6 @@ except ImportError:
                     return float(obj)
                 elif isinstance(obj, sys.modules['numpy'].ndarray):
                     return obj.tolist()
-
-            mapped = encode_internal_types(obj)
-            if mapped is not None:
-                return mapped
 
             return json.JSONEncoder.default(self, obj)
 

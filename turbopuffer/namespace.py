@@ -218,14 +218,20 @@ class Namespace:
         payload = {}
 
         if upsert_columns is not None:
-            if not isinstance(upsert_columns, Dict) and not isinstance(upsert_columns, VectorColumns):
+            if isinstance(upsert_columns, VectorColumns):
+                payload["upsert_columns"] = upsert_columns.to_dict_for_write()
+            elif isinstance(upsert_columns, Dict):
+                payload["upsert_columns"] = upsert_columns
+            else:
                 raise ValueError("upsert_columns must be a Dict or VectorColumns")
-            payload["upsert_columns"] = VectorColumns.from_columns_for_write(upsert_columns)
 
         if patch_columns is not None:
-            if not isinstance(patch_columns, Dict) and not isinstance(patch_columns, VectorColumns):
+            if isinstance(patch_columns, VectorColumns):
+                payload["patch_columns"] = patch_columns.to_dict_for_write()
+            elif isinstance(patch_columns, Dict):
+                payload["patch_columns"] = patch_columns
+            else:
                 raise ValueError("patch_columns must be a Dict or VectorColumns")
-            payload["patch_columns"] = VectorColumns.from_columns_for_write(patch_columns)
 
         if upsert_rows is not None:
             if not isinstance(upsert_rows, List):
@@ -234,7 +240,7 @@ class Namespace:
             if "upsert_columns" in payload:
                 raise ValueError("upsert_rows cannot be used with upsert_columns")
             else:
-                payload["upsert_columns"] = VectorColumns.from_rows_for_write(upsert_rows)
+                payload["upsert_columns"] = VectorColumns.from_rows_for_write(upsert_rows).to_dict_for_write()
 
         if patch_rows is not None:
             if not isinstance(patch_rows, List):
@@ -243,7 +249,7 @@ class Namespace:
             if "patch_columns" in payload:
                 raise ValueError("patch_rows cannot be used with patch_columns")
             else:
-                payload["patch_columns"] = VectorColumns.from_rows_for_write(patch_rows)
+                payload["patch_columns"] = VectorColumns.from_rows_for_write(patch_rows).to_dict_for_write()
 
         if deletes is not None:
             if not isinstance(deletes, List):
