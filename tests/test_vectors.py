@@ -5,6 +5,7 @@ import tests
 import pytest
 from datetime import datetime
 from typing import List
+import numpy as np
 
 
 @pytest.mark.xdist_group(name="group1")
@@ -645,4 +646,32 @@ def test_upsert_base64_vectors():
         assert results[i-6] == tpuf.VectorRow(id=i, vector=[i/10, i/10], attributes={'test': 'rows'})
 
     ns.delete_all()
+
+def test_query_vectors_vector_encoding_format():
+    ns = tpuf.Namespace(tests.test_prefix + 'vector_encoding_format')
+    assert str(ns) == f'tpuf-namespace:{tests.test_prefix}vector_encoding_format'
+
+    ns.write(
+        upsert_rows=[
+            tpuf.VectorRow(id=1, vector=b64encode_vector([0.1, 0.2, 0.3])),
+        ],
+        distance_metric='euclidean_squared',
+    )
+
+    for vector_encoding_format in [None, 'float', 'base64']:
+        vector_set = ns.query(
+            top_k=1,
+            vector=[0.0, 0.0, 0.0],
+            distance_metric='euclidean_squared',
+            include_vectors=True,
+            vector_encoding_format=vector_encoding_format,
+        )
+        assert len(vector_set) == 1
+        assert vector_set[0].id == 1
+
+        # Compare using float32 to avoid precision issues if the vectors had
+        # been passed through 32-bit floats.
+        def float32_list(vector):
+            return [np.float32(x) for x in vector]
+        assert float32_list(vector_set[0].vector) == float32_list([0.1, 0.2, 0.3])
 
