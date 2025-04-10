@@ -163,6 +163,14 @@ class VectorColumns:
                         row.attributes[key] = values[index]
         return row
 
+    def from_columns_for_write(column_data: Union[Dict, 'VectorColumns']) -> 'VectorColumns':
+        if isinstance(column_data, VectorColumns):
+            return column_data
+
+        ids = column_data.pop('id')
+        vectors = column_data.pop('vector', None)
+        return VectorColumns(ids=ids, vectors=vectors, attributes=column_data)
+
     def from_rows_for_write(row_data: Union[List, VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
         ids = []
         vectors = []

@@ -220,12 +220,12 @@ class Namespace:
         if upsert_columns is not None:
             if not isinstance(upsert_columns, Dict) and not isinstance(upsert_columns, VectorColumns):
                 raise ValueError("upsert_columns must be a Dict or VectorColumns")
-            payload["upsert_columns"] = upsert_columns
+            payload["upsert_columns"] = VectorColumns.from_columns_for_write(upsert_columns)
 
         if patch_columns is not None:
             if not isinstance(patch_columns, Dict) and not isinstance(patch_columns, VectorColumns):
                 raise ValueError("patch_columns must be a Dict or VectorColumns")
-            payload["patch_columns"] = patch_columns
+            payload["patch_columns"] = VectorColumns.from_columns_for_write(patch_columns)
 
         if upsert_rows is not None:
             if not isinstance(upsert_rows, List):
