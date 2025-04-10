@@ -91,12 +91,10 @@ class VectorRow:
         o = { 'id': self.id }
 
         if self.vector is not None:
-            # server-side doesn't support base64 encoding for row-based vectors yet
-            # if tpuf.upsert_vectors_as_base64 and isinstance(self.vector, list):
-            #     o['vector'] = b64encode_vector(self.vector)
-            # else:
-            #     o['vector'] = self.vector
-            o['vector'] = self.vector
+            if tpuf.upsert_vectors_as_base64 and isinstance(self.vector, list):
+                o['vector'] = b64encode_vector(self.vector)
+            else:
+                o['vector'] = self.vector
 
         if self.attributes is not None:
             o.update(self.attributes)

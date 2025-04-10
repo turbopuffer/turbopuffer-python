@@ -470,12 +470,11 @@ def encode_row(field: str, row: Dict[str, Any] | VectorRow) -> dict:
         if "id" not in row:
             raise ValueError(f"each row in {field} must have an id")
 
-        # server-side doesn't support base64 encoding for row-based vectors yet
-        # if tpuf.upsert_vectors_as_base64:
-        #     vector = output.get('vector')
-        #     if isinstance(vector, list):
-        #         row = row.copy()
-        #         row['vector'] = b64encode_vector(vector)
+        if tpuf.upsert_vectors_as_base64:
+            vector = row.get('vector')
+            if isinstance(vector, list):
+                row = row.copy()
+                row['vector'] = b64encode_vector(vector)
 
         return row
     else:
