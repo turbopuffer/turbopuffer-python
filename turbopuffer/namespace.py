@@ -225,6 +225,9 @@ class Namespace:
             else:
                 raise ValueError("upsert_columns must be a Dict or VectorColumns")
 
+            if "id" not in payload["upsert_columns"]:
+                raise ValueError("upsert_columns must have an id column")
+
         if patch_columns is not None:
             if isinstance(patch_columns, VectorColumns):
                 payload["patch_columns"] = patch_columns.to_dict_for_write()
@@ -232,6 +235,9 @@ class Namespace:
                 payload["patch_columns"] = patch_columns
             else:
                 raise ValueError("patch_columns must be a Dict or VectorColumns")
+
+            if "id" not in payload["patch_columns"]:
+                raise ValueError("patch_columns must have an id column")
 
         if upsert_rows is not None:
             if not isinstance(upsert_rows, List):
@@ -244,12 +250,15 @@ class Namespace:
 
         if patch_rows is not None:
             if not isinstance(patch_rows, List):
-                raise ValueError("patch_rows must be a List")
+                raise ValueError("patch_rows must be a list of dicts")
 
-            if "patch_columns" in payload:
-                raise ValueError("patch_rows cannot be used with patch_columns")
-            else:
-                payload["patch_columns"] = VectorColumns.from_rows_for_write(patch_rows).to_dict_for_write()
+            for row in patch_rows:
+                if not isinstance(row, dict):
+                    raise ValueError("patch_rows must be a list of dicts")
+                if "id" not in row:
+                    raise ValueError("each patch row must have an id")
+
+            payload["patch_rows"] = patch_rows
 
         if deletes is not None:
             if not isinstance(deletes, List):

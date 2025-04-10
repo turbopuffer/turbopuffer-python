@@ -672,18 +672,3 @@ def test_mixed_columnar_and_row_based_writes_not_allowed():
         )
     except ValueError as err:
         assert err.args == ('upsert_rows cannot be used with upsert_columns',)
-
-    try:
-        ns.write(
-            patch_columns={
-                'id': [2, 7],
-                'foo': [1, 2],
-            },
-            patch_rows=[
-                {'id': 2, 'foo': 1},
-                {'id': 7, 'foo': 2},
-            ],
-            distance_metric='euclidean_squared',
-        )
-    except ValueError as err:
-        assert err.args == ('patch_rows cannot be used with patch_columns',)
