@@ -70,13 +70,13 @@ class VectorRow:
 
     def from_dict(source: dict) -> 'VectorRow':
         vector = source.get('vector')
-        vector_encoding_format = source.get('vector_encoding_format')
-        if vector_encoding_format is None or vector_encoding_format == 'float':
-            pass # already in float format
-        elif vector_encoding_format == 'base64':
-            vector = b64decode_vector(vector)
-        else:
-            raise ValueError(f'Unsupported vector encoding format: {vector_encoding_format}')
+        if vector is not None:
+            if isinstance(vector, list):
+                pass # already in float format
+            elif isinstance(vector, str):
+                vector = b64decode_vector(vector)
+            else:
+                raise ValueError(f'Unsupported vector type: {type(vector)}')
         return VectorRow(
             id=source.get('id'),
             vector=vector,
