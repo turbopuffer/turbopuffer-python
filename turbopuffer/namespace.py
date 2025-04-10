@@ -280,7 +280,7 @@ class Namespace:
             payload = {**data.__dict__}
 
             # Convert List[float] vectors to base64-encoded strings, if enabled.
-            if tpuf.upsert_vectors_as_base64 and payload["vectors"] is not None:
+            if tpuf.encode_vectors_as_base64 and payload["vectors"] is not None:
                 payload["vectors"] = [
                     b64encode_vector(vector) if isinstance(vector, list) else vector
                     for vector in payload["vectors"]
@@ -427,6 +427,10 @@ class Namespace:
                 query_data = VectorQuery.from_dict(query_data)
             else:
                 raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
+
+        # If enabled, request vectors as base64-encoded strings.
+        if tpuf.encode_vectors_as_base64 and query_data.include_vectors and query_data.vector_encoding_format is None:
+            query_data.vector_encoding_format = 'base64'
 
         response = self.backend.make_api_request('namespaces', self.name, 'query', payload=query_data.__dict__)
         result = VectorResult(response.get('content', dict()), namespace=self)

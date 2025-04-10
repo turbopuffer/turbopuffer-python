@@ -45,6 +45,7 @@ class VectorQuery:
     filters: Optional[Filters] = None
     rank_by: Optional[RankInput] = None
     consistency: Optional[ConsistencyDict] = None
+    vector_encoding_format: Optional[str] = None
 
     def from_dict(source: dict) -> 'VectorQuery':
         return VectorQuery(
@@ -56,6 +57,7 @@ class VectorQuery:
             filters=source.get('filters'),
             rank_by=source.get('rank_by'),
             consistency=source.get('consistency'),
+            vector_encoding_format=source.get('vector_encoding_format'),
         )
 
     def __post_init__(self):
