@@ -10,7 +10,6 @@ read_timeout = 180 # seconds
 
 try:
     import orjson  # extras = ["fast"]
-
     def dump_json_bytes(obj): return orjson.dumps(obj, option=orjson.OPT_SERIALIZE_NUMPY)
 except ImportError:
     import json
@@ -24,7 +23,6 @@ except ImportError:
                     return float(obj)
                 elif isinstance(obj, sys.modules['numpy'].ndarray):
                     return obj.tolist()
-
             return json.JSONEncoder.default(self, obj)
 
     def dump_json_bytes(obj): return json.dumps(obj, cls=NumpyEncoder).encode()
@@ -38,6 +36,6 @@ except ImportError:
 
 from turbopuffer.version import VERSION
 from turbopuffer.namespace import Namespace, namespaces, AttributeSchema, FullTextSearchParams
-from turbopuffer.vectors import VectorColumns, VectorRow, VectorResult, b64encode_vector
+from turbopuffer.vectors import VectorColumns, VectorRow, VectorResult
 from turbopuffer.query import VectorQuery, Filters, RankInput
 from turbopuffer.error import TurbopufferError, AuthenticationError, APIError, NotFoundError
