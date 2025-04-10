@@ -151,15 +151,6 @@ def test_upsert_columns():
     )
 
     # Test upsert typed columns
-    # ns.upsert(tpuf.VectorColumns(
-    #     ids=[4, 5, 6],
-    #     vectors=[[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
-    #     attributes={
-    #         "key1": ["one", "two", "three"],
-    #         "key2": ["a", "b", "c"],
-    #         "test": ["cols", "cols", "cols"],
-    #     },
-    # ))
     ns.write(
         upsert_columns=tpuf.VectorColumns(
             ids=[4, 5, 6],
