@@ -97,7 +97,7 @@ class VectorColumns:
     """
 
     ids: Union[List[int], List[str]]
-    vectors: List[Optional[Union[List[float], str]]]
+    vectors: Optional[List[Optional[Union[List[float], str]]]] = None
     attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None
 
     distances: Optional[List[float]] = None
@@ -105,7 +105,7 @@ class VectorColumns:
     def from_dict(source: dict) -> 'VectorColumns':
         return VectorColumns(
             ids=source.get('ids') or [],
-            vectors=source.get('vectors') or [],
+            vectors=source.get('vectors') or None,
             attributes=source.get('attributes'),
             distances=source.get('distances'),
         )
@@ -116,13 +116,16 @@ class VectorColumns:
                 raise ValueError(f'VectorColumns.ids must be a 1d array, got {self.ids.ndim} dimensions')
         elif not isinstance(self.ids, list):
             raise ValueError('VectorColumns.ids must be a list, got:', type(self.ids))
-        if 'numpy' in sys.modules and isinstance(self.vectors, sys.modules['numpy'].ndarray):
-            if self.vectors.ndim != 2:
-                raise ValueError(f'VectorColumns.ids must be a 2d array, got {self.vectors.ndim} dimensions')
-        elif not isinstance(self.vectors, list):
-            raise ValueError('VectorColumns.vectors must be a list, got:', type(self.vectors))
-        if len(self.ids) != len(self.vectors):
-            raise ValueError('VectorColumns.ids and VectorColumns.vectors must be the same length')
+
+        if self.vectors is not None:
+            if 'numpy' in sys.modules and isinstance(self.vectors, sys.modules['numpy'].ndarray):
+                if self.vectors.ndim != 2:
+                    raise ValueError(f'VectorColumns.ids must be a 2d array, got {self.vectors.ndim} dimensions')
+            elif not isinstance(self.vectors, list):
+                raise ValueError('VectorColumns.vectors must be a list, got:', type(self.vectors))
+            if len(self.ids) != len(self.vectors):
+                raise ValueError('VectorColumns.ids and VectorColumns.vectors must be the same length')
+
         if self.attributes is not None:
             if not isinstance(self.attributes, dict):
                 raise ValueError('VectorColumns.attributes must be a dict, got:', type(self.attributes))
@@ -150,7 +153,8 @@ class VectorColumns:
 
     def __getitem__(self, index) -> VectorRow:
         # This functions as the main mechanism for converting Columns to Rows
-        row = VectorRow(self.ids[index], self.vectors[index], dist=(self.distances and self.distances[index]))
+        vector = self.vectors[index] if self.vectors is not None else None
+        row = VectorRow(self.ids[index], vector, dist=(self.distances and self.distances[index]))
         if self.attributes:
             row.attributes = dict()
             for key, values in self.attributes.items():
