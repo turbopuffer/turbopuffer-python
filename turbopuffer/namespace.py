@@ -306,6 +306,10 @@ class Namespace:
             else:
                 raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
 
+        # If enabled, request vectors as base64-encoded strings.
+        if tpuf.encode_vectors_as_base64 and query_data.include_vectors and query_data.vector_encoding_format is None:
+            query_data.vector_encoding_format = 'base64'
+
         response = self.backend.make_api_request('/v1/namespaces', self.name, 'query', payload=query_data.__dict__)
         result = VectorResult(response.get('content', dict()), namespace=self)
         result.performance = response.get('performance')
@@ -470,7 +474,7 @@ def encode_row(field: str, row: Dict[str, Any] | VectorRow) -> dict:
         if "id" not in row:
             raise ValueError(f"each row in {field} must have an id")
 
-        if tpuf.upsert_vectors_as_base64:
+        if tpuf.encode_vectors_as_base64:
             vector = row.get('vector')
             if isinstance(vector, list):
                 row = row.copy()
@@ -494,7 +498,7 @@ def encode_columns(field: str, column_dict: Dict[str, List] | VectorColumns) -> 
         if "id" not in output:
             raise ValueError(f"{field} must have an id column")
 
-        if tpuf.upsert_vectors_as_base64:
+        if tpuf.encode_vectors_as_base64:
             vectors = output.get('vector')
             if isinstance(vectors, list):
                 output = output.copy()

@@ -40,6 +40,21 @@ def b64encode_vector(vector: List[float]) -> str:
     return tpuf.b64encode_as_string(packed)
 
 
+def b64decode_vector(encoded: str) -> List[float]:
+    """
+    Decodes a base64 string representation of a float array in a little-endian
+    binary format into a list of floats.
+
+    Args:
+        encoded (str): The base64 encoded string representation of the vector.
+
+    Returns:
+        List[float]: The decoded list of floats.
+    """
+    packed = tpuf.b64decode(encoded)
+    return list(_get_struct(len(packed)//4).unpack(packed))
+
+
 @dataclass
 class VectorRow:
     """
@@ -51,13 +66,20 @@ class VectorRow:
     id: Union[int, str]
     vector: Optional[List[float]] = None
     attributes: Optional[Dict[str, Optional[Union[str, int]]]] = None
-
     dist: Optional[float] = None
 
     def from_dict(source: dict) -> 'VectorRow':
+        vector = source.get('vector')
+        vector_encoding_format = source.get('vector_encoding_format')
+        if vector_encoding_format is None or vector_encoding_format == 'float':
+            pass # already in float format
+        elif vector_encoding_format == 'base64':
+            vector = b64decode_vector(vector)
+        else:
+            raise ValueError(f'Unsupported vector encoding format: {vector_encoding_format}')
         return VectorRow(
             id=source.get('id'),
-            vector=source.get('vector'),
+            vector=vector,
             attributes=source.get('attributes'),
             dist=source.get('dist'),
         )
@@ -91,7 +113,7 @@ class VectorRow:
         o = { 'id': self.id }
 
         if self.vector is not None:
-            if tpuf.upsert_vectors_as_base64 and isinstance(self.vector, list):
+            if tpuf.encode_vectors_as_base64 and isinstance(self.vector, list):
                 o['vector'] = b64encode_vector(self.vector)
             else:
                 o['vector'] = self.vector
@@ -181,7 +203,7 @@ class VectorColumns:
         o = { 'id': self.ids }
 
         if self.vectors is not None:
-            if tpuf.upsert_vectors_as_base64:
+            if tpuf.encode_vectors_as_base64:
                 o['vector'] = [
                     b64encode_vector(vector) if isinstance(vector, list) else vector
                     for vector in self.vectors

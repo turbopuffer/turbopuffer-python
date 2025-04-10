@@ -2,7 +2,7 @@ import os
 import sys
 api_key = os.environ.get('TURBOPUFFER_API_KEY')
 api_base_url = os.environ.get('TURBOPUFFER_API_BASE_URL', 'https://api.turbopuffer.com')
-upsert_vectors_as_base64 = os.environ.get('TURBOPUFFER_UPSERT_VECTORS_AS_BASE64', 'true').lower() == 'true'
+encode_vectors_as_base64 = os.environ.get('TURBOPUFFER_ENCODE_VECTORS_AS_BASE64', 'true').lower() == 'true'
 upsert_batch_size = 10_000
 max_retries = 6
 connect_timeout = 10 # seconds
@@ -33,9 +33,11 @@ except ImportError:
 try:
     import pybase64  # extras = ["fast"]
     def b64encode_as_string(bytes): return pybase64.b64encode_as_string(bytes)
+    def b64decode(string): return pybase64.b64decode(string, validate=True)
 except ImportError:
     import base64
     def b64encode_as_string(bytes): return base64.b64encode(bytes).decode('utf-8')
+    def b64decode(string): return base64.b64decode(string, validate=True)
 
 from turbopuffer.version import VERSION
 from turbopuffer.namespace import Namespace, namespaces, AttributeSchema, FullTextSearchParams
