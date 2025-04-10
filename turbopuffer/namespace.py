@@ -282,7 +282,8 @@ class Namespace:
               include_attributes=None,
               filters=None,
               rank_by=None,
-              consistency=None) -> VectorResult:
+              consistency=None,
+              vector_encoding_format=None) -> VectorResult:
         """
         Searches vectors matching the search query.
 
@@ -298,7 +299,8 @@ class Namespace:
                 include_attributes=include_attributes,
                 filters=filters,
                 rank_by=rank_by,
-                consistency=consistency
+                consistency=consistency,
+                vector_encoding_format=vector_encoding_format,
             ))
         if not isinstance(query_data, VectorQuery):
             if isinstance(query_data, dict):
