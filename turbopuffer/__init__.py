@@ -9,13 +9,6 @@ connect_timeout = 10 # seconds
 read_timeout = 180 # seconds
 
 def encode_internal_types(obj):
-    if 'numpy' in sys.modules:
-        if isinstance(obj, sys.modules['numpy'].integer):
-            return int(obj)
-        elif isinstance(obj, sys.modules['numpy'].floating):
-            return float(obj)
-        elif isinstance(obj, sys.modules['numpy'].ndarray):
-            return obj.tolist()
     if isinstance(obj, VectorRow):
         o = {
             'id': obj.id,
@@ -54,7 +47,7 @@ try:
         return obj
 
     def dump_json_bytes(obj):
-        return orjson.dumps(obj, default=orjson_default)
+        return orjson.dumps(obj, default=orjson_default, option=orjson.OPT_SERIALIZE_NUMPY)
 except ImportError:
     import json
 
