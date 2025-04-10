@@ -30,42 +30,46 @@ ns = tpuf.Namespace('hello_world', base_url="https://gcp-us-east4.turbopuffer.co
 
 # Read namespace metadata
 if ns.exists():
-    print(f'Namespace {ns.name} exists with {ns.dimensions()} dimensions and approximately {ns.approx_count()} vectors.')
+    print(f'Namespace {ns.name} exists with {ns.dimensions()} dimensions and approximately {ns.approx_count()} rows.')
 
 # Upsert your dataset
-ns.upsert(
-    ids=[1, 2],
-    vectors=[[0.1, 0.2], [0.3, 0.4]],
-    attributes={'name': ['foo', 'foos']},
-    distance_metric='cosine_distance',
+ns.write(
+    upsert_columns={
+        "id": [1, 2],
+        "vector": [[0.1, 0.1], [0.2, 0.2]],
+        "name": ["one", "two"]
+    },
+    distance_metric='euclidean_squared',
 )
 
-# Alternatively, upsert using a row iterator
-ns.upsert(
-    {
-        'id': id,
-        'vector': [id/10, id/10],
-        'attributes': {'name': 'food', 'num': 8}
-    } for id in range(3, 10),
-    distance_metric='cosine_distance',
+# Alternatively, upsert with the row-based format
+ns.write(
+    upsert_rows=[
+        {
+            "id": id,
+            "vector": [id/10, id/10],
+            "name": "other"
+        } for id in range(3, 10)
+    ],
+    distance_metric='euclidean_squared',
 )
 
 # Query your dataset
-vectors = ns.query(
-    vector=[0.15, 0.22],
-    distance_metric='cosine_distance',
+results = ns.query(
+    vector=[0.18, 0.19],
     top_k=10,
     filters=['And', [
-        ['name', 'Glob', 'foo*'],
-        ['name', 'NotEq', 'food'],
+        ['name', 'Glob', '*o*'],
+        ['name', 'NotEq', 'other'],
     ]],
     include_attributes=['name'],
     include_vectors=True
 )
-print(vectors)
+print(results)
+# Output:
 # [
-#   VectorRow(id=2, vector=[0.30000001192092896, 0.4000000059604645], attributes={'name': 'foos'}, dist=0.001016080379486084),
-#   VectorRow(id=1, vector=[0.10000000149011612, 0.20000000298023224], attributes={'name': 'foo'}, dist=0.009067952632904053)
+#   VectorRow(id=2, vector=[0.2, 0.2], attributes={'name': 'two'}, dist=0.00049999997),
+#   VectorRow(id=1, vector=[0.1, 0.1], attributes={'name': 'one'}, dist=0.0145)]
 # ]
 
 # List all namespaces
@@ -73,10 +77,10 @@ namespaces = tpuf.namespaces()
 print('Total namespaces:', len(namespaces))
 for namespace in namespaces:
     print('Namespace', namespace.name, 'contains approximately', namespace.approx_count(),
-            'vectors with', namespace.dimensions(), 'dimensions.')
+          'rows with', namespace.dimensions(), 'dimensions.')
 
-# Delete vectors using the separate delete method
-ns.delete([1, 2])
+# Delete rows
+ns.write(deletes=[1, 2])
 ```
 
 Endpoint Documentation

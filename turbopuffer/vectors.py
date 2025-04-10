@@ -109,6 +109,20 @@ class VectorRow:
             fields.append(f'dist={self.dist}')
         return f"VectorRow({', '.join(fields)})"
 
+    def to_dict_for_write(self) -> dict:
+        o = { 'id': self.id }
+
+        if self.vector is not None:
+            if tpuf.encode_vectors_as_base64 and isinstance(self.vector, list):
+                o['vector'] = b64encode_vector(self.vector)
+            else:
+                o['vector'] = self.vector
+
+        if self.attributes is not None:
+            o.update(self.attributes)
+
+        return o
+
 
 @dataclass
 class VectorColumns:
@@ -119,7 +133,7 @@ class VectorColumns:
     """
 
     ids: Union[List[int], List[str]]
-    vectors: List[Optional[Union[List[float], str]]]
+    vectors: Optional[List[Optional[Union[List[float], str]]]] = None
     attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None
 
     distances: Optional[List[float]] = None
@@ -127,7 +141,7 @@ class VectorColumns:
     def from_dict(source: dict) -> 'VectorColumns':
         return VectorColumns(
             ids=source.get('ids') or [],
-            vectors=source.get('vectors') or [],
+            vectors=source.get('vectors') or None,
             attributes=source.get('attributes'),
             distances=source.get('distances'),
         )
@@ -138,13 +152,16 @@ class VectorColumns:
                 raise ValueError(f'VectorColumns.ids must be a 1d array, got {self.ids.ndim} dimensions')
         elif not isinstance(self.ids, list):
             raise ValueError('VectorColumns.ids must be a list, got:', type(self.ids))
-        if 'numpy' in sys.modules and isinstance(self.vectors, sys.modules['numpy'].ndarray):
-            if self.vectors.ndim != 2:
-                raise ValueError(f'VectorColumns.ids must be a 2d array, got {self.vectors.ndim} dimensions')
-        elif not isinstance(self.vectors, list):
-            raise ValueError('VectorColumns.vectors must be a list, got:', type(self.vectors))
-        if len(self.ids) != len(self.vectors):
-            raise ValueError('VectorColumns.ids and VectorColumns.vectors must be the same length')
+
+        if self.vectors is not None:
+            if 'numpy' in sys.modules and isinstance(self.vectors, sys.modules['numpy'].ndarray):
+                if self.vectors.ndim != 2:
+                    raise ValueError(f'VectorColumns.ids must be a 2d array, got {self.vectors.ndim} dimensions')
+            elif not isinstance(self.vectors, list):
+                raise ValueError('VectorColumns.vectors must be a list, got:', type(self.vectors))
+            if len(self.ids) != len(self.vectors):
+                raise ValueError('VectorColumns.ids and VectorColumns.vectors must be the same length')
+
         if self.attributes is not None:
             if not isinstance(self.attributes, dict):
                 raise ValueError('VectorColumns.attributes must be a dict, got:', type(self.attributes))
@@ -172,7 +189,8 @@ class VectorColumns:
 
     def __getitem__(self, index) -> VectorRow:
         # This functions as the main mechanism for converting Columns to Rows
-        row = VectorRow(self.ids[index], self.vectors[index], dist=(self.distances and self.distances[index]))
+        vector = self.vectors[index] if self.vectors is not None else None
+        row = VectorRow(self.ids[index], vector, dist=(self.distances and self.distances[index]))
         if self.attributes:
             row.attributes = dict()
             for key, values in self.attributes.items():
@@ -181,114 +199,22 @@ class VectorColumns:
                         row.attributes[key] = values[index]
         return row
 
-    def __iadd__(self, other) -> 'VectorColumns':
-        return self.append(other)
+    def to_dict_for_write(self) -> dict:
+        o = { 'id': self.ids }
 
-    @overload
-    def append(self, other: VectorRow) -> 'VectorColumns':
-        ...
-
-    @overload
-    def append(self, other: List[VectorRow]) -> 'VectorColumns':
-        ...
-
-    @overload
-    def append(self, other: 'VectorColumns') -> 'VectorColumns':
-        ...
-
-    def append(self, other) -> 'VectorColumns':
-        old_len = len(self.ids)
-        if isinstance(other, VectorRow):
-            self.ids.append(other.id)
-            self.vectors.append(other.vector)
-            if other.dist is not None:
-                self.distances.append(other.dist)
-            new_len = len(self.ids)
-            if other.attributes:
-                if not self.attributes:
-                    self.attributes = dict()
-                for k, v in other.attributes.items():
-                    attrs = self.attributes.setdefault(k, [None]*old_len)
-                    attrs.append(v)
-            if self.attributes:
-                for v in self.attributes.values():
-                    if len(v) < new_len:
-                        v.append(None)
-        elif isinstance(other, VectorColumns):
-            self.ids.extend(other.ids)
-            self.vectors.extend(other.vectors)
-            self.distances.extend(other.distances)
-            new_len = len(self.ids)
-            if other.attributes:
-                if not self.attributes:
-                    self.attributes = dict()
-                for k, v in other.attributes.items():
-                    attrs = self.attributes.setdefault(k, [None]*old_len)
-                    attrs.extend(v)
-            if self.attributes:
-                for v in self.attributes.values():
-                    if len(v) < new_len:
-                        v.extend([None] * (new_len-len(v)))
-            return self
-        elif isinstance(other, list):
-            if len(other) == 0:
-                return self
-            if isinstance(other[0], VectorRow):
-                self.ids.extend(row.id for row in other)
-                self.vectors.extend(row.vector for row in other)
-                self.distances.extend(row.dist for row in other)
-                new_len = len(self.ids)
-                if not self.attributes:
-                    self.attributes = dict()
-                for i, row in enumerate(other):
-                    if row.attributes:
-                        for k, v in row.attributes.items():
-                            attrs = self.attributes.setdefault(k, [None]*new_len)
-                            attrs[old_len + i] = v
-                for v in self.attributes.values():
-                    if len(v) < new_len:
-                        v.extend([None] * (new_len-len(v)))
-                return self
+        if self.vectors is not None:
+            if tpuf.encode_vectors_as_base64:
+                o['vector'] = [
+                    b64encode_vector(vector) if isinstance(vector, list) else vector
+                    for vector in self.vectors
+                ]
             else:
-                raise ValueError('VectorColumns.append unsupported list type:', type(other[0]))
-        else:
-            raise ValueError('VectorColumns.append unsupported type:', type(other))
+                o['vector'] = self.vectors
 
-    def from_rows(row_data: Union[VectorRow, Iterable[VectorRow]]) -> 'VectorColumns':
-        ids = []
-        vectors = []
-        attributes = {}
-        distances = []
-        if isinstance(row_data, VectorRow):
-            ids = [row_data.id]
-            vectors = [row_data.vector]
-            distances = [row_data.dist]
-            if row_data.attributes:
-                for k, v in row_data.attributes.items():
-                    attributes[k] = [v]
-            return VectorColumns(ids=ids, vectors=vectors, attributes=attributes, distances=distances)
-        elif isinstance(row_data, list):
-            col_count = len(row_data)
-            for i, row in enumerate(row_data):
-                if isinstance(row, dict):
-                    parsed_row = VectorRow.from_dict(row)
-                elif isinstance(row, VectorRow):
-                    parsed_row = row
-                else:
-                    raise ValueError(f'Unsupported row data type: {type(row)}')
+        if self.attributes is not None:
+            o.update(self.attributes)
 
-                ids += [parsed_row.id]
-                vectors += [parsed_row.vector]
-                distances += [parsed_row.dist]
-                if parsed_row.attributes:
-                    for k, v in parsed_row.attributes.items():
-                        attrs = attributes.setdefault(k, [None]*col_count)
-                        attrs[i] = v
-        elif isinstance(row_data, Iterable):
-            raise ValueError('VectorColumns from Iterable not yet supported.')
-        else:
-            raise ValueError(f'Unsupported row data type: {type(row_data)}')
-        return VectorColumns(ids=ids, vectors=vectors, attributes=attributes, distances=distances)
+        return o
 
 
 SET_DATA = Union[Iterable[VectorRow], VectorColumns]
@@ -383,7 +309,7 @@ class VectorResult:
             raise StopIteration
         else:
             response = self.namespace.backend.make_api_request(
-                'vectors',
+                '/v1/namespaces',
                 self.namespace.name,
                 query={'cursor': self.next_cursor}
             )

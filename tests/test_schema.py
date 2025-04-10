@@ -6,10 +6,13 @@ def test_schema():
     ns = tpuf.Namespace(tests.test_prefix + "schema")
 
     # Upsert some data
-    ns.upsert([
-        {'id': 2, 'vector': [2, 2]},
-        {'id': 7, 'vector': [0.7, 0.7], 'attributes': {'hello': 'world', 'test': 'rows'}},
-    ], distance_metric='euclidean_squared')
+    ns.write(
+        upsert_rows=[
+            {'id': 2, 'vector': [2, 2]},
+            {'id': 7, 'vector': [0.7, 0.7], 'hello': 'world', 'test': 'rows'}
+        ],
+        distance_metric='euclidean_squared'
+    )
 
     # Get the schema for the namespace
     schema = ns.schema()

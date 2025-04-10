@@ -23,6 +23,9 @@ except ImportError:
                     return float(obj)
                 elif isinstance(obj, sys.modules['numpy'].ndarray):
                     return obj.tolist()
+            if isinstance(obj, VectorRow) or isinstance(obj, VectorColumns):
+                # sanity check; should not be used in the v2 write api
+                raise ValueError('Cannot serialize VectorRow or VectorColumns to JSON')
             return json.JSONEncoder.default(self, obj)
 
     def dump_json_bytes(obj): return json.dumps(obj, cls=NumpyEncoder).encode()

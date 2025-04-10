@@ -27,7 +27,7 @@ def test_500_retried():
 
     with mock.patch.object(time, 'sleep', return_value=None) as sleep:
         with pytest.raises(tpuf.error.APIError):
-            backend.make_api_request('namespaces', payload={})
+            backend.make_api_request('/v1/namespaces', payload={})
         assert sleep.call_count == tpuf.max_retries - 1
 
 
@@ -38,7 +38,7 @@ def test_429_retried():
 
     with mock.patch.object(time, 'sleep', return_value=None) as sleep:
         with pytest.raises(tpuf.error.APIError):
-            backend.make_api_request('namespaces', payload={})
+            backend.make_api_request('/v1/namespaces', payload={})
         assert sleep.call_count == tpuf.max_retries - 1
 
 

@@ -7,15 +7,15 @@ def test_no_cmek():
     ns = tpuf.Namespace(tests.test_prefix + 'no_cmek')
 
     try:
-        ns.upsert(
-            {
-                'ids': [1, 2],
-                'vectors': [[0.1, 0.1], [0.2, 0.2]],
+        ns.write(
+            upsert_columns={
+                "id": [1, 2],
+                "vector": [[0.1, 0.1], [0.2, 0.2]],
             },
             distance_metric='cosine_distance',
             encryption={
-                'cmek': {
-                    'key_name': 'mykey'
+                "cmek": {
+                    "key_name": "mykey"
                 }
             }
         )

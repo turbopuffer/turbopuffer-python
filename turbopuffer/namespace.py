@@ -6,7 +6,7 @@ from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter, b64encode_vector
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict
-from typing import Dict, List, Literal, Optional, Iterable, Union, overload
+from typing import Any, Dict, List, Literal, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 
 CmekDict = Dict[Literal['key_name'], str]
@@ -117,7 +117,7 @@ class Namespace:
             return False
 
     def refresh_metadata(self):
-        response = self.backend.make_api_request('namespaces', self.name, method='HEAD')
+        response = self.backend.make_api_request('/v1/namespaces', self.name, method='HEAD')
         status_code = response.get('status_code')
         if status_code == 200:
             headers = response.get('headers', dict())
@@ -175,7 +175,7 @@ class Namespace:
         """
         Returns the current schema for the namespace.
         """
-        response = self.backend.make_api_request('namespaces', self.name, 'schema', method='GET')
+        response = self.backend.make_api_request('/v1/namespaces', self.name, 'schema', method='GET')
         return parse_namespace_schema(response["content"])
 
     def update_schema(self, schema_updates: NamespaceSchema):
@@ -186,7 +186,7 @@ class Namespace:
         See https://turbopuffer.com/docs/schema for specifics on allowed updates.
         """
         request_payload = json.dumps({key: value.as_dict() for key, value in schema_updates.items()}).encode()
-        response = self.backend.make_api_request('namespaces', self.name, 'schema', method='POST', payload=request_payload)
+        response = self.backend.make_api_request('/v1/namespaces', self.name, 'schema', method='POST', payload=request_payload)
         return parse_namespace_schema(response["content"])
 
     def copy_from_namespace(self, source_namespace: str):
@@ -199,178 +199,56 @@ class Namespace:
         payload = {
             "copy_from_namespace": source_namespace
         }
-        response = self.backend.make_api_request('namespaces', self.name, payload=payload)
+        response = self.backend.make_api_request('/v2/namespaces', self.name, payload=payload)
         assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid copy_from_namespace() response: {response}'
 
-    @overload
-    def upsert(self,
-               ids: Union[List[int], List[str]],
-               vectors: List[Union[List[float], str]],
-               attributes: Optional[Dict[str, List[Optional[Union[str, int]]]]] = None,
-               schema: Optional[Dict] = None,
-               distance_metric: Optional[str] = None,
-               encryption: Optional[EncryptionDict] = None) -> None:
+    def write(self,
+          upsert_columns: Optional[Dict[str, List] | VectorColumns] = None,
+          patch_columns: Optional[Dict[str, List]] = None,
+          upsert_rows: Optional[List[Dict[str, Any] | VectorRow]] = None,
+          patch_rows: Optional[List[Dict[str, Any]]] = None,
+          deletes: Optional[List[Union[int, str]]] = None,
+          delete_by_filter: Optional[Filters] = None,
+          distance_metric: Optional[Literal["cosine_distance", "euclidean_squared"]] = None,
+          schema: Optional[Dict] = None,
+          encryption: Optional[EncryptionDict] = None) -> None:
         """
-        Creates or updates multiple vectors provided in a column-oriented layout.
-        If this call succeeds, data is guaranteed to be durably written to object storage.
-
-        Upserting a vector will overwrite any existing vector with the same ID.
+        Create, update, or delete documents.
         """
-        ...
+        payload = {}
 
-    @overload
-    def upsert(self,
-               data: Union[dict, VectorColumns],
-               distance_metric: Optional[str] = None,
-               schema: Optional[Dict] = None,
-               encryption: Optional[EncryptionDict] = None) -> None:
-        """
-        Creates or updates multiple vectors provided in a column-oriented layout.
-        If this call succeeds, data is guaranteed to be durably written to object storage.
+        if upsert_columns is not None:
+            payload["upsert_columns"] = encode_columns("upsert_columns", upsert_columns)
 
-        Upserting a vector will overwrite any existing vector with the same ID.
-        """
-        ...
+        if patch_columns is not None:
+            payload["patch_columns"] = encode_columns("patch_columns", patch_columns)
 
-    @overload
-    def upsert(self,
-               data: Union[Iterable[dict], Iterable[VectorRow]],
-               distance_metric: Optional[str] = None,
-               schema: Optional[Dict] = None,
-               encryption: Optional[EncryptionDict] = None) -> None:
-        """
-        Creates or updates a multiple vectors provided as a list or iterator.
-        If this call succeeds, data is guaranteed to be durably written to object storage.
+        if upsert_rows is not None:
+            payload["upsert_rows"] = encode_rows("upsert_rows", upsert_rows)
 
-        Upserting a vector will overwrite any existing vector with the same ID.
-        """
-        ...
+        if patch_rows is not None:
+            payload["patch_rows"] = encode_rows("patch_rows", patch_rows)
 
-    @overload
-    def upsert(self,
-               data: VectorResult,
-               distance_metric: Optional[str] = None,
-               schema: Optional[Dict] = None,
-               encryption: Optional[EncryptionDict] = None) -> None:
-        """
-        Creates or updates multiple vectors.
-        If this call succeeds, data is guaranteed to be durably written to object storage.
+        if deletes is not None:
+            if not isinstance(deletes, List):
+                raise ValueError("deletes must be a List")
+            payload["deletes"] = deletes
 
-        Upserting a vector will overwrite any existing vector with the same ID.
-        """
-        ...
+        if delete_by_filter is not None:
+            payload["delete_by_filter"] = delete_by_filter
 
-    def upsert(self,
-               data=None,
-               ids=None,
-               vectors=None,
-               attributes=None,
-               schema=None,
-               distance_metric=None,
-               encryption= None) -> None:
-        if data is None:
-            if ids is not None and vectors is not None:
-                return self.upsert(VectorColumns(ids=ids, vectors=vectors, attributes=attributes), schema=schema, distance_metric=distance_metric, encryption=encryption)
-            else:
-                raise ValueError('upsert() requires both ids= and vectors= be set.')
-        elif (ids is not None and attributes is None) or (attributes is not None and schema is None):
-            # Offset arguments to handle positional arguments case with no data field.
-            return self.upsert(VectorColumns(ids=data, vectors=ids, attributes=vectors), schema=attributes, distance_metric=distance_metric, encryption=encryption)
-        elif isinstance(data, VectorColumns):
-            payload = {**data.__dict__}
+        if distance_metric is not None:
+            payload["distance_metric"] = distance_metric
 
-            # Convert List[float] vectors to base64-encoded strings, if enabled.
-            if tpuf.encode_vectors_as_base64 and payload["vectors"] is not None:
-                payload["vectors"] = [
-                    b64encode_vector(vector) if isinstance(vector, list) else vector
-                    for vector in payload["vectors"]
-                ]
+        if schema is not None:
+            payload["schema"] = schema
 
-            if distance_metric is not None:
-                payload["distance_metric"] = distance_metric
+        if encryption is not None:
+            payload["encryption"] = encryption
 
-            if schema is not None:
-                payload["schema"] = schema
-            
-            if encryption is not None:
-                payload["encryption"] = encryption
-
-            response = self.backend.make_api_request('namespaces', self.name, payload=payload)
-
-            assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid upsert() response: {response}'
-            self.metadata = None  # Invalidate cached metadata
-        elif isinstance(data, VectorRow):
-            raise ValueError('upsert() should be called on a list of vectors, got single vector.')
-        elif isinstance(data, list):
-            if isinstance(data[0], dict):
-                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric, encryption=encryption)
-            elif isinstance(data[0], VectorRow):
-                return self.upsert(VectorColumns.from_rows(data), schema=schema, distance_metric=distance_metric, encryption=encryption)
-            elif isinstance(data[0], VectorColumns):
-                for columns in data:
-                    self.upsert(columns, schema=schema, distance_metric=distance_metric, encryption=encryption)
-                return
-            else:
-                raise ValueError(f'Unsupported list data type: {type(data[0])}')
-        elif isinstance(data, dict):
-            if 'id' in data:
-                raise ValueError('upsert() should be called on a list of vectors, got single vector.')
-            elif 'ids' in data:
-                return self.upsert(VectorColumns.from_dict(data), schema=data.get('schema', None), distance_metric=distance_metric, encryption=encryption)
-            else:
-                raise ValueError('Provided dict is missing ids.')
-        elif 'pandas' in sys.modules and isinstance(data, sys.modules['pandas'].DataFrame):
-            if 'id' not in data.keys():
-                raise ValueError('Provided pd.DataFrame is missing an id column.')
-            if 'vector' not in data.keys():
-                raise ValueError('Provided pd.DataFrame is missing a vector column.')
-            for i in range(0, len(data), tpuf.upsert_batch_size):
-                batch = data[i:i+tpuf.upsert_batch_size]
-                attributes = dict()
-                for key, values in batch.items():
-                    if key != 'id' and key != 'vector':
-                        attributes[key] = values.tolist()
-                columns = tpuf.VectorColumns(
-                    ids=batch['id'].tolist(),
-                    vectors=batch['vector'].transform(lambda x: x.tolist()).tolist(),
-                    attributes=attributes
-                )
-                self.upsert(columns, schema=schema, distance_metric=distance_metric, encryption=encryption)
-            return
-        elif isinstance(data, Iterable):
-            for batch in batch_iter(data, tpuf.upsert_batch_size):
-                self.upsert(batch, schema=schema, distance_metric=distance_metric, encryption=encryption)
-            return
-        else:
-            raise ValueError(f'Unsupported data type: {type(data)}')
-
-    def delete(self, ids: Union[int, str, List[int], List[str]]) -> None:
-        """
-        Deletes vectors by id.
-        """
-
-        if isinstance(ids, int) or isinstance(ids, str):
-            response = self.backend.make_api_request('namespaces', self.name, payload={
-                'ids': [ids],
-                'vectors': [None],
-            })
-        elif isinstance(ids, list):
-            response = self.backend.make_api_request('namespaces', self.name, payload={
-                'ids': ids,
-                'vectors': [None] * len(ids),
-            })
-        else:
-            raise ValueError(f'Unsupported ids type: {type(ids)}')
-
-        assert response.get('content', dict()).get('status', '') == 'OK', f'Invalid delete() response: {response}'
-        self.metadata = None  # Invalidate cached metadata
-
-    def delete_by_filter(self, filters: Filters) -> int:
-        response = self.backend.make_api_request('namespaces', self.name, payload={
-            'delete_by_filter': filters
-        })
+        response = self.backend.make_api_request('/v2/namespaces', self.name, payload=payload)
         response_content = response.get('content', dict())
-        assert response_content.get('status', '') == 'OK', f'Invalid delete_by_filter() response: {response}'
+        assert response_content.get('status', '') == 'OK', f'Invalid write() response: {response}'
         self.metadata = None  # Invalidate cached metadata
         return response_content.get('rows_affected')
 
@@ -432,7 +310,7 @@ class Namespace:
         if tpuf.encode_vectors_as_base64 and query_data.include_vectors and query_data.vector_encoding_format is None:
             query_data.vector_encoding_format = 'base64'
 
-        response = self.backend.make_api_request('namespaces', self.name, 'query', payload=query_data.__dict__)
+        response = self.backend.make_api_request('/v1/namespaces', self.name, 'query', payload=query_data.__dict__)
         result = VectorResult(response.get('content', dict()), namespace=self)
         result.performance = response.get('performance')
         return result
@@ -445,7 +323,7 @@ class Namespace:
         If you want to look up vectors by ID, use the query function with an id filter.
         """
 
-        response = self.backend.make_api_request('namespaces', self.name, query={'cursor': cursor})
+        response = self.backend.make_api_request('/v1/namespaces', self.name, query={'cursor': cursor})
         content = response.get('content', dict())
         next_cursor = content.pop('next_cursor', None)
         result = VectorResult(content, namespace=self, next_cursor=next_cursor)
@@ -457,7 +335,7 @@ class Namespace:
         Deletes all indexes in a namespace.
         """
 
-        response = self.backend.make_api_request('namespaces', self.name, 'index', method='DELETE')
+        response = self.backend.make_api_request('/v1/namespaces', self.name, 'index', method='DELETE')
         assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all_indexes() response: {response}'
 
     def delete_all(self) -> None:
@@ -465,7 +343,7 @@ class Namespace:
         Deletes all data as well as all indexes.
         """
 
-        response = self.backend.make_api_request('namespaces', self.name, method='DELETE')
+        response = self.backend.make_api_request('/v1/namespaces', self.name, method='DELETE')
         assert response.get('content', dict()).get('status', '') == 'ok', f'Invalid delete_all() response: {response}'
         self.metadata = None  # Invalidate cached metadata
 
@@ -479,7 +357,7 @@ class Namespace:
         Recall is calculated as the ratio of matching vectors between the two search results.
         """
 
-        response = self.backend.make_api_request('namespaces', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
+        response = self.backend.make_api_request('/v1/namespaces', self.name, '_debug', 'recall', query={'num': num, 'top_k': top_k})
         content = response.get('content', dict())
         assert 'avg_recall' in content, f'Invalid recall() response: {response}'
         return float(content.get('avg_recall'))
@@ -584,7 +462,51 @@ def namespaces(api_key: Optional[str] = None, base_url: Optional[str] = None) ->
     If no base_url is provided, the globally configured api_base_url will be used.
     """
     backend = Backend(api_key, base_url)
-    response = backend.make_api_request('namespaces')
+    response = backend.make_api_request('/v1/namespaces')
     content = response.get('content', dict())
     next_cursor = content.pop('next_cursor', None)
     return NamespaceIterator(backend, content.pop('namespaces', list()), next_cursor)
+
+def encode_row(field: str, row: Dict[str, Any] | VectorRow) -> dict:
+    if isinstance(row, VectorRow):
+        return row.to_dict_for_write()
+    elif isinstance(row, Dict):
+        if "id" not in row:
+            raise ValueError(f"each row in {field} must have an id")
+
+        if tpuf.encode_vectors_as_base64:
+            vector = row.get('vector')
+            if isinstance(vector, list):
+                row = row.copy()
+                row['vector'] = b64encode_vector(vector)
+
+        return row
+    else:
+        raise ValueError(f"{field} must be a dict or VectorRow")
+
+def encode_rows(field: str, rows: List[Dict[str, Any] | VectorRow]) -> List[dict]:
+    if not isinstance(rows, List):
+        raise ValueError(f"{field} must be a list")
+
+    return [encode_row(field, row) for row in rows]
+
+def encode_columns(field: str, column_dict: Dict[str, List] | VectorColumns) -> dict:
+    if isinstance(column_dict, VectorColumns):
+        output = column_dict.to_dict_for_write()
+    elif isinstance(column_dict, Dict):
+        output = column_dict
+        if "id" not in output:
+            raise ValueError(f"{field} must have an id column")
+
+        if tpuf.encode_vectors_as_base64:
+            vectors = output.get('vector')
+            if isinstance(vectors, list):
+                output = output.copy()
+                output['vector'] = [
+                    b64encode_vector(vector) if isinstance(vector, list) else vector
+                    for vector in vectors
+                ]
+    else:
+        raise ValueError(f"{field} must be a dict or VectorColumns")
+
+    return output

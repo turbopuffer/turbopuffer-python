@@ -62,7 +62,7 @@ class Backend:
         if method is None and payload is not None:
             method = 'POST'
 
-        request = requests.Request(method or 'GET', self.base_url + '/v1/' + '/'.join(args))
+        request = requests.Request(method or 'GET', self.base_url + '/'.join(args))
 
         if query is not None:
             request.params = query
