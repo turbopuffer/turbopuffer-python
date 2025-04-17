@@ -36,19 +36,7 @@ client = Turbopuffer(
 
 response = client.namespaces.upsert(
     namespace="products",
-    documents={
-        "upserts": [
-            {
-                "id": "2108ed60-6851-49a0-9016-8325434f3845",
-                "vector": [0.1, 0.2],
-                "attributes": {
-                    "name": "Red boots",
-                    "price": 34.99,
-                },
-            }
-        ],
-        "distance_metric": "cosine_distance",
-    },
+    documents={"distance_metric": "cosine_distance"},
 )
 print(response.status)
 ```
@@ -75,19 +63,7 @@ client = AsyncTurbopuffer(
 async def main() -> None:
     response = await client.namespaces.upsert(
         namespace="products",
-        documents={
-            "upserts": [
-                {
-                    "id": "2108ed60-6851-49a0-9016-8325434f3845",
-                    "vector": [0.1, 0.2],
-                    "attributes": {
-                        "name": "Red boots",
-                        "price": 34.99,
-                    },
-                }
-            ],
-            "distance_metric": "cosine_distance",
-        },
+        documents={"distance_metric": "cosine_distance"},
     )
     print(response.status)
 

@@ -263,7 +263,7 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          documents: Write documents.
+          documents: Upsert documents in columnar format.
 
           extra_headers: Send extra headers
 
@@ -511,7 +511,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          documents: Write documents.
+          documents: Upsert documents in columnar format.
 
           extra_headers: Send extra headers
 
