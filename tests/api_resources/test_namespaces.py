@@ -218,9 +218,6 @@ class TestNamespaces:
         namespace = client.namespaces.upsert(
             namespace="namespace",
             documents={
-                "attributes": {"foo": [{"foo": "bar"}]},
-                "ids": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                "vectors": [[0]],
                 "distance_metric": "cosine_distance",
                 "schema": {
                     "foo": [
@@ -231,6 +228,17 @@ class TestNamespaces:
                         }
                     ]
                 },
+                "upsert_columns": {
+                    "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                    "additional_properties": [{"foo": "bar"}],
+                },
+                "upsert_rows": [
+                    {
+                        "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                        "additional_properties": {},
+                        "vector": [0],
+                    }
+                ],
             },
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
@@ -467,9 +475,6 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespaces.upsert(
             namespace="namespace",
             documents={
-                "attributes": {"foo": [{"foo": "bar"}]},
-                "ids": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                "vectors": [[0]],
                 "distance_metric": "cosine_distance",
                 "schema": {
                     "foo": [
@@ -480,6 +485,17 @@ class TestAsyncNamespaces:
                         }
                     ]
                 },
+                "upsert_columns": {
+                    "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                    "additional_properties": [{"foo": "bar"}],
+                },
+                "upsert_rows": [
+                    {
+                        "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                        "additional_properties": {},
+                        "vector": [0],
+                    }
+                ],
             },
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])

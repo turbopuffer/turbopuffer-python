@@ -13,8 +13,7 @@ from .document_columns_param import DocumentColumnsParam
 __all__ = [
     "NamespaceUpsertParams",
     "Documents",
-    "DocumentsUpsertColumnar",
-    "DocumentsUpsertRowBased",
+    "DocumentsWrite",
     "DocumentsCopyFromNamespace",
     "DocumentsDeleteByFilter",
 ]
@@ -22,25 +21,20 @@ __all__ = [
 
 class NamespaceUpsertParams(TypedDict, total=False):
     documents: Documents
-    """Upsert documents in columnar format."""
+    """Write documents."""
 
 
-class DocumentsUpsertColumnar(DocumentColumnsParam, total=False):
-    distance_metric: Required[DistanceMetric]
+class DocumentsWrite(TypedDict, total=False):
+    distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
     schema: Dict[str, Iterable[AttributeSchemaParam]]
     """The schema of the attributes attached to the documents."""
 
+    upsert_columns: DocumentColumnsParam
+    """A list of documents in columnar format. The keys are the column names."""
 
-class DocumentsUpsertRowBased(TypedDict, total=False):
-    distance_metric: Required[DistanceMetric]
-    """A function used to calculate vector similarity."""
-
-    upserts: Required[Iterable[DocumentRowParam]]
-
-    schema: Dict[str, Iterable[AttributeSchemaParam]]
-    """The schema of the attributes attached to the documents."""
+    upsert_rows: Iterable[DocumentRowParam]
 
 
 class DocumentsCopyFromNamespace(TypedDict, total=False):
@@ -53,6 +47,4 @@ class DocumentsDeleteByFilter(TypedDict, total=False):
     """The filter specifying which documents to delete."""
 
 
-Documents: TypeAlias = Union[
-    DocumentsUpsertColumnar, DocumentsUpsertRowBased, DocumentsCopyFromNamespace, DocumentsDeleteByFilter
-]
+Documents: TypeAlias = Union[DocumentsWrite, DocumentsCopyFromNamespace, DocumentsDeleteByFilter, object]
