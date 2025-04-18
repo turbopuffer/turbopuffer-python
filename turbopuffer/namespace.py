@@ -446,7 +446,7 @@ class NamespaceIterator:
             raise StopIteration
         else:
             response = self.backend.make_api_request(
-                'namespaces',
+                '/v1/namespaces',
                 query={'cursor': self.next_cursor}
             )
             content = response.get('content', dict())
