@@ -6,17 +6,9 @@ from typing import List, Union, Iterable
 
 import httpx
 
-from ..types import (
-    DistanceMetric,
-    namespace_list_params,
-    namespace_query_params,
-    namespace_upsert_params,
-)
+from ..types import DistanceMetric, namespace_list_params, namespace_query_params, namespace_upsert_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
