@@ -211,7 +211,7 @@ class Namespace:
           delete_by_filter: Optional[Filters] = None,
           distance_metric: Optional[Literal["cosine_distance", "euclidean_squared"]] = None,
           schema: Optional[Dict] = None,
-          encryption: Optional[EncryptionDict] = None) -> None:
+          encryption: Optional[EncryptionDict] = None) -> dict:
         """
         Create, update, or delete documents.
         """
