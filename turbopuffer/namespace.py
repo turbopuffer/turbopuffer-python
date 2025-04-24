@@ -250,7 +250,7 @@ class Namespace:
         response_content = response.get('content', dict())
         assert response_content.get('status', '') == 'OK', f'Invalid write() response: {response}'
         self.metadata = None  # Invalidate cached metadata
-        return response_content.get('rows_affected')
+        return response
 
     @overload
     def query(self,
