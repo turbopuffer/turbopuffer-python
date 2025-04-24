@@ -570,18 +570,18 @@ def test_delete_by_filter():
         distance_metric='euclidean_squared',
     )
 
-    rows_affected = ns.write(
+    res = ns.write(
         delete_by_filter=['a', 'Eq', 42] # no-op, nothing matches
     )
-    assert rows_affected == 0
+    assert res['content']['rows_affected'] == 0
 
     results = ns.vectors()
     assert len(results) == 5, "Got wrong number of vectors back"
 
-    rows_affected = ns.write(
+    res = ns.write(
         delete_by_filter=['a', 'Eq', 1]
     )
-    assert rows_affected == 2
+    assert res['content']['rows_affected'] == 2
 
     results = ns.vectors()
     assert len(results) == 3, "Got wrong number of vectors back"
@@ -589,10 +589,10 @@ def test_delete_by_filter():
     assert results[1].id == 7
     assert results[2].id == 9
 
-    rows_affected = ns.write(
+    res = ns.write(
         delete_by_filter=['a', 'Gt', 0]
     )
-    assert rows_affected == 2
+    assert res['content']['rows_affected'] == 2
 
     results = ns.vectors()
     assert len(results) == 1, "Got wrong number of vectors back"
