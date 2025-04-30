@@ -19,5 +19,4 @@ from .namespace_upsert_params import NamespaceUpsertParams as NamespaceUpsertPar
 from .namespace_query_response import NamespaceQueryResponse as NamespaceQueryResponse
 from .namespace_upsert_response import NamespaceUpsertResponse as NamespaceUpsertResponse
 from .full_text_search_config_param import FullTextSearchConfigParam as FullTextSearchConfigParam
-from .namespace_delete_all_response import NamespaceDeleteAllResponse as NamespaceDeleteAllResponse
 from .namespace_get_schema_response import NamespaceGetSchemaResponse as NamespaceGetSchemaResponse
