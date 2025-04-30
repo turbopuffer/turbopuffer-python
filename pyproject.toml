@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "turbopuffer"
-version = "0.1.38"
+version = "0.1.39"
 description = "Python Client for accessing the turbopuffer API"
 authors = ["turbopuffer Inc. <info@turbopuffer.com>"]
 homepage = "https://turbopuffer.com"
@@ -31,6 +31,7 @@ classifiers = [
 python = "^3.9"
 requests = "^2.31"
 iso8601 = "^2.1.0"
+typing-extensions = "^4.12.2"
 orjson = { version = ">=3.9, <=3.10.3", optional = true } # 3.10.4 errors on install
 numpy = { version = ">=1.24.0", optional = true }
 pandas = { version = ">=2.0.0", optional = true }
@@ -54,10 +55,6 @@ optional = true
 [tool.poetry.group.compatibility.dependencies]
 pandas = "^2.1.4"
 numpy = "^1.26.3"
-
-
-[tool.poetry.group.dev.dependencies]
-typing-extensions = "^4.12.2"
 
 [build-system]
 requires = ["poetry-core"]
