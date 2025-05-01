@@ -34,8 +34,9 @@ client = Turbopuffer(
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.namespaces.write(
+response = client.namespaces.upsert(
     namespace="products",
+    documents={"distance_metric": "cosine_distance"},
 )
 print(response.status)
 ```
@@ -60,8 +61,9 @@ client = AsyncTurbopuffer(
 
 
 async def main() -> None:
-    response = await client.namespaces.write(
+    response = await client.namespaces.upsert(
         namespace="products",
+        documents={"distance_metric": "cosine_distance"},
     )
     print(response.status)
 
