@@ -34,10 +34,9 @@ client = Turbopuffer(
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.namespaces.write(
+document_row_with_scores = client.namespaces.query(
     namespace="products",
 )
-print(response.status)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -60,10 +59,9 @@ client = AsyncTurbopuffer(
 
 
 async def main() -> None:
-    response = await client.namespaces.write(
+    document_row_with_scores = await client.namespaces.query(
         namespace="products",
     )
-    print(response.status)
 
 
 asyncio.run(main())

@@ -6,7 +6,7 @@ from typing import List, Union, Iterable
 
 import httpx
 
-from ..types import DistanceMetric, namespace_list_params, namespace_query_params, namespace_write_params
+from ..types import DistanceMetric, namespace_list_params, namespace_query_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -22,7 +22,6 @@ from .._base_client import AsyncPaginator, make_request_options
 from ..types.distance_metric import DistanceMetric
 from ..types.namespace_summary import NamespaceSummary
 from ..types.namespace_query_response import NamespaceQueryResponse
-from ..types.namespace_write_response import NamespaceWriteResponse
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
 from ..types.namespace_get_schema_response import NamespaceGetSchemaResponse
 
@@ -239,43 +238,6 @@ class NamespacesResource(SyncAPIResource):
             cast_to=NamespaceQueryResponse,
         )
 
-    def write(
-        self,
-        namespace: str,
-        *,
-        write: namespace_write_params.Write | NotGiven = NOT_GIVEN,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> NamespaceWriteResponse:
-        """
-        Create, update, or delete documents.
-
-        Args:
-          write: Write documents.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not namespace:
-            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
-        return self._post(
-            f"/v1/namespaces/{namespace}",
-            body=maybe_transform(write, namespace_write_params.NamespaceWriteParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NamespaceWriteResponse,
-        )
-
 
 class AsyncNamespacesResource(AsyncAPIResource):
     @cached_property
@@ -487,43 +449,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceQueryResponse,
         )
 
-    async def write(
-        self,
-        namespace: str,
-        *,
-        write: namespace_write_params.Write | NotGiven = NOT_GIVEN,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> NamespaceWriteResponse:
-        """
-        Create, update, or delete documents.
-
-        Args:
-          write: Write documents.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not namespace:
-            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
-        return await self._post(
-            f"/v1/namespaces/{namespace}",
-            body=await async_maybe_transform(write, namespace_write_params.NamespaceWriteParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NamespaceWriteResponse,
-        )
-
 
 class NamespacesResourceWithRawResponse:
     def __init__(self, namespaces: NamespacesResource) -> None:
@@ -540,9 +465,6 @@ class NamespacesResourceWithRawResponse:
         )
         self.query = to_raw_response_wrapper(
             namespaces.query,
-        )
-        self.write = to_raw_response_wrapper(
-            namespaces.write,
         )
 
 
@@ -562,9 +484,6 @@ class AsyncNamespacesResourceWithRawResponse:
         self.query = async_to_raw_response_wrapper(
             namespaces.query,
         )
-        self.write = async_to_raw_response_wrapper(
-            namespaces.write,
-        )
 
 
 class NamespacesResourceWithStreamingResponse:
@@ -583,9 +502,6 @@ class NamespacesResourceWithStreamingResponse:
         self.query = to_streamed_response_wrapper(
             namespaces.query,
         )
-        self.write = to_streamed_response_wrapper(
-            namespaces.write,
-        )
 
 
 class AsyncNamespacesResourceWithStreamingResponse:
@@ -603,7 +519,4 @@ class AsyncNamespacesResourceWithStreamingResponse:
         )
         self.query = async_to_streamed_response_wrapper(
             namespaces.query,
-        )
-        self.write = async_to_streamed_response_wrapper(
-            namespaces.write,
         )
