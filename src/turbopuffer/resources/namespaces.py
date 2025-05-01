@@ -126,7 +126,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._delete(
-            f"/v2/namespaces/{namespace}",
+            f"/v1/namespaces/{namespace}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -374,7 +374,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._delete(
-            f"/v2/namespaces/{namespace}",
+            f"/v1/namespaces/{namespace}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
