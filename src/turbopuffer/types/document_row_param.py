@@ -2,20 +2,20 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable, Optional
-from typing_extensions import TypedDict
+from typing import Dict, Union, Iterable
+from typing_extensions import TypeAlias, TypedDict
 
 from .id_param import IDParam
 
 __all__ = ["DocumentRowParam"]
 
 
-class DocumentRowParam(TypedDict, total=False):
+class DocumentRowParamTyped(TypedDict, total=False):
     id: IDParam
     """An identifier for a document."""
 
-    attributes: Dict[str, object]
-    """The attributes attached to the document."""
-
-    vector: Optional[Iterable[float]]
+    vector: Union[Iterable[float], str, None]
     """A vector describing the document."""
+
+
+DocumentRowParam: TypeAlias = Union[DocumentRowParamTyped, Dict[str, object]]
