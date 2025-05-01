@@ -4,9 +4,9 @@ from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["NamespaceUpsertResponse"]
+__all__ = ["NamespaceWriteResponse"]
 
 
-class NamespaceUpsertResponse(BaseModel):
+class NamespaceWriteResponse(BaseModel):
     status: Literal["OK"]
     """The status of the request."""

@@ -10,21 +10,15 @@ from .document_row_param import DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam
 
-__all__ = [
-    "NamespaceUpsertParams",
-    "Documents",
-    "DocumentsWrite",
-    "DocumentsCopyFromNamespace",
-    "DocumentsDeleteByFilter",
-]
+__all__ = ["NamespaceWriteParams", "Write", "WriteWriteDocuments", "WriteCopyFromNamespace", "WriteDeleteByFilter"]
 
 
-class NamespaceUpsertParams(TypedDict, total=False):
-    documents: Documents
+class NamespaceWriteParams(TypedDict, total=False):
+    write: Write
     """Write documents."""
 
 
-class DocumentsWrite(TypedDict, total=False):
+class WriteWriteDocuments(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
@@ -42,14 +36,14 @@ class DocumentsWrite(TypedDict, total=False):
     upsert_rows: Iterable[DocumentRowParam]
 
 
-class DocumentsCopyFromNamespace(TypedDict, total=False):
+class WriteCopyFromNamespace(TypedDict, total=False):
     copy_from_namespace: Required[str]
     """The namespace to copy documents from."""
 
 
-class DocumentsDeleteByFilter(TypedDict, total=False):
+class WriteDeleteByFilter(TypedDict, total=False):
     delete_by_filter: Required[object]
     """The filter specifying which documents to delete."""
 
 
-Documents: TypeAlias = Union[DocumentsWrite, DocumentsCopyFromNamespace, DocumentsDeleteByFilter]
+Write: TypeAlias = Union[WriteWriteDocuments, WriteCopyFromNamespace, WriteDeleteByFilter]
