@@ -219,7 +219,10 @@ class TestNamespaces:
             namespace="namespace",
             documents={
                 "distance_metric": "cosine_distance",
-                "patch_columns": {"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+                "patch_columns": {
+                    "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                    "additional_properties": [{"foo": "bar"}],
+                },
                 "patch_rows": [
                     {
                         "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -236,7 +239,10 @@ class TestNamespaces:
                         }
                     ]
                 },
-                "upsert_columns": {"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+                "upsert_columns": {
+                    "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                    "additional_properties": [{"foo": "bar"}],
+                },
                 "upsert_rows": [
                     {
                         "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -481,7 +487,10 @@ class TestAsyncNamespaces:
             namespace="namespace",
             documents={
                 "distance_metric": "cosine_distance",
-                "patch_columns": {"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+                "patch_columns": {
+                    "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                    "additional_properties": [{"foo": "bar"}],
+                },
                 "patch_rows": [
                     {
                         "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -498,7 +507,10 @@ class TestAsyncNamespaces:
                         }
                     ]
                 },
-                "upsert_columns": {"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+                "upsert_columns": {
+                    "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                    "additional_properties": [{"foo": "bar"}],
+                },
                 "upsert_rows": [
                     {
                         "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
