@@ -28,6 +28,11 @@ class DocumentsWrite(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
+    patch_columns: DocumentColumnsParam
+    """A list of documents in columnar format. The keys are the column names."""
+
+    patch_rows: Iterable[DocumentRowParam]
+
     schema: Dict[str, Iterable[AttributeSchemaParam]]
     """The schema of the attributes attached to the documents."""
 
@@ -47,4 +52,4 @@ class DocumentsDeleteByFilter(TypedDict, total=False):
     """The filter specifying which documents to delete."""
 
 
-Documents: TypeAlias = Union[DocumentsWrite, DocumentsCopyFromNamespace, DocumentsDeleteByFilter, object]
+Documents: TypeAlias = Union[DocumentsWrite, DocumentsCopyFromNamespace, DocumentsDeleteByFilter]
