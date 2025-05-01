@@ -243,7 +243,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         namespace: str,
         *,
-        write_operation: namespace_write_params.WriteOperation | NotGiven = NOT_GIVEN,
+        operation: namespace_write_params.Operation | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -255,7 +255,7 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          write_operation: Write documents.
+          operation: Write documents.
 
           extra_headers: Send extra headers
 
@@ -269,7 +269,7 @@ class NamespacesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             f"/v2/namespaces/{namespace}",
-            body=maybe_transform(write_operation, namespace_write_params.NamespaceWriteParams),
+            body=maybe_transform(operation, namespace_write_params.NamespaceWriteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -491,7 +491,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         namespace: str,
         *,
-        write_operation: namespace_write_params.WriteOperation | NotGiven = NOT_GIVEN,
+        operation: namespace_write_params.Operation | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -503,7 +503,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          write_operation: Write documents.
+          operation: Write documents.
 
           extra_headers: Send extra headers
 
@@ -517,7 +517,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             f"/v2/namespaces/{namespace}",
-            body=await async_maybe_transform(write_operation, namespace_write_params.NamespaceWriteParams),
+            body=await async_maybe_transform(operation, namespace_write_params.NamespaceWriteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

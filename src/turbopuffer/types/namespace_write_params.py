@@ -12,19 +12,19 @@ from .document_columns_param import DocumentColumnsParam
 
 __all__ = [
     "NamespaceWriteParams",
-    "WriteOperation",
-    "WriteOperationWriteDocuments",
-    "WriteOperationCopyFromNamespace",
-    "WriteOperationDeleteByFilter",
+    "Operation",
+    "OperationWriteDocuments",
+    "OperationCopyFromNamespace",
+    "OperationDeleteByFilter",
 ]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
-    write_operation: WriteOperation
+    operation: Operation
     """Write documents."""
 
 
-class WriteOperationWriteDocuments(TypedDict, total=False):
+class OperationWriteDocuments(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
@@ -42,16 +42,14 @@ class WriteOperationWriteDocuments(TypedDict, total=False):
     upsert_rows: Iterable[DocumentRowParam]
 
 
-class WriteOperationCopyFromNamespace(TypedDict, total=False):
+class OperationCopyFromNamespace(TypedDict, total=False):
     copy_from_namespace: Required[str]
     """The namespace to copy documents from."""
 
 
-class WriteOperationDeleteByFilter(TypedDict, total=False):
+class OperationDeleteByFilter(TypedDict, total=False):
     delete_by_filter: Required[object]
     """The filter specifying which documents to delete."""
 
 
-WriteOperation: TypeAlias = Union[
-    WriteOperationWriteDocuments, WriteOperationCopyFromNamespace, WriteOperationDeleteByFilter
-]
+Operation: TypeAlias = Union[OperationWriteDocuments, OperationCopyFromNamespace, OperationDeleteByFilter]
