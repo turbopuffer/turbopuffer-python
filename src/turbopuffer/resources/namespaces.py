@@ -23,6 +23,7 @@ from ..types.distance_metric import DistanceMetric
 from ..types.namespace_summary import NamespaceSummary
 from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_upsert_response import NamespaceUpsertResponse
+from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
 from ..types.namespace_get_schema_response import NamespaceGetSchemaResponse
 
 __all__ = ["NamespacesResource", "AsyncNamespacesResource"]
@@ -97,6 +98,39 @@ class NamespacesResource(SyncAPIResource):
                 ),
             ),
             model=NamespaceSummary,
+        )
+
+    def delete_all(
+        self,
+        namespace: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceDeleteAllResponse:
+        """
+        Delete namespace.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._delete(
+            f"/v2/namespaces/{namespace}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceDeleteAllResponse,
         )
 
     def get_schema(
@@ -221,7 +255,7 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          documents: Upsert documents in columnar format.
+          documents: Write documents.
 
           extra_headers: Send extra headers
 
@@ -312,6 +346,39 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 ),
             ),
             model=NamespaceSummary,
+        )
+
+    async def delete_all(
+        self,
+        namespace: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceDeleteAllResponse:
+        """
+        Delete namespace.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._delete(
+            f"/v2/namespaces/{namespace}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceDeleteAllResponse,
         )
 
     async def get_schema(
@@ -436,7 +503,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          documents: Upsert documents in columnar format.
+          documents: Write documents.
 
           extra_headers: Send extra headers
 
@@ -465,6 +532,9 @@ class NamespacesResourceWithRawResponse:
         self.list = to_raw_response_wrapper(
             namespaces.list,
         )
+        self.delete_all = to_raw_response_wrapper(
+            namespaces.delete_all,
+        )
         self.get_schema = to_raw_response_wrapper(
             namespaces.get_schema,
         )
@@ -482,6 +552,9 @@ class AsyncNamespacesResourceWithRawResponse:
 
         self.list = async_to_raw_response_wrapper(
             namespaces.list,
+        )
+        self.delete_all = async_to_raw_response_wrapper(
+            namespaces.delete_all,
         )
         self.get_schema = async_to_raw_response_wrapper(
             namespaces.get_schema,
@@ -501,6 +574,9 @@ class NamespacesResourceWithStreamingResponse:
         self.list = to_streamed_response_wrapper(
             namespaces.list,
         )
+        self.delete_all = to_streamed_response_wrapper(
+            namespaces.delete_all,
+        )
         self.get_schema = to_streamed_response_wrapper(
             namespaces.get_schema,
         )
@@ -518,6 +594,9 @@ class AsyncNamespacesResourceWithStreamingResponse:
 
         self.list = async_to_streamed_response_wrapper(
             namespaces.list,
+        )
+        self.delete_all = async_to_streamed_response_wrapper(
+            namespaces.delete_all,
         )
         self.get_schema = async_to_streamed_response_wrapper(
             namespaces.get_schema,

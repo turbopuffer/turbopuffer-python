@@ -13,6 +13,7 @@ from turbopuffer.types import (
     NamespaceSummary,
     NamespaceQueryResponse,
     NamespaceUpsertResponse,
+    NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,
 )
 from turbopuffer.pagination import SyncListNamespaces, AsyncListNamespaces
@@ -60,6 +61,48 @@ class TestNamespaces:
             assert_matches_type(SyncListNamespaces[NamespaceSummary], namespace, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_delete_all(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.delete_all(
+            "namespace",
+        )
+        assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_raw_response_delete_all(self, client: Turbopuffer) -> None:
+        response = client.namespaces.with_raw_response.delete_all(
+            "namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = response.parse()
+        assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_streaming_response_delete_all(self, client: Turbopuffer) -> None:
+        with client.namespaces.with_streaming_response.delete_all(
+            "namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = response.parse()
+            assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_path_params_delete_all(self, client: Turbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            client.namespaces.with_raw_response.delete_all(
+                "",
+            )
 
     @pytest.mark.skip()
     @parametrize
@@ -175,9 +218,6 @@ class TestNamespaces:
         namespace = client.namespaces.upsert(
             namespace="namespace",
             documents={
-                "attributes": {"foo": [{"foo": "bar"}]},
-                "ids": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                "vectors": [[0]],
                 "distance_metric": "cosine_distance",
                 "schema": {
                     "foo": [
@@ -188,6 +228,17 @@ class TestNamespaces:
                         }
                     ]
                 },
+                "upsert_columns": {
+                    "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                    "additional_properties": [{"foo": "bar"}],
+                },
+                "upsert_rows": [
+                    {
+                        "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                        "additional_properties": {},
+                        "vector": [0],
+                    }
+                ],
             },
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
@@ -267,6 +318,48 @@ class TestAsyncNamespaces:
             assert_matches_type(AsyncListNamespaces[NamespaceSummary], namespace, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_delete_all(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.delete_all(
+            "namespace",
+        )
+        assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_raw_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
+        response = await async_client.namespaces.with_raw_response.delete_all(
+            "namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = await response.parse()
+        assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_streaming_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
+        async with async_client.namespaces.with_streaming_response.delete_all(
+            "namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = await response.parse()
+            assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_path_params_delete_all(self, async_client: AsyncTurbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            await async_client.namespaces.with_raw_response.delete_all(
+                "",
+            )
 
     @pytest.mark.skip()
     @parametrize
@@ -382,9 +475,6 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespaces.upsert(
             namespace="namespace",
             documents={
-                "attributes": {"foo": [{"foo": "bar"}]},
-                "ids": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
-                "vectors": [[0]],
                 "distance_metric": "cosine_distance",
                 "schema": {
                     "foo": [
@@ -395,6 +485,17 @@ class TestAsyncNamespaces:
                         }
                     ]
                 },
+                "upsert_columns": {
+                    "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                    "additional_properties": [{"foo": "bar"}],
+                },
+                "upsert_rows": [
+                    {
+                        "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                        "additional_properties": {},
+                        "vector": [0],
+                    }
+                ],
             },
         )
         assert_matches_type(NamespaceUpsertResponse, namespace, path=["response"])
