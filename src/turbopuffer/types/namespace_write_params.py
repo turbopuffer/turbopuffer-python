@@ -10,7 +10,7 @@ from .document_row_param import DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam
 
-__all__ = ["NamespaceWriteParams", "Write", "WriteWriteDocuments", "WriteCopyFromNamespace", "WriteDeleteByFilter"]
+__all__ = ["NamespaceWriteParams", "Write", "WriteWrite", "WriteCopyFromNamespace", "WriteDeleteByFilter"]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
@@ -18,7 +18,7 @@ class NamespaceWriteParams(TypedDict, total=False):
     """Write documents."""
 
 
-class WriteWriteDocuments(TypedDict, total=False):
+class WriteWrite(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
@@ -46,4 +46,4 @@ class WriteDeleteByFilter(TypedDict, total=False):
     """The filter specifying which documents to delete."""
 
 
-Write: TypeAlias = Union[WriteWriteDocuments, WriteCopyFromNamespace, WriteDeleteByFilter]
+Write: TypeAlias = Union[WriteWrite, WriteCopyFromNamespace, WriteDeleteByFilter]
