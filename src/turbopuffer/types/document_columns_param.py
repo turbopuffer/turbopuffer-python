@@ -2,20 +2,17 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Iterable, Optional
-from typing_extensions import TypedDict
+from typing import Dict, List, Union, Iterable
+from typing_extensions import TypeAlias, TypedDict
 
 from .id_param import IDParam
 
 __all__ = ["DocumentColumnsParam"]
 
 
-class DocumentColumnsParam(TypedDict, total=False):
-    attributes: Dict[str, Iterable[Dict[str, object]]]
-    """The attributes attached to each of the documents."""
-
-    ids: List[IDParam]
+class DocumentColumnsParamTyped(TypedDict, total=False):
+    id: List[IDParam]
     """The IDs of the documents."""
 
-    vectors: Iterable[Optional[Iterable[float]]]
-    """Vectors describing each of the documents."""
+
+DocumentColumnsParam: TypeAlias = Union[DocumentColumnsParamTyped, Dict[str, Iterable[Dict[str, object]]]]
