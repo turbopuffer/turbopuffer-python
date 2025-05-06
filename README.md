@@ -12,7 +12,7 @@ pip install turbopuffer
 ```
 Or if you're able to run C binaries for JSON encoding, use:
 ```sh
-pip install turbopuffer[fast]
+pip install 'turbopuffer[fast]'
 ```
 
 2. Start using the API
