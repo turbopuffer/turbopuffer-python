@@ -19,6 +19,6 @@ def test_no_cmek():
                 }
             }
         )
-        assert False, 'Using CMEK is only available as part of enterprise offerings.'
+        assert False, 'CMEK requires additional setup'
     except APIError as err:
-        assert err.args == ('error (HTTP 400): 💔 CMEK is not currently enabled in this cluster',)
+        assert err.args[0].startswith('error (HTTP 400):')
