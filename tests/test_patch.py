@@ -31,12 +31,13 @@ def test_patches():
         ],
     )
 
-    results = ns.query(include_attributes=True)
-    assert len(results) == 2
-    assert results[0].id == 1
-    assert results[0].attributes == {'a': 1, 'b': 1}
-    assert results[1].id == 2
-    assert results[1].attributes == {'a': 2, 'b': 2}
+    result = ns.query(rank_by=["id", "asc"], include_attributes=['a', 'b'])
+    assert len(result.rows) == 2
+    print(result.rows)
+    assert result.rows[0].id == 1
+    assert result.rows[0].attributes == {'a': 1, 'b': 1}
+    assert result.rows[1].id == 2
+    assert result.rows[1].attributes == {'a': 2, 'b': 2}
 
     ns.write(
         patch_columns={
@@ -46,9 +47,9 @@ def test_patches():
         },
     )
 
-    results = ns.query(include_attributes=True)
-    assert len(results) == 2
-    assert results[0].id == 1
-    assert results[0].attributes == {'a': 11, 'b': 1, 'c': 1}
-    assert results[1].id == 2
-    assert results[1].attributes == {'a': 22, 'b': 2, 'c': 2}
+    result = ns.query(rank_by=["id", "asc"], include_attributes=['a', 'b', 'c'])
+    assert len(result.rows) == 2
+    assert result.rows[0].id == 1
+    assert result.rows[0].attributes == {'a': 11, 'b': 1, 'c': 1}
+    assert result.rows[1].id == 2
+    assert result.rows[1].attributes == {'a': 22, 'b': 2, 'c': 2}

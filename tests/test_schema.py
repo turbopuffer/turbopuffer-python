@@ -32,7 +32,7 @@ def test_schema():
     # since it's not filterable anymore
     with pytest.raises(tpuf.TurbopufferError):
         ns.query(
-            vector=[2, 2],
+            rank_by=["vector", "ANN", [2, 2]],
             top_k=10,
             filters={
                 'hello': ['Eq', 'foobar']

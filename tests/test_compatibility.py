@@ -42,10 +42,10 @@ try:
             assert np.allclose(vec.vector, data[i])
 
         # Test query with numpy vector
-        result = ns.query(vector=data[5], distance_metric="cosine_distance", top_k=1, include_vectors=True)
-        assert len(result) == 1
-        assert result[0].id == 5
-        assert np.allclose(result[0].vector, data[5])
+        result = ns.query(rank_by=["vector", "ANN", data[5]], distance_metric="cosine_distance", top_k=1, include_attributes=['vector'])
+        assert len(result.rows) == 1
+        assert result.rows[0].id == 5
+        assert np.allclose(result.rows[0].vector, data[5])
 
         ns.delete_all()
 

@@ -18,5 +18,5 @@ def test_copy_from_namespace():
 
     ns2.copy_from_namespace(ns1_name)
 
-    query_results = ns2.query(vector=[0.1, 0.1], top_k=10)
-    assert len(query_results) == 4
+    query_results = ns2.query(rank_by=["vector", "ANN", [0.1, 0.1]], top_k=10)
+    assert len(query_results.rows) == 4

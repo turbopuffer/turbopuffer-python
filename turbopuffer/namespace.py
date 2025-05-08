@@ -3,9 +3,9 @@ import iso8601
 import json
 from datetime import datetime
 from turbopuffer.error import APIError
-from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, batch_iter, b64encode_vector
+from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, b64decode_vector, batch_iter, b64encode_vector
 from turbopuffer.backend import Backend
-from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict
+from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict, QueryResult
 from typing import Any, Dict, List, Literal, Optional, Iterable, Union, overload
 import turbopuffer as tpuf
 
@@ -254,15 +254,13 @@ class Namespace:
 
     @overload
     def query(self,
-              vector: Optional[List[float]] = None,
+              rank_by: RankInput,
               distance_metric: Optional[str] = None,
               top_k: int = 10,
-              include_vectors: bool = False,
               include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Filters] = None,
-              rank_by: Optional[RankInput] = None,
               consistency: Optional[ConsistencyDict] = None
-              ) -> VectorResult:
+              ) -> QueryResult:
         ...
 
     @overload
@@ -275,15 +273,13 @@ class Namespace:
 
     def query(self,
               query_data=None,
-              vector=None,
+              rank_by=None,
               distance_metric=None,
               top_k=None,
-              include_vectors=None,
               include_attributes=None,
               filters=None,
-              rank_by=None,
               consistency=None,
-              vector_encoding_format=None) -> VectorResult:
+              vector_encoding=None) -> VectorResult:
         """
         Searches vectors matching the search query.
 
@@ -292,15 +288,13 @@ class Namespace:
 
         if query_data is None:
             return self.query(VectorQuery(
-                vector=vector,
                 distance_metric=distance_metric,
                 top_k=top_k,
-                include_vectors=include_vectors,
                 include_attributes=include_attributes,
                 filters=filters,
                 rank_by=rank_by,
                 consistency=consistency,
-                vector_encoding_format=vector_encoding_format,
+                vector_encoding=vector_encoding,
             ))
         if not isinstance(query_data, VectorQuery):
             if isinstance(query_data, dict):
@@ -309,13 +303,20 @@ class Namespace:
                 raise ValueError(f'query() input type must be compatible with turbopuffer.VectorQuery: {type(query_data)}')
 
         # If enabled, request vectors as base64-encoded strings.
-        if tpuf.encode_vectors_as_base64 and query_data.include_vectors and query_data.vector_encoding_format is None:
-            query_data.vector_encoding_format = 'base64'
+        if tpuf.encode_vectors_as_base64 and query_data.vector_encoding is None:
+            query_data.vector_encoding = 'base64'
 
-        response = self.backend.make_api_request('/v1/namespaces', self.name, 'query', payload=query_data.__dict__)
-        result = VectorResult(response.get('content', dict()), namespace=self)
-        result.performance = response.get('performance')
-        return result
+        response = self.backend.make_api_request('/v2/namespaces', self.name, 'query', payload=query_data.__dict__)
+        content = response.get('content', dict())
+
+        # Move some v1-style performance metrics from the Python client into the
+        # v2 performance dict returned by the server.
+        client_performance = response.get('performance', dict())
+        for perf_key in ['json_time', 'gzip_time', 'gzip_ratio', 'request_time']:
+            if perf_key in client_performance:
+                content['performance'][perf_key] = float(client_performance[perf_key])
+
+        return QueryResult.from_dict(content)
 
     def vectors(self, cursor: Optional[Cursor] = None) -> VectorResult:
         """
