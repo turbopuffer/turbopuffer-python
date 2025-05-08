@@ -3,7 +3,7 @@ import iso8601
 import json
 from datetime import datetime
 from turbopuffer.error import APIError
-from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, b64decode_vector, batch_iter, b64encode_vector
+from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, b64encode_vector
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict, QueryResult
 from typing import Any, Dict, List, Literal, Optional, Iterable, Union, overload

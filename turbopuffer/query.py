@@ -64,7 +64,7 @@ class VectorQuery:
             vector = self.rank_by[2]
             if 'numpy' in sys.modules and isinstance(vector, sys.modules['numpy'].ndarray):
                 if vector.ndim != 1:
-                    raise ValueError(f'VectorQuery.vector must be a 1d array, got {vector.ndim} dimensions')
+                    raise ValueError(f'VectorQuery.rank_by vector must be a 1d array, got {vector.ndim} dimensions')
             elif not isinstance(vector, list):
                 raise ValueError('VectorQuery.rank_by vector must be a list, got:', type(vector))
         if self.include_attributes is not None:
