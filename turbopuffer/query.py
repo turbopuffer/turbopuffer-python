@@ -41,7 +41,6 @@ ConsistencyDict = Dict[Literal['level'], Literal['strong', 'eventual']]
 @dataclass
 class VectorQuery:
     rank_by: RankInput
-    distance_metric: Optional[str] = None
     top_k: int = 10
     include_attributes: Optional[Union[List[str], bool]] = None
     filters: Optional[Filters] = None
@@ -50,7 +49,6 @@ class VectorQuery:
 
     def from_dict(source: dict) -> 'VectorQuery':
         return VectorQuery(
-            distance_metric=source.get('distance_metric'),
             top_k=source.get('top_k'),
             include_attributes=source.get('include_attributes'),
             filters=source.get('filters'),
@@ -66,7 +64,7 @@ class VectorQuery:
             vector = self.rank_by[2]
             if 'numpy' in sys.modules and isinstance(vector, sys.modules['numpy'].ndarray):
                 if vector.ndim != 1:
-                    raise ValueError(f'VectorQuery.vector must be a 1d array, got {self.vector.ndim} dimensions')
+                    raise ValueError(f'VectorQuery.vector must be a 1d array, got {vector.ndim} dimensions')
             elif not isinstance(vector, list):
                 raise ValueError('VectorQuery.rank_by vector must be a list, got:', type(vector))
         if self.include_attributes is not None:

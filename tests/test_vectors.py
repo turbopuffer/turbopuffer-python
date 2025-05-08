@@ -214,7 +214,6 @@ def test_query_vectors():
     vector_set = ns.query(
         top_k=5,
         rank_by=['vector', 'ANN', [0.8, 0.7]],
-        distance_metric='euclidean_squared',
         include_attributes=['hello', 'vector'],
     )
     for i in range(len(vector_set.rows)):
@@ -228,7 +227,6 @@ def test_query_vectors():
     vector_set = ns.query({
         'top_k': 5,
         'rank_by': ['vector', 'ANN', [0.8, 0.7]],
-        'distance_metric': 'euclidean_squared',
         'include_attributes': ['hello', 'vector'],
     })
     for i in range(len(vector_set.rows)):
@@ -238,7 +236,6 @@ def test_query_vectors():
     vector_set = ns.query(
         top_k=5,
         rank_by=['vector', 'ANN', [0.8, 0.7]],
-        distance_metric='euclidean_squared',
         include_attributes=True,
     )
     expected = [
@@ -255,7 +252,6 @@ def test_query_vectors():
     vector_set = ns.query(tpuf.VectorQuery(
         top_k=5,
         rank_by=['vector', 'ANN', [1.5, 1.6]],
-        distance_metric='euclidean_squared',
     ))
     expected = [
         tpuf.VectorRow(id=15, dist=0.01),
@@ -426,7 +422,6 @@ def test_string_ids():
     result = ns.query(
         top_k=5,
         rank_by=['vector', 'ANN', [0.0, 0.0]],
-        distance_metric='euclidean_squared',
         filters={'id': ['In', vec_ids]}
     )
     expected = [
@@ -451,7 +446,6 @@ def test_string_ids():
     result = ns.query(
         top_k=5,
         rank_by=['vector', 'ANN', [0.0, 0.0]],
-        distance_metric='euclidean_squared',
         filters={'id': ['In', vec_ids]}
     )
     expected = [
@@ -493,7 +487,6 @@ def test_attribute_types():
     result = ns.query(
         top_k=5,
         rank_by=['vector', 'ANN', [0.0, 0.0]],
-        distance_metric="euclidean_squared",
         filters={"count": [["Gt", 1]], "users": [["In", "simon"]]},
     )
     assert len(result.rows) == 1
@@ -501,7 +494,6 @@ def test_attribute_types():
     result = ns.query(
         top_k=5,
         rank_by=['vector', 'ANN', [0.0, 0.0]],
-        distance_metric="euclidean_squared",
         filters=["Or", [
             ["count", "Eq", 1],
             ["users", "Contains", "bojan"],
@@ -512,7 +504,6 @@ def test_attribute_types():
     result = ns.query(
         top_k=5,
         rank_by=['vector', 'ANN', [0.0, 0.0]],
-        distance_metric="euclidean_squared",
         filters=["And", [
             ["count", "Eq", 1],
             ["users", "Contains", "bojan"],
@@ -523,7 +514,6 @@ def test_attribute_types():
     result = ns.query(
         top_k=5,
         rank_by=['vector', 'ANN', [0.0, 0.0]],
-        distance_metric="euclidean_squared",
         filters=["And", [
             ["count", "Eq", 1],
             ["Or", [
@@ -669,7 +659,6 @@ def test_query_vectors_vector_encoding_format():
         vector_set = ns.query(
             top_k=1,
             rank_by=['vector', 'ANN', [0.0, 0.0, 0.0]],
-            distance_metric='euclidean_squared',
             include_attributes=['vector'],
             vector_encoding=vector_encoding,
         )

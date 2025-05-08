@@ -255,7 +255,6 @@ class Namespace:
     @overload
     def query(self,
               rank_by: RankInput,
-              distance_metric: Optional[str] = None,
               top_k: int = 10,
               include_attributes: Optional[Union[List[str], bool]] = None,
               filters: Optional[Filters] = None,
@@ -274,7 +273,6 @@ class Namespace:
     def query(self,
               query_data=None,
               rank_by=None,
-              distance_metric=None,
               top_k=None,
               include_attributes=None,
               filters=None,
@@ -288,7 +286,6 @@ class Namespace:
 
         if query_data is None:
             return self.query(VectorQuery(
-                distance_metric=distance_metric,
                 top_k=top_k,
                 include_attributes=include_attributes,
                 filters=filters,

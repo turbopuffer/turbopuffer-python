@@ -15,7 +15,6 @@ def test_perf_metrics():
 
     result = ns.query(
         rank_by=["vector", "ANN", [0.0, 0.3]],
-        distance_metric='cosine_distance',
         include_attributes=['hello'],
         filters=['hello', 'Eq', 'world'],
     )
