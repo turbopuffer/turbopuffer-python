@@ -34,8 +34,8 @@ def test_bm25():
     )
 
     # Query with dict
-    results = ns.query({"top_k": 10, "rank_by": ("blabla", "BM25", "fox jumping")})
-    assert [item.id for item in results] == [2, 1]
+    result = ns.query({"top_k": 10, "rank_by": ("blabla", "BM25", "fox jumping")})
+    assert [item.id for item in result.rows] == [2, 1]
 
     # Upsert with named args
     ns.write(
@@ -49,7 +49,7 @@ def test_bm25():
     )
 
     # Query with named args (and combined ranking)
-    results = ns.query(
+    result = ns.query(
         top_k=2,
         rank_by=(
             "Sum",
@@ -57,7 +57,7 @@ def test_bm25():
         ),
         filters=("fact_id", "NotEq", "z"),
     )
-    assert [item.id for item in results] == [2, 4]
+    assert [item.id for item in result.rows] == [2, 4]
 
     # Upsert with row-based upsert format
     ns.write(
@@ -76,13 +76,13 @@ def test_bm25():
     )
 
     # Query to make sure the new row(s) is there
-    results = ns.query(
+    result = ns.query(
         {
             "top_k": 10,
             "rank_by": ["blabla", "BM25", "row based upsert"],
         }
     )
-    assert [item.id for item in results] == [8, 9]
+    assert [item.id for item in result.rows] == [8, 9]
 
 
 def test_bm25_product_operator():
@@ -147,11 +147,11 @@ def test_bm25_product_operator():
     ]
 
     for query in queries:
-        results = ns.query(
+        result = ns.query(
             rank_by=query,
             top_k=10,
         )
-        assert len(results) > 0
+        assert len(result.rows) > 0
 
 def test_bm25_ContainsAllTokens():
     ns = tpuf.Namespace(tests.test_prefix + "bm25_ContainsAllTokens")
@@ -178,13 +178,13 @@ def test_bm25_ContainsAllTokens():
         distance_metric="cosine_distance",
     )
 
-    results = ns.query(
+    result = ns.query(
         {
             "rank_by": ["text", "BM25", "walrus whisker"],
             "filters": ["text", "ContainsAllTokens", "marine mammals"],
         }
     )
-    assert len(results) == 1
+    assert len(result.rows) == 1
 
     missing = ns.query(
         {
@@ -192,7 +192,7 @@ def test_bm25_ContainsAllTokens():
             "filters": ["text", "ContainsAllTokens", "marine mammals short"],
         }
     )
-    assert len(missing) == 0
+    assert len(missing.rows) == 0
 
 
 def test_bm25_pre_tokenized_array():
@@ -223,18 +223,18 @@ def test_bm25_pre_tokenized_array():
         schema=schema,
     )
 
-    results = ns.query(
+    result = ns.query(
         rank_by=["content", "BM25", ["jumped"]],
         top_k=10,
     )
-    assert len(results) == 1
-    assert results[0].id == 1
+    assert len(result.rows) == 1
+    assert result.rows[0].id == 1
 
-    results = ns.query(
+    result = ns.query(
         rank_by=["content", "BM25", ["dog"]],
         top_k=10,
     )
-    assert len(results) == 2
+    assert len(result.rows) == 2
 
     with pytest.raises(tpuf.APIError, match="invalid input 'jumped' for rank_by field \"content\", expecting \\[\\]string"):
         # Query must be an array.

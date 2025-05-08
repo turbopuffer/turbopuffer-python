@@ -13,7 +13,8 @@ try:
             upsert_columns={
                 "id": np.arange(0, data.shape[0]),
                 "vector": data
-            }
+            },
+            distance_metric='euclidean_squared'
         )
         vecs = ns.vectors()
         for i, vec in enumerate(vecs):
@@ -23,6 +24,7 @@ try:
         # Test row upsert
         ns.write(
             upsert_rows=[{"id": i, "vector":row} for i, row in enumerate(data)],
+            distance_metric='euclidean_squared'
         )
         vecs = ns.vectors()
         for i, vec in enumerate(vecs):
@@ -34,7 +36,8 @@ try:
             upsert_columns={
                 "id": [np.int64(i) for i in range(0, data.shape[0])],
                 "vector": [[np.float64(v) for v in row] for row in data]
-            }
+            },
+            distance_metric='euclidean_squared'
         )
         vecs = ns.vectors()
         for i, vec in enumerate(vecs):
@@ -42,10 +45,10 @@ try:
             assert np.allclose(vec.vector, data[i])
 
         # Test query with numpy vector
-        result = ns.query(vector=data[5], distance_metric="cosine_distance", top_k=1, include_vectors=True)
-        assert len(result) == 1
-        assert result[0].id == 5
-        assert np.allclose(result[0].vector, data[5])
+        result = ns.query(rank_by=["vector", "ANN", data[5]], top_k=1, include_attributes=['vector'])
+        assert len(result.rows) == 1
+        assert result.rows[0].id == 5
+        assert np.allclose(result.rows[0].vector, data[5])
 
         ns.delete_all()
 

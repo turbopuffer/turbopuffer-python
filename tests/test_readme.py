@@ -32,21 +32,22 @@ def test_readme():
 
     # Query your dataset
     results = ns.query(
-        vector=[0.18, 0.19],
+        rank_by=["vector", "ANN", [0.18, 0.19]],
         top_k=10,
         filters=['And', [
             ['name', 'Glob', '*o*'],
             ['name', 'NotEq', 'other'],
         ]],
-        include_attributes=['name'],
-        include_vectors=True
+        include_attributes=['name', 'vector'],
     )
     print(results)
     # Output:
-    # [
-    #   VectorRow(id=2, vector=[0.2, 0.2], attributes={'name': 'two'}, dist=0.00049999997),
-    #   VectorRow(id=1, vector=[0.1, 0.1], attributes={'name': 'one'}, dist=0.0145)]
-    # ]
+    # QueryResult(
+    #   rows=[
+    #     VectorRow(id=2, vector=[0.2, 0.2], attributes={'name': 'two'}, dist=0.00049999997),
+    #     VectorRow(id=1, vector=[0.1, 0.1], attributes={'name': 'one'}, dist=0.0145)
+    #   ]
+    # )
 
     # Delete rows
     ns.write(deletes=[1, 2])

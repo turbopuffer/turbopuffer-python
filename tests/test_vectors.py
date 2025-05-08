@@ -1,5 +1,6 @@
 import uuid
 import turbopuffer as tpuf
+from turbopuffer.query import QueryBilling
 from turbopuffer.vectors import b64encode_vector
 import tests
 import pytest
@@ -212,32 +213,30 @@ def test_query_vectors():
     # Test normal query
     vector_set = ns.query(
         top_k=5,
-        vector=[0.8, 0.7],
-        distance_metric='euclidean_squared',
-        include_vectors=True,
-        include_attributes=['hello'],
+        rank_by=['vector', 'ANN', [0.8, 0.7]],
+        include_attributes=['hello', 'vector'],
     )
-    for i in range(len(vector_set)):  # Use VectorResult in index mode
-        check_result(vector_set[i], expected[i])
+    for i in range(len(vector_set.rows)):
+        check_result(vector_set.rows[i], expected[i])
+    assert vector_set.billing == QueryBilling(
+        billable_logical_bytes_queried=256000000,
+        billable_logical_bytes_returned=105,
+    )
 
     # Test query with dict
     vector_set = ns.query({
         'top_k': 5,
-        'vector': [0.8, 0.7],
-        'distance_metric': 'euclidean_squared',
-        'include_vectors': True,
-        'include_attributes': ['hello'],
+        'rank_by': ['vector', 'ANN', [0.8, 0.7]],
+        'include_attributes': ['hello', 'vector'],
     })
-    for i in range(len(vector_set)):  # Use VectorResult in index mode
-        check_result(vector_set[i], expected[i])
+    for i in range(len(vector_set.rows)):
+        check_result(vector_set.rows[i], expected[i])
 
     # Test query with all attributes
     vector_set = ns.query(
         top_k=5,
-        vector=[0.8, 0.7],
-        distance_metric='euclidean_squared',
-        include_vectors=True,
-        include_attributes=True
+        rank_by=['vector', 'ANN', [0.8, 0.7]],
+        include_attributes=True,
     )
     expected = [
         tpuf.VectorRow(id=7, vector=[0.7, 0.7], dist=0.01, attributes={'hello': 'world'}),
@@ -246,14 +245,13 @@ def test_query_vectors():
         tpuf.VectorRow(id=3, vector=[0.3, 0.3], dist=0.41, attributes={'test': 'cols', 'key1': 'three', 'key2': 'c'}),
         tpuf.VectorRow(id=6, vector=[0.3, 0.3], dist=0.41, attributes={'test': 'cols', 'key1': 'three', 'key2': 'c'}),
     ]
-    for i in range(len(vector_set)):  # Use VectorResult in index mode
-        check_result(vector_set[i], expected[i])
+    for i in range(len(vector_set.rows)):
+        check_result(vector_set.rows[i], expected[i])
 
     # Test query with typed query
     vector_set = ns.query(tpuf.VectorQuery(
         top_k=5,
-        vector=[1.5, 1.6],
-        distance_metric='euclidean_squared',
+        rank_by=['vector', 'ANN', [1.5, 1.6]],
     ))
     expected = [
         tpuf.VectorRow(id=15, dist=0.01),
@@ -263,7 +261,7 @@ def test_query_vectors():
         tpuf.VectorRow(id=18, dist=0.13),
     ]
     i = 0
-    for row in vector_set:  # Use VectorResult in iterator mode
+    for row in vector_set.rows:
         check_result(row, expected[i])
         i += 1
 
@@ -274,14 +272,15 @@ def test_query_vectors():
         tpuf.VectorRow(id=12),
     ]
     vector_set = ns.query(
+        rank_by=['id', 'asc'],
         top_k=3,
-        include_vectors=False,
+        include_attributes=['hello'],
         filters={
             'id': ['In', [10, 11, 12]]
         },
     )
-    for i in range(len(vector_set)):  # Use VectorResult in index mode
-        check_result(vector_set[i], expected[i])
+    for i in range(len(vector_set.rows)):
+        check_result(vector_set.rows[i], expected[i])
 
     # Test query with no vectors
     expected = [
@@ -290,25 +289,28 @@ def test_query_vectors():
         tpuf.VectorRow(id=12),
     ]
     vector_set = ns.query(
+        rank_by=['id', 'asc'],
         top_k=3,
-        include_vectors=False,
+        include_attributes=['hello'],
         filters={
             'id': [['In', [10, 11, 12]]]
         },
     )
-    for i in range(len(vector_set)):  # Use VectorResult in index mode
-        check_result(vector_set[i], expected[i])
+    for i in range(len(vector_set.rows)):
+        check_result(vector_set.rows[i], expected[i])
 
     # Test query with 'eventual' consistency
     vector_set = ns.query(
+        rank_by=['id', 'asc'],
         top_k=3,
         consistency={'level': 'eventual'}
     )
-    assert len(vector_set) == 3
+    assert len(vector_set.rows) == 3
 
     # Test query with no consistency dict key should fail
     try:
         ns.query(
+            rank_by=['id', 'asc'],
             top_k=3,
             consistency='eventual'
         )
@@ -319,6 +321,7 @@ def test_query_vectors():
     # Test query with 'nonexistentvalue' consistency should fail
     try:
         ns.query(
+            rank_by=['id', 'asc'],
             top_k=3,
             consistency={'level': 'nonexistentvalue'}
         )
@@ -416,10 +419,9 @@ def test_string_ids():
                 })
 
     # Test query
-    results = ns.query(
+    result = ns.query(
         top_k=5,
-        vector=[0.0, 0.0],
-        distance_metric='euclidean_squared',
+        rank_by=['vector', 'ANN', [0.0, 0.0]],
         filters={'id': ['In', vec_ids]}
     )
     expected = [
@@ -429,7 +431,7 @@ def test_string_ids():
         tpuf.VectorRow(id=vec_ids[3], dist=0.18),
         tpuf.VectorRow(id=vec_ids[4], dist=0.32)
     ]
-    for i, row in enumerate(results):
+    for i, row in enumerate(result.rows):
         assert row.id == expected[i].id
         assert row.attributes == expected[i].attributes
         assert row.vector == expected[i].vector
@@ -441,10 +443,9 @@ def test_string_ids():
     )
 
     # Test query 2
-    results = ns.query(
+    result = ns.query(
         top_k=5,
-        vector=[0.0, 0.0],
-        distance_metric='euclidean_squared',
+        rank_by=['vector', 'ANN', [0.0, 0.0]],
         filters={'id': ['In', vec_ids]}
     )
     expected = [
@@ -454,7 +455,7 @@ def test_string_ids():
         tpuf.VectorRow(id=vec_ids[4], dist=0.32),
         tpuf.VectorRow(id=vec_ids[5], dist=0.5)
     ]
-    for i, row in enumerate(results):
+    for i, row in enumerate(result.rows):
         assert row.id == expected[i].id
         assert row.attributes == expected[i].attributes
         assert row.vector == expected[i].vector
@@ -483,40 +484,36 @@ def test_attribute_types():
         distance_metric='euclidean_squared',
     )
 
-    results = ns.query(
+    result = ns.query(
         top_k=5,
-        vector=[0.0, 0.0],
-        distance_metric="euclidean_squared",
+        rank_by=['vector', 'ANN', [0.0, 0.0]],
         filters={"count": [["Gt", 1]], "users": [["In", "simon"]]},
     )
-    assert len(results) == 1
+    assert len(result.rows) == 1
 
-    results = ns.query(
+    result = ns.query(
         top_k=5,
-        vector=[0.0, 0.0],
-        distance_metric="euclidean_squared",
+        rank_by=['vector', 'ANN', [0.0, 0.0]],
         filters=["Or", [
             ["count", "Eq", 1],
             ["users", "Contains", "bojan"],
         ]],
     )
-    assert len(results) == 2
+    assert len(result.rows) == 2
 
-    results = ns.query(
+    result = ns.query(
         top_k=5,
-        vector=[0.0, 0.0],
-        distance_metric="euclidean_squared",
+        rank_by=['vector', 'ANN', [0.0, 0.0]],
         filters=["And", [
             ["count", "Eq", 1],
             ["users", "Contains", "bojan"],
         ]],
     )
-    assert len(results) == 0
+    assert len(result.rows) == 0
 
-    results = ns.query(
+    result = ns.query(
         top_k=5,
-        vector=[0.0, 0.0],
-        distance_metric="euclidean_squared",
+        rank_by=['vector', 'ANN', [0.0, 0.0]],
         filters=["And", [
             ["count", "Eq", 1],
             ["Or", [
@@ -525,7 +522,7 @@ def test_attribute_types():
             ]],
         ]],
     )
-    assert len(results) == 1
+    assert len(result.rows) == 1
 
 def test_not_found_error():
     ns = tpuf.Namespace(tests.test_prefix + 'not_found')
@@ -533,7 +530,7 @@ def test_not_found_error():
     with pytest.raises(tpuf.NotFoundError):
         ns.query(
             top_k=5,
-            vector=[0.0, 0.0],
+            rank_by=['vector', 'ANN', [0.0, 0.0]],
         )
 
 def test_list_in_empty_namespace():
@@ -658,20 +655,18 @@ def test_query_vectors_vector_encoding_format():
         distance_metric='euclidean_squared',
     )
 
-    for vector_encoding_format in [None, 'float', 'base64']:
+    for vector_encoding in [None, 'float', 'base64']:
         vector_set = ns.query(
             top_k=1,
-            vector=[0.0, 0.0, 0.0],
-            distance_metric='euclidean_squared',
-            include_vectors=True,
-            vector_encoding_format=vector_encoding_format,
+            rank_by=['vector', 'ANN', [0.0, 0.0, 0.0]],
+            include_attributes=['vector'],
+            vector_encoding=vector_encoding,
         )
-        assert len(vector_set) == 1
-        assert vector_set[0].id == 1
+        assert len(vector_set.rows) == 1
+        assert vector_set.rows[0].id == 1
 
         # Compare using float32 to avoid precision issues if the vectors had
         # been passed through 32-bit floats.
         def float32_list(vector):
             return [np.float32(x) for x in vector]
-        assert float32_list(vector_set[0].vector) == float32_list([0.1, 0.2, 0.3])
-
+        assert float32_list(vector_set.rows[0].vector) == float32_list([0.1, 0.2, 0.3])

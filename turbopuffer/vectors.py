@@ -84,6 +84,14 @@ class VectorRow:
             dist=source.get('dist'),
         )
 
+    def from_dict_v2(source: dict) -> 'VectorRow':
+        id = source.pop('id')
+        vector = source.pop('vector', None)
+        dist = source.pop('$dist', None)
+        if len(source) == 0:
+            source = None
+        return VectorRow.from_dict({'id': id, 'vector': vector, 'attributes': source, 'dist': dist})
+
     def __post_init__(self):
         if not isinstance(self.id, int) and not isinstance(self.id, str):
             raise ValueError('VectorRow.id must be an int or str, got:', type(self.id))

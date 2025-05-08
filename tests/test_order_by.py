@@ -16,10 +16,10 @@ def test_order_by_attribute():
         rank_by=("fact_id", "asc"),
         top_k=10
     )
-    assert [item.id for item in results] == [1, 2, 3, 4]
+    assert [item.id for item in results.rows] == [1, 2, 3, 4]
 
     results = ns.query(
         rank_by=("fact_id", "desc"),
         top_k=10
     )
-    assert [item.id for item in results] == [4, 3, 2, 1]
+    assert [item.id for item in results.rows] == [4, 3, 2, 1]
