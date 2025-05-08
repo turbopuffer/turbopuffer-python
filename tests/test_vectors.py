@@ -1,5 +1,6 @@
 import uuid
 import turbopuffer as tpuf
+from turbopuffer.query import QueryBilling
 from turbopuffer.vectors import b64encode_vector
 import tests
 import pytest
@@ -218,6 +219,10 @@ def test_query_vectors():
     )
     for i in range(len(vector_set.rows)):
         check_result(vector_set.rows[i], expected[i])
+    assert vector_set.billing == QueryBilling(
+        billable_logical_bytes_queried=256000000,
+        billable_logical_bytes_returned=105,
+    )
 
     # Test query with dict
     vector_set = ns.query({
