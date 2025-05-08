@@ -13,7 +13,8 @@ try:
             upsert_columns={
                 "id": np.arange(0, data.shape[0]),
                 "vector": data
-            }
+            },
+            distance_metric='euclidean_squared'
         )
         vecs = ns.vectors()
         for i, vec in enumerate(vecs):
@@ -23,6 +24,7 @@ try:
         # Test row upsert
         ns.write(
             upsert_rows=[{"id": i, "vector":row} for i, row in enumerate(data)],
+            distance_metric='euclidean_squared'
         )
         vecs = ns.vectors()
         for i, vec in enumerate(vecs):
@@ -34,7 +36,8 @@ try:
             upsert_columns={
                 "id": [np.int64(i) for i in range(0, data.shape[0])],
                 "vector": [[np.float64(v) for v in row] for row in data]
-            }
+            },
+            distance_metric='euclidean_squared'
         )
         vecs = ns.vectors()
         for i, vec in enumerate(vecs):
