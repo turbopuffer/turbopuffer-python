@@ -102,7 +102,7 @@ class Backend:
                 performance['request_time'] = time.monotonic() - request_start
                 # print(f'Request time (HTTP {response.status_code}):', performance['request_time'])
 
-                if response.status_code >= 500 or response.status_code == 408 or response.status_code == 429:
+                if status_code_should_retry(response.status_code):
                     response.raise_for_status()
 
                 server_timing_str = response.headers.get('Server-Timing', '')
@@ -171,3 +171,6 @@ class Backend:
                                    str(err))
                     else:
                         raise
+
+def status_code_should_retry(status_code: int) -> bool:
+    return status_code >= 500 or status_code in (408, 409, 429)
