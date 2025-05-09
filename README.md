@@ -146,7 +146,7 @@ first_page = await client.namespaces.list(
 
 print(f"next page cursor: {first_page.next_cursor}")  # => "next page cursor: ..."
 for namespace in first_page.namespaces:
-    print(namespace.namespace.id)
+    print(namespace.id)
 
 # Remove `await` for non-async usage.
 ```
