@@ -182,6 +182,7 @@ def test_bm25_ContainsAllTokens():
         {
             "rank_by": ["text", "BM25", "walrus whisker"],
             "filters": ["text", "ContainsAllTokens", "marine mammals"],
+            "top_k": 10,
         }
     )
     assert len(result.rows) == 1
@@ -190,6 +191,7 @@ def test_bm25_ContainsAllTokens():
         {
             "rank_by": ["text", "BM25", "walrus whisker"],
             "filters": ["text", "ContainsAllTokens", "marine mammals short"],
+            "top_k": 10,
         }
     )
     assert len(missing.rows) == 0

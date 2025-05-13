@@ -31,7 +31,7 @@ def test_patches():
         ],
     )
 
-    result = ns.query(rank_by=["id", "asc"], include_attributes=['a', 'b'])
+    result = ns.query(rank_by=["id", "asc"], include_attributes=['a', 'b'], top_k=10)
     assert len(result.rows) == 2
     print(result.rows)
     assert result.rows[0].id == 1
@@ -47,7 +47,7 @@ def test_patches():
         },
     )
 
-    result = ns.query(rank_by=["id", "asc"], include_attributes=['a', 'b', 'c'])
+    result = ns.query(rank_by=["id", "asc"], include_attributes=['a', 'b', 'c'], top_k=10)
     assert len(result.rows) == 2
     assert result.rows[0].id == 1
     assert result.rows[0].attributes == {'a': 11, 'b': 1, 'c': 1}

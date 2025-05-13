@@ -17,6 +17,7 @@ def test_perf_metrics():
         rank_by=["vector", "ANN", [0.0, 0.3]],
         include_attributes=['hello'],
         filters=['hello', 'Eq', 'world'],
+        top_k=10,
     )
 
     metrics = result.performance
