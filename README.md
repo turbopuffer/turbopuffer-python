@@ -20,7 +20,7 @@ pip install git+ssh://git@github.com/turbopuffer/turbopuffer-python#ng.git
 ```
 
 > [!NOTE]
-> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install turbopuffer`
+> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre turbopuffer`
 
 ## Usage
 
