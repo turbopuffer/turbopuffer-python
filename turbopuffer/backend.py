@@ -20,10 +20,15 @@ def find_api_key(api_key: Optional[str] = None) -> str:
                                   "or pass `api_key=` when creating a Namespace.")
 
 def clean_base_url(base_url: str) -> str:
-    if base_url.endswith(('/v1', '/v1/', '/')):
-        return re.sub('(/v1|/v1/|/)$', '', base_url)
-    else:
-        return base_url
+    url = base_url.strip()
+
+    if '://' not in url:
+        url = f'https://{url}'
+
+    if url.endswith(('/v1', '/v1/', '/')):
+        url = re.sub('(/v1|/v1/|/)$', '', url)
+
+    return url
 
 
 class Backend:
