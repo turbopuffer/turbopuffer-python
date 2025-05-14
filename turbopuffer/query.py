@@ -41,7 +41,7 @@ ConsistencyDict = Dict[Literal['level'], Literal['strong', 'eventual']]
 @dataclass
 class VectorQuery:
     rank_by: RankInput
-    top_k: int = 10
+    top_k: int
     include_attributes: Optional[Union[List[str], bool]] = None
     filters: Optional[Filters] = None
     consistency: Optional[ConsistencyDict] = None
@@ -67,6 +67,8 @@ class VectorQuery:
                     raise ValueError(f'VectorQuery.rank_by vector must be a 1d array, got {vector.ndim} dimensions')
             elif not isinstance(vector, list):
                 raise ValueError('VectorQuery.rank_by vector must be a list, got:', type(vector))
+        if self.top_k is None:
+            raise ValueError('VectorQuery.top_k is required')
         if self.include_attributes is not None:
             if not isinstance(self.include_attributes, list) and not isinstance(self.include_attributes, bool):
                 raise ValueError('VectorQuery.include_attributes must be a list or bool, got:', type(self.include_attributes))
