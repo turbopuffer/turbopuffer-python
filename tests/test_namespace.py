@@ -34,3 +34,10 @@ def test_namespace_base_url():
         request = args[0]
         expected_url = base_url + "/v2/namespaces/" + ns_name
         assert request.url == expected_url
+
+def test_namespace_hint_cache_warm():
+    ns_name = next(tpuf.namespaces()).name
+    ns = tpuf.Namespace(ns_name)
+    result = ns.hint_cache_warm()
+    assert isinstance(result["message"], str)
+    assert result["status"] in ["ACCEPTED", "OK"]
