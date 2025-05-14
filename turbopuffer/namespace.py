@@ -6,7 +6,7 @@ from turbopuffer.error import APIError
 from turbopuffer.vectors import Cursor, VectorResult, VectorColumns, VectorRow, b64encode_vector
 from turbopuffer.backend import Backend
 from turbopuffer.query import VectorQuery, Filters, RankInput, ConsistencyDict, QueryResult
-from typing import Any, Dict, List, Literal, Optional, Iterable, Union, overload
+from typing import Any, Dict, List, Literal, Optional, Iterable, TypedDict, Union, overload
 import turbopuffer as tpuf
 
 CmekDict = Dict[Literal['key_name'], str]
@@ -329,6 +329,19 @@ class Namespace:
         result = VectorResult(content, namespace=self, next_cursor=next_cursor)
         result.performance = response.get('performance')
         return result
+
+    class HintCacheWarmResponse(TypedDict):
+        message: str
+        status: Literal["ACCEPTED", "OK"]
+
+    def hint_cache_warm(self) -> HintCacheWarmResponse:
+        """
+        Warms the cache.
+        """
+
+        response = self.backend.make_api_request('/v1/namespaces', self.name, 'hint_cache_warm', method='GET')
+        content = response.get('content', dict())
+        return content
 
     def delete_all_indexes(self) -> None:
         """
