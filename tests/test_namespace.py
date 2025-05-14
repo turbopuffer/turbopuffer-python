@@ -40,4 +40,4 @@ def test_namespace_hint_cache_warm():
     ns = tpuf.Namespace(ns_name)
     result = ns.hint_cache_warm()
     assert isinstance(result["message"], str)
-    assert "ACCEPTED" or "OK" in result["status"]
+    assert result["status"] in ["ACCEPTED", "OK"]
