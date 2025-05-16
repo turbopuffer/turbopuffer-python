@@ -36,8 +36,17 @@ def test_namespace_base_url():
         assert request.url == expected_url
 
 def test_namespace_hint_cache_warm():
-    ns_name = next(tpuf.namespaces()).name
-    ns = tpuf.Namespace(ns_name)
+    ns = tpuf.Namespace(tests.test_prefix + 'namespace_hint_cache_warm')
+
+    # Upsert anything
+    ns.write(
+        upsert_rows=[
+            {'id': 2, 'vector': [2, 2]},
+            {'id': 7, 'vector': [0.7, 0.7], 'hello': 'world', 'test': 'rows'},
+        ],
+        distance_metric='euclidean_squared'
+    )
+
     result = ns.hint_cache_warm()
     assert isinstance(result["message"], str)
     assert result["status"] in ["ACCEPTED", "OK"]
