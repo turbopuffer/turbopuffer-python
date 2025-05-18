@@ -97,4 +97,4 @@ Run `poetry install --with=test` to set up the project and dependencies.
 2.  Bump version in `turbopuffer/version.py` and `pyproject.toml`
 3. `git tag vX.Y.Z && git push --tags`
 3. `poetry build`
-4. `poetry publish`
+4. `poetry publish` (will need to set `POETRY_PYPI_TOKEN_PYPI` in your environment)
