@@ -379,7 +379,8 @@ def test_string_ids():
             "key1": key1,
             "key2": key2,
             "test": ["cols", "cols", "cols", "cols"],
-        }
+        },
+        distance_metric='euclidean_squared',
     )
 
     # Test upsert rows
