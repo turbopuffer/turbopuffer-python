@@ -30,6 +30,7 @@ def test_bm25():
             ],
             "fact_id": ["a", "b", "c", "d"],
         },
+        distance_metric='euclidean_squared',
         schema=schema,
     )
 
@@ -117,6 +118,7 @@ def test_bm25_product_operator():
             "title": "the lazy dog",
             "content": "is brown",
         }],
+        distance_metric='euclidean_squared',
         schema=schema,
     )
 

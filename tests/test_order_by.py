@@ -9,7 +9,8 @@ def test_order_by_attribute():
             "id": [1, 2, 3, 4],
             "vector": [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]],
             "fact_id": ["a", "b", "c", "d"],
-        }
+        },
+        distance_metric='euclidean_squared',
     )
 
     results = ns.query(
