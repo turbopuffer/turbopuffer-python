@@ -186,7 +186,16 @@ class NamespacesResource(SyncAPIResource):
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
-        rank_by: object | NotGiven = NOT_GIVEN,
+        rank_by: Union[
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+        ]
+        | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -461,7 +470,16 @@ class AsyncNamespacesResource(AsyncAPIResource):
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
-        rank_by: object | NotGiven = NOT_GIVEN,
+        rank_by: Union[
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+        ]
+        | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.

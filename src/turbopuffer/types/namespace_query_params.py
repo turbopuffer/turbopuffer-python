@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Union
+from typing import List, Union, Iterable
 from typing_extensions import Literal, TypedDict
 
 from .distance_metric import DistanceMetric
@@ -24,7 +24,15 @@ class NamespaceQueryParams(TypedDict, total=False):
     include_attributes: Union[bool, List[str]]
     """Whether to include attributes in the response."""
 
-    rank_by: object
+    rank_by: Union[
+        Iterable[object],
+        Iterable[object],
+        Iterable[object],
+        Iterable[object],
+        Iterable[object],
+        Iterable[object],
+        Iterable[object],
+    ]
 
     top_k: int
     """The number of results to return."""
