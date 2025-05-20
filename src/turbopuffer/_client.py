@@ -37,7 +37,7 @@ from ._response import (
 )
 from .resources import namespaces
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from .pagination import SyncListNamespaces, AsyncListNamespaces
+from .pagination import SyncExport, AsyncExport
 from ._exceptions import APIStatusError, TurbopufferError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
@@ -46,7 +46,7 @@ from ._base_client import (
     AsyncPaginator,
     make_request_options,
 )
-from .types.namespace_summary import NamespaceSummary
+from .types.list_namespaces_response import ListNamespacesResponse
 
 __all__ = [
     "Timeout",
@@ -212,7 +212,7 @@ class Turbopuffer(SyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncListNamespaces[NamespaceSummary]:
+    ) -> SyncExport[ListNamespacesResponse]:
         """
         List namespaces.
 
@@ -233,7 +233,7 @@ class Turbopuffer(SyncAPIClient):
         """
         return self.get_api_list(
             "/v1/namespaces",
-            page=SyncListNamespaces[NamespaceSummary],
+            page=SyncExport[ListNamespacesResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -248,7 +248,7 @@ class Turbopuffer(SyncAPIClient):
                     client_list_namespaces_params.ClientListNamespacesParams,
                 ),
             ),
-            model=NamespaceSummary,
+            model=ListNamespacesResponse,
         )
 
     def _get_default_namespace_path_param(self) -> str:
@@ -446,7 +446,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[NamespaceSummary, AsyncListNamespaces[NamespaceSummary]]:
+    ) -> AsyncPaginator[ListNamespacesResponse, AsyncExport[ListNamespacesResponse]]:
         """
         List namespaces.
 
@@ -467,7 +467,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         """
         return self.get_api_list(
             "/v1/namespaces",
-            page=AsyncListNamespaces[NamespaceSummary],
+            page=AsyncExport[ListNamespacesResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -482,7 +482,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
                     client_list_namespaces_params.ClientListNamespacesParams,
                 ),
             ),
-            model=NamespaceSummary,
+            model=ListNamespacesResponse,
         )
 
     def _get_default_namespace_path_param(self) -> str:
