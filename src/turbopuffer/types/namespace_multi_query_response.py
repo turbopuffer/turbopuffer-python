@@ -5,10 +5,14 @@ from typing import Dict, List, Optional
 from .._models import BaseModel
 from .document_row import DocumentRow
 
-__all__ = ["NamespaceQueryResponse"]
+__all__ = ["NamespaceMultiQueryResponse", "Result"]
 
 
-class NamespaceQueryResponse(BaseModel):
+class Result(BaseModel):
     aggregations: Optional[List[Dict[str, object]]] = None
 
     rows: Optional[List[DocumentRow]] = None
+
+
+class NamespaceMultiQueryResponse(BaseModel):
+    results: List[Result]

@@ -24,14 +24,16 @@ class AttributeSchemaParam(TypedDict, total=False):
     `filterable: true`.
     """
 
-    type: Literal["string", "uint", "uuid", "bool", "[]string", "[]uint", "[]uuid"]
+    type: Literal["string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint", "[]uuid", "[]datetime"]
     """The data type of the attribute.
 
     - `string` - A string.
     - `uint` - An unsigned integer.
     - `uuid` - A UUID.
     - `bool` - A boolean.
+    - `datetime` - A date and time.
     - `[]string` - An array of strings.
     - `[]uint` - An array of unsigned integers.
     - `[]uuid` - An array of UUIDs.
+    - `[]datetime` - An array of date and time values.
     """

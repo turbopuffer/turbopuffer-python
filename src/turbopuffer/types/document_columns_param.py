@@ -15,4 +15,4 @@ class DocumentColumnsParamTyped(TypedDict, total=False):
     """The IDs of the documents."""
 
 
-DocumentColumnsParam: TypeAlias = Union[DocumentColumnsParamTyped, Dict[str, Iterable[Dict[str, object]]]]
+DocumentColumnsParam: TypeAlias = Union[DocumentColumnsParamTyped, Dict[str, Iterable[object]]]
