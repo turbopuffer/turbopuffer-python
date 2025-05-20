@@ -13,12 +13,15 @@ _T = TypeVar("_T")
 class SyncExport(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     """Document pagination."""
 
+    ids: List[_T]
     next_cursor: Optional[str] = None
 
     @override
     def _get_page_items(self) -> List[_T]:
-        data = self.data
-        return data
+        ids = self.ids
+        if not ids:
+            return []
+        return ids
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
@@ -32,12 +35,15 @@ class SyncExport(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
 class AsyncExport(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     """Document pagination."""
 
+    ids: List[_T]
     next_cursor: Optional[str] = None
 
     @override
     def _get_page_items(self) -> List[_T]:
-        data = self.data
-        return data
+        ids = self.ids
+        if not ids:
+            return []
+        return ids
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
