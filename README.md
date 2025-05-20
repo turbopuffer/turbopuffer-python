@@ -132,7 +132,7 @@ first_page = await client.list_namespaces(
 if first_page.has_next_page():
     print(f"will fetch next page using these details: {first_page.next_page_info()}")
     next_page = await first_page.get_next_page()
-    print(f"number of items we just fetched: {len(next_page.namespaces)}")
+    print(f"number of items we just fetched: {len(next_page.data)}")
 
 # Remove `await` for non-async usage.
 ```
@@ -145,8 +145,8 @@ first_page = await client.list_namespaces(
 )
 
 print(f"next page cursor: {first_page.next_cursor}")  # => "next page cursor: ..."
-for client in first_page.namespaces:
-    print(client.id)
+for client in first_page.data:
+    print(client.namespaces)
 
 # Remove `await` for non-async usage.
 ```

@@ -14,6 +14,7 @@ from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams
 from .full_text_search_config import FullTextSearchConfig as FullTextSearchConfig
+from .list_namespaces_response import ListNamespacesResponse as ListNamespacesResponse
 from .namespace_query_response import NamespaceQueryResponse as NamespaceQueryResponse
 from .namespace_write_response import NamespaceWriteResponse as NamespaceWriteResponse
 from .namespace_multi_query_params import NamespaceMultiQueryParams as NamespaceMultiQueryParams
