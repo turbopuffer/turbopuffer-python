@@ -12,9 +12,11 @@ from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from turbopuffer.types import (
     NamespaceQueryResponse,
     NamespaceWriteResponse,
+    NamespaceExportResponse,
     NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,
     NamespaceMultiQueryResponse,
+    NamespaceUpdateSchemaResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -58,6 +60,52 @@ class TestNamespaces:
     def test_path_params_delete_all(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespaces.with_raw_response.delete_all(
+                namespace="",
+            )
+
+    @parametrize
+    def test_method_export(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.export(
+            namespace="namespace",
+        )
+        assert_matches_type(NamespaceExportResponse, namespace, path=["response"])
+
+    @parametrize
+    def test_method_export_with_all_params(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.export(
+            namespace="namespace",
+            cursor="cursor",
+        )
+        assert_matches_type(NamespaceExportResponse, namespace, path=["response"])
+
+    @parametrize
+    def test_raw_response_export(self, client: Turbopuffer) -> None:
+        response = client.namespaces.with_raw_response.export(
+            namespace="namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = response.parse()
+        assert_matches_type(NamespaceExportResponse, namespace, path=["response"])
+
+    @parametrize
+    def test_streaming_response_export(self, client: Turbopuffer) -> None:
+        with client.namespaces.with_streaming_response.export(
+            namespace="namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = response.parse()
+            assert_matches_type(NamespaceExportResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_export(self, client: Turbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            client.namespaces.with_raw_response.export(
                 namespace="",
             )
 
@@ -114,7 +162,7 @@ class TestNamespaces:
             queries=[
                 {
                     "distance_metric": "cosine_distance",
-                    "filters": {},
+                    "filters": [{}],
                     "include_attributes": True,
                     "rank_by": [{}],
                     "top_k": 0,
@@ -168,7 +216,7 @@ class TestNamespaces:
             namespace="namespace",
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
-            filters={},
+            filters=[{}],
             include_attributes=True,
             rank_by=[{}],
             top_k=0,
@@ -204,6 +252,58 @@ class TestNamespaces:
     def test_path_params_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespaces.with_raw_response.query(
+                namespace="",
+            )
+
+    @parametrize
+    def test_method_update_schema(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.update_schema(
+            namespace="namespace",
+        )
+        assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
+
+    @parametrize
+    def test_method_update_schema_with_all_params(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.update_schema(
+            namespace="namespace",
+            body={
+                "foo": {
+                    "filterable": True,
+                    "full_text_search": True,
+                    "type": "string",
+                }
+            },
+        )
+        assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
+
+    @parametrize
+    def test_raw_response_update_schema(self, client: Turbopuffer) -> None:
+        response = client.namespaces.with_raw_response.update_schema(
+            namespace="namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = response.parse()
+        assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
+
+    @parametrize
+    def test_streaming_response_update_schema(self, client: Turbopuffer) -> None:
+        with client.namespaces.with_streaming_response.update_schema(
+            namespace="namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = response.parse()
+            assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_update_schema(self, client: Turbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            client.namespaces.with_raw_response.update_schema(
                 namespace="",
             )
 
@@ -320,6 +420,52 @@ class TestAsyncNamespaces:
             )
 
     @parametrize
+    async def test_method_export(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.export(
+            namespace="namespace",
+        )
+        assert_matches_type(NamespaceExportResponse, namespace, path=["response"])
+
+    @parametrize
+    async def test_method_export_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.export(
+            namespace="namespace",
+            cursor="cursor",
+        )
+        assert_matches_type(NamespaceExportResponse, namespace, path=["response"])
+
+    @parametrize
+    async def test_raw_response_export(self, async_client: AsyncTurbopuffer) -> None:
+        response = await async_client.namespaces.with_raw_response.export(
+            namespace="namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = await response.parse()
+        assert_matches_type(NamespaceExportResponse, namespace, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_export(self, async_client: AsyncTurbopuffer) -> None:
+        async with async_client.namespaces.with_streaming_response.export(
+            namespace="namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = await response.parse()
+            assert_matches_type(NamespaceExportResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_export(self, async_client: AsyncTurbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            await async_client.namespaces.with_raw_response.export(
+                namespace="",
+            )
+
+    @parametrize
     async def test_method_get_schema(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.get_schema(
             namespace="namespace",
@@ -372,7 +518,7 @@ class TestAsyncNamespaces:
             queries=[
                 {
                     "distance_metric": "cosine_distance",
-                    "filters": {},
+                    "filters": [{}],
                     "include_attributes": True,
                     "rank_by": [{}],
                     "top_k": 0,
@@ -426,7 +572,7 @@ class TestAsyncNamespaces:
             namespace="namespace",
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
-            filters={},
+            filters=[{}],
             include_attributes=True,
             rank_by=[{}],
             top_k=0,
@@ -462,6 +608,58 @@ class TestAsyncNamespaces:
     async def test_path_params_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespaces.with_raw_response.query(
+                namespace="",
+            )
+
+    @parametrize
+    async def test_method_update_schema(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.update_schema(
+            namespace="namespace",
+        )
+        assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
+
+    @parametrize
+    async def test_method_update_schema_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.update_schema(
+            namespace="namespace",
+            body={
+                "foo": {
+                    "filterable": True,
+                    "full_text_search": True,
+                    "type": "string",
+                }
+            },
+        )
+        assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
+
+    @parametrize
+    async def test_raw_response_update_schema(self, async_client: AsyncTurbopuffer) -> None:
+        response = await async_client.namespaces.with_raw_response.update_schema(
+            namespace="namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = await response.parse()
+        assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_update_schema(self, async_client: AsyncTurbopuffer) -> None:
+        async with async_client.namespaces.with_streaming_response.update_schema(
+            namespace="namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = await response.parse()
+            assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_update_schema(self, async_client: AsyncTurbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            await async_client.namespaces.with_raw_response.update_schema(
                 namespace="",
             )
 
