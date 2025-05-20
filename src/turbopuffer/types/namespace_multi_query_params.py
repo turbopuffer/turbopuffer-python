@@ -37,7 +37,7 @@ class Query(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    filters: object
+    filters: Union[Iterable[object], Iterable[object], Iterable[object], Iterable[object]]
 
     include_attributes: Union[bool, List[str]]
     """Whether to include attributes in the response."""
