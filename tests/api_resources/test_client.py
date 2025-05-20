@@ -18,13 +18,11 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestClient:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_list_namespaces(self, client: Turbopuffer) -> None:
         client_ = client.list_namespaces()
         assert_matches_type(SyncExport[ListNamespacesResponse], client_, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_list_namespaces_with_all_params(self, client: Turbopuffer) -> None:
         client_ = client.list_namespaces(
@@ -34,7 +32,6 @@ class TestClient:
         )
         assert_matches_type(SyncExport[ListNamespacesResponse], client_, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_raw_response_list_namespaces(self, client: Turbopuffer) -> None:
         response = client.with_raw_response.list_namespaces()
@@ -44,7 +41,6 @@ class TestClient:
         client_ = response.parse()
         assert_matches_type(SyncExport[ListNamespacesResponse], client_, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_streaming_response_list_namespaces(self, client: Turbopuffer) -> None:
         with client.with_streaming_response.list_namespaces() as response:
@@ -60,13 +56,11 @@ class TestClient:
 class TestAsyncClient:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_list_namespaces(self, async_client: AsyncTurbopuffer) -> None:
         client = await async_client.list_namespaces()
         assert_matches_type(AsyncExport[ListNamespacesResponse], client, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_list_namespaces_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         client = await async_client.list_namespaces(
@@ -76,7 +70,6 @@ class TestAsyncClient:
         )
         assert_matches_type(AsyncExport[ListNamespacesResponse], client, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_raw_response_list_namespaces(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.with_raw_response.list_namespaces()
@@ -86,7 +79,6 @@ class TestAsyncClient:
         client = await response.parse()
         assert_matches_type(AsyncExport[ListNamespacesResponse], client, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_streaming_response_list_namespaces(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.with_streaming_response.list_namespaces() as response:

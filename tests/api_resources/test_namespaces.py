@@ -23,7 +23,6 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestNamespaces:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_delete_all(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.delete_all(
@@ -31,7 +30,6 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_raw_response_delete_all(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.delete_all(
@@ -43,7 +41,6 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_streaming_response_delete_all(self, client: Turbopuffer) -> None:
         with client.namespaces.with_streaming_response.delete_all(
@@ -57,7 +54,6 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     def test_path_params_delete_all(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -65,7 +61,6 @@ class TestNamespaces:
                 namespace="",
             )
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_get_schema(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.get_schema(
@@ -73,7 +68,6 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_raw_response_get_schema(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.get_schema(
@@ -85,7 +79,6 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_streaming_response_get_schema(self, client: Turbopuffer) -> None:
         with client.namespaces.with_streaming_response.get_schema(
@@ -99,7 +92,6 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     def test_path_params_get_schema(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -107,7 +99,6 @@ class TestNamespaces:
                 namespace="",
             )
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_multi_query(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.multi_query(
@@ -115,7 +106,6 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_multi_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.multi_query(
@@ -134,7 +124,6 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_raw_response_multi_query(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.multi_query(
@@ -146,7 +135,6 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_streaming_response_multi_query(self, client: Turbopuffer) -> None:
         with client.namespaces.with_streaming_response.multi_query(
@@ -160,7 +148,6 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     def test_path_params_multi_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -168,7 +155,6 @@ class TestNamespaces:
                 namespace="",
             )
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_query(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.query(
@@ -176,7 +162,6 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.query(
@@ -191,7 +176,6 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_raw_response_query(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.query(
@@ -203,7 +187,6 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_streaming_response_query(self, client: Turbopuffer) -> None:
         with client.namespaces.with_streaming_response.query(
@@ -217,7 +200,6 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     def test_path_params_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -225,7 +207,6 @@ class TestNamespaces:
                 namespace="",
             )
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_write(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.write(
@@ -233,7 +214,6 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_method_write_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.write(
@@ -266,7 +246,6 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_raw_response_write(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.write(
@@ -278,7 +257,6 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     def test_streaming_response_write(self, client: Turbopuffer) -> None:
         with client.namespaces.with_streaming_response.write(
@@ -292,7 +270,6 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     def test_path_params_write(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -304,7 +281,6 @@ class TestNamespaces:
 class TestAsyncNamespaces:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.delete_all(
@@ -312,7 +288,6 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_raw_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.delete_all(
@@ -324,7 +299,6 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_streaming_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespaces.with_streaming_response.delete_all(
@@ -338,7 +312,6 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     async def test_path_params_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -346,7 +319,6 @@ class TestAsyncNamespaces:
                 namespace="",
             )
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_get_schema(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.get_schema(
@@ -354,7 +326,6 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_raw_response_get_schema(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.get_schema(
@@ -366,7 +337,6 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_streaming_response_get_schema(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespaces.with_streaming_response.get_schema(
@@ -380,7 +350,6 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     async def test_path_params_get_schema(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -388,7 +357,6 @@ class TestAsyncNamespaces:
                 namespace="",
             )
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.multi_query(
@@ -396,7 +364,6 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_multi_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.multi_query(
@@ -415,7 +382,6 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_raw_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.multi_query(
@@ -427,7 +393,6 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_streaming_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespaces.with_streaming_response.multi_query(
@@ -441,7 +406,6 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     async def test_path_params_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -449,7 +413,6 @@ class TestAsyncNamespaces:
                 namespace="",
             )
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_query(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.query(
@@ -457,7 +420,6 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.query(
@@ -472,7 +434,6 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_raw_response_query(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.query(
@@ -484,7 +445,6 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_streaming_response_query(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespaces.with_streaming_response.query(
@@ -498,7 +458,6 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     async def test_path_params_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -506,7 +465,6 @@ class TestAsyncNamespaces:
                 namespace="",
             )
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_write(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.write(
@@ -514,7 +472,6 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_method_write_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.write(
@@ -547,7 +504,6 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_raw_response_write(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.write(
@@ -559,7 +515,6 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
     @parametrize
     async def test_streaming_response_write(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespaces.with_streaming_response.write(
@@ -573,7 +528,6 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
     @parametrize
     async def test_path_params_write(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
