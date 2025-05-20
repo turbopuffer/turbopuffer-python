@@ -7,7 +7,6 @@ from .id_param import IDParam as IDParam
 from .document_row import DocumentRow as DocumentRow
 from .distance_metric import DistanceMetric as DistanceMetric
 from .attribute_schema import AttributeSchema as AttributeSchema
-from .document_columns import DocumentColumns as DocumentColumns
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .document_row_param import DocumentRowParam as DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
@@ -15,10 +14,8 @@ from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams
 from .full_text_search_config import FullTextSearchConfig as FullTextSearchConfig
-from .namespace_export_params import NamespaceExportParams as NamespaceExportParams
 from .namespace_query_response import NamespaceQueryResponse as NamespaceQueryResponse
 from .namespace_write_response import NamespaceWriteResponse as NamespaceWriteResponse
-from .namespace_export_response import NamespaceExportResponse as NamespaceExportResponse
 from .namespace_multi_query_params import NamespaceMultiQueryParams as NamespaceMultiQueryParams
 from .client_list_namespaces_params import ClientListNamespacesParams as ClientListNamespacesParams
 from .full_text_search_config_param import FullTextSearchConfigParam as FullTextSearchConfigParam
