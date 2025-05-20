@@ -10,25 +10,43 @@ import httpx
 
 from . import _exceptions
 from ._qs import Querystring
+from .types import client_list_namespaces_params
 from ._types import (
     NOT_GIVEN,
+    Body,
     Omit,
+    Query,
+    Headers,
     Timeout,
     NotGiven,
     Transport,
     ProxiesTypes,
     RequestOptions,
 )
-from ._utils import is_given, get_async_library
+from ._utils import (
+    is_given,
+    maybe_transform,
+    get_async_library,
+)
 from ._version import __version__
+from ._response import (
+    to_raw_response_wrapper,
+    to_streamed_response_wrapper,
+    async_to_raw_response_wrapper,
+    async_to_streamed_response_wrapper,
+)
 from .resources import namespaces
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
+from .pagination import SyncListNamespaces, AsyncListNamespaces
 from ._exceptions import APIStatusError, TurbopufferError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
     AsyncAPIClient,
+    AsyncPaginator,
+    make_request_options,
 )
+from .types.namespace_summary import NamespaceSummary
 
 from .lib.namespace import Namespace
 
@@ -51,11 +69,13 @@ class Turbopuffer(SyncAPIClient):
 
     # client options
     api_key: str
+    default_namespace: str | None
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
+        default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -86,6 +106,8 @@ class Turbopuffer(SyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the TURBOPUFFER_API_KEY environment variable"
             )
         self.api_key = api_key
+
+        self.default_namespace = default_namespace
 
         if base_url is None:
             base_url = os.environ.get("TURBOPUFFER_BASE_URL")
@@ -135,6 +157,7 @@ class Turbopuffer(SyncAPIClient):
         self,
         *,
         api_key: str | None = None,
+        default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.Client | None = None,
@@ -169,6 +192,7 @@ class Turbopuffer(SyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
+            default_namespace=default_namespace or self.default_namespace,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -181,6 +205,66 @@ class Turbopuffer(SyncAPIClient):
     # Alias for `copy` for nicer inline usage, e.g.
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
+
+    def list_namespaces(
+        self,
+        *,
+        cursor: str | NotGiven = NOT_GIVEN,
+        page_size: int | NotGiven = NOT_GIVEN,
+        prefix: str | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> SyncListNamespaces[NamespaceSummary]:
+        """
+        List namespaces.
+
+        Args:
+          cursor: Retrieve the next page of results.
+
+          page_size: Limit the number of results per page.
+
+          prefix: Retrieve only the namespaces that match the prefix.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self.get_api_list(
+            "/v1/namespaces",
+            page=SyncListNamespaces[NamespaceSummary],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "cursor": cursor,
+                        "page_size": page_size,
+                        "prefix": prefix,
+                    },
+                    client_list_namespaces_params.ClientListNamespacesParams,
+                ),
+            ),
+            model=NamespaceSummary,
+        )
+
+    def _get_default_namespace_path_param(self) -> str:
+        from_client = self.default_namespace
+        if from_client is not None:
+            return from_client
+
+        raise ValueError(
+            "Missing default_namespace argument; Please provide it at the client level, e.g. Turbopuffer(default_namespace='abcd') or per method."
+        )
 
     @override
     def _make_status_error(
@@ -223,11 +307,13 @@ class AsyncTurbopuffer(AsyncAPIClient):
 
     # client options
     api_key: str
+    default_namespace: str | None
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
+        default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -258,6 +344,8 @@ class AsyncTurbopuffer(AsyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the TURBOPUFFER_API_KEY environment variable"
             )
         self.api_key = api_key
+
+        self.default_namespace = default_namespace
 
         if base_url is None:
             base_url = os.environ.get("TURBOPUFFER_BASE_URL")
@@ -303,6 +391,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         self,
         *,
         api_key: str | None = None,
+        default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.AsyncClient | None = None,
@@ -337,6 +426,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
+            default_namespace=default_namespace or self.default_namespace,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -349,6 +439,66 @@ class AsyncTurbopuffer(AsyncAPIClient):
     # Alias for `copy` for nicer inline usage, e.g.
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
+
+    def list_namespaces(
+        self,
+        *,
+        cursor: str | NotGiven = NOT_GIVEN,
+        page_size: int | NotGiven = NOT_GIVEN,
+        prefix: str | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> AsyncPaginator[NamespaceSummary, AsyncListNamespaces[NamespaceSummary]]:
+        """
+        List namespaces.
+
+        Args:
+          cursor: Retrieve the next page of results.
+
+          page_size: Limit the number of results per page.
+
+          prefix: Retrieve only the namespaces that match the prefix.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self.get_api_list(
+            "/v1/namespaces",
+            page=AsyncListNamespaces[NamespaceSummary],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "cursor": cursor,
+                        "page_size": page_size,
+                        "prefix": prefix,
+                    },
+                    client_list_namespaces_params.ClientListNamespacesParams,
+                ),
+            ),
+            model=NamespaceSummary,
+        )
+
+    def _get_default_namespace_path_param(self) -> str:
+        from_client = self.default_namespace
+        if from_client is not None:
+            return from_client
+
+        raise ValueError(
+            "Missing default_namespace argument; Please provide it at the client level, e.g. AsyncTurbopuffer(default_namespace='abcd') or per method."
+        )
 
     @override
     def _make_status_error(
@@ -388,20 +538,36 @@ class TurbopufferWithRawResponse:
     def __init__(self, client: Turbopuffer) -> None:
         self.namespaces = namespaces.NamespacesResourceWithRawResponse(client.namespaces)
 
+        self.list_namespaces = to_raw_response_wrapper(
+            client.list_namespaces,
+        )
+
 
 class AsyncTurbopufferWithRawResponse:
     def __init__(self, client: AsyncTurbopuffer) -> None:
         self.namespaces = namespaces.AsyncNamespacesResourceWithRawResponse(client.namespaces)
+
+        self.list_namespaces = async_to_raw_response_wrapper(
+            client.list_namespaces,
+        )
 
 
 class TurbopufferWithStreamedResponse:
     def __init__(self, client: Turbopuffer) -> None:
         self.namespaces = namespaces.NamespacesResourceWithStreamingResponse(client.namespaces)
 
+        self.list_namespaces = to_streamed_response_wrapper(
+            client.list_namespaces,
+        )
+
 
 class AsyncTurbopufferWithStreamedResponse:
     def __init__(self, client: AsyncTurbopuffer) -> None:
         self.namespaces = namespaces.AsyncNamespacesResourceWithStreamingResponse(client.namespaces)
+
+        self.list_namespaces = async_to_streamed_response_wrapper(
+            client.list_namespaces,
+        )
 
 
 Client = Turbopuffer

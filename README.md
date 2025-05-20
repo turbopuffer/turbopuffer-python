@@ -91,14 +91,14 @@ from turbopuffer import Turbopuffer
 
 client = Turbopuffer()
 
-all_namespaces = []
+all_clients = []
 # Automatically fetches more pages as needed.
-for namespace in client.namespaces.list(
+for client in client.list_namespaces(
     prefix="products",
 ):
-    # Do something with namespace here
-    all_namespaces.append(namespace)
-print(all_namespaces)
+    # Do something with client here
+    all_clients.append(client)
+print(all_clients)
 ```
 
 Or, asynchronously:
@@ -111,13 +111,13 @@ client = AsyncTurbopuffer()
 
 
 async def main() -> None:
-    all_namespaces = []
+    all_clients = []
     # Iterate through items across all pages, issuing requests as needed.
-    async for namespace in client.namespaces.list(
+    async for client in client.list_namespaces(
         prefix="products",
     ):
-        all_namespaces.append(namespace)
-    print(all_namespaces)
+        all_clients.append(client)
+    print(all_clients)
 
 
 asyncio.run(main())
@@ -126,7 +126,7 @@ asyncio.run(main())
 Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
 
 ```python
-first_page = await client.namespaces.list(
+first_page = await client.list_namespaces(
     prefix="products",
 )
 if first_page.has_next_page():
@@ -140,13 +140,13 @@ if first_page.has_next_page():
 Or just work directly with the returned data:
 
 ```python
-first_page = await client.namespaces.list(
+first_page = await client.list_namespaces(
     prefix="products",
 )
 
 print(f"next page cursor: {first_page.next_cursor}")  # => "next page cursor: ..."
-for namespace in first_page.namespaces:
-    print(namespace.id)
+for client in first_page.namespaces:
+    print(client.id)
 
 # Remove `await` for non-async usage.
 ```
@@ -160,11 +160,11 @@ from turbopuffer import Turbopuffer
 
 client = Turbopuffer()
 
-document_row_with_scores = client.namespaces.query(
+response = client.namespaces.write(
     namespace="namespace",
-    consistency={"level": "strong"},
+    patch_columns={"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
 )
-print(document_row_with_scores.consistency)
+print(response.patch_columns)
 ```
 
 ## Handling errors
@@ -302,7 +302,7 @@ response = client.namespaces.with_raw_response.query(
 print(response.headers.get('X-My-Header'))
 
 namespace = response.parse()  # get the object that `namespaces.query()` would have returned
-print(namespace)
+print(namespace.aggregations)
 ```
 
 These methods return an [`APIResponse`](https://github.com/turbopuffer/turbopuffer-python/tree/ng/src/turbopuffer/_response.py) object.
