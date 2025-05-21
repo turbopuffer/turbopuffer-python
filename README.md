@@ -185,7 +185,7 @@ client = Turbopuffer()
 try:
     client.namespaces.query(
         namespace="products",
-        rank_by=[{}],
+        rank_by=[{}, {}, {}],
         top_k=0,
     )
 except turbopuffer.APIConnectionError as e:
@@ -232,7 +232,7 @@ client = Turbopuffer(
 # Or, configure per-request:
 client.with_options(max_retries=5).namespaces.query(
     namespace="products",
-    rank_by=[{}],
+    rank_by=[{}, {}, {}],
     top_k=0,
 )
 ```
@@ -259,7 +259,7 @@ client = Turbopuffer(
 # Override per-request:
 client.with_options(timeout=5.0).namespaces.query(
     namespace="products",
-    rank_by=[{}],
+    rank_by=[{}, {}, {}],
     top_k=0,
 )
 ```
@@ -304,7 +304,7 @@ from turbopuffer import Turbopuffer
 client = Turbopuffer()
 response = client.namespaces.with_raw_response.query(
     namespace="products",
-    rank_by=[{}],
+    rank_by=[{}, {}, {}],
     top_k=0,
 )
 print(response.headers.get('X-My-Header'))
@@ -326,7 +326,7 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 ```python
 with client.namespaces.with_streaming_response.query(
     namespace="products",
-    rank_by=[{}],
+    rank_by=[{}, {}, {}],
     top_k=0,
 ) as response:
     print(response.headers.get("X-My-Header"))
