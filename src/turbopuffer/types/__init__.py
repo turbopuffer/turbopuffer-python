@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from .id import ID as ID
+from .shared import Filter as Filter
 from .id_param import IDParam as IDParam
 from .document_row import DocumentRow as DocumentRow
 from .distance_metric import DistanceMetric as DistanceMetric
