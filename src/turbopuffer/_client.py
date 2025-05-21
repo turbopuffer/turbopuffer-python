@@ -30,6 +30,8 @@ from ._base_client import (
     AsyncAPIClient,
 )
 
+from .lib.namespace import Namespace
+
 __all__ = [
     "Timeout",
     "Transport",
@@ -104,6 +106,10 @@ class Turbopuffer(SyncAPIClient):
         self.namespaces = namespaces.NamespacesResource(self)
         self.with_raw_response = TurbopufferWithRawResponse(self)
         self.with_streaming_response = TurbopufferWithStreamedResponse(self)
+
+    def namespace(self, namespace: str) -> Namespace:
+        """Create a namespace resource."""
+        return Namespace(self.with_options(default_namespace=namespace))
 
     @property
     @override

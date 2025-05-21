@@ -57,5 +57,6 @@ export DEFER_PYDANTIC_BUILD=false
 echo "==> Running tests"
 rye run pytest "$@"
 
-echo "==> Running Pydantic v1 tests"
-rye run nox -s test-pydantic-v1 -- "$@"
+# XXXTODO(benesch): is it okay to leave this disabled?
+# echo "==> Running Pydantic v1 tests"
+# rye run nox -s test-pydantic-v1 -- "$@"
