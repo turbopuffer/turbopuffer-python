@@ -1,3 +1,9 @@
+# Shared Types
+
+```python
+from turbopuffer.types import Filter
+```
+
 # Turbopuffer
 
 Types:

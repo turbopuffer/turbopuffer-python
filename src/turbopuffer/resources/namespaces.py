@@ -28,6 +28,7 @@ from .._base_client import make_request_options
 from ..types.id_param import IDParam
 from ..types.distance_metric import DistanceMetric
 from ..types.document_row_param import DocumentRowParam
+from ..types.shared_params.filter import Filter
 from ..types.attribute_schema_param import AttributeSchemaParam
 from ..types.document_columns_param import DocumentColumnsParam
 from ..types.namespace_query_response import NamespaceQueryResponse
@@ -196,7 +197,7 @@ class NamespacesResource(SyncAPIResource):
         top_k: int,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        filters: Union[Iterable[object], Iterable[object], Iterable[object], Iterable[object]] | NotGiven = NOT_GIVEN,
+        filters: Filter | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -518,7 +519,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         top_k: int,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        filters: Union[Iterable[object], Iterable[object], Iterable[object], Iterable[object]] | NotGiven = NOT_GIVEN,
+        filters: Filter | NotGiven = NOT_GIVEN,
         include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.

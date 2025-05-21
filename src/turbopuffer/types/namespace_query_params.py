@@ -6,6 +6,7 @@ from typing import List, Union, Iterable
 from typing_extensions import Literal, Required, TypedDict
 
 from .distance_metric import DistanceMetric
+from .shared_params.filter import Filter
 
 __all__ = ["NamespaceQueryParams", "Consistency"]
 
@@ -34,7 +35,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    filters: Union[Iterable[object], Iterable[object], Iterable[object], Iterable[object]]
+    filters: Filter
 
     include_attributes: Union[bool, List[str]]
     """Whether to include attributes in the response."""
