@@ -745,7 +745,7 @@ class TestTurbopuffer:
         with pytest.raises(APITimeoutError):
             self.client.post(
                 "/v2/namespaces/namespace/query",
-                body=cast(object, maybe_transform({}, NamespaceQueryParams)),
+                body=cast(object, maybe_transform(dict(rank_by=[{}], top_k=0), NamespaceQueryParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -760,7 +760,7 @@ class TestTurbopuffer:
         with pytest.raises(APIStatusError):
             self.client.post(
                 "/v2/namespaces/namespace/query",
-                body=cast(object, maybe_transform({}, NamespaceQueryParams)),
+                body=cast(object, maybe_transform(dict(rank_by=[{}], top_k=0), NamespaceQueryParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -793,7 +793,7 @@ class TestTurbopuffer:
 
         respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
 
-        response = client.namespaces.with_raw_response.query(namespace="namespace")
+        response = client.namespaces.with_raw_response.query(namespace="namespace", rank_by=[{}], top_k=0)
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -818,7 +818,7 @@ class TestTurbopuffer:
         respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
 
         response = client.namespaces.with_raw_response.query(
-            namespace="namespace", extra_headers={"x-stainless-retry-count": Omit()}
+            namespace="namespace", rank_by=[{}], top_k=0, extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -843,7 +843,7 @@ class TestTurbopuffer:
         respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
 
         response = client.namespaces.with_raw_response.query(
-            namespace="namespace", extra_headers={"x-stainless-retry-count": "42"}
+            namespace="namespace", rank_by=[{}], top_k=0, extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
@@ -1541,7 +1541,7 @@ class TestAsyncTurbopuffer:
         with pytest.raises(APITimeoutError):
             await self.client.post(
                 "/v2/namespaces/namespace/query",
-                body=cast(object, maybe_transform({}, NamespaceQueryParams)),
+                body=cast(object, maybe_transform(dict(rank_by=[{}], top_k=0), NamespaceQueryParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1556,7 +1556,7 @@ class TestAsyncTurbopuffer:
         with pytest.raises(APIStatusError):
             await self.client.post(
                 "/v2/namespaces/namespace/query",
-                body=cast(object, maybe_transform({}, NamespaceQueryParams)),
+                body=cast(object, maybe_transform(dict(rank_by=[{}], top_k=0), NamespaceQueryParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1590,7 +1590,7 @@ class TestAsyncTurbopuffer:
 
         respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
 
-        response = await client.namespaces.with_raw_response.query(namespace="namespace")
+        response = await client.namespaces.with_raw_response.query(namespace="namespace", rank_by=[{}], top_k=0)
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1616,7 +1616,7 @@ class TestAsyncTurbopuffer:
         respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
 
         response = await client.namespaces.with_raw_response.query(
-            namespace="namespace", extra_headers={"x-stainless-retry-count": Omit()}
+            namespace="namespace", rank_by=[{}], top_k=0, extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1642,7 +1642,7 @@ class TestAsyncTurbopuffer:
         respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
 
         response = await client.namespaces.with_raw_response.query(
-            namespace="namespace", extra_headers={"x-stainless-retry-count": "42"}
+            namespace="namespace", rank_by=[{}], top_k=0, extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"

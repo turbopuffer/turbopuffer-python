@@ -184,10 +184,6 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        filters: Union[Iterable[object], Iterable[object], Iterable[object], Iterable[object]] | NotGiven = NOT_GIVEN,
-        include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         rank_by: Union[
             Iterable[object],
             Iterable[object],
@@ -196,9 +192,12 @@ class NamespacesResource(SyncAPIResource):
             Iterable[object],
             Iterable[object],
             Iterable[object],
-        ]
-        | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
+        ],
+        top_k: int,
+        consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        filters: Union[Iterable[object], Iterable[object], Iterable[object], Iterable[object]] | NotGiven = NOT_GIVEN,
+        include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -211,13 +210,13 @@ class NamespacesResource(SyncAPIResource):
         Query, filter, full-text search and vector search documents.
 
         Args:
+          top_k: The number of results to return.
+
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
 
           include_attributes: Whether to include attributes in the response.
-
-          top_k: The number of results to return.
 
           vector_encoding: The encoding to use for vectors in the response.
 
@@ -237,12 +236,12 @@ class NamespacesResource(SyncAPIResource):
             f"/v2/namespaces/{namespace}/query",
             body=maybe_transform(
                 {
+                    "rank_by": rank_by,
+                    "top_k": top_k,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "filters": filters,
                     "include_attributes": include_attributes,
-                    "rank_by": rank_by,
-                    "top_k": top_k,
                     "vector_encoding": vector_encoding,
                 },
                 namespace_query_params.NamespaceQueryParams,
@@ -507,10 +506,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        filters: Union[Iterable[object], Iterable[object], Iterable[object], Iterable[object]] | NotGiven = NOT_GIVEN,
-        include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         rank_by: Union[
             Iterable[object],
             Iterable[object],
@@ -519,9 +514,12 @@ class AsyncNamespacesResource(AsyncAPIResource):
             Iterable[object],
             Iterable[object],
             Iterable[object],
-        ]
-        | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
+        ],
+        top_k: int,
+        consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        filters: Union[Iterable[object], Iterable[object], Iterable[object], Iterable[object]] | NotGiven = NOT_GIVEN,
+        include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
         vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -534,13 +532,13 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Query, filter, full-text search and vector search documents.
 
         Args:
+          top_k: The number of results to return.
+
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
 
           include_attributes: Whether to include attributes in the response.
-
-          top_k: The number of results to return.
 
           vector_encoding: The encoding to use for vectors in the response.
 
@@ -560,12 +558,12 @@ class AsyncNamespacesResource(AsyncAPIResource):
             f"/v2/namespaces/{namespace}/query",
             body=await async_maybe_transform(
                 {
+                    "rank_by": rank_by,
+                    "top_k": top_k,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "filters": filters,
                     "include_attributes": include_attributes,
-                    "rank_by": rank_by,
-                    "top_k": top_k,
                     "vector_encoding": vector_encoding,
                 },
                 namespace_query_params.NamespaceQueryParams,
