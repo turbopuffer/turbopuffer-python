@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import List, Union, Iterable
-from typing_extensions import Literal, TypedDict
+from typing_extensions import Literal, Required, TypedDict
 
 from .distance_metric import DistanceMetric
 
@@ -12,6 +12,21 @@ __all__ = ["NamespaceQueryParams", "Consistency"]
 
 class NamespaceQueryParams(TypedDict, total=False):
     namespace: str
+
+    rank_by: Required[
+        Union[
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+        ]
+    ]
+
+    top_k: Required[int]
+    """The number of results to return."""
 
     consistency: Consistency
     """The consistency level for a query."""
@@ -23,19 +38,6 @@ class NamespaceQueryParams(TypedDict, total=False):
 
     include_attributes: Union[bool, List[str]]
     """Whether to include attributes in the response."""
-
-    rank_by: Union[
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-    ]
-
-    top_k: int
-    """The number of results to return."""
 
     vector_encoding: Literal["float", "base64"]
     """The encoding to use for vectors in the response."""

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import List, Union, Iterable
-from typing_extensions import Literal, TypedDict
+from typing_extensions import Literal, Required, TypedDict
 
 from .distance_metric import DistanceMetric
 
@@ -34,6 +34,21 @@ class Consistency(TypedDict, total=False):
 
 
 class Query(TypedDict, total=False):
+    rank_by: Required[
+        Union[
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+            Iterable[object],
+        ]
+    ]
+
+    top_k: Required[int]
+    """The number of results to return."""
+
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
@@ -41,16 +56,3 @@ class Query(TypedDict, total=False):
 
     include_attributes: Union[bool, List[str]]
     """Whether to include attributes in the response."""
-
-    rank_by: Union[
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-        Iterable[object],
-    ]
-
-    top_k: int
-    """The number of results to return."""
