@@ -22,6 +22,7 @@ from turbopuffer.types import (
     DocumentRow,
     FullTextSearchConfig,
     ID,
+    IncludeAttributes,
     Vector,
     NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,
