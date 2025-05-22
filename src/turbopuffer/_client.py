@@ -67,12 +67,14 @@ class Turbopuffer(SyncAPIClient):
 
     # client options
     api_key: str
+    region: str
     default_namespace: str | None
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
+        region: str | None = None,
         default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
@@ -95,7 +97,9 @@ class Turbopuffer(SyncAPIClient):
     ) -> None:
         """Construct a new synchronous Turbopuffer client instance.
 
-        This automatically infers the `api_key` argument from the `TURBOPUFFER_API_KEY` environment variable if it is not provided.
+        This automatically infers the following arguments from their corresponding environment variables if they are not provided:
+        - `api_key` from `TURBOPUFFER_API_KEY`
+        - `region` from `TURBOPUFFER_REGION`
         """
         if api_key is None:
             api_key = os.environ.get("TURBOPUFFER_API_KEY")
@@ -105,12 +109,20 @@ class Turbopuffer(SyncAPIClient):
             )
         self.api_key = api_key
 
+        if region is None:
+            region = os.environ.get("TURBOPUFFER_REGION")
+        if region is None:
+            raise TurbopufferError(
+                "The region client option must be set either by passing region to the client or by setting the TURBOPUFFER_REGION environment variable"
+            )
+        self.region = region
+
         self.default_namespace = default_namespace
 
         if base_url is None:
             base_url = os.environ.get("TURBOPUFFER_BASE_URL")
         if base_url is None:
-            base_url = f"https://api.turbopuffer.com"
+            base_url = f"https://{region}.turbopuffer.com"
 
         super().__init__(
             version=__version__,
@@ -151,6 +163,7 @@ class Turbopuffer(SyncAPIClient):
         self,
         *,
         api_key: str | None = None,
+        region: str | None = None,
         default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
@@ -186,6 +199,7 @@ class Turbopuffer(SyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
+            region=region or self.region,
             default_namespace=default_namespace or self.default_namespace,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
@@ -301,12 +315,14 @@ class AsyncTurbopuffer(AsyncAPIClient):
 
     # client options
     api_key: str
+    region: str
     default_namespace: str | None
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
+        region: str | None = None,
         default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
@@ -329,7 +345,9 @@ class AsyncTurbopuffer(AsyncAPIClient):
     ) -> None:
         """Construct a new async AsyncTurbopuffer client instance.
 
-        This automatically infers the `api_key` argument from the `TURBOPUFFER_API_KEY` environment variable if it is not provided.
+        This automatically infers the following arguments from their corresponding environment variables if they are not provided:
+        - `api_key` from `TURBOPUFFER_API_KEY`
+        - `region` from `TURBOPUFFER_REGION`
         """
         if api_key is None:
             api_key = os.environ.get("TURBOPUFFER_API_KEY")
@@ -339,12 +357,20 @@ class AsyncTurbopuffer(AsyncAPIClient):
             )
         self.api_key = api_key
 
+        if region is None:
+            region = os.environ.get("TURBOPUFFER_REGION")
+        if region is None:
+            raise TurbopufferError(
+                "The region client option must be set either by passing region to the client or by setting the TURBOPUFFER_REGION environment variable"
+            )
+        self.region = region
+
         self.default_namespace = default_namespace
 
         if base_url is None:
             base_url = os.environ.get("TURBOPUFFER_BASE_URL")
         if base_url is None:
-            base_url = f"https://api.turbopuffer.com"
+            base_url = f"https://{region}.turbopuffer.com"
 
         super().__init__(
             version=__version__,
@@ -385,6 +411,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         self,
         *,
         api_key: str | None = None,
+        region: str | None = None,
         default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
@@ -420,6 +447,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
+            region=region or self.region,
             default_namespace=default_namespace or self.default_namespace,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
