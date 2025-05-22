@@ -192,7 +192,10 @@ client = Turbopuffer(
 
 response = client.namespaces.write(
     namespace="namespace",
-    patch_columns={"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+    patch_columns={
+        "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+        "vector": [[0]],
+    },
 )
 print(response.patch_columns)
 ```

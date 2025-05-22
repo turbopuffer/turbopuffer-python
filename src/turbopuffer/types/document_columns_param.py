@@ -14,5 +14,8 @@ class DocumentColumnsParamTyped(TypedDict, total=False):
     id: List[IDParam]
     """The IDs of the documents."""
 
+    vector: Union[List[Union[Iterable[float], str]], Iterable[float], str]
+    """The vector embeddings of the documents."""
+
 
 DocumentColumnsParam: TypeAlias = Union[DocumentColumnsParamTyped, Dict[str, Iterable[object]]]

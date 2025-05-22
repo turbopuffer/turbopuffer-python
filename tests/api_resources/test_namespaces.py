@@ -344,7 +344,10 @@ class TestNamespaces:
             delete_by_filter={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             distance_metric="cosine_distance",
-            patch_columns={"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+            patch_columns={
+                "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                "vector": [[0]],
+            },
             patch_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -358,7 +361,10 @@ class TestNamespaces:
                     "type": "string",
                 }
             },
-            upsert_columns={"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+            upsert_columns={
+                "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                "vector": [[0]],
+            },
             upsert_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -725,7 +731,10 @@ class TestAsyncNamespaces:
             delete_by_filter={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             distance_metric="cosine_distance",
-            patch_columns={"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+            patch_columns={
+                "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                "vector": [[0]],
+            },
             patch_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -739,7 +748,10 @@ class TestAsyncNamespaces:
                     "type": "string",
                 }
             },
-            upsert_columns={"id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"]},
+            upsert_columns={
+                "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
+                "vector": [[0]],
+            },
             upsert_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
