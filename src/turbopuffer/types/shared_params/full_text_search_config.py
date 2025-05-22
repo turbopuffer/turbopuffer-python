@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import Literal, TypedDict
 
-__all__ = ["FullTextSearchConfigParam"]
+__all__ = ["FullTextSearchConfig"]
 
 
-class FullTextSearchConfigParam(TypedDict, total=False):
+class FullTextSearchConfig(TypedDict, total=False):
     case_sensitive: bool
     """Whether searching is case-sensitive.
 

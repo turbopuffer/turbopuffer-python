@@ -184,6 +184,18 @@ class TestNamespaces:
 
     @pytest.mark.skip()
     @parametrize
+    def test_method_recall_with_all_params(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.recall(
+            namespace="namespace",
+            filters={},
+            num=0,
+            queries=[{}],
+            top_k=0,
+        )
+        assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
     def test_raw_response_recall(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.recall(
             namespace="namespace",
@@ -229,7 +241,7 @@ class TestNamespaces:
     def test_method_update_schema_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.update_schema(
             namespace="namespace",
-            body={
+            schema={
                 "foo": {
                     "filterable": True,
                     "full_text_search": True,
@@ -553,6 +565,18 @@ class TestAsyncNamespaces:
 
     @pytest.mark.skip()
     @parametrize
+    async def test_method_recall_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.recall(
+            namespace="namespace",
+            filters={},
+            num=0,
+            queries=[{}],
+            top_k=0,
+        )
+        assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
     async def test_raw_response_recall(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.recall(
             namespace="namespace",
@@ -598,7 +622,7 @@ class TestAsyncNamespaces:
     async def test_method_update_schema_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.update_schema(
             namespace="namespace",
-            body={
+            schema={
                 "foo": {
                     "filterable": True,
                     "full_text_search": True,
