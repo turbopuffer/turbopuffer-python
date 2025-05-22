@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Dict, List, Union, Iterable
-from typing_extensions import TypeAlias, TypedDict
+from typing_extensions import Required, TypeAlias, TypedDict
 
 from .id_param import IDParam
 
@@ -11,7 +11,7 @@ __all__ = ["DocumentColumnsParam"]
 
 
 class DocumentColumnsParamTyped(TypedDict, total=False):
-    id: List[IDParam]
+    id: Required[List[IDParam]]
     """The IDs of the documents."""
 
     vector: Union[List[Union[Iterable[float], str]], Iterable[float], str]
