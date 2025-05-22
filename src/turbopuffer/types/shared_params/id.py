@@ -5,6 +5,6 @@ from __future__ import annotations
 from typing import Union
 from typing_extensions import TypeAlias
 
-__all__ = ["IDParam"]
+__all__ = ["ID"]
 
-IDParam: TypeAlias = Union[str, int]
+ID: TypeAlias = Union[str, int]

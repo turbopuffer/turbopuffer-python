@@ -5,11 +5,11 @@ from __future__ import annotations
 from typing import Dict, List, Iterable
 from typing_extensions import TypedDict
 
-from .id_param import IDParam
-from .distance_metric import DistanceMetric
-from .document_row_param import DocumentRowParam
-from .attribute_schema_param import AttributeSchemaParam
-from .document_columns_param import DocumentColumnsParam
+from .shared_params.id import ID
+from .shared.distance_metric import DistanceMetric
+from .shared_params.document_row import DocumentRow
+from .shared_params.attribute_schema import AttributeSchema
+from .shared_params.document_columns import DocumentColumns
 
 __all__ = ["NamespaceWriteParams"]
 
@@ -23,20 +23,20 @@ class NamespaceWriteParams(TypedDict, total=False):
     delete_by_filter: object
     """The filter specifying which documents to delete."""
 
-    deletes: List[IDParam]
+    deletes: List[ID]
 
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    patch_columns: DocumentColumnsParam
+    patch_columns: DocumentColumns
     """A list of documents in columnar format. The keys are the column names."""
 
-    patch_rows: Iterable[DocumentRowParam]
+    patch_rows: Iterable[DocumentRow]
 
-    schema: Dict[str, AttributeSchemaParam]
+    schema: Dict[str, AttributeSchema]
     """The schema of the attributes attached to the documents."""
 
-    upsert_columns: DocumentColumnsParam
+    upsert_columns: DocumentColumns
     """A list of documents in columnar format. The keys are the column names."""
 
-    upsert_rows: Iterable[DocumentRowParam]
+    upsert_rows: Iterable[DocumentRow]

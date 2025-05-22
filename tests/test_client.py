@@ -745,7 +745,9 @@ class TestTurbopuffer:
         with pytest.raises(APITimeoutError):
             self.client.post(
                 "/v2/namespaces/namespace/query",
-                body=cast(object, maybe_transform(dict(rank_by={}, top_k=0), NamespaceQueryParams)),
+                body=cast(
+                    object, maybe_transform(dict(rank_by=["vector", "ANN", [0.2, 0.3]], top_k=10), NamespaceQueryParams)
+                ),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -760,7 +762,9 @@ class TestTurbopuffer:
         with pytest.raises(APIStatusError):
             self.client.post(
                 "/v2/namespaces/namespace/query",
-                body=cast(object, maybe_transform(dict(rank_by={}, top_k=0), NamespaceQueryParams)),
+                body=cast(
+                    object, maybe_transform(dict(rank_by=["vector", "ANN", [0.2, 0.3]], top_k=10), NamespaceQueryParams)
+                ),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1541,7 +1545,9 @@ class TestAsyncTurbopuffer:
         with pytest.raises(APITimeoutError):
             await self.client.post(
                 "/v2/namespaces/namespace/query",
-                body=cast(object, maybe_transform(dict(rank_by={}, top_k=0), NamespaceQueryParams)),
+                body=cast(
+                    object, maybe_transform(dict(rank_by=["vector", "ANN", [0.2, 0.3]], top_k=10), NamespaceQueryParams)
+                ),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1556,7 +1562,9 @@ class TestAsyncTurbopuffer:
         with pytest.raises(APIStatusError):
             await self.client.post(
                 "/v2/namespaces/namespace/query",
-                body=cast(object, maybe_transform(dict(rank_by={}, top_k=0), NamespaceQueryParams)),
+                body=cast(
+                    object, maybe_transform(dict(rank_by=["vector", "ANN", [0.2, 0.3]], top_k=10), NamespaceQueryParams)
+                ),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )

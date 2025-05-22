@@ -37,7 +37,7 @@ client = Turbopuffer(
 response = client.namespaces.write(
     namespace="products",
 )
-print(response.status)
+print(response.rows_affected)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -63,7 +63,7 @@ async def main() -> None:
     response = await client.namespaces.write(
         namespace="products",
     )
-    print(response.status)
+    print(response.rows_affected)
 
 
 asyncio.run(main())
@@ -185,8 +185,8 @@ client = Turbopuffer()
 try:
     client.namespaces.query(
         namespace="products",
-        rank_by={},
-        top_k=0,
+        rank_by=["vector", "ANN", [0.2, 0.3]],
+        top_k=10,
     )
 except turbopuffer.APIConnectionError as e:
     print("The server could not be reached")
@@ -232,8 +232,8 @@ client = Turbopuffer(
 # Or, configure per-request:
 client.with_options(max_retries=5).namespaces.query(
     namespace="products",
-    rank_by={},
-    top_k=0,
+    rank_by=["vector", "ANN", [0.2, 0.3]],
+    top_k=10,
 )
 ```
 
@@ -259,8 +259,8 @@ client = Turbopuffer(
 # Override per-request:
 client.with_options(timeout=5.0).namespaces.query(
     namespace="products",
-    rank_by={},
-    top_k=0,
+    rank_by=["vector", "ANN", [0.2, 0.3]],
+    top_k=10,
 )
 ```
 
@@ -304,8 +304,8 @@ from turbopuffer import Turbopuffer
 client = Turbopuffer()
 response = client.namespaces.with_raw_response.query(
     namespace="products",
-    rank_by={},
-    top_k=0,
+    rank_by=["vector", "ANN", [0.2, 0.3]],
+    top_k=10,
 )
 print(response.headers.get('X-My-Header'))
 
@@ -326,8 +326,8 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 ```python
 with client.namespaces.with_streaming_response.query(
     namespace="products",
-    rank_by={},
-    top_k=0,
+    rank_by=["vector", "ANN", [0.2, 0.3]],
+    top_k=10,
 ) as response:
     print(response.headers.get("X-My-Header"))
 

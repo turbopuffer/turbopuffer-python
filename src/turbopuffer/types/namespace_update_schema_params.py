@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Dict
 from typing_extensions import TypedDict
 
-from .attribute_schema_param import AttributeSchemaParam
+from .shared_params.attribute_schema import AttributeSchema
 
 __all__ = ["NamespaceUpdateSchemaParams"]
 
@@ -13,5 +13,5 @@ __all__ = ["NamespaceUpdateSchemaParams"]
 class NamespaceUpdateSchemaParams(TypedDict, total=False):
     namespace: str
 
-    body: Dict[str, AttributeSchemaParam]
+    schema: Dict[str, AttributeSchema]
     """The desired schema for the namespace."""
