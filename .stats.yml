@@ -1,4 +1,4 @@
 configured_endpoints: 8
 openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/turbopuffer-benesch%2Fturbopuffer-e201184f80eff56839f2f43e36a74f40984efc90da2590d152d8e6dcef2914f3.yml
 openapi_spec_hash: ddeaa129822ed4af5d53ab933eef183a
-config_hash: d51f14537f264263053b7ad68c699879
+config_hash: eccd8225533810202144fec12fbf5031

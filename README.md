@@ -31,7 +31,7 @@ import os
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -54,7 +54,7 @@ print(response.rows_affected)
 
 While you can provide an `api_key` keyword argument,
 we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `TURBOPUFFER_API_KEY="My API Key"` to your `.env` file
+to add `TURBOPUFFER_API_KEY="tpuf_A1..."` to your `.env` file
 so that your API Key is not stored in source control.
 
 ## Async usage
@@ -67,7 +67,7 @@ import asyncio
 from turbopuffer import AsyncTurbopuffer
 
 client = AsyncTurbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -114,7 +114,7 @@ This library provides auto-paginating iterators with each list response, so you 
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
 )
 
 all_clients = []
@@ -134,7 +134,7 @@ import asyncio
 from turbopuffer import AsyncTurbopuffer
 
 client = AsyncTurbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
 )
 
 
@@ -187,7 +187,7 @@ Nested parameters are dictionaries, typed using `TypedDict`, for example:
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
 )
 
 response = client.namespaces.write(
@@ -211,7 +211,7 @@ import turbopuffer
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
 )
 
 try:
@@ -257,7 +257,7 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
     # default is 2
     max_retries=0,
 )
@@ -280,14 +280,14 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
@@ -337,7 +337,7 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
 )
 response = client.namespaces.with_raw_response.query(
     namespace="products",
@@ -421,7 +421,7 @@ import httpx
 from turbopuffer import Turbopuffer, DefaultHttpxClient
 
 client = Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
     # Or use the `TURBOPUFFER_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
@@ -445,7 +445,7 @@ By default the library closes underlying HTTP connections whenever the client is
 from turbopuffer import Turbopuffer
 
 with Turbopuffer(
-    region="My-Region",
+    region="gcp-us-central1",
 ) as client:
   # make requests here
   ...

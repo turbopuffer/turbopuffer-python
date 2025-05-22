@@ -28,8 +28,8 @@ def pytest_collection_modifyitems(items: list[pytest.Function]) -> None:
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
-api_key = "My API Key"
-region = "My-Region"
+api_key = "tpuf_A1..."
+region = "gcp-us-central1"
 
 
 @pytest.fixture(scope="session")
