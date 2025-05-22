@@ -38,8 +38,8 @@ from turbopuffer.types.namespace_query_params import NamespaceQueryParams
 from .utils import update_env
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
-api_key = "My API Key"
-region = "My-Region"
+api_key = "tpuf_A1..."
+region = "gcp-us-central1"
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -87,13 +87,13 @@ class TestTurbopuffer:
         copied = self.client.copy()
         assert id(copied) != id(self.client)
 
-        copied = self.client.copy(api_key="another My API Key")
-        assert copied.api_key == "another My API Key"
-        assert self.client.api_key == "My API Key"
+        copied = self.client.copy(api_key="another tpuf_A1...")
+        assert copied.api_key == "another tpuf_A1..."
+        assert self.client.api_key == "tpuf_A1..."
 
-        copied = self.client.copy(region="another My-Region")
-        assert copied.region == "another My-Region"
-        assert self.client.region == "My-Region"
+        copied = self.client.copy(region="another gcp-us-central1")
+        assert copied.region == "another gcp-us-central1"
+        assert self.client.region == "gcp-us-central1"
 
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
@@ -938,13 +938,13 @@ class TestAsyncTurbopuffer:
         copied = self.client.copy()
         assert id(copied) != id(self.client)
 
-        copied = self.client.copy(api_key="another My API Key")
-        assert copied.api_key == "another My API Key"
-        assert self.client.api_key == "My API Key"
+        copied = self.client.copy(api_key="another tpuf_A1...")
+        assert copied.api_key == "another tpuf_A1..."
+        assert self.client.api_key == "tpuf_A1..."
 
-        copied = self.client.copy(region="another My-Region")
-        assert copied.region == "another My-Region"
-        assert self.client.region == "My-Region"
+        copied = self.client.copy(region="another gcp-us-central1")
+        assert copied.region == "another gcp-us-central1"
+        assert self.client.region == "gcp-us-central1"
 
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
