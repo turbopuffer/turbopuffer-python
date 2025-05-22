@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Union, Iterable
+from typing import Dict, List, Iterable
 from typing_extensions import Literal
 
 import httpx
@@ -30,6 +30,7 @@ from ..types.distance_metric import DistanceMetric
 from ..types.document_row_param import DocumentRowParam
 from ..types.attribute_schema_param import AttributeSchemaParam
 from ..types.document_columns_param import DocumentColumnsParam
+from ..types.include_attributes_param import IncludeAttributesParam
 from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_write_response import NamespaceWriteResponse
 from ..types.namespace_recall_response import NamespaceRecallResponse
@@ -140,7 +141,7 @@ class NamespacesResource(SyncAPIResource):
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
-        include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
+        include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -502,7 +503,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
-        include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
+        include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.

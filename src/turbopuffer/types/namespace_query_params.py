@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from typing import List, Union
 from typing_extensions import Literal, Required, TypedDict
 
 from .distance_metric import DistanceMetric
+from .include_attributes_param import IncludeAttributesParam
 
 __all__ = ["NamespaceQueryParams", "Consistency"]
 
@@ -31,7 +31,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     Think of it as a SQL WHERE clause.
     """
 
-    include_attributes: Union[bool, List[str]]
+    include_attributes: IncludeAttributesParam
     """Whether to include attributes in the response."""
 
     vector_encoding: Literal["float", "base64"]
