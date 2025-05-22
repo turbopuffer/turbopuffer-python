@@ -3,7 +3,7 @@
 from typing import Dict
 from typing_extensions import TypeAlias
 
-from .shared.attribute_schema import AttributeSchema
+from .attribute_schema import AttributeSchema
 
 __all__ = ["NamespaceGetSchemaResponse"]
 

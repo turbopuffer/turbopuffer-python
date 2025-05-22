@@ -8,6 +8,7 @@ from typing_extensions import Literal
 import httpx
 
 from ..types import (
+    DistanceMetric,
     namespace_query_params,
     namespace_write_params,
     namespace_recall_params,
@@ -24,17 +25,17 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.shared_params.id import ID
-from ..types.shared.distance_metric import DistanceMetric
+from ..types.id_param import IDParam
+from ..types.distance_metric import DistanceMetric
+from ..types.document_row_param import DocumentRowParam
+from ..types.attribute_schema_param import AttributeSchemaParam
+from ..types.document_columns_param import DocumentColumnsParam
 from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_write_response import NamespaceWriteResponse
 from ..types.namespace_recall_response import NamespaceRecallResponse
-from ..types.shared_params.document_row import DocumentRow
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
 from ..types.namespace_get_schema_response import NamespaceGetSchemaResponse
 from ..types.namespace_warm_cache_response import NamespaceWarmCacheResponse
-from ..types.shared_params.attribute_schema import AttributeSchema
-from ..types.shared_params.document_columns import DocumentColumns
 from ..types.namespace_update_schema_response import NamespaceUpdateSchemaResponse
 
 __all__ = ["NamespacesResource", "AsyncNamespacesResource"]
@@ -261,7 +262,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        schema: Dict[str, AttributeSchema] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -337,13 +338,13 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
         delete_by_filter: object | NotGiven = NOT_GIVEN,
-        deletes: List[ID] | NotGiven = NOT_GIVEN,
+        deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        patch_columns: DocumentColumns | NotGiven = NOT_GIVEN,
-        patch_rows: Iterable[DocumentRow] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, AttributeSchema] | NotGiven = NOT_GIVEN,
-        upsert_columns: DocumentColumns | NotGiven = NOT_GIVEN,
-        upsert_rows: Iterable[DocumentRow] | NotGiven = NOT_GIVEN,
+        patch_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
+        patch_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
+        upsert_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
+        upsert_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -623,7 +624,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        schema: Dict[str, AttributeSchema] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -699,13 +700,13 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
         delete_by_filter: object | NotGiven = NOT_GIVEN,
-        deletes: List[ID] | NotGiven = NOT_GIVEN,
+        deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        patch_columns: DocumentColumns | NotGiven = NOT_GIVEN,
-        patch_rows: Iterable[DocumentRow] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, AttributeSchema] | NotGiven = NOT_GIVEN,
-        upsert_columns: DocumentColumns | NotGiven = NOT_GIVEN,
-        upsert_rows: Iterable[DocumentRow] | NotGiven = NOT_GIVEN,
+        patch_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
+        patch_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
+        upsert_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
+        upsert_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,

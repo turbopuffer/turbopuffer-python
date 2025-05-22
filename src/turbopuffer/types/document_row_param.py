@@ -5,17 +5,17 @@ from __future__ import annotations
 from typing import Dict, Union, Iterable
 from typing_extensions import TypeAlias, TypedDict
 
-from .id import ID
+from .id_param import IDParam
 
-__all__ = ["DocumentRow"]
+__all__ = ["DocumentRowParam"]
 
 
-class DocumentRowTyped(TypedDict, total=False):
-    id: ID
+class DocumentRowParamTyped(TypedDict, total=False):
+    id: IDParam
     """An identifier for a document."""
 
     vector: Union[Iterable[float], str, None]
     """A vector describing the document."""
 
 
-DocumentRow: TypeAlias = Union[DocumentRowTyped, Dict[str, object]]
+DocumentRowParam: TypeAlias = Union[DocumentRowParamTyped, Dict[str, object]]

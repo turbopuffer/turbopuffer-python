@@ -3,7 +3,7 @@
 from typing import Dict, List, Optional
 
 from .._models import BaseModel
-from .shared.document_row import DocumentRow
+from .document_row import DocumentRow
 
 __all__ = ["NamespaceQueryResponse", "Billing", "Performance"]
 
