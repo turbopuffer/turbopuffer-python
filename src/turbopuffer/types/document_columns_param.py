@@ -5,14 +5,14 @@ from __future__ import annotations
 from typing import Dict, List, Union, Iterable
 from typing_extensions import TypeAlias, TypedDict
 
-from .id import ID
+from .id_param import IDParam
 
-__all__ = ["DocumentColumns"]
+__all__ = ["DocumentColumnsParam"]
 
 
-class DocumentColumnsTyped(TypedDict, total=False):
-    id: List[ID]
+class DocumentColumnsParamTyped(TypedDict, total=False):
+    id: List[IDParam]
     """The IDs of the documents."""
 
 
-DocumentColumns: TypeAlias = Union[DocumentColumnsTyped, Dict[str, Iterable[object]]]
+DocumentColumnsParam: TypeAlias = Union[DocumentColumnsParamTyped, Dict[str, Iterable[object]]]

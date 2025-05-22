@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import List, Union
 from typing_extensions import Literal, Required, TypedDict
 
-from .shared.distance_metric import DistanceMetric
+from .distance_metric import DistanceMetric
 
 __all__ = ["NamespaceQueryParams", "Consistency"]
 

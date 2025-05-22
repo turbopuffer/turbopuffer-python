@@ -3,7 +3,7 @@
 from typing import TYPE_CHECKING, List, Union, Optional
 
 from .id import ID
-from ..._models import BaseModel
+from .._models import BaseModel
 
 __all__ = ["DocumentRow"]
 

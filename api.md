@@ -1,16 +1,3 @@
-# Shared Types
-
-```python
-from turbopuffer.types import (
-    AttributeSchema,
-    DistanceMetric,
-    DocumentColumns,
-    DocumentRow,
-    FullTextSearchConfig,
-    ID,
-)
-```
-
 # Turbopuffer
 
 Types:
@@ -29,6 +16,12 @@ Types:
 
 ```python
 from turbopuffer.types import (
+    AttributeSchema,
+    DistanceMetric,
+    DocumentColumns,
+    DocumentRow,
+    FullTextSearchConfig,
+    ID,
     NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,
     NamespaceQueryResponse,
