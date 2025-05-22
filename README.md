@@ -31,6 +31,7 @@ import os
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
+    region="My-Region",
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -66,6 +67,7 @@ import asyncio
 from turbopuffer import AsyncTurbopuffer
 
 client = AsyncTurbopuffer(
+    region="My-Region",
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -111,7 +113,9 @@ This library provides auto-paginating iterators with each list response, so you 
 ```python
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer()
+client = Turbopuffer(
+    region="My-Region",
+)
 
 all_clients = []
 # Automatically fetches more pages as needed.
@@ -129,7 +133,9 @@ Or, asynchronously:
 import asyncio
 from turbopuffer import AsyncTurbopuffer
 
-client = AsyncTurbopuffer()
+client = AsyncTurbopuffer(
+    region="My-Region",
+)
 
 
 async def main() -> None:
@@ -180,7 +186,9 @@ Nested parameters are dictionaries, typed using `TypedDict`, for example:
 ```python
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer()
+client = Turbopuffer(
+    region="My-Region",
+)
 
 response = client.namespaces.write(
     namespace="namespace",
@@ -202,7 +210,9 @@ All errors inherit from `turbopuffer.APIError`.
 import turbopuffer
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer()
+client = Turbopuffer(
+    region="My-Region",
+)
 
 try:
     client.namespaces.query(
@@ -247,6 +257,7 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
+    region="My-Region",
     # default is 2
     max_retries=0,
 )
@@ -269,12 +280,14 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
+    region="My-Region",
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
 client = Turbopuffer(
+    region="My-Region",
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
@@ -323,7 +336,9 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 ```py
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer()
+client = Turbopuffer(
+    region="My-Region",
+)
 response = client.namespaces.with_raw_response.query(
     namespace="products",
     rank_by=["vector", "ANN", [0.2, 0.3]],
@@ -406,6 +421,7 @@ import httpx
 from turbopuffer import Turbopuffer, DefaultHttpxClient
 
 client = Turbopuffer(
+    region="My-Region",
     # Or use the `TURBOPUFFER_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
@@ -428,7 +444,9 @@ By default the library closes underlying HTTP connections whenever the client is
 ```py
 from turbopuffer import Turbopuffer
 
-with Turbopuffer() as client:
+with Turbopuffer(
+    region="My-Region",
+) as client:
   # make requests here
   ...
 
