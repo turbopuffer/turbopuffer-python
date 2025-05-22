@@ -6,6 +6,7 @@ from typing import Dict, List, Union, Iterable
 from typing_extensions import Required, TypeAlias, TypedDict
 
 from .id_param import IDParam
+from .vector_param import VectorParam
 
 __all__ = ["DocumentColumnsParam"]
 
@@ -14,7 +15,7 @@ class DocumentColumnsParamTyped(TypedDict, total=False):
     id: Required[List[IDParam]]
     """The IDs of the documents."""
 
-    vector: Union[List[Union[Iterable[float], str]], Iterable[float], str]
+    vector: Union[List[VectorParam], Iterable[float], str]
     """The vector embeddings of the documents."""
 
 
