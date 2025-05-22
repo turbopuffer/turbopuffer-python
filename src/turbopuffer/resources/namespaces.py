@@ -205,7 +205,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         filters: object | NotGiven = NOT_GIVEN,
         num: int | NotGiven = NOT_GIVEN,
-        queries: Iterable[object] | NotGiven = NOT_GIVEN,
+        queries: Iterable[float] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -567,7 +567,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         filters: object | NotGiven = NOT_GIVEN,
         num: int | NotGiven = NOT_GIVEN,
-        queries: Iterable[object] | NotGiven = NOT_GIVEN,
+        queries: Iterable[float] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
