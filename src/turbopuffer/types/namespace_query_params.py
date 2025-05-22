@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Iterable
+from typing import List, Union
 from typing_extensions import Literal, Required, TypedDict
 
 from .distance_metric import DistanceMetric
-from .shared_params.filter import Filter
 
 __all__ = ["NamespaceQueryParams", "Consistency"]
 
@@ -14,17 +13,8 @@ __all__ = ["NamespaceQueryParams", "Consistency"]
 class NamespaceQueryParams(TypedDict, total=False):
     namespace: str
 
-    rank_by: Required[
-        Union[
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-            Iterable[object],
-        ]
-    ]
+    rank_by: Required[object]
+    """How to rank the documents in the namespace."""
 
     top_k: Required[int]
     """The number of results to return."""
@@ -35,7 +25,11 @@ class NamespaceQueryParams(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    filters: Filter
+    filters: object
+    """Exact filters for attributes to refine search results for.
+
+    Think of it as a SQL WHERE clause.
+    """
 
     include_attributes: Union[bool, List[str]]
     """Whether to include attributes in the response."""

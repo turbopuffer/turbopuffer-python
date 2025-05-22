@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from .id import ID as ID
-from .shared import Filter as Filter
 from .id_param import IDParam as IDParam
 from .document_row import DocumentRow as DocumentRow
 from .distance_metric import DistanceMetric as DistanceMetric
@@ -17,11 +16,11 @@ from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams
 from .full_text_search_config import FullTextSearchConfig as FullTextSearchConfig
 from .namespace_query_response import NamespaceQueryResponse as NamespaceQueryResponse
 from .namespace_write_response import NamespaceWriteResponse as NamespaceWriteResponse
-from .namespace_multi_query_params import NamespaceMultiQueryParams as NamespaceMultiQueryParams
+from .namespace_recall_response import NamespaceRecallResponse as NamespaceRecallResponse
 from .client_list_namespaces_params import ClientListNamespacesParams as ClientListNamespacesParams
 from .full_text_search_config_param import FullTextSearchConfigParam as FullTextSearchConfigParam
 from .namespace_delete_all_response import NamespaceDeleteAllResponse as NamespaceDeleteAllResponse
 from .namespace_get_schema_response import NamespaceGetSchemaResponse as NamespaceGetSchemaResponse
-from .namespace_multi_query_response import NamespaceMultiQueryResponse as NamespaceMultiQueryResponse
+from .namespace_warm_cache_response import NamespaceWarmCacheResponse as NamespaceWarmCacheResponse
 from .namespace_update_schema_params import NamespaceUpdateSchemaParams as NamespaceUpdateSchemaParams
 from .namespace_update_schema_response import NamespaceUpdateSchemaResponse as NamespaceUpdateSchemaResponse
