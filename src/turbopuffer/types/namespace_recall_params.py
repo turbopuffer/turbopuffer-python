@@ -17,7 +17,7 @@ class NamespaceRecallParams(TypedDict, total=False):
     num: int
     """The number of searches to run."""
 
-    queries: Iterable[object]
+    queries: Iterable[float]
     """Use specific query vectors for the measurement.
 
     If omitted, sampled from the index.

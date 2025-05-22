@@ -189,7 +189,7 @@ class TestNamespaces:
             namespace="namespace",
             filters={},
             num=0,
-            queries=[{}],
+            queries=[0],
             top_k=0,
         )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
@@ -570,7 +570,7 @@ class TestAsyncNamespaces:
             namespace="namespace",
             filters={},
             num=0,
-            queries=[{}],
+            queries=[0],
             top_k=0,
         )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
