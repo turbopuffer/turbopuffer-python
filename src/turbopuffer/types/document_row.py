@@ -1,19 +1,20 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import TYPE_CHECKING, List, Union, Optional
+from typing import TYPE_CHECKING, Optional
 
 from .id import ID
+from .vector import Vector
 from .._models import BaseModel
 
 __all__ = ["DocumentRow"]
 
 
 class DocumentRow(BaseModel):
-    id: Optional[ID] = None
+    id: ID
     """An identifier for a document."""
 
-    vector: Union[List[float], str, None] = None
-    """A vector describing the document."""
+    vector: Optional[Vector] = None
+    """A vector embedding associated with a document."""
 
     if TYPE_CHECKING:
         # Stub to indicate that arbitrary properties are accepted.
