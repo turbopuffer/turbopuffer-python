@@ -1,8 +1,9 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Optional
 
 from .id import ID
+from .vector import Vector
 from .._models import BaseModel
 
 __all__ = ["DocumentRow"]
@@ -12,7 +13,7 @@ class DocumentRow(BaseModel):
     id: ID
     """An identifier for a document."""
 
-    vector: Union[List[float], str, None] = None
+    vector: Optional[Vector] = None
     """A vector embedding associated with a document."""
 
     if TYPE_CHECKING:
