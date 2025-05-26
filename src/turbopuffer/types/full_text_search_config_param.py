@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from typing_extensions import Literal, TypedDict
+from typing import Union
+from typing_extensions import Literal, TypeAlias, TypedDict
 
-__all__ = ["FullTextSearchConfigParam"]
+__all__ = ["FullTextSearchConfigParam", "UnionMember1"]
 
 
-class FullTextSearchConfigParam(TypedDict, total=False):
+class UnionMember1(TypedDict, total=False):
     case_sensitive: bool
     """Whether searching is case-sensitive.
 
@@ -47,3 +48,6 @@ class FullTextSearchConfigParam(TypedDict, total=False):
 
     Defaults to `false` (i.e., do not stem).
     """
+
+
+FullTextSearchConfigParam: TypeAlias = Union[bool, UnionMember1]
