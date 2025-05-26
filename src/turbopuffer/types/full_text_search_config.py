@@ -1,14 +1,14 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
-from typing_extensions import Literal
+from typing import Union, Optional
+from typing_extensions import Literal, TypeAlias
 
 from .._models import BaseModel
 
-__all__ = ["FullTextSearchConfig"]
+__all__ = ["FullTextSearchConfig", "UnionMember1"]
 
 
-class FullTextSearchConfig(BaseModel):
+class UnionMember1(BaseModel):
     case_sensitive: Optional[bool] = None
     """Whether searching is case-sensitive.
 
@@ -50,3 +50,6 @@ class FullTextSearchConfig(BaseModel):
 
     Defaults to `false` (i.e., do not stem).
     """
+
+
+FullTextSearchConfig: TypeAlias = Union[bool, UnionMember1]
