@@ -23,17 +23,14 @@ from pydantic import ValidationError
 
 from turbopuffer import Turbopuffer, AsyncTurbopuffer, APIResponseValidationError
 from turbopuffer._types import Omit
-from turbopuffer._utils import maybe_transform
 from turbopuffer._models import BaseModel, FinalRequestOptions
-from turbopuffer._constants import RAW_RESPONSE_HEADER
-from turbopuffer._exceptions import APIStatusError, APITimeoutError, TurbopufferError, APIResponseValidationError
+from turbopuffer._exceptions import TurbopufferError, APIResponseValidationError
 from turbopuffer._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     BaseClient,
     make_request_options,
 )
-from turbopuffer.types.namespace_query_params import NamespaceQueryParams
 
 from .utils import update_env
 
@@ -50,14 +47,6 @@ def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
 
 def _low_retry_timeout(*_args: Any, **_kwargs: Any) -> float:
     return 0.1
-
-
-def _get_open_connections(client: Turbopuffer | AsyncTurbopuffer) -> int:
-    transport = client._client._transport
-    assert isinstance(transport, httpx.HTTPTransport) or isinstance(transport, httpx.AsyncHTTPTransport)
-
-    pool = transport._pool
-    return len(pool._requests)
 
 
 class TestTurbopuffer:
@@ -793,40 +782,6 @@ class TestTurbopuffer:
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
-    @pytest.mark.respx(base_url=base_url)
-    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=httpx.TimeoutException("Test timeout error"))
-
-        with pytest.raises(APITimeoutError):
-            self.client.post(
-                "/v2/namespaces/namespace/query",
-                body=cast(
-                    object, maybe_transform(dict(rank_by=["vector", "ANN", [0.2, 0.3]], top_k=10), NamespaceQueryParams)
-                ),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
-
-        assert _get_open_connections(self.client) == 0
-
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
-    @pytest.mark.respx(base_url=base_url)
-    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/v2/namespaces/namespace/query").mock(return_value=httpx.Response(500))
-
-        with pytest.raises(APIStatusError):
-            self.client.post(
-                "/v2/namespaces/namespace/query",
-                body=cast(
-                    object, maybe_transform(dict(rank_by=["vector", "ANN", [0.2, 0.3]], top_k=10), NamespaceQueryParams)
-                ),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
-
-        assert _get_open_connections(self.client) == 0
-
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
@@ -851,9 +806,9 @@ class TestTurbopuffer:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = client.namespaces.with_raw_response.query(namespace="namespace", rank_by={}, top_k=0)
+        response = client.with_raw_response.list_namespaces()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -875,11 +830,9 @@ class TestTurbopuffer:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = client.namespaces.with_raw_response.query(
-            namespace="namespace", rank_by={}, top_k=0, extra_headers={"x-stainless-retry-count": Omit()}
-        )
+        response = client.with_raw_response.list_namespaces(extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -900,11 +853,9 @@ class TestTurbopuffer:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = client.namespaces.with_raw_response.query(
-            namespace="namespace", rank_by={}, top_k=0, extra_headers={"x-stainless-retry-count": "42"}
-        )
+        response = client.with_raw_response.list_namespaces(extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
@@ -1652,40 +1603,6 @@ class TestAsyncTurbopuffer:
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
-    @pytest.mark.respx(base_url=base_url)
-    async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=httpx.TimeoutException("Test timeout error"))
-
-        with pytest.raises(APITimeoutError):
-            await self.client.post(
-                "/v2/namespaces/namespace/query",
-                body=cast(
-                    object, maybe_transform(dict(rank_by=["vector", "ANN", [0.2, 0.3]], top_k=10), NamespaceQueryParams)
-                ),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
-
-        assert _get_open_connections(self.client) == 0
-
-    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
-    @pytest.mark.respx(base_url=base_url)
-    async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/v2/namespaces/namespace/query").mock(return_value=httpx.Response(500))
-
-        with pytest.raises(APIStatusError):
-            await self.client.post(
-                "/v2/namespaces/namespace/query",
-                body=cast(
-                    object, maybe_transform(dict(rank_by=["vector", "ANN", [0.2, 0.3]], top_k=10), NamespaceQueryParams)
-                ),
-                cast_to=httpx.Response,
-                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
-            )
-
-        assert _get_open_connections(self.client) == 0
-
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
@@ -1711,9 +1628,9 @@ class TestAsyncTurbopuffer:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = await client.namespaces.with_raw_response.query(namespace="namespace", rank_by={}, top_k=0)
+        response = await client.with_raw_response.list_namespaces()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1736,11 +1653,9 @@ class TestAsyncTurbopuffer:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = await client.namespaces.with_raw_response.query(
-            namespace="namespace", rank_by={}, top_k=0, extra_headers={"x-stainless-retry-count": Omit()}
-        )
+        response = await client.with_raw_response.list_namespaces(extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -1762,11 +1677,9 @@ class TestAsyncTurbopuffer:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/namespaces/namespace/query").mock(side_effect=retry_handler)
+        respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = await client.namespaces.with_raw_response.query(
-            namespace="namespace", rank_by={}, top_k=0, extra_headers={"x-stainless-retry-count": "42"}
-        )
+        response = await client.with_raw_response.list_namespaces(extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 

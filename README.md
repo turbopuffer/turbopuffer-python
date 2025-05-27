@@ -218,10 +218,8 @@ client = Turbopuffer(
 )
 
 try:
-    client.namespaces.query(
-        namespace="products",
-        rank_by=["vector", "ANN", [0.2, 0.3]],
-        top_k=10,
+    client.list_namespaces(
+        prefix="foo",
     )
 except turbopuffer.APIConnectionError as e:
     print("The server could not be reached")
@@ -266,10 +264,8 @@ client = Turbopuffer(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).namespaces.query(
-    namespace="products",
-    rank_by=["vector", "ANN", [0.2, 0.3]],
-    top_k=10,
+client.with_options(max_retries=5).list_namespaces(
+    prefix="foo",
 )
 ```
 
@@ -295,10 +291,8 @@ client = Turbopuffer(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).namespaces.query(
-    namespace="products",
-    rank_by=["vector", "ANN", [0.2, 0.3]],
-    top_k=10,
+client.with_options(timeout=5.0).list_namespaces(
+    prefix="foo",
 )
 ```
 
@@ -342,15 +336,13 @@ from turbopuffer import Turbopuffer
 client = Turbopuffer(
     region="gcp-us-central1",
 )
-response = client.namespaces.with_raw_response.query(
-    namespace="products",
-    rank_by=["vector", "ANN", [0.2, 0.3]],
-    top_k=10,
+response = client.with_raw_response.list_namespaces(
+    prefix="foo",
 )
 print(response.headers.get('X-My-Header'))
 
-namespace = response.parse()  # get the object that `namespaces.query()` would have returned
-print(namespace.aggregations)
+client = response.parse()  # get the object that `list_namespaces()` would have returned
+print(client.id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/turbopuffer/turbopuffer-python/tree/ng/src/turbopuffer/_response.py) object.
@@ -364,10 +356,8 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.namespaces.with_streaming_response.query(
-    namespace="products",
-    rank_by=["vector", "ANN", [0.2, 0.3]],
-    top_k=10,
+with client.with_streaming_response.list_namespaces(
+    prefix="foo",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
