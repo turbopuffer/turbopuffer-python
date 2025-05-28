@@ -9,11 +9,14 @@ from .language import Language as Language
 from .tokenizer import Tokenizer as Tokenizer
 from .document_row import DocumentRow as DocumentRow
 from .vector_param import VectorParam as VectorParam
+from .query_billing import QueryBilling as QueryBilling
+from .write_billing import WriteBilling as WriteBilling
 from .attribute_type import AttributeType as AttributeType
 from .distance_metric import DistanceMetric as DistanceMetric
 from .attribute_schema import AttributeSchema as AttributeSchema
 from .full_text_search import FullTextSearch as FullTextSearch
 from .namespace_summary import NamespaceSummary as NamespaceSummary
+from .query_performance import QueryPerformance as QueryPerformance
 from .document_row_param import DocumentRowParam as DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
