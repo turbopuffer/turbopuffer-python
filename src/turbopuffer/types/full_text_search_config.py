@@ -5,10 +5,10 @@ from typing_extensions import Literal, TypeAlias
 
 from .._models import BaseModel
 
-__all__ = ["FullTextSearchConfig", "UnionMember1"]
+__all__ = ["FullTextSearchConfig", "FullTextSearchDetailedConfig"]
 
 
-class UnionMember1(BaseModel):
+class FullTextSearchDetailedConfig(BaseModel):
     case_sensitive: Optional[bool] = None
     """Whether searching is case-sensitive.
 
@@ -52,4 +52,4 @@ class UnionMember1(BaseModel):
     """
 
 
-FullTextSearchConfig: TypeAlias = Union[bool, UnionMember1]
+FullTextSearchConfig: TypeAlias = Union[bool, FullTextSearchDetailedConfig]
