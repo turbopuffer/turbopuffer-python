@@ -5,10 +5,10 @@ from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["NamespaceWarmCacheResponse"]
+__all__ = ["NamespaceHintCacheWarmResponse"]
 
 
-class NamespaceWarmCacheResponse(BaseModel):
+class NamespaceHintCacheWarmResponse(BaseModel):
     status: Literal["OK"]
     """The status of the request."""
 

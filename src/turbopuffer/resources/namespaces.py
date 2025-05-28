@@ -36,8 +36,8 @@ from ..types.namespace_write_response import NamespaceWriteResponse
 from ..types.namespace_recall_response import NamespaceRecallResponse
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
 from ..types.namespace_get_schema_response import NamespaceGetSchemaResponse
-from ..types.namespace_warm_cache_response import NamespaceWarmCacheResponse
 from ..types.namespace_update_schema_response import NamespaceUpdateSchemaResponse
+from ..types.namespace_hint_cache_warm_response import NamespaceHintCacheWarmResponse
 
 __all__ = ["NamespacesResource", "AsyncNamespacesResource"]
 
@@ -130,6 +130,41 @@ class NamespacesResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NamespaceGetSchemaResponse,
+        )
+
+    def hint_cache_warm(
+        self,
+        *,
+        namespace: str | None = None,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceHintCacheWarmResponse:
+        """
+        Warm the cache for a namespace.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._get(
+            f"/v1/namespaces/{namespace}/hint_cache_warm",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceHintCacheWarmResponse,
         )
 
     def query(
@@ -298,41 +333,6 @@ class NamespacesResource(SyncAPIResource):
             cast_to=NamespaceUpdateSchemaResponse,
         )
 
-    def warm_cache(
-        self,
-        *,
-        namespace: str | None = None,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> NamespaceWarmCacheResponse:
-        """
-        Warm the cache for a namespace.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if namespace is None:
-            namespace = self._client._get_default_namespace_path_param()
-        if not namespace:
-            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
-        return self._get(
-            f"/v1/namespaces/{namespace}/hint_cache_warm",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NamespaceWarmCacheResponse,
-        )
-
     def write(
         self,
         *,
@@ -492,6 +492,41 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NamespaceGetSchemaResponse,
+        )
+
+    async def hint_cache_warm(
+        self,
+        *,
+        namespace: str | None = None,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceHintCacheWarmResponse:
+        """
+        Warm the cache for a namespace.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._get(
+            f"/v1/namespaces/{namespace}/hint_cache_warm",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceHintCacheWarmResponse,
         )
 
     async def query(
@@ -660,41 +695,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceUpdateSchemaResponse,
         )
 
-    async def warm_cache(
-        self,
-        *,
-        namespace: str | None = None,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> NamespaceWarmCacheResponse:
-        """
-        Warm the cache for a namespace.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if namespace is None:
-            namespace = self._client._get_default_namespace_path_param()
-        if not namespace:
-            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
-        return await self._get(
-            f"/v1/namespaces/{namespace}/hint_cache_warm",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NamespaceWarmCacheResponse,
-        )
-
     async def write(
         self,
         *,
@@ -776,6 +776,9 @@ class NamespacesResourceWithRawResponse:
         self.get_schema = to_raw_response_wrapper(
             namespaces.get_schema,
         )
+        self.hint_cache_warm = to_raw_response_wrapper(
+            namespaces.hint_cache_warm,
+        )
         self.query = to_raw_response_wrapper(
             namespaces.query,
         )
@@ -784,9 +787,6 @@ class NamespacesResourceWithRawResponse:
         )
         self.update_schema = to_raw_response_wrapper(
             namespaces.update_schema,
-        )
-        self.warm_cache = to_raw_response_wrapper(
-            namespaces.warm_cache,
         )
         self.write = to_raw_response_wrapper(
             namespaces.write,
@@ -803,6 +803,9 @@ class AsyncNamespacesResourceWithRawResponse:
         self.get_schema = async_to_raw_response_wrapper(
             namespaces.get_schema,
         )
+        self.hint_cache_warm = async_to_raw_response_wrapper(
+            namespaces.hint_cache_warm,
+        )
         self.query = async_to_raw_response_wrapper(
             namespaces.query,
         )
@@ -811,9 +814,6 @@ class AsyncNamespacesResourceWithRawResponse:
         )
         self.update_schema = async_to_raw_response_wrapper(
             namespaces.update_schema,
-        )
-        self.warm_cache = async_to_raw_response_wrapper(
-            namespaces.warm_cache,
         )
         self.write = async_to_raw_response_wrapper(
             namespaces.write,
@@ -830,6 +830,9 @@ class NamespacesResourceWithStreamingResponse:
         self.get_schema = to_streamed_response_wrapper(
             namespaces.get_schema,
         )
+        self.hint_cache_warm = to_streamed_response_wrapper(
+            namespaces.hint_cache_warm,
+        )
         self.query = to_streamed_response_wrapper(
             namespaces.query,
         )
@@ -838,9 +841,6 @@ class NamespacesResourceWithStreamingResponse:
         )
         self.update_schema = to_streamed_response_wrapper(
             namespaces.update_schema,
-        )
-        self.warm_cache = to_streamed_response_wrapper(
-            namespaces.warm_cache,
         )
         self.write = to_streamed_response_wrapper(
             namespaces.write,
@@ -857,6 +857,9 @@ class AsyncNamespacesResourceWithStreamingResponse:
         self.get_schema = async_to_streamed_response_wrapper(
             namespaces.get_schema,
         )
+        self.hint_cache_warm = async_to_streamed_response_wrapper(
+            namespaces.hint_cache_warm,
+        )
         self.query = async_to_streamed_response_wrapper(
             namespaces.query,
         )
@@ -865,9 +868,6 @@ class AsyncNamespacesResourceWithStreamingResponse:
         )
         self.update_schema = async_to_streamed_response_wrapper(
             namespaces.update_schema,
-        )
-        self.warm_cache = async_to_streamed_response_wrapper(
-            namespaces.warm_cache,
         )
         self.write = async_to_streamed_response_wrapper(
             namespaces.write,
