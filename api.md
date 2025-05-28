@@ -30,6 +30,7 @@ from turbopuffer.types import (
     QueryPerformance,
     Tokenizer,
     Vector,
+    VectorEncoding,
     WriteBilling,
     NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,

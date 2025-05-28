@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 from typing import Dict, List, Iterable
-from typing_extensions import Literal
 
 import httpx
 
 from ..types import (
     DistanceMetric,
+    VectorEncoding,
     namespace_query_params,
     namespace_write_params,
     namespace_recall_params,
@@ -27,6 +27,7 @@ from .._response import (
 from .._base_client import make_request_options
 from ..types.id_param import IDParam
 from ..types.distance_metric import DistanceMetric
+from ..types.vector_encoding import VectorEncoding
 from ..types.document_row_param import DocumentRowParam
 from ..types.attribute_schema_param import AttributeSchemaParam
 from ..types.document_columns_param import DocumentColumnsParam
@@ -177,7 +178,7 @@ class NamespacesResource(SyncAPIResource):
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
-        vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
+        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -543,7 +544,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
-        vector_encoding: Literal["float", "base64"] | NotGiven = NOT_GIVEN,
+        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,

@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing_extensions import Literal, Required, TypedDict
 
 from .distance_metric import DistanceMetric
+from .vector_encoding import VectorEncoding
 from .include_attributes_param import IncludeAttributesParam
 
 __all__ = ["NamespaceQueryParams", "Consistency"]
@@ -34,7 +35,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     include_attributes: IncludeAttributesParam
     """Whether to include attributes in the response."""
 
-    vector_encoding: Literal["float", "base64"]
+    vector_encoding: VectorEncoding
     """The encoding to use for vectors in the response."""
 
 
