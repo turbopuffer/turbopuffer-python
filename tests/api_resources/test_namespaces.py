@@ -244,12 +244,7 @@ class TestNamespaces:
             schema={
                 "foo": {
                     "filterable": True,
-                    "full_text_search": {
-                        "case_sensitive": True,
-                        "language": "arabic",
-                        "remove_stopwords": True,
-                        "stemming": True,
-                    },
+                    "full_text_search": True,
                     "type": "string",
                 }
             },
@@ -362,12 +357,7 @@ class TestNamespaces:
             schema={
                 "foo": {
                     "filterable": True,
-                    "full_text_search": {
-                        "case_sensitive": True,
-                        "language": "arabic",
-                        "remove_stopwords": True,
-                        "stemming": True,
-                    },
+                    "full_text_search": True,
                     "type": "string",
                 }
             },
@@ -641,12 +631,7 @@ class TestAsyncNamespaces:
             schema={
                 "foo": {
                     "filterable": True,
-                    "full_text_search": {
-                        "case_sensitive": True,
-                        "language": "arabic",
-                        "remove_stopwords": True,
-                        "stemming": True,
-                    },
+                    "full_text_search": True,
                     "type": "string",
                 }
             },
@@ -759,12 +744,7 @@ class TestAsyncNamespaces:
             schema={
                 "foo": {
                     "filterable": True,
-                    "full_text_search": {
-                        "case_sensitive": True,
-                        "language": "arabic",
-                        "remove_stopwords": True,
-                        "stemming": True,
-                    },
+                    "full_text_search": True,
                     "type": "string",
                 }
             },
