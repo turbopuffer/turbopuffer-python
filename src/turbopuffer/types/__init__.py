@@ -5,8 +5,10 @@ from __future__ import annotations
 from .id import ID as ID
 from .vector import Vector as Vector
 from .id_param import IDParam as IDParam
+from .language import Language as Language
 from .document_row import DocumentRow as DocumentRow
 from .vector_param import VectorParam as VectorParam
+from .attribute_type import AttributeType as AttributeType
 from .distance_metric import DistanceMetric as DistanceMetric
 from .attribute_schema import AttributeSchema as AttributeSchema
 from .namespace_summary import NamespaceSummary as NamespaceSummary

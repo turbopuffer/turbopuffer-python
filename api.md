@@ -17,12 +17,15 @@ Types:
 ```python
 from turbopuffer.types import (
     AttributeSchema,
+    AttributeType,
     DistanceMetric,
     DocumentColumns,
     DocumentRow,
+    FullTextSearch,
     FullTextSearchConfig,
     ID,
     IncludeAttributes,
+    Language,
     Vector,
     NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,

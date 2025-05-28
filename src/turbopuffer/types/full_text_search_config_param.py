@@ -2,40 +2,22 @@
 
 from __future__ import annotations
 
-from typing import Union
-from typing_extensions import Literal, TypeAlias, TypedDict
+from typing_extensions import TypedDict
 
-__all__ = ["FullTextSearchConfigParam", "Detailed"]
+from .language import Language
+
+__all__ = ["FullTextSearchConfigParam"]
 
 
-class Detailed(TypedDict, total=False):
+class FullTextSearchConfigParam(TypedDict, total=False):
     case_sensitive: bool
     """Whether searching is case-sensitive.
 
     Defaults to `false` (i.e. case-insensitive).
     """
 
-    language: Literal[
-        "arabic",
-        "danish",
-        "dutch",
-        "english",
-        "finnish",
-        "french",
-        "german",
-        "greek",
-        "hungarian",
-        "italian",
-        "norwegian",
-        "portuguese",
-        "romanian",
-        "russian",
-        "spanish",
-        "swedish",
-        "tamil",
-        "turkish",
-    ]
-    """The language of the text. Defaults to `english`."""
+    language: Language
+    """Describes the language of a text attribute. Defaults to `english`."""
 
     remove_stopwords: bool
     """Removes common words from the text based on language.
@@ -48,6 +30,3 @@ class Detailed(TypedDict, total=False):
 
     Defaults to `false` (i.e., do not stem).
     """
-
-
-FullTextSearchConfigParam: TypeAlias = Union[bool, Detailed]
