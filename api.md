@@ -26,6 +26,7 @@ from turbopuffer.types import (
     ID,
     IncludeAttributes,
     Language,
+    Tokenizer,
     Vector,
     NamespaceDeleteAllResponse,
     NamespaceGetSchemaResponse,
