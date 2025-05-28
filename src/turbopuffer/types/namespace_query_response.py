@@ -43,12 +43,12 @@ class Performance(BaseModel):
 
 
 class NamespaceQueryResponse(BaseModel):
-    aggregations: Optional[List[Dict[str, object]]] = None
-
-    billing: Optional[Billing] = None
+    billing: Billing
     """The billing information for a query."""
 
-    performance: Optional[Performance] = None
+    performance: Performance
     """The performance information for a query."""
+
+    aggregations: Optional[List[Dict[str, object]]] = None
 
     rows: Optional[List[DocumentRow]] = None
