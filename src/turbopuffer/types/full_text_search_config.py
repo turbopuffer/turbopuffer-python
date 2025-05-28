@@ -4,6 +4,7 @@ from typing import Optional
 
 from .._models import BaseModel
 from .language import Language
+from .tokenizer import Tokenizer
 
 __all__ = ["FullTextSearchConfig"]
 
@@ -29,3 +30,6 @@ class FullTextSearchConfig(BaseModel):
 
     Defaults to `false` (i.e., do not stem).
     """
+
+    tokenizer: Optional[Tokenizer] = None
+    """The tokenizer to use for full-text search on an attribute."""

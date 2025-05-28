@@ -6,6 +6,7 @@ from .id import ID as ID
 from .vector import Vector as Vector
 from .id_param import IDParam as IDParam
 from .language import Language as Language
+from .tokenizer import Tokenizer as Tokenizer
 from .document_row import DocumentRow as DocumentRow
 from .vector_param import VectorParam as VectorParam
 from .attribute_type import AttributeType as AttributeType

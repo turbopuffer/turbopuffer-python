@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing_extensions import TypedDict
 
 from .language import Language
+from .tokenizer import Tokenizer
 
 __all__ = ["FullTextSearchConfigParam"]
 
@@ -30,3 +31,6 @@ class FullTextSearchConfigParam(TypedDict, total=False):
 
     Defaults to `false` (i.e., do not stem).
     """
+
+    tokenizer: Tokenizer
+    """The tokenizer to use for full-text search on an attribute."""
