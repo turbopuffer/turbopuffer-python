@@ -11,10 +11,12 @@ from .vector_param import VectorParam as VectorParam
 from .attribute_type import AttributeType as AttributeType
 from .distance_metric import DistanceMetric as DistanceMetric
 from .attribute_schema import AttributeSchema as AttributeSchema
+from .full_text_search import FullTextSearch as FullTextSearch
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .document_row_param import DocumentRowParam as DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
+from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams
 from .full_text_search_config import FullTextSearchConfig as FullTextSearchConfig
