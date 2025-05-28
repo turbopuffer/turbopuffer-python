@@ -1,9 +1,9 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Optional
-from typing_extensions import Literal
 
 from .._models import BaseModel
+from .attribute_type import AttributeType
 from .full_text_search_config import FullTextSearchConfig
 
 __all__ = ["AttributeSchema"]
@@ -14,25 +14,7 @@ class AttributeSchema(BaseModel):
     """Whether or not the attributes can be used in filters/WHERE clauses."""
 
     full_text_search: Optional[FullTextSearchConfig] = None
-    """Whether this attribute can be used as part of a BM25 full-text search.
+    """Configuration options for full-text search."""
 
-    Requires the `string` or `[]string` type, and by default, BM25-enabled
-    attributes are not filterable. You can override this by setting
-    `filterable: true`.
-    """
-
-    type: Optional[
-        Literal["string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint", "[]uuid", "[]datetime"]
-    ] = None
-    """The data type of the attribute.
-
-    - `string` - A string.
-    - `uint` - An unsigned integer.
-    - `uuid` - A UUID.
-    - `bool` - A boolean.
-    - `datetime` - A date and time.
-    - `[]string` - An array of strings.
-    - `[]uint` - An array of unsigned integers.
-    - `[]uuid` - An array of UUIDs.
-    - `[]datetime` - An array of date and time values.
-    """
+    type: Optional[AttributeType] = None
+    """The data type of the attribute."""

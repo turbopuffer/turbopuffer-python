@@ -1,43 +1,22 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Union, Optional
-from typing_extensions import Literal, TypeAlias
+from typing import Optional
 
 from .._models import BaseModel
+from .language import Language
 
-__all__ = ["FullTextSearchConfig", "Detailed"]
+__all__ = ["FullTextSearchConfig"]
 
 
-class Detailed(BaseModel):
+class FullTextSearchConfig(BaseModel):
     case_sensitive: Optional[bool] = None
     """Whether searching is case-sensitive.
 
     Defaults to `false` (i.e. case-insensitive).
     """
 
-    language: Optional[
-        Literal[
-            "arabic",
-            "danish",
-            "dutch",
-            "english",
-            "finnish",
-            "french",
-            "german",
-            "greek",
-            "hungarian",
-            "italian",
-            "norwegian",
-            "portuguese",
-            "romanian",
-            "russian",
-            "spanish",
-            "swedish",
-            "tamil",
-            "turkish",
-        ]
-    ] = None
-    """The language of the text. Defaults to `english`."""
+    language: Optional[Language] = None
+    """Describes the language of a text attribute. Defaults to `english`."""
 
     remove_stopwords: Optional[bool] = None
     """Removes common words from the text based on language.
@@ -50,6 +29,3 @@ class Detailed(BaseModel):
 
     Defaults to `false` (i.e., do not stem).
     """
-
-
-FullTextSearchConfig: TypeAlias = Union[bool, Detailed]
