@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import Union
 from typing_extensions import Literal, TypeAlias, TypedDict
 
-__all__ = ["FullTextSearchConfigParam", "FullTextSearchDetailedConfig"]
+__all__ = ["FullTextSearchConfigParam", "Detailed"]
 
 
-class FullTextSearchDetailedConfig(TypedDict, total=False):
+class Detailed(TypedDict, total=False):
     case_sensitive: bool
     """Whether searching is case-sensitive.
 
@@ -50,4 +50,4 @@ class FullTextSearchDetailedConfig(TypedDict, total=False):
     """
 
 
-FullTextSearchConfigParam: TypeAlias = Union[bool, FullTextSearchDetailedConfig]
+FullTextSearchConfigParam: TypeAlias = Union[bool, Detailed]
