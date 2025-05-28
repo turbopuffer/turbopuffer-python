@@ -30,6 +30,8 @@ distro==1.8.0
 exceptiongroup==1.2.2
     # via anyio
     # via pytest
+execnet==2.1.1
+    # via pytest-xdist
 filelock==3.12.4
     # via virtualenv
 h11==0.14.0
@@ -56,6 +58,7 @@ nest-asyncio==1.6.0
 nodeenv==1.8.0
     # via pyright
 nox==2023.4.22
+numpy==2.0.2
 packaging==23.2
     # via nox
     # via pytest
@@ -63,6 +66,8 @@ platformdirs==3.11.0
     # via virtualenv
 pluggy==1.5.0
     # via pytest
+pybase64==1.4.1
+    # via turbopuffer
 pydantic==2.10.3
     # via turbopuffer
 pydantic-core==2.27.1
@@ -72,7 +77,9 @@ pygments==2.18.0
 pyright==1.1.399
 pytest==8.3.3
     # via pytest-asyncio
+    # via pytest-xdist
 pytest-asyncio==0.24.0
+pytest-xdist==3.7.0
 python-dateutil==2.8.2
     # via time-machine
 pytz==2023.3.post1

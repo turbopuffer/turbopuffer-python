@@ -3,12 +3,14 @@ from __future__ import annotations
 import io
 import base64
 import pathlib
-from typing import Any, Mapping, TypeVar, cast
+from typing import Any, List, Union, Mapping, TypeVar, Iterable, cast
 from datetime import date, datetime
 from typing_extensions import Literal, get_args, override, get_type_hints as _get_type_hints
 
 import anyio
 import pydantic
+
+from turbopuffer_api.lib.vector import b64encode_vector
 
 from ._utils import (
     is_list,
@@ -35,6 +37,11 @@ _T = TypeVar("_T")
 # TODO: support for drilling globals() and locals()
 # TODO: ensure works correctly with forward references in all cases
 
+# HACK: annotations to sniff out that indicate data is of a vector type.
+# Unfortunately we don't get nice types like `Vector` directly.
+VectorRowAnnotation = Union[Iterable[float], str]
+VectorColumnAnnotation = Union[List[VectorRowAnnotation], Iterable[float], str]
+VectorAnnotations = cast(list[type], [VectorRowAnnotation, VectorColumnAnnotation])
 
 PropertyFormat = Literal["iso8601", "base64", "custom"]
 
@@ -170,6 +177,10 @@ def _transform_recursive(
     if inner_type is None:
         inner_type = annotation
 
+    # Fast path for vector encoding.
+    if annotation in VectorAnnotations:
+        return _encode_vector(data)
+
     stripped_type = strip_annotated_type(inner_type)
     origin = get_origin(stripped_type) or stripped_type
     if is_typeddict(stripped_type) and is_mapping(data):
@@ -224,6 +235,20 @@ def _transform_recursive(
         if isinstance(annotation, PropertyInfo) and annotation.format is not None:
             return _format_data(data, annotation.format, annotation.format_template)
 
+    return data
+
+
+def _encode_vector(data: Any) -> Any:
+    if isinstance(data, list):
+        data = cast(List[Any], data)
+        if len(data) > 0:
+            if isinstance(data[0], list):
+                # List of lists; recurse.
+                return [_encode_vector(item) for item in data]
+            elif isinstance(data[0], float):
+                # List of floats; encode to base64.
+                return b64encode_vector(cast(List[float], data))
+    # Something else; return it as is.
     return data
 
 
@@ -331,6 +356,10 @@ async def _async_transform_recursive(
     """
     if inner_type is None:
         inner_type = annotation
+
+    # Fast path for vector encoding.
+    if annotation in VectorAnnotations:
+        return _encode_vector(data)
 
     stripped_type = strip_annotated_type(inner_type)
     origin = get_origin(stripped_type) or stripped_type

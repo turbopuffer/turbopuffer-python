@@ -31,6 +31,8 @@ httpx==0.28.1
 idna==3.4
     # via anyio
     # via httpx
+pybase64==1.4.1
+    # via turbopuffer
 pydantic==2.10.3
     # via turbopuffer
 pydantic-core==2.27.1

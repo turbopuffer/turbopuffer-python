@@ -10,6 +10,7 @@ authors = [
 dependencies = [
     "httpx>=0.23.0, <1",
     "pydantic>=1.9.0, <3",
+    "pybase64>=1.4.1, <2",
     "typing-extensions>=4.10, <5",
     "anyio>=3.5.0, <5",
     "distro>=1.7.0, <2",
@@ -47,6 +48,7 @@ dev-dependencies = [
     "respx",
     "pytest",
     "pytest-asyncio",
+    "pytest-xdist",
     "ruff",
     "time-machine",
     "nox",
@@ -54,6 +56,7 @@ dev-dependencies = [
     "importlib-metadata>=6.7.0",
     "rich>=13.7.1",
     "nest_asyncio==1.6.0",
+    "numpy",
 ]
 
 [tool.rye.scripts]

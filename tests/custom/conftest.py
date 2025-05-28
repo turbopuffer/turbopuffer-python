@@ -1,14 +1,16 @@
 from typing import Iterator
 
 import pytest
-from turbopuffer import Turbopuffer
+
+from turbopuffer import Turbopuffer, AsyncTurbopuffer
 
 
 @pytest.fixture(scope="session")
-def tpuf(request: pytest.FixtureRequest) -> Iterator[Turbopuffer]:
-    strict = getattr(request, "param", True)
-    if not isinstance(strict, bool):
-        raise TypeError(f"Unexpected fixture parameter type {type(strict)}, expected {bool}")
-
+def tpuf() -> Iterator[Turbopuffer]:
     with Turbopuffer() as tpuf:
         yield tpuf
+
+
+@pytest.fixture(scope="session")
+def async_tpuf() -> Iterator[AsyncTurbopuffer]:
+    yield AsyncTurbopuffer()

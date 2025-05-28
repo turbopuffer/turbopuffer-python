@@ -25,6 +25,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.custom import Filter, RankBy
 from ..types.id_param import IDParam
 from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
@@ -172,11 +173,11 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        rank_by: object,
+        rank_by: RankBy,
         top_k: int,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        filters: object | NotGiven = NOT_GIVEN,
+        filters: Filter | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -339,7 +340,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         namespace: str | None = None,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
-        delete_by_filter: object | NotGiven = NOT_GIVEN,
+        delete_by_filter: Filter | NotGiven = NOT_GIVEN,
         deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,

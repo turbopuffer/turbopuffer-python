@@ -24,6 +24,7 @@ from pydantic import ValidationError
 from turbopuffer import Turbopuffer, AsyncTurbopuffer, APIResponseValidationError
 from turbopuffer._types import Omit
 from turbopuffer._models import BaseModel, FinalRequestOptions
+from turbopuffer.resources import namespaces
 from turbopuffer._exceptions import TurbopufferError, APIResponseValidationError
 from turbopuffer._base_client import (
     DEFAULT_TIMEOUT,
@@ -397,7 +398,7 @@ class TestTurbopuffer:
 
         with client as c2:
             with pytest.raises(ValueError, match="Missing default_namespace argument;"):
-                c2.namespaces.delete_all()
+                namespaces.NamespacesResource(c2).delete_all()
 
         client = Turbopuffer(
             base_url=base_url,
@@ -407,7 +408,7 @@ class TestTurbopuffer:
             default_namespace="My Default Namespace",
         )
         with client as c2:
-            c2.namespaces.delete_all()
+            namespaces.NamespacesResource(c2).delete_all()
 
     def test_request_extra_json(self) -> None:
         request = self.client._build_request(
