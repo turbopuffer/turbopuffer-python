@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Dict, List, Iterable
-from typing_extensions import TypedDict
+from typing_extensions import Required, TypedDict
 
 from .id_param import IDParam
 from .distance_metric import DistanceMetric
@@ -11,7 +11,7 @@ from .document_row_param import DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam
 
-__all__ = ["NamespaceWriteParams"]
+__all__ = ["NamespaceWriteParams", "Encryption", "EncryptionCmek"]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
@@ -28,6 +28,9 @@ class NamespaceWriteParams(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
+    encryption: Encryption
+    """The encryption configuration for a namespace."""
+
     patch_columns: DocumentColumnsParam
     """A list of documents in columnar format. The keys are the column names."""
 
@@ -40,3 +43,16 @@ class NamespaceWriteParams(TypedDict, total=False):
     """A list of documents in columnar format. The keys are the column names."""
 
     upsert_rows: Iterable[DocumentRowParam]
+
+
+class EncryptionCmek(TypedDict, total=False):
+    key_name: Required[str]
+    """The identifier of the CMEK key to use for encryption.
+
+    For GCP, the fully-qualified resource name of the key. For AWS, the ARN of the
+    key.
+    """
+
+
+class Encryption(TypedDict, total=False):
+    cmek: EncryptionCmek

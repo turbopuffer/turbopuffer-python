@@ -341,6 +341,7 @@ class NamespacesResource(SyncAPIResource):
         delete_by_filter: object | NotGiven = NOT_GIVEN,
         deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
         patch_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
         patch_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
@@ -362,6 +363,8 @@ class NamespacesResource(SyncAPIResource):
           delete_by_filter: The filter specifying which documents to delete.
 
           distance_metric: A function used to calculate vector similarity.
+
+          encryption: The encryption configuration for a namespace.
 
           patch_columns: A list of documents in columnar format. The keys are the column names.
 
@@ -389,6 +392,7 @@ class NamespacesResource(SyncAPIResource):
                     "delete_by_filter": delete_by_filter,
                     "deletes": deletes,
                     "distance_metric": distance_metric,
+                    "encryption": encryption,
                     "patch_columns": patch_columns,
                     "patch_rows": patch_rows,
                     "schema": schema,
@@ -703,6 +707,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         delete_by_filter: object | NotGiven = NOT_GIVEN,
         deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
         patch_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
         patch_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
@@ -724,6 +729,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
           delete_by_filter: The filter specifying which documents to delete.
 
           distance_metric: A function used to calculate vector similarity.
+
+          encryption: The encryption configuration for a namespace.
 
           patch_columns: A list of documents in columnar format. The keys are the column names.
 
@@ -751,6 +758,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "delete_by_filter": delete_by_filter,
                     "deletes": deletes,
                     "distance_metric": distance_metric,
+                    "encryption": encryption,
                     "patch_columns": patch_columns,
                     "patch_rows": patch_rows,
                     "schema": schema,
