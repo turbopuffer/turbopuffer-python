@@ -20,6 +20,12 @@ class NamespaceQueryParams(TypedDict, total=False):
     top_k: Required[int]
     """The number of results to return."""
 
+    aggregate_by: object
+    """
+    Aggregations to compute over all documents in the namespace that match the
+    filters.
+    """
+
     consistency: Consistency
     """The consistency level for a query."""
 
