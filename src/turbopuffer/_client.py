@@ -46,7 +46,6 @@ from ._base_client import (
     AsyncPaginator,
     make_request_options,
 )
-from .types.namespace_summary import NamespaceSummary
 from .lib.namespace import (
     Namespace,
     AsyncNamespace,
@@ -55,6 +54,7 @@ from .lib.namespace import (
     NamespaceWithStreamingResponse,
     AsyncNamespaceWithStreamingResponse,
 )
+from .types.namespace_summary import NamespaceSummary
 
 __all__ = [
     "Timeout",

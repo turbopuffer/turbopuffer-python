@@ -24,6 +24,7 @@ from pydantic import ValidationError
 from turbopuffer import Turbopuffer, AsyncTurbopuffer, APIResponseValidationError
 from turbopuffer._types import Omit
 from turbopuffer._models import BaseModel, FinalRequestOptions
+from turbopuffer.resources import namespaces
 from turbopuffer._exceptions import TurbopufferError, APIResponseValidationError
 from turbopuffer._base_client import (
     DEFAULT_TIMEOUT,
