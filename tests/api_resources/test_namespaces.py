@@ -142,7 +142,6 @@ class TestNamespaces:
         namespace = client.namespace("namespace").query(
             rank_by=("vector", "ANN", [0.0, 0.0]),
             top_k=0,
-            aggregate_by={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             include_attributes=True,

@@ -25,7 +25,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.custom import Filter, RankBy
+from ..types.custom import Filter, RankBy, AggregateBy
 from ..types.id_param import IDParam
 from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
@@ -175,7 +175,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         rank_by: RankBy,
         top_k: int,
-        aggregate_by: Dict[str, object] | NotGiven = NOT_GIVEN,
+        aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: Filter | NotGiven = NOT_GIVEN,
