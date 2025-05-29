@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Dict
-from typing_extensions import Literal, Required, TypedDict
+from typing_extensions import Literal, TypedDict
 
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
@@ -14,12 +14,6 @@ __all__ = ["NamespaceQueryParams", "Consistency"]
 
 class NamespaceQueryParams(TypedDict, total=False):
     namespace: str
-
-    rank_by: Required[object]
-    """How to rank the documents in the namespace."""
-
-    top_k: Required[int]
-    """The number of results to return."""
 
     aggregate_by: Dict[str, object]
     """
@@ -41,6 +35,12 @@ class NamespaceQueryParams(TypedDict, total=False):
 
     include_attributes: IncludeAttributesParam
     """Whether to include attributes in the response."""
+
+    rank_by: object
+    """How to rank the documents in the namespace."""
+
+    top_k: int
+    """The number of results to return."""
 
     vector_encoding: VectorEncoding
     """The encoding to use for vectors in the response."""
