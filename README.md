@@ -1,6 +1,6 @@
-# Turbopuffer Python API library
+# Turbopuffer Python API library  <a href="https://turbopuffer.com"><img src="https://github.com/user-attachments/assets/8d6cca4c-10b7-4d3a-9782-696053baf44e" align="right"></a>
 
-[![PyPI version](https://img.shields.io/pypi/v/turbopuffer.svg)](https://pypi.org/project/turbopuffer/)
+<a href="https://pypi.org/project/turbopuffer/"><img src="https://img.shields.io/pypi/v/turbopuffer.svg" alt="PyPI version" align="right"></a>
 
 The Turbopuffer Python library provides convenient access to the Turbopuffer REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -10,7 +10,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs).
 
 ## Installation
 
@@ -24,19 +24,18 @@ pip install git+ssh://git@github.com/turbopuffer/turbopuffer-python#ng.git
 
 ## Usage
 
-The full API of this library can be found in [api.md](api.md).
-
 ```python
 import os
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
+    # Pick the right region https://turbopuffer.com/docs/regions
     region="gcp-us-central1",
-    api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
+    # This is the default and can be omitted
+    api_key=os.environ.get("TURBOPUFFER_API_KEY"),
 )
 
-response = client.namespaces.write(
-    namespace="products",
+response = client.namespace("products").write(
     distance_metric="cosine_distance",
     upsert_rows=[
         {
@@ -67,8 +66,10 @@ import asyncio
 from turbopuffer import AsyncTurbopuffer
 
 client = AsyncTurbopuffer(
+    # Pick the right region https://turbopuffer.com/docs/regions
     region="gcp-us-central1",
-    api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
+    # This is the default and can be omitted
+    api_key=os.environ.get("TURBOPUFFER_API_KEY"),
 )
 
 
@@ -117,14 +118,14 @@ client = Turbopuffer(
     region="gcp-us-central1",
 )
 
-all_clients = []
+all_namespaces = []
 # Automatically fetches more pages as needed.
 for client in client.list_namespaces(
     prefix="products",
 ):
     # Do something with client here
-    all_clients.append(client)
-print(all_clients)
+    all_namespaces.append(client)
+print(all_namespaces)
 ```
 
 Or, asynchronously:
@@ -139,13 +140,13 @@ client = AsyncTurbopuffer(
 
 
 async def main() -> None:
-    all_clients = []
+    all_namespaces = []
     # Iterate through items across all pages, issuing requests as needed.
     async for client in client.list_namespaces(
         prefix="products",
     ):
-        all_clients.append(client)
-    print(all_clients)
+        all_namespaces.append(client)
+    print(all_namespaces)
 
 
 asyncio.run(main())
