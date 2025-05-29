@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from typing import Dict
 from typing_extensions import Literal, Required, TypedDict
 
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
+from .aggregation_param import AggregationParam
 from .include_attributes_param import IncludeAttributesParam
 
 __all__ = ["NamespaceQueryParams", "Consistency"]
@@ -20,7 +22,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     top_k: Required[int]
     """The number of results to return."""
 
-    aggregate_by: object
+    aggregate_by: Dict[str, AggregationParam]
     """
     Aggregations to compute over all documents in the namespace that match the
     filters.
