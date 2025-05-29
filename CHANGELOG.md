@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.5.0-alpha.2 (2025-05-29)
+
+Full Changelog: [v0.5.0-alpha.1...v0.5.0-alpha.2](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.1...v0.5.0-alpha.2)
+
+### Features
+
+* **api:** api update ([c021d8b](https://github.com/turbopuffer/turbopuffer-python/commit/c021d8b89f5049e48c7b62c4543a887706b141fa))
+
+
+### Bug Fixes
+
+* **README:** add alpha notice ([14aac9d](https://github.com/turbopuffer/turbopuffer-python/commit/14aac9d3f1177316a90be10063248b2db70c38c3))
+* **README:** update code examples ([12e9cca](https://github.com/turbopuffer/turbopuffer-python/commit/12e9ccada045c2a00c0bc8a5f4ab275c71bf9783))
+
+
+### Chores
+
+* remove custom code ([51c0514](https://github.com/turbopuffer/turbopuffer-python/commit/51c051481a85e719bfd97279bc2b8129e2c88d46))
+
 ## 0.5.0-alpha.1 (2025-05-28)
 
 Full Changelog: [v0.4.0-alpha.1...v0.5.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.4.0-alpha.1...v0.5.0-alpha.1)
