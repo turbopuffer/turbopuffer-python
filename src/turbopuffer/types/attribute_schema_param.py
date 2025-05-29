@@ -15,7 +15,7 @@ class AttributeSchemaParam(TypedDict, total=False):
     """Whether to create an approximate nearest neighbor index for the attribute."""
 
     filterable: bool
-    """Whether or not the attributes can be used in filters/WHERE clauses."""
+    """Whether or not the attributes can be used in filters."""
 
     full_text_search: FullTextSearchParam
     """Whether this attribute can be used as part of a BM25 full-text search.
