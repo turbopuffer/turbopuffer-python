@@ -3,12 +3,12 @@
 Types:
 
 ```python
-from turbopuffer.types import NamespaceSummary, ListNamespacesResponse
+from turbopuffer.types import NamespaceSummary
 ```
 
 Methods:
 
-- <code title="get /v1/namespaces">client.<a href="./src/turbopuffer/_client.py">list_namespaces</a>(\*\*<a href="src/turbopuffer/types/client_list_namespaces_params.py">params</a>) -> <a href="./src/turbopuffer/types/list_namespaces_response.py">ListNamespacesResponse</a></code>
+- <code title="get /v1/namespaces">client.<a href="./src/turbopuffer/_client.py">list_namespaces</a>(\*\*<a href="src/turbopuffer/types/client_list_namespaces_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_summary.py">SyncNamespacePage[NamespaceSummary]</a></code>
 
 # Namespaces
 

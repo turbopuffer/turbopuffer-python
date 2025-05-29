@@ -101,6 +101,81 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
 
+## Pagination
+
+List methods in the Turbopuffer API are paginated.
+
+This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
+
+```python
+from turbopuffer import Turbopuffer
+
+client = Turbopuffer(
+    region="gcp-us-central1",
+)
+
+all_clients = []
+# Automatically fetches more pages as needed.
+for client in client.list_namespaces(
+    prefix="products",
+):
+    # Do something with client here
+    all_clients.append(client)
+print(all_clients)
+```
+
+Or, asynchronously:
+
+```python
+import asyncio
+from turbopuffer import AsyncTurbopuffer
+
+client = AsyncTurbopuffer(
+    region="gcp-us-central1",
+)
+
+
+async def main() -> None:
+    all_clients = []
+    # Iterate through items across all pages, issuing requests as needed.
+    async for client in client.list_namespaces(
+        prefix="products",
+    ):
+        all_clients.append(client)
+    print(all_clients)
+
+
+asyncio.run(main())
+```
+
+Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
+
+```python
+first_page = await client.list_namespaces(
+    prefix="products",
+)
+if first_page.has_next_page():
+    print(f"will fetch next page using these details: {first_page.next_page_info()}")
+    next_page = await first_page.get_next_page()
+    print(f"number of items we just fetched: {len(next_page.namespaces)}")
+
+# Remove `await` for non-async usage.
+```
+
+Or just work directly with the returned data:
+
+```python
+first_page = await client.list_namespaces(
+    prefix="products",
+)
+
+print(f"next page cursor: {first_page.next_cursor}")  # => "next page cursor: ..."
+for client in first_page.namespaces:
+    print(client.id)
+
+# Remove `await` for non-async usage.
+```
+
 ## Nested params
 
 Nested parameters are dictionaries, typed using `TypedDict`, for example:
@@ -261,7 +336,7 @@ response = client.with_raw_response.list_namespaces(
 print(response.headers.get('X-My-Header'))
 
 client = response.parse()  # get the object that `list_namespaces()` would have returned
-print(client.namespaces)
+print(client.id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/turbopuffer/turbopuffer-python/tree/ng/src/turbopuffer/_response.py) object.
