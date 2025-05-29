@@ -19,6 +19,7 @@ from .full_text_search import FullTextSearch as FullTextSearch
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .query_performance import QueryPerformance as QueryPerformance
 from .document_row_param import DocumentRowParam as DocumentRowParam
+from .attribute_type_param import AttributeTypeParam as AttributeTypeParam
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
