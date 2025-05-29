@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from typing_extensions import Literal, TypedDict
+from typing_extensions import TypedDict
+
+from .language import Language
+from .tokenizer import Tokenizer
 
 __all__ = ["FullTextSearchConfigParam"]
 
@@ -14,27 +17,8 @@ class FullTextSearchConfigParam(TypedDict, total=False):
     Defaults to `false` (i.e. case-insensitive).
     """
 
-    language: Literal[
-        "arabic",
-        "danish",
-        "dutch",
-        "english",
-        "finnish",
-        "french",
-        "german",
-        "greek",
-        "hungarian",
-        "italian",
-        "norwegian",
-        "portuguese",
-        "romanian",
-        "russian",
-        "spanish",
-        "swedish",
-        "tamil",
-        "turkish",
-    ]
-    """The language of the text. Defaults to `english`."""
+    language: Language
+    """Describes the language of a text attribute. Defaults to `english`."""
 
     remove_stopwords: bool
     """Removes common words from the text based on language.
@@ -47,3 +31,6 @@ class FullTextSearchConfigParam(TypedDict, total=False):
 
     Defaults to `false` (i.e., do not stem).
     """
+
+    tokenizer: Tokenizer
+    """The tokenizer to use for full-text search on an attribute."""

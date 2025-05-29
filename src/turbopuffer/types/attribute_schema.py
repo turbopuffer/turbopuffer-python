@@ -1,14 +1,12 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Union, Optional
-from typing_extensions import Literal, TypeAlias
+from typing import Optional
 
 from .._models import BaseModel
-from .full_text_search_config import FullTextSearchConfig
+from .attribute_type import AttributeType
+from .full_text_search import FullTextSearch
 
-__all__ = ["AttributeSchema", "FullTextSearch"]
-
-FullTextSearch: TypeAlias = Union[bool, FullTextSearchConfig]
+__all__ = ["AttributeSchema"]
 
 
 class AttributeSchema(BaseModel):
@@ -23,14 +21,5 @@ class AttributeSchema(BaseModel):
     `filterable: true`.
     """
 
-    type: Optional[Literal["string", "uint", "uuid", "bool", "[]string", "[]uint", "[]uuid"]] = None
-    """The data type of the attribute.
-
-    - `string` - A string.
-    - `uint` - An unsigned integer.
-    - `uuid` - A UUID.
-    - `bool` - A boolean.
-    - `[]string` - An array of strings.
-    - `[]uint` - An array of unsigned integers.
-    - `[]uuid` - An array of UUIDs.
-    """
+    type: Optional[AttributeType] = None
+    """The data type of the attribute."""

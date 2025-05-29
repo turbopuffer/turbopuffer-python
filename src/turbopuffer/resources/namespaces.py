@@ -2,11 +2,18 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Iterable
+from typing import Dict, List, Iterable
 
 import httpx
 
-from ..types import DistanceMetric, namespace_list_params, namespace_query_params, namespace_write_params
+from ..types import (
+    DistanceMetric,
+    VectorEncoding,
+    namespace_query_params,
+    namespace_write_params,
+    namespace_recall_params,
+    namespace_update_schema_params,
+)
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -17,14 +24,22 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..pagination import SyncListNamespaces, AsyncListNamespaces
-from .._base_client import AsyncPaginator, make_request_options
+from .._base_client import make_request_options
+from ..types.custom import Filter, RankBy
+from ..types.id_param import IDParam
 from ..types.distance_metric import DistanceMetric
-from ..types.namespace_summary import NamespaceSummary
+from ..types.vector_encoding import VectorEncoding
+from ..types.document_row_param import DocumentRowParam
+from ..types.attribute_schema_param import AttributeSchemaParam
+from ..types.document_columns_param import DocumentColumnsParam
+from ..types.include_attributes_param import IncludeAttributesParam
 from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_write_response import NamespaceWriteResponse
+from ..types.namespace_recall_response import NamespaceRecallResponse
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
 from ..types.namespace_get_schema_response import NamespaceGetSchemaResponse
+from ..types.namespace_update_schema_response import NamespaceUpdateSchemaResponse
+from ..types.namespace_hint_cache_warm_response import NamespaceHintCacheWarmResponse
 
 __all__ = ["NamespacesResource", "AsyncNamespacesResource"]
 
@@ -49,61 +64,10 @@ class NamespacesResource(SyncAPIResource):
         """
         return NamespacesResourceWithStreamingResponse(self)
 
-    def list(
-        self,
-        *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        page_size: int | NotGiven = NOT_GIVEN,
-        prefix: str | NotGiven = NOT_GIVEN,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncListNamespaces[NamespaceSummary]:
-        """
-        List namespaces.
-
-        Args:
-          cursor: Retrieve the next page of results.
-
-          page_size: Limit the number of results per page.
-
-          prefix: Retrieve only the namespaces that match the prefix.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get_api_list(
-            "/v1/namespaces",
-            page=SyncListNamespaces[NamespaceSummary],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "cursor": cursor,
-                        "page_size": page_size,
-                        "prefix": prefix,
-                    },
-                    namespace_list_params.NamespaceListParams,
-                ),
-            ),
-            model=NamespaceSummary,
-        )
-
     def delete_all(
         self,
-        namespace: str,
         *,
+        namespace: str | None = None,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -123,6 +87,8 @@ class NamespacesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._delete(
@@ -135,8 +101,8 @@ class NamespacesResource(SyncAPIResource):
 
     def get_schema(
         self,
-        namespace: str,
         *,
+        namespace: str | None = None,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -156,6 +122,8 @@ class NamespacesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._get(
@@ -166,18 +134,52 @@ class NamespacesResource(SyncAPIResource):
             cast_to=NamespaceGetSchemaResponse,
         )
 
+    def hint_cache_warm(
+        self,
+        *,
+        namespace: str | None = None,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceHintCacheWarmResponse:
+        """
+        Warm the cache for a namespace.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._get(
+            f"/v1/namespaces/{namespace}/hint_cache_warm",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceHintCacheWarmResponse,
+        )
+
     def query(
         self,
-        namespace: str,
         *,
+        namespace: str | None = None,
+        rank_by: RankBy,
+        top_k: int,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        filters: object | NotGiven = NOT_GIVEN,
-        include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
-        include_vectors: bool | NotGiven = NOT_GIVEN,
-        rank_by: object | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
-        vector: Iterable[float] | NotGiven = NOT_GIVEN,
+        filters: Filter | NotGiven = NOT_GIVEN,
+        include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
+        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -189,6 +191,10 @@ class NamespacesResource(SyncAPIResource):
         Query, filter, full-text search and vector search documents.
 
         Args:
+          rank_by: How to rank the documents in the namespace.
+
+          top_k: The number of results to return.
+
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
@@ -198,15 +204,7 @@ class NamespacesResource(SyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
-          include_vectors: Whether to return vectors for the search results. Vectors are large and slow to
-              deserialize on the client, so use this option only if you need them.
-
-          rank_by: The attribute to rank the results by. Cannot be specified with `vector`.
-
-          top_k: The number of results to return.
-
-          vector: A vector to search for. It must have the same number of dimensions as the
-              vectors in the namespace. Cannot be specified with `rank_by`.
+          vector_encoding: The encoding to use for vectors in the response.
 
           extra_headers: Send extra headers
 
@@ -216,20 +214,21 @@ class NamespacesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
-            f"/v1/namespaces/{namespace}/query",
+            f"/v2/namespaces/{namespace}/query",
             body=maybe_transform(
                 {
+                    "rank_by": rank_by,
+                    "top_k": top_k,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "filters": filters,
                     "include_attributes": include_attributes,
-                    "include_vectors": include_vectors,
-                    "rank_by": rank_by,
-                    "top_k": top_k,
-                    "vector": vector,
+                    "vector_encoding": vector_encoding,
                 },
                 namespace_query_params.NamespaceQueryParams,
             ),
@@ -239,11 +238,117 @@ class NamespacesResource(SyncAPIResource):
             cast_to=NamespaceQueryResponse,
         )
 
+    def recall(
+        self,
+        *,
+        namespace: str | None = None,
+        filters: object | NotGiven = NOT_GIVEN,
+        num: int | NotGiven = NOT_GIVEN,
+        queries: Iterable[float] | NotGiven = NOT_GIVEN,
+        top_k: int | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceRecallResponse:
+        """Evaluate recall.
+
+        Args:
+          filters: Filter by attributes.
+
+        Same syntax as the query endpoint.
+
+          num: The number of searches to run.
+
+          queries: Use specific query vectors for the measurement. If omitted, sampled from the
+              index.
+
+          top_k: Search for `top_k` nearest neighbors.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._post(
+            f"/v1/namespaces/{namespace}/_debug/recall",
+            body=maybe_transform(
+                {
+                    "filters": filters,
+                    "num": num,
+                    "queries": queries,
+                    "top_k": top_k,
+                },
+                namespace_recall_params.NamespaceRecallParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceRecallResponse,
+        )
+
+    def update_schema(
+        self,
+        *,
+        namespace: str | None = None,
+        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpdateSchemaResponse:
+        """
+        Update namespace schema.
+
+        Args:
+          schema: The desired schema for the namespace.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._post(
+            f"/v1/namespaces/{namespace}/schema",
+            body=maybe_transform(schema, namespace_update_schema_params.NamespaceUpdateSchemaParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceUpdateSchemaResponse,
+        )
+
     def write(
         self,
-        namespace: str,
         *,
-        operation: namespace_write_params.Operation | NotGiven = NOT_GIVEN,
+        namespace: str | None = None,
+        copy_from_namespace: str | NotGiven = NOT_GIVEN,
+        delete_by_filter: Filter | NotGiven = NOT_GIVEN,
+        deletes: List[IDParam] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
+        patch_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
+        patch_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
+        upsert_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
+        upsert_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -255,7 +360,19 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          operation: Write documents.
+          copy_from_namespace: The namespace to copy documents from.
+
+          delete_by_filter: The filter specifying which documents to delete.
+
+          distance_metric: A function used to calculate vector similarity.
+
+          encryption: The encryption configuration for a namespace.
+
+          patch_columns: A list of documents in columnar format. The keys are the column names.
+
+          schema: The schema of the attributes attached to the documents.
+
+          upsert_columns: A list of documents in columnar format. The keys are the column names.
 
           extra_headers: Send extra headers
 
@@ -265,11 +382,27 @@ class NamespacesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             f"/v2/namespaces/{namespace}",
-            body=maybe_transform(operation, namespace_write_params.NamespaceWriteParams),
+            body=maybe_transform(
+                {
+                    "copy_from_namespace": copy_from_namespace,
+                    "delete_by_filter": delete_by_filter,
+                    "deletes": deletes,
+                    "distance_metric": distance_metric,
+                    "encryption": encryption,
+                    "patch_columns": patch_columns,
+                    "patch_rows": patch_rows,
+                    "schema": schema,
+                    "upsert_columns": upsert_columns,
+                    "upsert_rows": upsert_rows,
+                },
+                namespace_write_params.NamespaceWriteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -297,61 +430,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
         """
         return AsyncNamespacesResourceWithStreamingResponse(self)
 
-    def list(
-        self,
-        *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        page_size: int | NotGiven = NOT_GIVEN,
-        prefix: str | NotGiven = NOT_GIVEN,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[NamespaceSummary, AsyncListNamespaces[NamespaceSummary]]:
-        """
-        List namespaces.
-
-        Args:
-          cursor: Retrieve the next page of results.
-
-          page_size: Limit the number of results per page.
-
-          prefix: Retrieve only the namespaces that match the prefix.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get_api_list(
-            "/v1/namespaces",
-            page=AsyncListNamespaces[NamespaceSummary],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "cursor": cursor,
-                        "page_size": page_size,
-                        "prefix": prefix,
-                    },
-                    namespace_list_params.NamespaceListParams,
-                ),
-            ),
-            model=NamespaceSummary,
-        )
-
     async def delete_all(
         self,
-        namespace: str,
         *,
+        namespace: str | None = None,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -371,6 +453,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._delete(
@@ -383,8 +467,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
     async def get_schema(
         self,
-        namespace: str,
         *,
+        namespace: str | None = None,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -404,6 +488,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._get(
@@ -414,18 +500,52 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceGetSchemaResponse,
         )
 
+    async def hint_cache_warm(
+        self,
+        *,
+        namespace: str | None = None,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceHintCacheWarmResponse:
+        """
+        Warm the cache for a namespace.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._get(
+            f"/v1/namespaces/{namespace}/hint_cache_warm",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceHintCacheWarmResponse,
+        )
+
     async def query(
         self,
-        namespace: str,
         *,
+        namespace: str | None = None,
+        rank_by: object,
+        top_k: int,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
-        include_attributes: Union[bool, List[str]] | NotGiven = NOT_GIVEN,
-        include_vectors: bool | NotGiven = NOT_GIVEN,
-        rank_by: object | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
-        vector: Iterable[float] | NotGiven = NOT_GIVEN,
+        include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
+        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -437,6 +557,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Query, filter, full-text search and vector search documents.
 
         Args:
+          rank_by: How to rank the documents in the namespace.
+
+          top_k: The number of results to return.
+
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
@@ -446,15 +570,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
-          include_vectors: Whether to return vectors for the search results. Vectors are large and slow to
-              deserialize on the client, so use this option only if you need them.
-
-          rank_by: The attribute to rank the results by. Cannot be specified with `vector`.
-
-          top_k: The number of results to return.
-
-          vector: A vector to search for. It must have the same number of dimensions as the
-              vectors in the namespace. Cannot be specified with `rank_by`.
+          vector_encoding: The encoding to use for vectors in the response.
 
           extra_headers: Send extra headers
 
@@ -464,20 +580,21 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
-            f"/v1/namespaces/{namespace}/query",
+            f"/v2/namespaces/{namespace}/query",
             body=await async_maybe_transform(
                 {
+                    "rank_by": rank_by,
+                    "top_k": top_k,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "filters": filters,
                     "include_attributes": include_attributes,
-                    "include_vectors": include_vectors,
-                    "rank_by": rank_by,
-                    "top_k": top_k,
-                    "vector": vector,
+                    "vector_encoding": vector_encoding,
                 },
                 namespace_query_params.NamespaceQueryParams,
             ),
@@ -487,11 +604,117 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceQueryResponse,
         )
 
+    async def recall(
+        self,
+        *,
+        namespace: str | None = None,
+        filters: object | NotGiven = NOT_GIVEN,
+        num: int | NotGiven = NOT_GIVEN,
+        queries: Iterable[float] | NotGiven = NOT_GIVEN,
+        top_k: int | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceRecallResponse:
+        """Evaluate recall.
+
+        Args:
+          filters: Filter by attributes.
+
+        Same syntax as the query endpoint.
+
+          num: The number of searches to run.
+
+          queries: Use specific query vectors for the measurement. If omitted, sampled from the
+              index.
+
+          top_k: Search for `top_k` nearest neighbors.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._post(
+            f"/v1/namespaces/{namespace}/_debug/recall",
+            body=await async_maybe_transform(
+                {
+                    "filters": filters,
+                    "num": num,
+                    "queries": queries,
+                    "top_k": top_k,
+                },
+                namespace_recall_params.NamespaceRecallParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceRecallResponse,
+        )
+
+    async def update_schema(
+        self,
+        *,
+        namespace: str | None = None,
+        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceUpdateSchemaResponse:
+        """
+        Update namespace schema.
+
+        Args:
+          schema: The desired schema for the namespace.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._post(
+            f"/v1/namespaces/{namespace}/schema",
+            body=await async_maybe_transform(schema, namespace_update_schema_params.NamespaceUpdateSchemaParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceUpdateSchemaResponse,
+        )
+
     async def write(
         self,
-        namespace: str,
         *,
-        operation: namespace_write_params.Operation | NotGiven = NOT_GIVEN,
+        namespace: str | None = None,
+        copy_from_namespace: str | NotGiven = NOT_GIVEN,
+        delete_by_filter: object | NotGiven = NOT_GIVEN,
+        deletes: List[IDParam] | NotGiven = NOT_GIVEN,
+        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
+        patch_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
+        patch_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
+        upsert_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
+        upsert_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -503,7 +726,19 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          operation: Write documents.
+          copy_from_namespace: The namespace to copy documents from.
+
+          delete_by_filter: The filter specifying which documents to delete.
+
+          distance_metric: A function used to calculate vector similarity.
+
+          encryption: The encryption configuration for a namespace.
+
+          patch_columns: A list of documents in columnar format. The keys are the column names.
+
+          schema: The schema of the attributes attached to the documents.
+
+          upsert_columns: A list of documents in columnar format. The keys are the column names.
 
           extra_headers: Send extra headers
 
@@ -513,11 +748,27 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             f"/v2/namespaces/{namespace}",
-            body=await async_maybe_transform(operation, namespace_write_params.NamespaceWriteParams),
+            body=await async_maybe_transform(
+                {
+                    "copy_from_namespace": copy_from_namespace,
+                    "delete_by_filter": delete_by_filter,
+                    "deletes": deletes,
+                    "distance_metric": distance_metric,
+                    "encryption": encryption,
+                    "patch_columns": patch_columns,
+                    "patch_rows": patch_rows,
+                    "schema": schema,
+                    "upsert_columns": upsert_columns,
+                    "upsert_rows": upsert_rows,
+                },
+                namespace_write_params.NamespaceWriteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -529,17 +780,23 @@ class NamespacesResourceWithRawResponse:
     def __init__(self, namespaces: NamespacesResource) -> None:
         self._namespaces = namespaces
 
-        self.list = to_raw_response_wrapper(
-            namespaces.list,
-        )
         self.delete_all = to_raw_response_wrapper(
             namespaces.delete_all,
         )
         self.get_schema = to_raw_response_wrapper(
             namespaces.get_schema,
         )
+        self.hint_cache_warm = to_raw_response_wrapper(
+            namespaces.hint_cache_warm,
+        )
         self.query = to_raw_response_wrapper(
             namespaces.query,
+        )
+        self.recall = to_raw_response_wrapper(
+            namespaces.recall,
+        )
+        self.update_schema = to_raw_response_wrapper(
+            namespaces.update_schema,
         )
         self.write = to_raw_response_wrapper(
             namespaces.write,
@@ -550,17 +807,23 @@ class AsyncNamespacesResourceWithRawResponse:
     def __init__(self, namespaces: AsyncNamespacesResource) -> None:
         self._namespaces = namespaces
 
-        self.list = async_to_raw_response_wrapper(
-            namespaces.list,
-        )
         self.delete_all = async_to_raw_response_wrapper(
             namespaces.delete_all,
         )
         self.get_schema = async_to_raw_response_wrapper(
             namespaces.get_schema,
         )
+        self.hint_cache_warm = async_to_raw_response_wrapper(
+            namespaces.hint_cache_warm,
+        )
         self.query = async_to_raw_response_wrapper(
             namespaces.query,
+        )
+        self.recall = async_to_raw_response_wrapper(
+            namespaces.recall,
+        )
+        self.update_schema = async_to_raw_response_wrapper(
+            namespaces.update_schema,
         )
         self.write = async_to_raw_response_wrapper(
             namespaces.write,
@@ -571,17 +834,23 @@ class NamespacesResourceWithStreamingResponse:
     def __init__(self, namespaces: NamespacesResource) -> None:
         self._namespaces = namespaces
 
-        self.list = to_streamed_response_wrapper(
-            namespaces.list,
-        )
         self.delete_all = to_streamed_response_wrapper(
             namespaces.delete_all,
         )
         self.get_schema = to_streamed_response_wrapper(
             namespaces.get_schema,
         )
+        self.hint_cache_warm = to_streamed_response_wrapper(
+            namespaces.hint_cache_warm,
+        )
         self.query = to_streamed_response_wrapper(
             namespaces.query,
+        )
+        self.recall = to_streamed_response_wrapper(
+            namespaces.recall,
+        )
+        self.update_schema = to_streamed_response_wrapper(
+            namespaces.update_schema,
         )
         self.write = to_streamed_response_wrapper(
             namespaces.write,
@@ -592,17 +861,23 @@ class AsyncNamespacesResourceWithStreamingResponse:
     def __init__(self, namespaces: AsyncNamespacesResource) -> None:
         self._namespaces = namespaces
 
-        self.list = async_to_streamed_response_wrapper(
-            namespaces.list,
-        )
         self.delete_all = async_to_streamed_response_wrapper(
             namespaces.delete_all,
         )
         self.get_schema = async_to_streamed_response_wrapper(
             namespaces.get_schema,
         )
+        self.hint_cache_warm = async_to_streamed_response_wrapper(
+            namespaces.hint_cache_warm,
+        )
         self.query = async_to_streamed_response_wrapper(
             namespaces.query,
+        )
+        self.recall = async_to_streamed_response_wrapper(
+            namespaces.recall,
+        )
+        self.update_schema = async_to_streamed_response_wrapper(
+            namespaces.update_schema,
         )
         self.write = async_to_streamed_response_wrapper(
             namespaces.write,

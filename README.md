@@ -20,7 +20,7 @@ pip install git+ssh://git@github.com/turbopuffer/turbopuffer-python#ng.git
 ```
 
 > [!NOTE]
-> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install turbopuffer`
+> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre turbopuffer`
 
 ## Usage
 
@@ -31,18 +31,30 @@ import os
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
+    region="gcp-us-central1",
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
 response = client.namespaces.write(
     namespace="products",
+    distance_metric="cosine_distance",
+    upsert_rows=[
+        {
+            "id": "2108ed60-6851-49a0-9016-8325434f3845",
+            "vector": [0.1, 0.2],
+            "attributes": {
+                "name": "Red boots",
+                "price": 34.99,
+            },
+        }
+    ],
 )
-print(response.status)
+print(response.rows_affected)
 ```
 
 While you can provide an `api_key` keyword argument,
 we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `TURBOPUFFER_API_KEY="My API Key"` to your `.env` file
+to add `TURBOPUFFER_API_KEY="tpuf_A1..."` to your `.env` file
 so that your API Key is not stored in source control.
 
 ## Async usage
@@ -55,6 +67,7 @@ import asyncio
 from turbopuffer import AsyncTurbopuffer
 
 client = AsyncTurbopuffer(
+    region="gcp-us-central1",
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -62,8 +75,19 @@ client = AsyncTurbopuffer(
 async def main() -> None:
     response = await client.namespaces.write(
         namespace="products",
+        distance_metric="cosine_distance",
+        upsert_rows=[
+            {
+                "id": "2108ed60-6851-49a0-9016-8325434f3845",
+                "vector": [0.1, 0.2],
+                "attributes": {
+                    "name": "Red boots",
+                    "price": 34.99,
+                },
+            }
+        ],
     )
-    print(response.status)
+    print(response.rows_affected)
 
 
 asyncio.run(main())
@@ -89,16 +113,18 @@ This library provides auto-paginating iterators with each list response, so you 
 ```python
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer()
+client = Turbopuffer(
+    region="gcp-us-central1",
+)
 
-all_namespaces = []
+all_clients = []
 # Automatically fetches more pages as needed.
-for namespace in client.namespaces.list(
+for client in client.list_namespaces(
     prefix="products",
 ):
-    # Do something with namespace here
-    all_namespaces.append(namespace)
-print(all_namespaces)
+    # Do something with client here
+    all_clients.append(client)
+print(all_clients)
 ```
 
 Or, asynchronously:
@@ -107,17 +133,19 @@ Or, asynchronously:
 import asyncio
 from turbopuffer import AsyncTurbopuffer
 
-client = AsyncTurbopuffer()
+client = AsyncTurbopuffer(
+    region="gcp-us-central1",
+)
 
 
 async def main() -> None:
-    all_namespaces = []
+    all_clients = []
     # Iterate through items across all pages, issuing requests as needed.
-    async for namespace in client.namespaces.list(
+    async for client in client.list_namespaces(
         prefix="products",
     ):
-        all_namespaces.append(namespace)
-    print(all_namespaces)
+        all_clients.append(client)
+    print(all_clients)
 
 
 asyncio.run(main())
@@ -126,7 +154,7 @@ asyncio.run(main())
 Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
 
 ```python
-first_page = await client.namespaces.list(
+first_page = await client.list_namespaces(
     prefix="products",
 )
 if first_page.has_next_page():
@@ -140,13 +168,13 @@ if first_page.has_next_page():
 Or just work directly with the returned data:
 
 ```python
-first_page = await client.namespaces.list(
+first_page = await client.list_namespaces(
     prefix="products",
 )
 
 print(f"next page cursor: {first_page.next_cursor}")  # => "next page cursor: ..."
-for namespace in first_page.namespaces:
-    print(namespace.id)
+for client in first_page.namespaces:
+    print(client.id)
 
 # Remove `await` for non-async usage.
 ```
@@ -158,13 +186,15 @@ Nested parameters are dictionaries, typed using `TypedDict`, for example:
 ```python
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer()
-
-document_row_with_scores = client.namespaces.query(
-    namespace="namespace",
-    consistency={"level": "strong"},
+client = Turbopuffer(
+    region="gcp-us-central1",
 )
-print(document_row_with_scores.consistency)
+
+response = client.namespaces.write(
+    namespace="namespace",
+    encryption={"cmek": {"key_name": "key_name"}},
+)
+print(response.encryption)
 ```
 
 ## Handling errors
@@ -180,11 +210,13 @@ All errors inherit from `turbopuffer.APIError`.
 import turbopuffer
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer()
+client = Turbopuffer(
+    region="gcp-us-central1",
+)
 
 try:
-    client.namespaces.query(
-        namespace="products",
+    client.list_namespaces(
+        prefix="foo",
     )
 except turbopuffer.APIConnectionError as e:
     print("The server could not be reached")
@@ -223,13 +255,14 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
+    region="gcp-us-central1",
     # default is 2
     max_retries=0,
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).namespaces.query(
-    namespace="products",
+client.with_options(max_retries=5).list_namespaces(
+    prefix="foo",
 )
 ```
 
@@ -243,18 +276,20 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
+    region="gcp-us-central1",
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
 client = Turbopuffer(
+    region="gcp-us-central1",
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).namespaces.query(
-    namespace="products",
+client.with_options(timeout=5.0).list_namespaces(
+    prefix="foo",
 )
 ```
 
@@ -295,14 +330,16 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 ```py
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer()
-response = client.namespaces.with_raw_response.query(
-    namespace="products",
+client = Turbopuffer(
+    region="gcp-us-central1",
+)
+response = client.with_raw_response.list_namespaces(
+    prefix="foo",
 )
 print(response.headers.get('X-My-Header'))
 
-namespace = response.parse()  # get the object that `namespaces.query()` would have returned
-print(namespace)
+client = response.parse()  # get the object that `list_namespaces()` would have returned
+print(client.id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/turbopuffer/turbopuffer-python/tree/ng/src/turbopuffer/_response.py) object.
@@ -316,8 +353,8 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.namespaces.with_streaming_response.query(
-    namespace="products",
+with client.with_streaming_response.list_namespaces(
+    prefix="foo",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
@@ -374,6 +411,7 @@ import httpx
 from turbopuffer import Turbopuffer, DefaultHttpxClient
 
 client = Turbopuffer(
+    region="gcp-us-central1",
     # Or use the `TURBOPUFFER_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
@@ -396,7 +434,9 @@ By default the library closes underlying HTTP connections whenever the client is
 ```py
 from turbopuffer import Turbopuffer
 
-with Turbopuffer() as client:
+with Turbopuffer(
+    region="gcp-us-central1",
+) as client:
   # make requests here
   ...
 

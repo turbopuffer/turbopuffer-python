@@ -3,16 +3,20 @@
 from __future__ import annotations
 
 from typing import Dict, List, Union, Iterable
-from typing_extensions import TypeAlias, TypedDict
+from typing_extensions import Required, TypeAlias, TypedDict
 
 from .id_param import IDParam
+from .vector_param import VectorParam
 
 __all__ = ["DocumentColumnsParam"]
 
 
 class DocumentColumnsParamTyped(TypedDict, total=False):
-    id: List[IDParam]
+    id: Required[List[IDParam]]
     """The IDs of the documents."""
 
+    vector: Union[List[VectorParam], Iterable[float], str]
+    """The vector embeddings of the documents."""
 
-DocumentColumnsParam: TypeAlias = Union[DocumentColumnsParamTyped, Dict[str, Iterable[Dict[str, object]]]]
+
+DocumentColumnsParam: TypeAlias = Union[DocumentColumnsParamTyped, Dict[str, Iterable[object]]]

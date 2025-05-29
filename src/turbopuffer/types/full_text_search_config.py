@@ -1,9 +1,10 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Optional
-from typing_extensions import Literal
 
 from .._models import BaseModel
+from .language import Language
+from .tokenizer import Tokenizer
 
 __all__ = ["FullTextSearchConfig"]
 
@@ -15,29 +16,8 @@ class FullTextSearchConfig(BaseModel):
     Defaults to `false` (i.e. case-insensitive).
     """
 
-    language: Optional[
-        Literal[
-            "arabic",
-            "danish",
-            "dutch",
-            "english",
-            "finnish",
-            "french",
-            "german",
-            "greek",
-            "hungarian",
-            "italian",
-            "norwegian",
-            "portuguese",
-            "romanian",
-            "russian",
-            "spanish",
-            "swedish",
-            "tamil",
-            "turkish",
-        ]
-    ] = None
-    """The language of the text. Defaults to `english`."""
+    language: Optional[Language] = None
+    """Describes the language of a text attribute. Defaults to `english`."""
 
     remove_stopwords: Optional[bool] = None
     """Removes common words from the text based on language.
@@ -50,3 +30,6 @@ class FullTextSearchConfig(BaseModel):
 
     Defaults to `false` (i.e., do not stem).
     """
+
+    tokenizer: Optional[Tokenizer] = None
+    """The tokenizer to use for full-text search on an attribute."""

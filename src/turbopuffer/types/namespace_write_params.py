@@ -2,38 +2,41 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union, Iterable
-from typing_extensions import Required, TypeAlias, TypedDict
+from typing import Dict, List, Iterable
+from typing_extensions import Required, TypedDict
 
+from .id_param import IDParam
 from .distance_metric import DistanceMetric
 from .document_row_param import DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam
 from .document_columns_param import DocumentColumnsParam
 
-__all__ = [
-    "NamespaceWriteParams",
-    "Operation",
-    "OperationWriteDocuments",
-    "OperationCopyFromNamespace",
-    "OperationDeleteByFilter",
-]
+__all__ = ["NamespaceWriteParams", "Encryption", "EncryptionCmek"]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
-    operation: Operation
-    """Write documents."""
+    namespace: str
 
+    copy_from_namespace: str
+    """The namespace to copy documents from."""
 
-class OperationWriteDocuments(TypedDict, total=False):
+    delete_by_filter: object
+    """The filter specifying which documents to delete."""
+
+    deletes: List[IDParam]
+
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
+
+    encryption: Encryption
+    """The encryption configuration for a namespace."""
 
     patch_columns: DocumentColumnsParam
     """A list of documents in columnar format. The keys are the column names."""
 
     patch_rows: Iterable[DocumentRowParam]
 
-    schema: Dict[str, Iterable[AttributeSchemaParam]]
+    schema: Dict[str, AttributeSchemaParam]
     """The schema of the attributes attached to the documents."""
 
     upsert_columns: DocumentColumnsParam
@@ -42,14 +45,14 @@ class OperationWriteDocuments(TypedDict, total=False):
     upsert_rows: Iterable[DocumentRowParam]
 
 
-class OperationCopyFromNamespace(TypedDict, total=False):
-    copy_from_namespace: Required[str]
-    """The namespace to copy documents from."""
+class EncryptionCmek(TypedDict, total=False):
+    key_name: Required[str]
+    """The identifier of the CMEK key to use for encryption.
+
+    For GCP, the fully-qualified resource name of the key. For AWS, the ARN of the
+    key.
+    """
 
 
-class OperationDeleteByFilter(TypedDict, total=False):
-    delete_by_filter: Required[object]
-    """The filter specifying which documents to delete."""
-
-
-Operation: TypeAlias = Union[OperationWriteDocuments, OperationCopyFromNamespace, OperationDeleteByFilter]
+class Encryption(TypedDict, total=False):
+    cmek: EncryptionCmek

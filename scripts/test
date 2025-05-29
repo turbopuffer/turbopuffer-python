@@ -53,6 +53,7 @@ else
 fi
 
 export DEFER_PYDANTIC_BUILD=false
+export TURBOPUFFER_REGION=gcp-us-central1
 
 echo "==> Running tests"
 rye run pytest "$@"

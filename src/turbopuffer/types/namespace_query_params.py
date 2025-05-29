@@ -2,15 +2,24 @@
 
 from __future__ import annotations
 
-from typing import List, Union, Iterable
-from typing_extensions import Literal, TypedDict
+from typing_extensions import Literal, Required, TypedDict
 
 from .distance_metric import DistanceMetric
+from .vector_encoding import VectorEncoding
+from .include_attributes_param import IncludeAttributesParam
 
 __all__ = ["NamespaceQueryParams", "Consistency"]
 
 
 class NamespaceQueryParams(TypedDict, total=False):
+    namespace: str
+
+    rank_by: Required[object]
+    """How to rank the documents in the namespace."""
+
+    top_k: Required[int]
+    """The number of results to return."""
+
     consistency: Consistency
     """The consistency level for a query."""
 
@@ -23,27 +32,11 @@ class NamespaceQueryParams(TypedDict, total=False):
     Think of it as a SQL WHERE clause.
     """
 
-    include_attributes: Union[bool, List[str]]
+    include_attributes: IncludeAttributesParam
     """Whether to include attributes in the response."""
 
-    include_vectors: bool
-    """Whether to return vectors for the search results.
-
-    Vectors are large and slow to deserialize on the client, so use this option only
-    if you need them.
-    """
-
-    rank_by: object
-    """The attribute to rank the results by. Cannot be specified with `vector`."""
-
-    top_k: int
-    """The number of results to return."""
-
-    vector: Iterable[float]
-    """
-    A vector to search for. It must have the same number of dimensions as the
-    vectors in the namespace. Cannot be specified with `rank_by`.
-    """
+    vector_encoding: VectorEncoding
+    """The encoding to use for vectors in the response."""
 
 
 class Consistency(TypedDict, total=False):
