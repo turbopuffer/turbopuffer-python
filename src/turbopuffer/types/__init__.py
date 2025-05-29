@@ -13,11 +13,11 @@ from .vector_param import VectorParam as VectorParam
 from .query_billing import QueryBilling as QueryBilling
 from .write_billing import WriteBilling as WriteBilling
 from .attribute_type import AttributeType as AttributeType
+from .aggregate_param import AggregateParam as AggregateParam
 from .distance_metric import DistanceMetric as DistanceMetric
 from .vector_encoding import VectorEncoding as VectorEncoding
 from .attribute_schema import AttributeSchema as AttributeSchema
 from .full_text_search import FullTextSearch as FullTextSearch
-from .aggregation_param import AggregationParam as AggregationParam
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .query_performance import QueryPerformance as QueryPerformance
 from .document_row_param import DocumentRowParam as DocumentRowParam

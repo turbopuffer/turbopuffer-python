@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import List
 from typing_extensions import TypeAlias
 
-__all__ = ["AggregationParam", "AggregationParamItem"]
+__all__ = ["AggregateParam", "AggregateParamItem"]
 
-AggregationParamItem: TypeAlias = object
+AggregateParamItem: TypeAlias = object
 
-AggregationParam: TypeAlias = List[object]
+AggregateParam: TypeAlias = List[object]
