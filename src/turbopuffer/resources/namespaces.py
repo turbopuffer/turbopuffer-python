@@ -173,13 +173,13 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        rank_by: RankBy,
-        top_k: int,
         aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: Filter | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
+        rank_by: RankBy | NotGiven = NOT_GIVEN,
+        top_k: int | NotGiven = NOT_GIVEN,
         vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -192,10 +192,6 @@ class NamespacesResource(SyncAPIResource):
         Query, filter, full-text search and vector search documents.
 
         Args:
-          rank_by: How to rank the documents in the namespace.
-
-          top_k: The number of results to return.
-
           aggregate_by: Aggregations to compute over all documents in the namespace that match the
               filters.
 
@@ -207,6 +203,10 @@ class NamespacesResource(SyncAPIResource):
               WHERE clause.
 
           include_attributes: Whether to include attributes in the response.
+
+          rank_by: How to rank the documents in the namespace.
+
+          top_k: The number of results to return.
 
           vector_encoding: The encoding to use for vectors in the response.
 
@@ -226,13 +226,13 @@ class NamespacesResource(SyncAPIResource):
             f"/v2/namespaces/{namespace}/query",
             body=maybe_transform(
                 {
-                    "rank_by": rank_by,
-                    "top_k": top_k,
                     "aggregate_by": aggregate_by,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "filters": filters,
                     "include_attributes": include_attributes,
+                    "rank_by": rank_by,
+                    "top_k": top_k,
                     "vector_encoding": vector_encoding,
                 },
                 namespace_query_params.NamespaceQueryParams,
@@ -544,13 +544,13 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        rank_by: object,
-        top_k: int,
         aggregate_by: Dict[str, object] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
+        rank_by: object | NotGiven = NOT_GIVEN,
+        top_k: int | NotGiven = NOT_GIVEN,
         vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -563,10 +563,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Query, filter, full-text search and vector search documents.
 
         Args:
-          rank_by: How to rank the documents in the namespace.
-
-          top_k: The number of results to return.
-
           aggregate_by: Aggregations to compute over all documents in the namespace that match the
               filters.
 
@@ -578,6 +574,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
               WHERE clause.
 
           include_attributes: Whether to include attributes in the response.
+
+          rank_by: How to rank the documents in the namespace.
+
+          top_k: The number of results to return.
 
           vector_encoding: The encoding to use for vectors in the response.
 
@@ -597,13 +597,13 @@ class AsyncNamespacesResource(AsyncAPIResource):
             f"/v2/namespaces/{namespace}/query",
             body=await async_maybe_transform(
                 {
-                    "rank_by": rank_by,
-                    "top_k": top_k,
                     "aggregate_by": aggregate_by,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "filters": filters,
                     "include_attributes": include_attributes,
+                    "rank_by": rank_by,
+                    "top_k": top_k,
                     "vector_encoding": vector_encoding,
                 },
                 namespace_query_params.NamespaceQueryParams,

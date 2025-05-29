@@ -11,6 +11,9 @@ __all__ = ["AttributeSchemaParam"]
 
 
 class AttributeSchemaParam(TypedDict, total=False):
+    ann: bool
+    """Whether to create an approximate nearest neighbor index for the attribute."""
+
     filterable: bool
     """Whether or not the attributes can be used in filters/WHERE clauses."""
 
