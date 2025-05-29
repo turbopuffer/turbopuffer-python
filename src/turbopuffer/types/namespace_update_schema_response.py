@@ -3,8 +3,8 @@
 from typing import Dict
 from typing_extensions import TypeAlias
 
-from .attribute_schema import AttributeSchema
+from .attribute_schema_config import AttributeSchemaConfig
 
 __all__ = ["NamespaceUpdateSchemaResponse"]
 
-NamespaceUpdateSchemaResponse: TypeAlias = Dict[str, AttributeSchema]
+NamespaceUpdateSchemaResponse: TypeAlias = Dict[str, AttributeSchemaConfig]
