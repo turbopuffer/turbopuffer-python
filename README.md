@@ -8,6 +8,15 @@ and offers both synchronous and asynchronous clients powered by [httpx](https://
 
 It is generated with [Stainless](https://www.stainless.com/).
 
+
+> [!WARNING]
+> **This version of the turbopuffer Python client is in alpha.**
+>
+> You may encounter bugs or performance issues. APIs are subject to change.
+>
+> The stable version of the turbopuffer Python client is [v0.4.1](https://pypi.org/project/turbopuffer/0.4.1/).
+
+
 ## Documentation
 
 The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs).
