@@ -25,4 +25,8 @@ class AttributeSchemaConfig(BaseModel):
     """
 
     type: Optional[AttributeType] = None
-    """The data type of the attribute."""
+    """The data type of the attribute.
+
+    Valid values: string, int, uint, uuid, datetime, bool, []string, []int, []uint,
+    []uuid, []datetime, [DIMS]f16, [DIMS]f32.
+    """
