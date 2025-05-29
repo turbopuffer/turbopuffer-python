@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-from .attribute_type import AttributeType
+from .attribute_type_param import AttributeTypeParam
 from .full_text_search_param import FullTextSearchParam
 
 __all__ = ["AttributeSchemaParam"]
@@ -22,5 +22,5 @@ class AttributeSchemaParam(TypedDict, total=False):
     `filterable: true`.
     """
 
-    type: AttributeType
+    type: AttributeTypeParam
     """The data type of the attribute."""
