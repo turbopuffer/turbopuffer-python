@@ -37,7 +37,7 @@ from ._response import (
 )
 from .resources import namespaces
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from .pagination import SyncListNamespaces, AsyncListNamespaces
+from .pagination import SyncNamespacePage, AsyncNamespacePage
 from ._exceptions import APIStatusError, TurbopufferError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
@@ -236,7 +236,7 @@ class Turbopuffer(SyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncListNamespaces[NamespaceSummary]:
+    ) -> SyncNamespacePage[NamespaceSummary]:
         """
         List namespaces.
 
@@ -257,7 +257,7 @@ class Turbopuffer(SyncAPIClient):
         """
         return self.get_api_list(
             "/v1/namespaces",
-            page=SyncListNamespaces[NamespaceSummary],
+            page=SyncNamespacePage[NamespaceSummary],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -488,7 +488,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[NamespaceSummary, AsyncListNamespaces[NamespaceSummary]]:
+    ) -> AsyncPaginator[NamespaceSummary, AsyncNamespacePage[NamespaceSummary]]:
         """
         List namespaces.
 
@@ -509,7 +509,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         """
         return self.get_api_list(
             "/v1/namespaces",
-            page=AsyncListNamespaces[NamespaceSummary],
+            page=AsyncNamespacePage[NamespaceSummary],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

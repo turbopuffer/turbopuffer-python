@@ -124,14 +124,14 @@ client = Turbopuffer(
     region="gcp-us-central1",
 )
 
-all_namespaces = []
+all_clients = []
 # Automatically fetches more pages as needed.
 for client in client.list_namespaces(
     prefix="products",
 ):
     # Do something with client here
-    all_namespaces.append(client)
-print(all_namespaces)
+    all_clients.append(client)
+print(all_clients)
 ```
 
 Or, asynchronously:
@@ -146,13 +146,13 @@ client = AsyncTurbopuffer(
 
 
 async def main() -> None:
-    all_namespaces = []
+    all_clients = []
     # Iterate through items across all pages, issuing requests as needed.
     async for client in client.list_namespaces(
         prefix="products",
     ):
-        all_namespaces.append(client)
-    print(all_namespaces)
+        all_clients.append(client)
+    print(all_clients)
 
 
 asyncio.run(main())

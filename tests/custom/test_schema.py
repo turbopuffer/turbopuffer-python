@@ -3,7 +3,7 @@ import pytest
 import turbopuffer
 from turbopuffer import Turbopuffer
 from tests.custom import test_prefix
-from turbopuffer.types.attribute_schema_param import AttributeSchemaParam
+from turbopuffer.types import AttributeSchemaConfigParam
 
 
 def test_schema(tpuf: Turbopuffer):
@@ -23,7 +23,7 @@ def test_schema(tpuf: Turbopuffer):
         assert schema[attr].full_text_search is None
 
     # Write an update to the schema making 'hello' not filterable
-    updated_hello_schema = AttributeSchemaParam(type="string", filterable=False)
+    updated_hello_schema = AttributeSchemaConfigParam(type="string", filterable=False)
     updated_schema = ns.update_schema(schema={"hello": updated_hello_schema})
     assert not updated_schema["hello"].filterable
 

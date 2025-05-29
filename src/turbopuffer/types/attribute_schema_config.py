@@ -6,10 +6,10 @@ from .._models import BaseModel
 from .attribute_type import AttributeType
 from .full_text_search import FullTextSearch
 
-__all__ = ["AttributeSchema"]
+__all__ = ["AttributeSchemaConfig"]
 
 
-class AttributeSchema(BaseModel):
+class AttributeSchemaConfig(BaseModel):
     ann: Optional[bool] = None
     """Whether to create an approximate nearest neighbor index for the attribute."""
 
@@ -25,4 +25,8 @@ class AttributeSchema(BaseModel):
     """
 
     type: Optional[AttributeType] = None
-    """The data type of the attribute."""
+    """The data type of the attribute.
+
+    Valid values: string, int, uint, uuid, datetime, bool, []string, []int, []uint,
+    []uuid, []datetime, [DIMS]f16, [DIMS]f32.
+    """

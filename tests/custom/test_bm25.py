@@ -1,14 +1,16 @@
+import pytest
+
 import turbopuffer
 from turbopuffer import Turbopuffer
 from tests.custom import test_prefix
-from turbopuffer.types import RankBy, AttributeSchemaParam, FullTextSearchConfigParam
+from turbopuffer.types import RankBy, AttributeSchemaParam, FullTextSearchConfigParam, AttributeSchemaConfigParam
 
 
 def test_bm25(tpuf: Turbopuffer):
     ns = tpuf.namespace(test_prefix + "bm25")
 
     schema: dict[str, AttributeSchemaParam] = {
-        "blabla": AttributeSchemaParam(
+        "blabla": AttributeSchemaConfigParam(
             type="string",
             full_text_search=FullTextSearchConfigParam(
                 language="english",
@@ -210,54 +212,57 @@ def test_bm25_ContainsAllTokens(tpuf: Turbopuffer):
     assert len(missing.rows) == 0
 
 
-# TODO(benesch): awaiting `tokenizer`.
-#
-# def test_bm25_pre_tokenized_array(tpuf: Turbopuffer):
-#     ns = tpuf.namespace(test_prefix + "bm25_pre_tokenized_array")
+def test_bm25_pre_tokenized_array(tpuf: Turbopuffer):
+    ns = tpuf.namespace(test_prefix + "bm25_pre_tokenized_array")
 
-#     try:
-#         ns.delete_all()
-#     except turbopuffer.NotFoundError:
-#         pass
+    try:
+        ns.delete_all()
+    except turbopuffer.NotFoundError:
+        pass
 
-#     schema: dict[str, AttributeSchemaParam] = {
-#         "content": AttributeSchemaParam(
-#             type="[]string",
-#             full_text_search=FullTextSearchConfigParam(
-#                 tokenizer="pre_tokenized_array",
-#             ),
-#         ),
-#     }
+    schema: dict[str, AttributeSchemaParam] = {
+        "content": AttributeSchemaConfigParam(
+            type="[]string",
+            full_text_search=FullTextSearchConfigParam(
+                tokenizer="pre_tokenized_array",
+            ),
+        ),
+    }
 
-#     ns.write(
-#         upsert_rows=[{
-#             "id": 1,
-#             "content": ["jumped", "over", "the", "lazy", "dog"],
-#         }, {
-#             "id": 2,
-#             "content": ["the", "lazy", "dog", "is", "brown"],
-#         }],
-#         schema=schema,
-#     )
+    ns.write(
+        upsert_rows=[
+            {
+                "id": 1,
+                "content": ["jumped", "over", "the", "lazy", "dog"],
+            },
+            {
+                "id": 2,
+                "content": ["the", "lazy", "dog", "is", "brown"],
+            },
+        ],
+        schema=schema,
+    )
 
-#     result = ns.query(
-#         rank_by=("content", "BM25", ["jumped"]),
-#         top_k=10,
-#     )
-#     assert result.rows is not None
-#     assert len(result.rows) == 1
-#     assert result.rows[0].id == 1
+    result = ns.query(
+        rank_by=("content", "BM25", ["jumped"]),
+        top_k=10,
+    )
+    assert result.rows is not None
+    assert len(result.rows) == 1
+    assert result.rows[0].id == 1
 
-#     result = ns.query(
-#         rank_by=("content", "BM25", ["dog"]),
-#         top_k=10,
-#     )
-#     assert result.rows is not None
-#     assert len(result.rows) == 2
+    result = ns.query(
+        rank_by=("content", "BM25", ["dog"]),
+        top_k=10,
+    )
+    assert result.rows is not None
+    assert len(result.rows) == 2
 
-#     with pytest.raises(turbopuffer.APIError, match="invalid input 'jumped' for rank_by field \"content\", expecting \\[\\]string"):
-#         # Query must be an array.
-#         ns.query(
-#             rank_by=("content", "BM25", "jumped"),
-#             top_k=10,
-#         )
+    with pytest.raises(
+        turbopuffer.APIError, match=r"""invalid input \\'jumped\\' for rank_by field "content", expecting \[\]string"""
+    ):
+        # Query must be an array.
+        ns.query(
+            rank_by=("content", "BM25", "jumped"),
+            top_k=10,
+        )

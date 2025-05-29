@@ -10,7 +10,7 @@ import pytest
 from tests.utils import assert_matches_type
 from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from turbopuffer.types import NamespaceSummary
-from turbopuffer.pagination import SyncListNamespaces, AsyncListNamespaces
+from turbopuffer.pagination import SyncNamespacePage, AsyncNamespacePage
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -22,7 +22,7 @@ class TestClient:
     @parametrize
     def test_method_list_namespaces(self, client: Turbopuffer) -> None:
         client_ = client.list_namespaces()
-        assert_matches_type(SyncListNamespaces[NamespaceSummary], client_, path=["response"])
+        assert_matches_type(SyncNamespacePage[NamespaceSummary], client_, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -32,7 +32,7 @@ class TestClient:
             page_size=1,
             prefix="prefix",
         )
-        assert_matches_type(SyncListNamespaces[NamespaceSummary], client_, path=["response"])
+        assert_matches_type(SyncNamespacePage[NamespaceSummary], client_, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -42,7 +42,7 @@ class TestClient:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         client_ = response.parse()
-        assert_matches_type(SyncListNamespaces[NamespaceSummary], client_, path=["response"])
+        assert_matches_type(SyncNamespacePage[NamespaceSummary], client_, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -52,7 +52,7 @@ class TestClient:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             client_ = response.parse()
-            assert_matches_type(SyncListNamespaces[NamespaceSummary], client_, path=["response"])
+            assert_matches_type(SyncNamespacePage[NamespaceSummary], client_, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -64,7 +64,7 @@ class TestAsyncClient:
     @parametrize
     async def test_method_list_namespaces(self, async_client: AsyncTurbopuffer) -> None:
         client = await async_client.list_namespaces()
-        assert_matches_type(AsyncListNamespaces[NamespaceSummary], client, path=["response"])
+        assert_matches_type(AsyncNamespacePage[NamespaceSummary], client, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -74,7 +74,7 @@ class TestAsyncClient:
             page_size=1,
             prefix="prefix",
         )
-        assert_matches_type(AsyncListNamespaces[NamespaceSummary], client, path=["response"])
+        assert_matches_type(AsyncNamespacePage[NamespaceSummary], client, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -84,7 +84,7 @@ class TestAsyncClient:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         client = await response.parse()
-        assert_matches_type(AsyncListNamespaces[NamespaceSummary], client, path=["response"])
+        assert_matches_type(AsyncNamespacePage[NamespaceSummary], client, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -94,6 +94,6 @@ class TestAsyncClient:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             client = await response.parse()
-            assert_matches_type(AsyncListNamespaces[NamespaceSummary], client, path=["response"])
+            assert_matches_type(AsyncNamespacePage[NamespaceSummary], client, path=["response"])
 
         assert cast(Any, response.is_closed) is True
