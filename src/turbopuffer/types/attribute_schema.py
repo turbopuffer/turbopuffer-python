@@ -10,6 +10,9 @@ __all__ = ["AttributeSchema"]
 
 
 class AttributeSchema(BaseModel):
+    ann: Optional[bool] = None
+    """Whether to create an approximate nearest neighbor index for the attribute."""
+
     filterable: Optional[bool] = None
     """Whether or not the attributes can be used in filters/WHERE clauses."""
 
