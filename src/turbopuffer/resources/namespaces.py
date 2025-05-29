@@ -26,7 +26,6 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.id_param import IDParam
-from ..types.aggregate_param import AggregateParam
 from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
 from ..types.document_row_param import DocumentRowParam
@@ -175,7 +174,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         rank_by: object,
         top_k: int,
-        aggregate_by: Dict[str, AggregateParam] | NotGiven = NOT_GIVEN,
+        aggregate_by: Dict[str, object] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
@@ -546,7 +545,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         rank_by: object,
         top_k: int,
-        aggregate_by: Dict[str, AggregateParam] | NotGiven = NOT_GIVEN,
+        aggregate_by: Dict[str, object] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
