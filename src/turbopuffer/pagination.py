@@ -5,12 +5,12 @@ from typing_extensions import override
 
 from ._base_client import BasePage, PageInfo, BaseSyncPage, BaseAsyncPage
 
-__all__ = ["SyncListNamespaces", "AsyncListNamespaces"]
+__all__ = ["SyncNamespacePage", "AsyncNamespacePage"]
 
 _T = TypeVar("_T")
 
 
-class SyncListNamespaces(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+class SyncNamespacePage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     """Namespace pagination."""
 
     namespaces: List[_T]
@@ -32,7 +32,7 @@ class SyncListNamespaces(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
         return PageInfo(params={"cursor": next_cursor})
 
 
-class AsyncListNamespaces(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+class AsyncNamespacePage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     """Namespace pagination."""
 
     namespaces: List[_T]

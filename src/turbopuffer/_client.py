@@ -27,6 +27,7 @@ from ._utils import (
     is_given,
     maybe_transform,
     get_async_library,
+    async_maybe_transform,
 )
 from ._version import __version__
 from ._response import (
@@ -37,15 +38,14 @@ from ._response import (
 )
 from .resources import namespaces
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from .pagination import SyncListNamespaces, AsyncListNamespaces
 from ._exceptions import APIStatusError, TurbopufferError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
     AsyncAPIClient,
-    AsyncPaginator,
     make_request_options,
 )
+from .types.list_namespaces_response import ListNamespacesResponse
 from .lib.namespace import (
     Namespace,
     AsyncNamespace,
@@ -54,7 +54,6 @@ from .lib.namespace import (
     NamespaceWithStreamingResponse,
     AsyncNamespaceWithStreamingResponse,
 )
-from .types.namespace_summary import NamespaceSummary
 
 __all__ = [
     "Timeout",
@@ -236,7 +235,7 @@ class Turbopuffer(SyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncListNamespaces[NamespaceSummary]:
+    ) -> ListNamespacesResponse:
         """
         List namespaces.
 
@@ -255,9 +254,8 @@ class Turbopuffer(SyncAPIClient):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self.get_api_list(
+        return self.get(
             "/v1/namespaces",
-            page=SyncListNamespaces[NamespaceSummary],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -272,7 +270,7 @@ class Turbopuffer(SyncAPIClient):
                     client_list_namespaces_params.ClientListNamespacesParams,
                 ),
             ),
-            model=NamespaceSummary,
+            cast_to=ListNamespacesResponse,
         )
 
     def _get_default_namespace_path_param(self) -> str:
@@ -476,7 +474,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
 
-    def list_namespaces(
+    async def list_namespaces(
         self,
         *,
         cursor: str | NotGiven = NOT_GIVEN,
@@ -488,7 +486,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncPaginator[NamespaceSummary, AsyncListNamespaces[NamespaceSummary]]:
+    ) -> ListNamespacesResponse:
         """
         List namespaces.
 
@@ -507,15 +505,14 @@ class AsyncTurbopuffer(AsyncAPIClient):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self.get_api_list(
+        return await self.get(
             "/v1/namespaces",
-            page=AsyncListNamespaces[NamespaceSummary],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
+                query=await async_maybe_transform(
                     {
                         "cursor": cursor,
                         "page_size": page_size,
@@ -524,7 +521,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
                     client_list_namespaces_params.ClientListNamespacesParams,
                 ),
             ),
-            model=NamespaceSummary,
+            cast_to=ListNamespacesResponse,
         )
 
     def _get_default_namespace_path_param(self) -> str:

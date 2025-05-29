@@ -29,6 +29,7 @@ from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams
 from .full_text_search_config import FullTextSearchConfig as FullTextSearchConfig
 from .namespace_recall_params import NamespaceRecallParams as NamespaceRecallParams
 from .include_attributes_param import IncludeAttributesParam as IncludeAttributesParam
+from .list_namespaces_response import ListNamespacesResponse as ListNamespacesResponse
 from .namespace_query_response import NamespaceQueryResponse as NamespaceQueryResponse
 from .namespace_write_response import NamespaceWriteResponse as NamespaceWriteResponse
 from .namespace_recall_response import NamespaceRecallResponse as NamespaceRecallResponse
