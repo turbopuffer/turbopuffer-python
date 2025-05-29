@@ -11,11 +11,17 @@ __all__ = ["FullTextSearchConfigParam"]
 
 
 class FullTextSearchConfigParam(TypedDict, total=False):
+    b: float
+    """The `b` document length normalization parameter for BM25. Defaults to `0.75`."""
+
     case_sensitive: bool
     """Whether searching is case-sensitive.
 
     Defaults to `false` (i.e. case-insensitive).
     """
+
+    k1: float
+    """The `k1` term saturation parameter for BM25. Defaults to `1.2`."""
 
     language: Language
     """Describes the language of a text attribute. Defaults to `english`."""
