@@ -17,6 +17,7 @@ Types:
 ```python
 from turbopuffer.types import (
     AttributeSchema,
+    AttributeSchemaConfig,
     AttributeType,
     DistanceMetric,
     DocumentColumns,
