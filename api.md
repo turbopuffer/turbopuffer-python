@@ -18,6 +18,7 @@ Types:
 from turbopuffer.types import (
     AggregateBy,
     AttributeSchema,
+    AttributeSchemaConfig,
     AttributeType,
     DistanceMetric,
     DocumentColumns,

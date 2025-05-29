@@ -228,14 +228,7 @@ class TestNamespaces:
     @parametrize
     def test_method_update_schema_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").update_schema(
-            schema={
-                "foo": {
-                    "ann": True,
-                    "filterable": True,
-                    "full_text_search": True,
-                    "type": "string",
-                }
-            },
+            schema={"foo": "string"},
         )
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
@@ -291,14 +284,7 @@ class TestNamespaces:
                     "vector": [0],
                 }
             ],
-            schema={
-                "foo": {
-                    "ann": True,
-                    "filterable": True,
-                    "full_text_search": True,
-                    "type": "string",
-                }
-            },
+            schema={"foo": "string"},
             upsert_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
@@ -595,14 +581,7 @@ class TestAsyncNamespaces:
     async def test_method_update_schema_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.update_schema(
             namespace="namespace",
-            schema={
-                "foo": {
-                    "ann": True,
-                    "filterable": True,
-                    "full_text_search": True,
-                    "type": "string",
-                }
-            },
+            schema={"foo": "string"},
         )
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
@@ -668,14 +647,7 @@ class TestAsyncNamespaces:
                     "vector": [0],
                 }
             ],
-            schema={
-                "foo": {
-                    "ann": True,
-                    "filterable": True,
-                    "full_text_search": True,
-                    "type": "string",
-                }
-            },
+            schema={"foo": "string"},
             upsert_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
