@@ -242,6 +242,7 @@ class TestNamespaces:
         namespace = client.namespace("namespace").update_schema(
             schema={
                 "foo": {
+                    "ann": True,
                     "filterable": True,
                     "full_text_search": True,
                     "type": "string",
@@ -304,6 +305,7 @@ class TestNamespaces:
             ],
             schema={
                 "foo": {
+                    "ann": True,
                     "filterable": True,
                     "full_text_search": True,
                     "type": "string",
@@ -615,6 +617,7 @@ class TestAsyncNamespaces:
             namespace="namespace",
             schema={
                 "foo": {
+                    "ann": True,
                     "filterable": True,
                     "full_text_search": True,
                     "type": "string",
@@ -687,6 +690,7 @@ class TestAsyncNamespaces:
             ],
             schema={
                 "foo": {
+                    "ann": True,
                     "filterable": True,
                     "full_text_search": True,
                     "type": "string",
