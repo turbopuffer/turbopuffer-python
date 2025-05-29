@@ -16,6 +16,7 @@ Types:
 
 ```python
 from turbopuffer.types import (
+    AggregateBy,
     AttributeSchema,
     AttributeType,
     DistanceMetric,

@@ -4,6 +4,14 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+echo "==> Checking for outdated supplemental generated code"
+scripts/gen
+if ! git diff --exit-code; then
+    echo "error: supplemental generated code is out of date" >&2
+    echo " hint: run \`scripts/gen\` to regenerate the code" >&2
+    exit 1
+fi
+
 echo "==> Running lints"
 rye run lint
 

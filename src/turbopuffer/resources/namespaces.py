@@ -25,7 +25,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.custom import Filter, RankBy
+from ..types.custom import Filter, RankBy, AggregateBy
 from ..types.id_param import IDParam
 from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
@@ -175,6 +175,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         rank_by: RankBy,
         top_k: int,
+        aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: Filter | NotGiven = NOT_GIVEN,
@@ -194,6 +195,9 @@ class NamespacesResource(SyncAPIResource):
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
+
+          aggregate_by: Aggregations to compute over all documents in the namespace that match the
+              filters.
 
           consistency: The consistency level for a query.
 
@@ -224,6 +228,7 @@ class NamespacesResource(SyncAPIResource):
                 {
                     "rank_by": rank_by,
                     "top_k": top_k,
+                    "aggregate_by": aggregate_by,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "filters": filters,
@@ -541,6 +546,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         rank_by: object,
         top_k: int,
+        aggregate_by: Dict[str, object] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
@@ -560,6 +566,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
+
+          aggregate_by: Aggregations to compute over all documents in the namespace that match the
+              filters.
 
           consistency: The consistency level for a query.
 
@@ -590,6 +599,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 {
                     "rank_by": rank_by,
                     "top_k": top_k,
+                    "aggregate_by": aggregate_by,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "filters": filters,

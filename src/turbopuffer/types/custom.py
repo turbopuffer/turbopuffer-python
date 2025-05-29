@@ -2,6 +2,7 @@
 
 from typing import Any, List, Tuple, Union, Literal
 
+AggregateBy = Tuple[Literal["Count"], str]
 Filter = Union[
     Tuple[str, Literal["Eq"], Any],
     Tuple[str, Literal["NotEq"], Any],

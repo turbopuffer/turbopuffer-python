@@ -4,7 +4,7 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-api_gen_image=ghcr.io/turbopuffer/turbopuffer-apigen:b5f9473ff5abe976443701b8e167c48157697b55
+api_gen_image=ghcr.io/turbopuffer/turbopuffer-apigen:8bbc4634ee8c2287d8f6a345018fa3a0c4798a0f
 
 echo "==> Generating code"
 docker run -v "$(pwd):/work" "$api_gen_image" python > src/turbopuffer/types/custom.py

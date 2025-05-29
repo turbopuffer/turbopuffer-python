@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from typing import Dict
 from typing_extensions import Literal, Required, TypedDict
 
+from .custom import Filter, AggregateBy
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
 from .include_attributes_param import IncludeAttributesParam
@@ -14,11 +16,17 @@ __all__ = ["NamespaceQueryParams", "Consistency"]
 class NamespaceQueryParams(TypedDict, total=False):
     namespace: str
 
-    rank_by: Required[object]
+    rank_by: object
     """How to rank the documents in the namespace."""
 
     top_k: Required[int]
     """The number of results to return."""
+
+    aggregate_by: Dict[str, AggregateBy]
+    """
+    Aggregations to compute over all documents in the namespace that match the
+    filters.
+    """
 
     consistency: Consistency
     """The consistency level for a query."""
@@ -26,7 +34,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    filters: object
+    filters: Filter
     """Exact filters for attributes to refine search results for.
 
     Think of it as a SQL WHERE clause.
