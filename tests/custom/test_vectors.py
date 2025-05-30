@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Dict, List, Union, cast
+from typing import List, Union
 
 import numpy
 import pytest
@@ -169,38 +169,32 @@ def test_upsert_columns(tpuf: Turbopuffer):
 def test_query_vectors(tpuf: Turbopuffer):
     ns = tpuf.namespace(test_prefix + "client_test")
 
-    def check_result(drow: DocumentRow, expected: Dict[str, Any]):
-        row = dict(drow)
-        expected = dict(expected)
-        vector = row.pop("vector", None)
-        expected_vector = expected.pop("vector", None)
-        if isinstance(expected_vector, list):
-            assert isinstance(vector, list)
-            vector = cast(List[float], vector)
-            expected_vector = cast(List[float], expected_vector)
-            assert abs(vector[0] - expected_vector[0]) < 0.000001
-            assert abs(vector[1] - expected_vector[1]) < 0.000001
+    def check_result(row: DocumentRow, expected: DocumentRow):
+        assert len(row) == len(expected)
+        assert row.id == expected.id
+        if isinstance(expected.vector, list):
+            assert isinstance(row.vector, list)
+            assert abs(row.vector[0] - expected.vector[0]) < 0.000001
+            assert abs(row.vector[1] - expected.vector[1]) < 0.000001
         else:
-            assert vector == expected_vector
-        dist = row.pop("$dist", None)
-        expected_dist = expected.pop("$dist", None)
-        if isinstance(expected_dist, float):
-            assert abs(dist - expected_dist) < 0.000001
+            assert row.vector == expected.vector
+        if "$dist" in expected:
+            assert abs(row["$dist"] - expected["$dist"]) < 0.000001
         else:
-            assert dist == dist
+            assert "$dist" not in row
 
-    def check_results(vector_set: NamespaceQueryResponse, expected: List[Dict[str, Any]]):
+    def check_results(vector_set: NamespaceQueryResponse, expected: List[DocumentRow]):
         assert vector_set.rows is not None
         assert len(vector_set.rows) == len(expected)
         for i in range(len(vector_set.rows)):
             check_result(vector_set.rows[i], expected[i])
 
     expected = [
-        {"id": 7, "vector": [0.7, 0.7], "hello": "world", "$dist": 0.01},
-        {"id": 10, "vector": [1.0, 1.0], "$dist": 0.13},
-        {"id": 11, "vector": [1.1, 1.1], "$dist": 0.25},
-        {"id": 3, "vector": [0.3, 0.3], "$dist": 0.41},
-        {"id": 6, "vector": [0.3, 0.3], "$dist": 0.41},
+        DocumentRow.from_dict({"id": 7, "vector": [0.7, 0.7], "hello": "world", "$dist": 0.01}),
+        DocumentRow.from_dict({"id": 10, "vector": [1.0, 1.0], "$dist": 0.13}),
+        DocumentRow.from_dict({"id": 11, "vector": [1.1, 1.1], "$dist": 0.25}),
+        DocumentRow.from_dict({"id": 3, "vector": [0.3, 0.3], "$dist": 0.41}),
+        DocumentRow.from_dict({"id": 6, "vector": [0.3, 0.3], "$dist": 0.41}),
     ]
 
     # Test normal query
@@ -230,11 +224,15 @@ def test_query_vectors(tpuf: Turbopuffer):
         include_attributes=True,
     )
     expected = [
-        {"id": 7, "vector": [0.7, 0.7], "$dist": 0.01, "hello": "world"},
-        {"id": 10, "vector": [1.0, 1.0], "$dist": 0.13, "test": "cols"},
-        {"id": 11, "vector": [1.1, 1.1], "$dist": 0.25, "test": "cols"},
-        {"id": 3, "vector": [0.3, 0.3], "$dist": 0.41, "test": "cols", "key1": "three", "key2": "c"},
-        {"id": 6, "vector": [0.3, 0.3], "$dist": 0.41, "test": "cols", "key1": "three", "key2": "c"},
+        DocumentRow.from_dict({"id": 7, "vector": [0.7, 0.7], "$dist": 0.01, "hello": "world"}),
+        DocumentRow.from_dict({"id": 10, "vector": [1.0, 1.0], "$dist": 0.13, "test": "cols"}),
+        DocumentRow.from_dict({"id": 11, "vector": [1.1, 1.1], "$dist": 0.25, "test": "cols"}),
+        DocumentRow.from_dict(
+            {"id": 3, "vector": [0.3, 0.3], "$dist": 0.41, "test": "cols", "key1": "three", "key2": "c"}
+        ),
+        DocumentRow.from_dict(
+            {"id": 6, "vector": [0.3, 0.3], "$dist": 0.41, "test": "cols", "key1": "three", "key2": "c"}
+        ),
     ]
     check_results(vector_set, expected)
 
@@ -244,19 +242,19 @@ def test_query_vectors(tpuf: Turbopuffer):
         rank_by=("vector", "ANN", [1.5, 1.6]),
     )
     expected = [
-        {"id": 15, "$dist": 0.01},
-        {"id": 16, "$dist": 0.01},
-        {"id": 14, "$dist": 0.05},
-        {"id": 17, "$dist": 0.05},
-        {"id": 18, "$dist": 0.13},
+        DocumentRow.from_dict({"id": 15, "$dist": 0.01}),
+        DocumentRow.from_dict({"id": 16, "$dist": 0.01}),
+        DocumentRow.from_dict({"id": 14, "$dist": 0.05}),
+        DocumentRow.from_dict({"id": 17, "$dist": 0.05}),
+        DocumentRow.from_dict({"id": 18, "$dist": 0.13}),
     ]
     check_results(vector_set, expected)
 
     # Test query with single filter
     expected = [
-        {"id": 10},
-        {"id": 11},
-        {"id": 12},
+        DocumentRow.from_dict({"id": 10}),
+        DocumentRow.from_dict({"id": 11}),
+        DocumentRow.from_dict({"id": 12}),
     ]
     vector_set = ns.query(
         rank_by=("id", "asc"),
@@ -268,9 +266,9 @@ def test_query_vectors(tpuf: Turbopuffer):
 
     # Test query with no vectors
     expected = [
-        {"id": 10},
-        {"id": 11},
-        {"id": 12},
+        DocumentRow.from_dict({"id": 10}),
+        DocumentRow.from_dict({"id": 11}),
+        DocumentRow.from_dict({"id": 12}),
     ]
     vector_set = ns.query(
         rank_by=("id", "asc"),
@@ -372,19 +370,19 @@ def test_string_ids(tpuf: Turbopuffer):
     # Test query
     result = ns.query(top_k=5, rank_by=("vector", "ANN", [0.0, 0.0]), filters=("id", "In", vec_ids))
     expected = [
-        {"id": vec_ids[0], "vector": None, "$dist": 0.0},
-        {"id": vec_ids[1], "vector": None, "$dist": 0.02},
-        {"id": vec_ids[2], "vector": None, "$dist": 0.08},
-        {"id": vec_ids[3], "vector": None, "$dist": 0.18},
-        {"id": vec_ids[4], "vector": None, "$dist": 0.32},
+        DocumentRow.from_dict({"id": vec_ids[0], "vector": None, "$dist": 0.0}),
+        DocumentRow.from_dict({"id": vec_ids[1], "vector": None, "$dist": 0.02}),
+        DocumentRow.from_dict({"id": vec_ids[2], "vector": None, "$dist": 0.08}),
+        DocumentRow.from_dict({"id": vec_ids[3], "vector": None, "$dist": 0.18}),
+        DocumentRow.from_dict({"id": vec_ids[4], "vector": None, "$dist": 0.32}),
     ]
     assert result.rows is not None
     assert len(result.rows) == len(expected)
     for i, row in enumerate(result.rows):
         assert len(dict(row)) == 3
-        assert row.id == expected[i]["id"]
-        assert row.vector == expected[i]["vector"]
-        assert abs(getattr(row, "$dist") - expected[i]["$dist"]) < 0.000001
+        assert row["id"] == expected[i]["id"]
+        assert row["vector"] == expected[i]["vector"]
+        assert abs(row["$dist"] - expected[i]["$dist"]) < 0.000001
 
     # Test delete by string id
     ns.write(deletes=[vec_ids[2]])
@@ -392,19 +390,19 @@ def test_string_ids(tpuf: Turbopuffer):
     # Test query 2
     result = ns.query(top_k=5, rank_by=("vector", "ANN", [0.0, 0.0]), filters=("id", "In", vec_ids))
     expected = [
-        {"id": vec_ids[0], "vector": None, "$dist": 0.0},
-        {"id": vec_ids[1], "vector": None, "$dist": 0.02},
-        {"id": vec_ids[3], "vector": None, "$dist": 0.18},
-        {"id": vec_ids[4], "vector": None, "$dist": 0.32},
-        {"id": vec_ids[5], "vector": None, "$dist": 0.5},
+        DocumentRow.from_dict({"id": vec_ids[0], "vector": None, "$dist": 0.0}),
+        DocumentRow.from_dict({"id": vec_ids[1], "vector": None, "$dist": 0.02}),
+        DocumentRow.from_dict({"id": vec_ids[3], "vector": None, "$dist": 0.18}),
+        DocumentRow.from_dict({"id": vec_ids[4], "vector": None, "$dist": 0.32}),
+        DocumentRow.from_dict({"id": vec_ids[5], "vector": None, "$dist": 0.5}),
     ]
     assert result.rows is not None
     assert len(result.rows) == len(expected)
     for i, row in enumerate(result.rows):
-        assert len(dict(row)) == 3
-        assert row.id == expected[i]["id"]
-        assert row.vector == expected[i]["vector"]
-        assert abs(getattr(row, "$dist") - expected[i]["$dist"]) < 0.000001
+        assert len(row) == 3
+        assert row["id"] == expected[i]["id"]
+        assert row["vector"] == expected[i]["vector"]
+        assert abs(row["$dist"] - expected[i]["$dist"]) < 0.000001
 
     ns.delete_all()
 

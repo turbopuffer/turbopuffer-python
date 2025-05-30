@@ -11,7 +11,7 @@ dependencies = [
     "httpx>=0.23.0, <1",
     "pydantic>=1.9.0, <3",
     "pybase64>=1.4.1, <2",
-    "typing-extensions>=4.10, <5",
+    "typing-extensions>=4.13, <5",
     "anyio>=3.5.0, <5",
     "distro>=1.7.0, <2",
     "sniffio",
@@ -144,7 +144,7 @@ typeCheckingMode = "strict"
 pythonVersion = "3.8"
 
 exclude = [
-    "_dev",
+    "_dev", 
     ".venv",
     ".nox",
 ]
@@ -154,6 +154,8 @@ reportOverlappingOverload = false
 
 reportImportCycles = false
 reportPrivateUsage = false
+
+enableExperimentalFeatures = true
 
 [tool.ruff]
 line-length = 120

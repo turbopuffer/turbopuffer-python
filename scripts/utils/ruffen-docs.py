@@ -7,7 +7,7 @@ import argparse
 import textwrap
 import contextlib
 import subprocess
-from typing import Match, Optional, Sequence, Generator, NamedTuple, cast
+from typing import Match, Optional, Sequence, Generator, NamedTuple
 
 MD_RE = re.compile(
     r"(?P<before>^(?P<indent> *)```\s*python\n)" r"(?P<code>.*?)" r"(?P<after>^(?P=indent)```\s*$)",
@@ -51,7 +51,7 @@ def format_str(
 
     def _pycon_match(match: Match[str]) -> str:
         code = ""
-        fragment = cast(Optional[str], None)
+        fragment: Optional[str] = None
 
         def finish_fragment() -> None:
             nonlocal code

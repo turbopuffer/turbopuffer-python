@@ -98,7 +98,7 @@ time-machine==2.9.0
 tomli==2.0.2
     # via mypy
     # via pytest
-typing-extensions==4.12.2
+typing-extensions==4.13.2
     # via anyio
     # via mypy
     # via pydantic
