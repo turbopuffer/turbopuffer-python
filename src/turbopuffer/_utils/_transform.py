@@ -10,8 +10,6 @@ from typing_extensions import Literal, get_args, override, get_type_hints as _ge
 import anyio
 import pydantic
 
-from turbopuffer_api.lib.vector import b64encode_vector
-
 from ._utils import (
     is_list,
     is_given,
@@ -30,6 +28,7 @@ from ._typing import (
     strip_annotated_type,
 )
 from .._compat import get_origin, model_dump, is_typeddict
+from ..lib.vector import b64encode_vector
 
 _T = TypeVar("_T")
 
