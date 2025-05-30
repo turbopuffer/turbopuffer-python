@@ -13,8 +13,8 @@ from turbopuffer.types import (
     NamespaceQueryResponse,
     NamespaceWriteResponse,
     NamespaceRecallResponse,
+    NamespaceSchemaResponse,
     NamespaceDeleteAllResponse,
-    NamespaceGetSchemaResponse,
     NamespaceUpdateSchemaResponse,
     NamespaceHintCacheWarmResponse,
 )
@@ -64,48 +64,6 @@ class TestNamespaces:
     def test_path_params_delete_all(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespaces.with_raw_response.delete_all(
-                namespace="",
-            )
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_method_get_schema(self, client: Turbopuffer) -> None:
-        namespace = client.namespaces.get_schema(
-            namespace="namespace",
-        )
-        assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_raw_response_get_schema(self, client: Turbopuffer) -> None:
-        response = client.namespaces.with_raw_response.get_schema(
-            namespace="namespace",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        namespace = response.parse()
-        assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_streaming_response_get_schema(self, client: Turbopuffer) -> None:
-        with client.namespaces.with_streaming_response.get_schema(
-            namespace="namespace",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            namespace = response.parse()
-            assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    def test_path_params_get_schema(self, client: Turbopuffer) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespaces.with_raw_response.get_schema(
                 namespace="",
             )
 
@@ -260,6 +218,48 @@ class TestNamespaces:
     def test_path_params_recall(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespaces.with_raw_response.recall(
+                namespace="",
+            )
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_schema(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.schema(
+            namespace="namespace",
+        )
+        assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_raw_response_schema(self, client: Turbopuffer) -> None:
+        response = client.namespaces.with_raw_response.schema(
+            namespace="namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = response.parse()
+        assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_streaming_response_schema(self, client: Turbopuffer) -> None:
+        with client.namespaces.with_streaming_response.schema(
+            namespace="namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = response.parse()
+            assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_path_params_schema(self, client: Turbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            client.namespaces.with_raw_response.schema(
                 namespace="",
             )
 
@@ -438,48 +438,6 @@ class TestAsyncNamespaces:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_get_schema(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespaces.get_schema(
-            namespace="namespace",
-        )
-        assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_raw_response_get_schema(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespaces.with_raw_response.get_schema(
-            namespace="namespace",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        namespace = await response.parse()
-        assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_streaming_response_get_schema(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespaces.with_streaming_response.get_schema(
-            namespace="namespace",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            namespace = await response.parse()
-            assert_matches_type(NamespaceGetSchemaResponse, namespace, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip()
-    @parametrize
-    async def test_path_params_get_schema(self, async_client: AsyncTurbopuffer) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespaces.with_raw_response.get_schema(
-                namespace="",
-            )
-
-    @pytest.mark.skip()
-    @parametrize
     async def test_method_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.hint_cache_warm(
             namespace="namespace",
@@ -629,6 +587,48 @@ class TestAsyncNamespaces:
     async def test_path_params_recall(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespaces.with_raw_response.recall(
+                namespace="",
+            )
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_schema(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.schema(
+            namespace="namespace",
+        )
+        assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_raw_response_schema(self, async_client: AsyncTurbopuffer) -> None:
+        response = await async_client.namespaces.with_raw_response.schema(
+            namespace="namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = await response.parse()
+        assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_streaming_response_schema(self, async_client: AsyncTurbopuffer) -> None:
+        async with async_client.namespaces.with_streaming_response.schema(
+            namespace="namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = await response.parse()
+            assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_path_params_schema(self, async_client: AsyncTurbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            await async_client.namespaces.with_raw_response.schema(
                 namespace="",
             )
 

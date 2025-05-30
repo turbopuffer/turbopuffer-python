@@ -116,7 +116,7 @@ client = Turbopuffer(
 
 all_clients = []
 # Automatically fetches more pages as needed.
-for client in client.list_namespaces(
+for client in client.namespaces(
     prefix="products",
 ):
     # Do something with client here
@@ -138,7 +138,7 @@ client = AsyncTurbopuffer(
 async def main() -> None:
     all_clients = []
     # Iterate through items across all pages, issuing requests as needed.
-    async for client in client.list_namespaces(
+    async for client in client.namespaces(
         prefix="products",
     ):
         all_clients.append(client)
@@ -151,7 +151,7 @@ asyncio.run(main())
 Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
 
 ```python
-first_page = await client.list_namespaces(
+first_page = await client.namespaces(
     prefix="products",
 )
 if first_page.has_next_page():
@@ -165,7 +165,7 @@ if first_page.has_next_page():
 Or just work directly with the returned data:
 
 ```python
-first_page = await client.list_namespaces(
+first_page = await client.namespaces(
     prefix="products",
 )
 
@@ -212,7 +212,7 @@ client = Turbopuffer(
 )
 
 try:
-    client.list_namespaces(
+    client.namespaces(
         prefix="foo",
     )
 except turbopuffer.APIConnectionError as e:
@@ -258,7 +258,7 @@ client = Turbopuffer(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).list_namespaces(
+client.with_options(max_retries=5).namespaces(
     prefix="foo",
 )
 ```
@@ -285,7 +285,7 @@ client = Turbopuffer(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).list_namespaces(
+client.with_options(timeout=5.0).namespaces(
     prefix="foo",
 )
 ```
@@ -330,12 +330,12 @@ from turbopuffer import Turbopuffer
 client = Turbopuffer(
     region="gcp-us-central1",
 )
-response = client.with_raw_response.list_namespaces(
+response = client.with_raw_response.namespaces(
     prefix="foo",
 )
 print(response.headers.get('X-My-Header'))
 
-client = response.parse()  # get the object that `list_namespaces()` would have returned
+client = response.parse()  # get the object that `namespaces()` would have returned
 print(client.id)
 ```
 
@@ -350,7 +350,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.with_streaming_response.list_namespaces(
+with client.with_streaming_response.namespaces(
     prefix="foo",
 ) as response:
     print(response.headers.get("X-My-Header"))

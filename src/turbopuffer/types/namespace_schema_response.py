@@ -5,6 +5,6 @@ from typing_extensions import TypeAlias
 
 from .attribute_schema_config import AttributeSchemaConfig
 
-__all__ = ["NamespaceGetSchemaResponse"]
+__all__ = ["NamespaceSchemaResponse"]
 
-NamespaceGetSchemaResponse: TypeAlias = Dict[str, AttributeSchemaConfig]
+NamespaceSchemaResponse: TypeAlias = Dict[str, AttributeSchemaConfig]
