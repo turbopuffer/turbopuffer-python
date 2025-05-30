@@ -809,7 +809,7 @@ class TestTurbopuffer:
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = client.with_raw_response.list_namespaces()
+        response = client.with_raw_response.namespaces()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -833,7 +833,7 @@ class TestTurbopuffer:
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = client.with_raw_response.list_namespaces(extra_headers={"x-stainless-retry-count": Omit()})
+        response = client.with_raw_response.namespaces(extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -856,7 +856,7 @@ class TestTurbopuffer:
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = client.with_raw_response.list_namespaces(extra_headers={"x-stainless-retry-count": "42"})
+        response = client.with_raw_response.namespaces(extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
@@ -1213,7 +1213,7 @@ class TestAsyncTurbopuffer:
 
         async with client as c2:
             with pytest.raises(ValueError, match="Missing default_namespace argument;"):
-                await c2.namespaces.delete_all()
+                await c2.namespace("").delete_all()
 
         client = AsyncTurbopuffer(
             base_url=base_url,
@@ -1223,7 +1223,7 @@ class TestAsyncTurbopuffer:
             default_namespace="My Default Namespace",
         )
         async with client as c2:
-            await c2.namespaces.delete_all()
+            await namespaces.AsyncNamespacesResource(c2).delete_all()
 
     def test_request_extra_json(self) -> None:
         request = self.client._build_request(
@@ -1631,7 +1631,7 @@ class TestAsyncTurbopuffer:
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = await client.with_raw_response.list_namespaces()
+        response = await client.with_raw_response.namespaces()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1656,7 +1656,7 @@ class TestAsyncTurbopuffer:
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = await client.with_raw_response.list_namespaces(extra_headers={"x-stainless-retry-count": Omit()})
+        response = await client.with_raw_response.namespaces(extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -1680,7 +1680,7 @@ class TestAsyncTurbopuffer:
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
-        response = await client.with_raw_response.list_namespaces(extra_headers={"x-stainless-retry-count": "42"})
+        response = await client.with_raw_response.namespaces(extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 

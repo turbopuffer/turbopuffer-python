@@ -10,7 +10,7 @@ import httpx
 
 from . import _exceptions
 from ._qs import Querystring
-from .types import client_list_namespaces_params
+from .types import client_namespaces_params
 from ._types import (
     NOT_GIVEN,
     Body,
@@ -35,7 +35,6 @@ from ._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .resources import namespaces
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from .pagination import SyncNamespacePage, AsyncNamespacePage
 from ._exceptions import APIStatusError, TurbopufferError
@@ -224,7 +223,7 @@ class Turbopuffer(SyncAPIClient):
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
 
-    def list_namespaces(
+    def namespaces(
         self,
         *,
         cursor: str | NotGiven = NOT_GIVEN,
@@ -269,7 +268,7 @@ class Turbopuffer(SyncAPIClient):
                         "page_size": page_size,
                         "prefix": prefix,
                     },
-                    client_list_namespaces_params.ClientListNamespacesParams,
+                    client_namespaces_params.ClientNamespacesParams,
                 ),
             ),
             model=NamespaceSummary,
@@ -319,7 +318,6 @@ class Turbopuffer(SyncAPIClient):
 
 
 class AsyncTurbopuffer(AsyncAPIClient):
-    namespaces: namespaces.AsyncNamespacesResource
     with_raw_response: AsyncTurbopufferWithRawResponse
     with_streaming_response: AsyncTurbopufferWithStreamedResponse
 
@@ -393,7 +391,6 @@ class AsyncTurbopuffer(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.namespaces = namespaces.AsyncNamespacesResource(self)
         self.with_raw_response = AsyncTurbopufferWithRawResponse(self)
         self.with_streaming_response = AsyncTurbopufferWithStreamedResponse(self)
 
@@ -476,7 +473,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
 
-    def list_namespaces(
+    def namespaces(
         self,
         *,
         cursor: str | NotGiven = NOT_GIVEN,
@@ -521,7 +518,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
                         "page_size": page_size,
                         "prefix": prefix,
                     },
-                    client_list_namespaces_params.ClientListNamespacesParams,
+                    client_namespaces_params.ClientNamespacesParams,
                 ),
             ),
             model=NamespaceSummary,
@@ -573,8 +570,8 @@ class AsyncTurbopuffer(AsyncAPIClient):
 class TurbopufferWithRawResponse:
     def __init__(self, client: Turbopuffer) -> None:
         self._client = client
-        self.list_namespaces = to_raw_response_wrapper(
-            client.list_namespaces,
+        self.namespaces = to_raw_response_wrapper(
+            client.namespaces,
         )
 
     def namespace(self, namespace: str) -> NamespaceWithRawResponse:
@@ -585,8 +582,8 @@ class TurbopufferWithRawResponse:
 class AsyncTurbopufferWithRawResponse:
     def __init__(self, client: AsyncTurbopuffer) -> None:
         self._client = client
-        self.list_namespaces = async_to_raw_response_wrapper(
-            client.list_namespaces,
+        self.namespaces = async_to_raw_response_wrapper(
+            client.namespaces,
         )
 
     def namespace(self, namespace: str) -> AsyncNamespaceWithRawResponse:
@@ -597,8 +594,8 @@ class AsyncTurbopufferWithRawResponse:
 class TurbopufferWithStreamedResponse:
     def __init__(self, client: Turbopuffer) -> None:
         self._client = client
-        self.list_namespaces = to_streamed_response_wrapper(
-            client.list_namespaces,
+        self.namespaces = to_streamed_response_wrapper(
+            client.namespaces,
         )
 
     def namespace(self, namespace: str) -> NamespaceWithStreamingResponse:
@@ -609,8 +606,8 @@ class TurbopufferWithStreamedResponse:
 class AsyncTurbopufferWithStreamedResponse:
     def __init__(self, client: AsyncTurbopuffer) -> None:
         self._client = client
-        self.list_namespaces = async_to_streamed_response_wrapper(
-            client.list_namespaces,
+        self.namespaces = async_to_streamed_response_wrapper(
+            client.namespaces,
         )
 
     def namespace(self, namespace: str) -> AsyncNamespaceWithStreamingResponse:
