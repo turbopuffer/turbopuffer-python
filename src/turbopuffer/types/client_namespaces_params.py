@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["ClientListNamespacesParams"]
+__all__ = ["ClientNamespacesParams"]
 
 
-class ClientListNamespacesParams(TypedDict, total=False):
+class ClientNamespacesParams(TypedDict, total=False):
     cursor: str
     """Retrieve the next page of results."""
 
