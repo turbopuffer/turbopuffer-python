@@ -35,7 +35,6 @@ from ._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .resources import namespaces
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from .pagination import SyncNamespacePage, AsyncNamespacePage
 from ._exceptions import APIStatusError, TurbopufferError
@@ -319,7 +318,6 @@ class Turbopuffer(SyncAPIClient):
 
 
 class AsyncTurbopuffer(AsyncAPIClient):
-    namespaces: namespaces.AsyncNamespacesResource
     with_raw_response: AsyncTurbopufferWithRawResponse
     with_streaming_response: AsyncTurbopufferWithStreamedResponse
 
@@ -393,7 +391,6 @@ class AsyncTurbopuffer(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.namespaces = namespaces.AsyncNamespacesResource(self)
         self.with_raw_response = AsyncTurbopufferWithRawResponse(self)
         self.with_streaming_response = AsyncTurbopufferWithStreamedResponse(self)
 
@@ -597,7 +594,7 @@ class AsyncTurbopufferWithRawResponse:
 class TurbopufferWithStreamedResponse:
     def __init__(self, client: Turbopuffer) -> None:
         self._client = client
-        self.list_namespaces = to_streamed_response_wrapper(
+        self.namespaces = to_streamed_response_wrapper(
             client.namespaces,
         )
 
@@ -609,7 +606,7 @@ class TurbopufferWithStreamedResponse:
 class AsyncTurbopufferWithStreamedResponse:
     def __init__(self, client: AsyncTurbopuffer) -> None:
         self._client = client
-        self.list_namespaces = async_to_streamed_response_wrapper(
+        self.namespaces = async_to_streamed_response_wrapper(
             client.namespaces,
         )
 

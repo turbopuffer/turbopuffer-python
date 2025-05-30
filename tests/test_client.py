@@ -1213,7 +1213,7 @@ class TestAsyncTurbopuffer:
 
         async with client as c2:
             with pytest.raises(ValueError, match="Missing default_namespace argument;"):
-                await c2.namespaces.delete_all()
+                await c2.namespace("").delete_all()
 
         client = AsyncTurbopuffer(
             base_url=base_url,
@@ -1223,7 +1223,7 @@ class TestAsyncTurbopuffer:
             default_namespace="My Default Namespace",
         )
         async with client as c2:
-            await c2.namespaces.delete_all()
+            await namespaces.AsyncNamespacesResource(c2).delete_all()
 
     def test_request_extra_json(self) -> None:
         request = self.client._build_request(

@@ -16,7 +16,7 @@ def test_schema(tpuf: Turbopuffer):
     )
 
     # Get the schema for the namespace
-    schema = ns.get_schema()
+    schema = ns.schema()
     for attr in ["hello", "test"]:
         assert schema[attr].type == "string"
         assert schema[attr].filterable

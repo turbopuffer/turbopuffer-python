@@ -316,13 +316,13 @@ def test_query_vectors(tpuf: Turbopuffer):
 def test_delete_all(tpuf: Turbopuffer):
     ns = tpuf.namespace(test_prefix + "client_test")
 
-    schema = ns.get_schema()
+    schema = ns.schema()
     assert schema is not None
 
     ns.delete_all()
 
     with pytest.raises(turbopuffer.NotFoundError):
-        ns.get_schema()
+        ns.schema()
 
 
 def test_string_ids(tpuf: Turbopuffer):
