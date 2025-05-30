@@ -17,7 +17,7 @@ from turbopuffer.types import (
     NamespaceQueryResponse,
     namespace_query_params,
 )
-from turbopuffer_api.lib.vector import b64decode_vector, b64encode_vector
+from turbopuffer.lib.vector import b64decode_vector, b64encode_vector
 from turbopuffer._utils._transform import transform, async_transform
 
 
