@@ -5,6 +5,7 @@ from __future__ import annotations
 from .id import ID as ID
 from .row import Row as Row
 from .custom import *
+from .row import Row as Row
 from .vector import Vector as Vector
 from .id_param import IDParam as IDParam
 from .language import Language as Language
