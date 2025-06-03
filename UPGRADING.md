@@ -131,13 +131,13 @@ There are several breaking changes as a result of this rewrite:
   New:
 
   ```py
-  tpuf.namespace('ns').updateSchema({
-      schema: {
+  tpuf.namespace('ns').updateSchema(
+      schema={
           attr1: 'val1',
           attr2: 'val2',
           # ...
       },
-  })
+  )
   ```
 
 - The `metadata` method has been removed.
@@ -147,9 +147,9 @@ There are several breaking changes as a result of this rewrite:
 
     ```py
     results = tpuf.namespace('ns').query(
-        aggregate_by={count: ('Count', 'id')},
+        aggregate_by={'count': ('Count', 'id')},
     )
-    print(results.aggregations.count)
+    print(results.aggregations['count'])
     ```
 
   - To determine the dimensionality of the vectors in a namespace, use
