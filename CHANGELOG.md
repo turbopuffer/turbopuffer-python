@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0-alpha.11 (2025-06-03)
+
+Full Changelog: [v0.5.0-alpha.10...v0.5.0-alpha.11](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.10...v0.5.0-alpha.11)
+
+### Features
+
+* **api:** api update ([14c2546](https://github.com/turbopuffer/turbopuffer-python/commit/14c25463edb34bd098eddc12f9f9cf49670b0845))
+* **types:** add __setitem__ support to Row ([90a2a9a](https://github.com/turbopuffer/turbopuffer-python/commit/90a2a9a93ac921467ea3e175716361c346653643))
+
 ## 0.5.0-alpha.10 (2025-06-03)
 
 Full Changelog: [v0.5.0-alpha.9...v0.5.0-alpha.10](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.9...v0.5.0-alpha.10)
