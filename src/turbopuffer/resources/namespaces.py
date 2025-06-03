@@ -27,11 +27,11 @@ from .._response import (
 from .._base_client import make_request_options
 from ..types.custom import Filter, RankBy, AggregateBy
 from ..types.id_param import IDParam
+from ..types.row_param import RowParam
+from ..types.columns_param import ColumnsParam
 from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
-from ..types.document_row_param import DocumentRowParam
 from ..types.attribute_schema_param import AttributeSchemaParam
-from ..types.document_columns_param import DocumentColumnsParam
 from ..types.include_attributes_param import IncludeAttributesParam
 from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_write_response import NamespaceWriteResponse
@@ -349,11 +349,11 @@ class NamespacesResource(SyncAPIResource):
         deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
-        patch_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
-        patch_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        patch_columns: ColumnsParam | NotGiven = NOT_GIVEN,
+        patch_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
-        upsert_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
-        upsert_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        upsert_columns: ColumnsParam | NotGiven = NOT_GIVEN,
+        upsert_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -373,11 +373,13 @@ class NamespacesResource(SyncAPIResource):
 
           encryption: The encryption configuration for a namespace.
 
-          patch_columns: A list of documents in columnar format. The keys are the column names.
+          patch_columns: A list of documents in columnar format. Each key is a column name, mapped to an
+              array of values for that column.
 
           schema: The schema of the attributes attached to the documents.
 
-          upsert_columns: A list of documents in columnar format. The keys are the column names.
+          upsert_columns: A list of documents in columnar format. Each key is a column name, mapped to an
+              array of values for that column.
 
           extra_headers: Send extra headers
 
@@ -720,11 +722,11 @@ class AsyncNamespacesResource(AsyncAPIResource):
         deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
-        patch_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
-        patch_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        patch_columns: ColumnsParam | NotGiven = NOT_GIVEN,
+        patch_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
-        upsert_columns: DocumentColumnsParam | NotGiven = NOT_GIVEN,
-        upsert_rows: Iterable[DocumentRowParam] | NotGiven = NOT_GIVEN,
+        upsert_columns: ColumnsParam | NotGiven = NOT_GIVEN,
+        upsert_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -744,11 +746,13 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           encryption: The encryption configuration for a namespace.
 
-          patch_columns: A list of documents in columnar format. The keys are the column names.
+          patch_columns: A list of documents in columnar format. Each key is a column name, mapped to an
+              array of values for that column.
 
           schema: The schema of the attributes attached to the documents.
 
-          upsert_columns: A list of documents in columnar format. The keys are the column names.
+          upsert_columns: A list of documents in columnar format. Each key is a column name, mapped to an
+              array of values for that column.
 
           extra_headers: Send extra headers
 

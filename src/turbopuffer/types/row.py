@@ -7,7 +7,7 @@ from .id import ID
 from .vector import Vector
 from .._models import BaseModel
 
-__all__ = ["DocumentRow"]
+__all__ = ["Row"]
 
 
 # The `type: ignore` comment below is because mypy doesn't yet support the
@@ -25,7 +25,7 @@ DocumentRowDict = TypedDict(  # type: ignore[misc]
 )
 
 
-class DocumentRow(BaseModel):
+class Row(BaseModel):
     id: ID
     """An identifier for a document."""
 

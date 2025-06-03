@@ -8,10 +8,10 @@ from typing_extensions import Required, TypeAlias, TypedDict
 from .id_param import IDParam
 from .vector_param import VectorParam
 
-__all__ = ["DocumentRowParam"]
+__all__ = ["RowParam"]
 
 
-class DocumentRowParamTyped(TypedDict, total=False):
+class RowParamTyped(TypedDict, total=False):
     id: Required[IDParam]
     """An identifier for a document."""
 
@@ -19,4 +19,4 @@ class DocumentRowParamTyped(TypedDict, total=False):
     """A vector embedding associated with a document."""
 
 
-DocumentRowParam: TypeAlias = Union[DocumentRowParamTyped, Dict[str, object]]
+RowParam: TypeAlias = Union[RowParamTyped, Dict[str, object]]

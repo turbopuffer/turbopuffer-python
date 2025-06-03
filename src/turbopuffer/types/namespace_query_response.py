@@ -2,8 +2,8 @@
 
 from typing import Dict, List, Optional
 
+from .row import Row
 from .._models import BaseModel
-from .document_row import DocumentRow
 from .query_billing import QueryBilling
 from .query_performance import QueryPerformance
 
@@ -19,4 +19,4 @@ class NamespaceQueryResponse(BaseModel):
 
     aggregations: Optional[Dict[str, object]] = None
 
-    rows: Optional[List[DocumentRow]] = None
+    rows: Optional[List[Row]] = None
