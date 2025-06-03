@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0-alpha.12 (2025-06-03)
+
+Full Changelog: [v0.5.0-alpha.11...v0.5.0-alpha.12](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.11...v0.5.0-alpha.12)
+
+### Bug Fixes
+
+* **types:** add missing fallback overloads for Row ([ca9c91f](https://github.com/turbopuffer/turbopuffer-python/commit/ca9c91fe2fe0d761f71a32d81d7a1b70ae2ad855))
+
 ## 0.5.0-alpha.11 (2025-06-03)
 
 Full Changelog: [v0.5.0-alpha.10...v0.5.0-alpha.11](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.10...v0.5.0-alpha.11)
