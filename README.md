@@ -189,7 +189,7 @@ client = Turbopuffer(
 
 response = client.namespaces.write(
     namespace="namespace",
-    encryption={"cmek": {"key_name": "key_name"}},
+    encryption={},
 )
 print(response.encryption)
 ```
