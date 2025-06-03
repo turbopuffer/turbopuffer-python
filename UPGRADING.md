@@ -106,10 +106,10 @@ There are several breaking changes as a result of this rewrite:
   tpuf.namespace("ns").query(
       rank_by=("vector", "ANN", [0.1, 0.2]),
       top_k=10,
-      filters=("And", [
+      filters=("And", (
           ("name", "Eq", "foo"),
           ("public", "Eq", 1),
-      ]),
+      )),
   )
   ```
 

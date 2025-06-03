@@ -260,7 +260,7 @@ def test_query_vectors(tpuf: Turbopuffer):
         rank_by=("id", "asc"),
         top_k=3,
         include_attributes=["hello"],
-        filters=("id", "In", [10, 11, 12]),
+        filters=("id", "In", (10, 11, 12)),
     )
     check_results(vector_set, expected)
 
@@ -274,7 +274,7 @@ def test_query_vectors(tpuf: Turbopuffer):
         rank_by=("id", "asc"),
         top_k=3,
         include_attributes=["hello"],
-        filters=("id", "In", [10, 11, 12]),
+        filters=("id", "In", (10, 11, 12)),
     )
     check_results(vector_set, expected)
 
