@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import TYPE_CHECKING, Literal, Optional, overload
+from typing import Literal, Optional, overload
 from typing_extensions import TypedDict
 
 from .id import ID
@@ -31,12 +31,6 @@ class Row(BaseModel):
 
     vector: Optional[Vector] = None
     """A vector embedding associated with a document."""
-
-    if TYPE_CHECKING:
-        # Stub to indicate that arbitrary properties are accepted.
-        # To access properties that are not valid identifiers you can use `getattr`, e.g.
-        # `getattr(obj, '$type')`
-        def __getattr__(self, attr: str) -> object: ...
 
     @staticmethod
     def from_dict(values: RowDict) -> "Row":
