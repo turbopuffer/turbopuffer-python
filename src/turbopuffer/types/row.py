@@ -52,6 +52,9 @@ class Row(BaseModel):
     @overload
     def __getitem__(self, key: Literal["$dist"]) -> float: ...
 
+    @overload
+    def __getitem__(self, key: str) -> object: ...
+
     def __getitem__(self, key: str) -> object:
         return getattr(self, key)
 
@@ -63,6 +66,9 @@ class Row(BaseModel):
 
     @overload
     def __setitem__(self, key: Literal["$dist"], value: float) -> None: ...
+
+    @overload
+    def __setitem__(self, key: str, value: object) -> None: ...
 
     def __setitem__(self, key: str, value: object) -> None:
         setattr(self, key, value)
