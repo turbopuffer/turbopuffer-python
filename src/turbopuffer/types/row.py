@@ -13,8 +13,8 @@ __all__ = ["Row"]
 # The `type: ignore` comment below is because mypy doesn't yet support the
 # `extra_items` argument to `TypedDict`. Pyright does though.
 # https://github.com/python/mypy/pull/18889
-DocumentRowDict = TypedDict(  # type: ignore[misc]
-    "DocumentRowDict",
+RowDict = TypedDict(  # type: ignore[misc]
+    "RowDict",
     {
         "id": ID,
         "vector": Optional[Vector],
@@ -39,9 +39,9 @@ class Row(BaseModel):
         def __getattr__(self, attr: str) -> object: ...
 
     @staticmethod
-    def from_dict(values: DocumentRowDict) -> "DocumentRow":
-        """Construct a `DocumentRow` from a dictionary of values."""
-        return DocumentRow.construct(**values)
+    def from_dict(values: RowDict) -> "Row":
+        """Construct a `Row` from a dictionary of values."""
+        return Row.construct(**values)
 
     @overload
     def __getitem__(self, key: Literal["id"]) -> ID: ...
