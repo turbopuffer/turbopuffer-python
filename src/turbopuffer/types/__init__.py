@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from .id import ID as ID
+from .row import Row as Row
 from .vector import Vector as Vector
 from .id_param import IDParam as IDParam
 from .language import Language as Language
+from .row_param import RowParam as RowParam
 from .tokenizer import Tokenizer as Tokenizer
-from .document_row import DocumentRow as DocumentRow
 from .vector_param import VectorParam as VectorParam
+from .columns_param import ColumnsParam as ColumnsParam
 from .query_billing import QueryBilling as QueryBilling
 from .write_billing import WriteBilling as WriteBilling
 from .attribute_type import AttributeType as AttributeType
@@ -17,9 +19,7 @@ from .vector_encoding import VectorEncoding as VectorEncoding
 from .full_text_search import FullTextSearch as FullTextSearch
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .query_performance import QueryPerformance as QueryPerformance
-from .document_row_param import DocumentRowParam as DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
-from .document_columns_param import DocumentColumnsParam as DocumentColumnsParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams

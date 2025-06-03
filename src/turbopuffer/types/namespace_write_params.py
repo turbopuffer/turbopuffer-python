@@ -6,10 +6,10 @@ from typing import Dict, List, Iterable
 from typing_extensions import Required, TypedDict
 
 from .id_param import IDParam
+from .row_param import RowParam
+from .columns_param import ColumnsParam
 from .distance_metric import DistanceMetric
-from .document_row_param import DocumentRowParam
 from .attribute_schema_param import AttributeSchemaParam
-from .document_columns_param import DocumentColumnsParam
 
 __all__ = ["NamespaceWriteParams", "Encryption", "EncryptionCmek"]
 
@@ -31,18 +31,24 @@ class NamespaceWriteParams(TypedDict, total=False):
     encryption: Encryption
     """The encryption configuration for a namespace."""
 
-    patch_columns: DocumentColumnsParam
-    """A list of documents in columnar format. The keys are the column names."""
+    patch_columns: ColumnsParam
+    """A list of documents in columnar format.
 
-    patch_rows: Iterable[DocumentRowParam]
+    Each key is a column name, mapped to an array of values for that column.
+    """
+
+    patch_rows: Iterable[RowParam]
 
     schema: Dict[str, AttributeSchemaParam]
     """The schema of the attributes attached to the documents."""
 
-    upsert_columns: DocumentColumnsParam
-    """A list of documents in columnar format. The keys are the column names."""
+    upsert_columns: ColumnsParam
+    """A list of documents in columnar format.
 
-    upsert_rows: Iterable[DocumentRowParam]
+    Each key is a column name, mapped to an array of values for that column.
+    """
+
+    upsert_rows: Iterable[RowParam]
 
 
 class EncryptionCmek(TypedDict, total=False):

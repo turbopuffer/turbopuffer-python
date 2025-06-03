@@ -6,10 +6,10 @@ from .id import ID
 from .vector import Vector
 from .._models import BaseModel
 
-__all__ = ["DocumentRow"]
+__all__ = ["Row"]
 
 
-class DocumentRow(BaseModel):
+class Row(BaseModel):
     id: ID
     """An identifier for a document."""
 
