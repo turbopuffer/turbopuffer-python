@@ -63,25 +63,25 @@ There are several breaking changes as a result of this rewrite:
   ```
 
 - The `VectorRow` and `VectorColumns` type have been renamed to
-  `DocumentRow`/`DocumentRowParam` and `DocumentColumnsParam`, respectively.
+  `Row`/`RowParam` and `ColumnsParam`, respectively.
 
   Old:
 
   ```py
   import turbopuffer as tpuf
 
-  doc_row = tpuf.VectorRow(...)
-  doc_columns = tpuf.VectorColumns(...)
+  row = tpuf.VectorRow(...)
+  columns = tpuf.VectorColumns(...)
   ```
 
   New:
 
   ```py
-  from turbopuffer.types import DocumentRow, DocumentRowParam, DocumentColumnsParam
+  from turbopuffer.types import Row, RowParam, ColumnsParam
 
-  doc_row_param: DocumentRowParam = { ... }          # when used in a request
-  doc_row: DocumentRow = { ... }                     # when used in a response
-  doc_columns_param: DocumentColumnsParam = { ... }  # when used in a request
+  row_param: RowParam = { ... }          # when used in a request
+  row: Row = { ... }                     # when used in a response
+  columns_param: ColumnsParam = { ... }  # when used in a request
   ```
 
 - The `filters` and `rank_by` parameters to the `query` method now require
@@ -106,10 +106,10 @@ There are several breaking changes as a result of this rewrite:
   tpuf.namespace("ns").query(
       rank_by=("vector", "ANN", [0.1, 0.2]),
       top_k=10,
-      filters=("And", [
+      filters=("And", (
           ("name", "Eq", "foo"),
           ("public", "Eq", 1),
-      ]),
+      )),
   )
   ```
 
@@ -131,13 +131,13 @@ There are several breaking changes as a result of this rewrite:
   New:
 
   ```py
-  tpuf.namespace('ns').updateSchema({
-      schema: {
+  tpuf.namespace('ns').updateSchema(
+      schema={
           attr1: 'val1',
           attr2: 'val2',
           # ...
       },
-  })
+  )
   ```
 
 - The `metadata` method has been removed.
@@ -147,9 +147,9 @@ There are several breaking changes as a result of this rewrite:
 
     ```py
     results = tpuf.namespace('ns').query(
-        aggregate_by={count: ('Count', 'id')},
+        aggregate_by={'count': ('Count', 'id')},
     )
-    print(results.aggregations.count)
+    print(results.aggregations['count'])
     ```
 
   - To determine the dimensionality of the vectors in a namespace, use

@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.5.0-alpha.10 (2025-06-03)
+
+Full Changelog: [v0.5.0-alpha.9...v0.5.0-alpha.10](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.9...v0.5.0-alpha.10)
+
+### Features
+
+* **api:** api update ([fe4083b](https://github.com/turbopuffer/turbopuffer-python/commit/fe4083b40d9bcfac42d5bb11017241d109d0f061))
+* **client:** add follow_redirects request option ([051cc38](https://github.com/turbopuffer/turbopuffer-python/commit/051cc38792626bee8f9b69af013dc2fad25cb213))
+
+
+### Bug Fixes
+
+* **gen:** update to lastest API gen ([db879a2](https://github.com/turbopuffer/turbopuffer-python/commit/db879a261ce0778bde4cc4f29c4b3eb4020860c9))
+* **guide:** add an upgrade guide ([5a9e1b0](https://github.com/turbopuffer/turbopuffer-python/commit/5a9e1b09d2fd1fd095b0aad602eccfcafb5990d6))
+* **guide:** correct syntax in upgrade guide ([b7fec22](https://github.com/turbopuffer/turbopuffer-python/commit/b7fec22470472c7eaaf7d721b9632359e5c49eae))
+* **tests:** update tests for new Row/Columns type names ([725c912](https://github.com/turbopuffer/turbopuffer-python/commit/725c9126d1f2d616852f42da5c18a2d30e26d52b))
+
+
+### Chores
+
+* **docs:** remove reference to rye shell ([038b2fd](https://github.com/turbopuffer/turbopuffer-python/commit/038b2fdae766bb3d6e230e232017516bf0970fe0))
+* **docs:** remove unnecessary param examples ([c04f310](https://github.com/turbopuffer/turbopuffer-python/commit/c04f310879729b1f33a0be5c9daabc536a85daa7))
+
 ## 0.5.0-alpha.9 (2025-05-30)
 
 Full Changelog: [v0.5.0-alpha.8...v0.5.0-alpha.9](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.8...v0.5.0-alpha.9)

@@ -8,12 +8,12 @@ import turbopuffer
 from turbopuffer import NOT_GIVEN, NotGiven, Turbopuffer
 from tests.custom import test_prefix
 from turbopuffer.types import (
+    Row,
     Vector,
-    DocumentRow,
+    RowParam,
+    ColumnsParam,
     QueryBilling,
     VectorEncoding,
-    DocumentRowParam,
-    DocumentColumnsParam,
     NamespaceQueryResponse,
     namespace_query_params,
 )
@@ -169,7 +169,7 @@ def test_upsert_columns(tpuf: Turbopuffer):
 def test_query_vectors(tpuf: Turbopuffer):
     ns = tpuf.namespace(test_prefix + "client_test")
 
-    def check_result(row: DocumentRow, expected: DocumentRow):
+    def check_result(row: Row, expected: Row):
         assert len(row) == len(expected)
         assert row.id == expected.id
         if isinstance(expected.vector, list):
@@ -183,18 +183,18 @@ def test_query_vectors(tpuf: Turbopuffer):
         else:
             assert "$dist" not in row
 
-    def check_results(vector_set: NamespaceQueryResponse, expected: List[DocumentRow]):
+    def check_results(vector_set: NamespaceQueryResponse, expected: List[Row]):
         assert vector_set.rows is not None
         assert len(vector_set.rows) == len(expected)
         for i in range(len(vector_set.rows)):
             check_result(vector_set.rows[i], expected[i])
 
     expected = [
-        DocumentRow.from_dict({"id": 7, "vector": [0.7, 0.7], "hello": "world", "$dist": 0.01}),
-        DocumentRow.from_dict({"id": 10, "vector": [1.0, 1.0], "$dist": 0.13}),
-        DocumentRow.from_dict({"id": 11, "vector": [1.1, 1.1], "$dist": 0.25}),
-        DocumentRow.from_dict({"id": 3, "vector": [0.3, 0.3], "$dist": 0.41}),
-        DocumentRow.from_dict({"id": 6, "vector": [0.3, 0.3], "$dist": 0.41}),
+        Row.from_dict({"id": 7, "vector": [0.7, 0.7], "hello": "world", "$dist": 0.01}),
+        Row.from_dict({"id": 10, "vector": [1.0, 1.0], "$dist": 0.13}),
+        Row.from_dict({"id": 11, "vector": [1.1, 1.1], "$dist": 0.25}),
+        Row.from_dict({"id": 3, "vector": [0.3, 0.3], "$dist": 0.41}),
+        Row.from_dict({"id": 6, "vector": [0.3, 0.3], "$dist": 0.41}),
     ]
 
     # Test normal query
@@ -224,15 +224,11 @@ def test_query_vectors(tpuf: Turbopuffer):
         include_attributes=True,
     )
     expected = [
-        DocumentRow.from_dict({"id": 7, "vector": [0.7, 0.7], "$dist": 0.01, "hello": "world"}),
-        DocumentRow.from_dict({"id": 10, "vector": [1.0, 1.0], "$dist": 0.13, "test": "cols"}),
-        DocumentRow.from_dict({"id": 11, "vector": [1.1, 1.1], "$dist": 0.25, "test": "cols"}),
-        DocumentRow.from_dict(
-            {"id": 3, "vector": [0.3, 0.3], "$dist": 0.41, "test": "cols", "key1": "three", "key2": "c"}
-        ),
-        DocumentRow.from_dict(
-            {"id": 6, "vector": [0.3, 0.3], "$dist": 0.41, "test": "cols", "key1": "three", "key2": "c"}
-        ),
+        Row.from_dict({"id": 7, "vector": [0.7, 0.7], "$dist": 0.01, "hello": "world"}),
+        Row.from_dict({"id": 10, "vector": [1.0, 1.0], "$dist": 0.13, "test": "cols"}),
+        Row.from_dict({"id": 11, "vector": [1.1, 1.1], "$dist": 0.25, "test": "cols"}),
+        Row.from_dict({"id": 3, "vector": [0.3, 0.3], "$dist": 0.41, "test": "cols", "key1": "three", "key2": "c"}),
+        Row.from_dict({"id": 6, "vector": [0.3, 0.3], "$dist": 0.41, "test": "cols", "key1": "three", "key2": "c"}),
     ]
     check_results(vector_set, expected)
 
@@ -242,39 +238,39 @@ def test_query_vectors(tpuf: Turbopuffer):
         rank_by=("vector", "ANN", [1.5, 1.6]),
     )
     expected = [
-        DocumentRow.from_dict({"id": 15, "$dist": 0.01}),
-        DocumentRow.from_dict({"id": 16, "$dist": 0.01}),
-        DocumentRow.from_dict({"id": 14, "$dist": 0.05}),
-        DocumentRow.from_dict({"id": 17, "$dist": 0.05}),
-        DocumentRow.from_dict({"id": 18, "$dist": 0.13}),
+        Row.from_dict({"id": 15, "$dist": 0.01}),
+        Row.from_dict({"id": 16, "$dist": 0.01}),
+        Row.from_dict({"id": 14, "$dist": 0.05}),
+        Row.from_dict({"id": 17, "$dist": 0.05}),
+        Row.from_dict({"id": 18, "$dist": 0.13}),
     ]
     check_results(vector_set, expected)
 
     # Test query with single filter
     expected = [
-        DocumentRow.from_dict({"id": 10}),
-        DocumentRow.from_dict({"id": 11}),
-        DocumentRow.from_dict({"id": 12}),
+        Row.from_dict({"id": 10}),
+        Row.from_dict({"id": 11}),
+        Row.from_dict({"id": 12}),
     ]
     vector_set = ns.query(
         rank_by=("id", "asc"),
         top_k=3,
         include_attributes=["hello"],
-        filters=("id", "In", [10, 11, 12]),
+        filters=("id", "In", (10, 11, 12)),
     )
     check_results(vector_set, expected)
 
     # Test query with no vectors
     expected = [
-        DocumentRow.from_dict({"id": 10}),
-        DocumentRow.from_dict({"id": 11}),
-        DocumentRow.from_dict({"id": 12}),
+        Row.from_dict({"id": 10}),
+        Row.from_dict({"id": 11}),
+        Row.from_dict({"id": 12}),
     ]
     vector_set = ns.query(
         rank_by=("id", "asc"),
         top_k=3,
         include_attributes=["hello"],
-        filters=("id", "In", [10, 11, 12]),
+        filters=("id", "In", (10, 11, 12)),
     )
     check_results(vector_set, expected)
 
@@ -370,11 +366,11 @@ def test_string_ids(tpuf: Turbopuffer):
     # Test query
     result = ns.query(top_k=5, rank_by=("vector", "ANN", [0.0, 0.0]), filters=("id", "In", vec_ids))
     expected = [
-        DocumentRow.from_dict({"id": vec_ids[0], "vector": None, "$dist": 0.0}),
-        DocumentRow.from_dict({"id": vec_ids[1], "vector": None, "$dist": 0.02}),
-        DocumentRow.from_dict({"id": vec_ids[2], "vector": None, "$dist": 0.08}),
-        DocumentRow.from_dict({"id": vec_ids[3], "vector": None, "$dist": 0.18}),
-        DocumentRow.from_dict({"id": vec_ids[4], "vector": None, "$dist": 0.32}),
+        Row.from_dict({"id": vec_ids[0], "vector": None, "$dist": 0.0}),
+        Row.from_dict({"id": vec_ids[1], "vector": None, "$dist": 0.02}),
+        Row.from_dict({"id": vec_ids[2], "vector": None, "$dist": 0.08}),
+        Row.from_dict({"id": vec_ids[3], "vector": None, "$dist": 0.18}),
+        Row.from_dict({"id": vec_ids[4], "vector": None, "$dist": 0.32}),
     ]
     assert result.rows is not None
     assert len(result.rows) == len(expected)
@@ -390,11 +386,11 @@ def test_string_ids(tpuf: Turbopuffer):
     # Test query 2
     result = ns.query(top_k=5, rank_by=("vector", "ANN", [0.0, 0.0]), filters=("id", "In", vec_ids))
     expected = [
-        DocumentRow.from_dict({"id": vec_ids[0], "vector": None, "$dist": 0.0}),
-        DocumentRow.from_dict({"id": vec_ids[1], "vector": None, "$dist": 0.02}),
-        DocumentRow.from_dict({"id": vec_ids[3], "vector": None, "$dist": 0.18}),
-        DocumentRow.from_dict({"id": vec_ids[4], "vector": None, "$dist": 0.32}),
-        DocumentRow.from_dict({"id": vec_ids[5], "vector": None, "$dist": 0.5}),
+        Row.from_dict({"id": vec_ids[0], "vector": None, "$dist": 0.0}),
+        Row.from_dict({"id": vec_ids[1], "vector": None, "$dist": 0.02}),
+        Row.from_dict({"id": vec_ids[3], "vector": None, "$dist": 0.18}),
+        Row.from_dict({"id": vec_ids[4], "vector": None, "$dist": 0.32}),
+        Row.from_dict({"id": vec_ids[5], "vector": None, "$dist": 0.5}),
     ]
     assert result.rows is not None
     assert len(result.rows) == len(expected)
@@ -571,10 +567,10 @@ def test_transparent_vector_encoding():
     # Due to the nature of the hack, there's a high risk of a future refactoring
     # to the Stainless specification breaking the fast path.
 
-    transformed = transform({"id": 1, "vector": [0.1, 0.2, 0.3]}, DocumentRowParam)
+    transformed = transform({"id": 1, "vector": [0.1, 0.2, 0.3]}, RowParam)
     assert transformed == {"id": 1, "vector": "zczMPc3MTD6amZk+"}
 
-    transformed = transform({"id": [1, 2], "vector": [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]]}, DocumentColumnsParam)
+    transformed = transform({"id": [1, 2], "vector": [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]]}, ColumnsParam)
     assert transformed == {"id": [1, 2], "vector": ["zczMPc3MTD6amZk+", "zczMPgAAAD+amRk/"]}
 
 
@@ -584,12 +580,10 @@ async def test_transparent_vector_encoding_async():
     # Due to the nature of the hack, there's a high risk of a future refactoring
     # to the Stainless specification breaking the fast path.
 
-    transformed = await async_transform({"id": 1, "vector": [0.1, 0.2, 0.3]}, DocumentRowParam)
+    transformed = await async_transform({"id": 1, "vector": [0.1, 0.2, 0.3]}, RowParam)
     assert transformed == {"id": 1, "vector": "zczMPc3MTD6amZk+"}
 
-    transformed = await async_transform(
-        {"id": [1, 2], "vector": [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]]}, DocumentColumnsParam
-    )
+    transformed = await async_transform({"id": [1, 2], "vector": [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]]}, ColumnsParam)
     assert transformed == {"id": [1, 2], "vector": ["zczMPc3MTD6amZk+", "zczMPgAAAD+amRk/"]}
 
 

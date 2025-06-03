@@ -8,10 +8,10 @@ from typing_extensions import Required, TypeAlias, TypedDict
 from .id_param import IDParam
 from .vector_param import VectorParam
 
-__all__ = ["DocumentColumnsParam"]
+__all__ = ["ColumnsParam"]
 
 
-class DocumentColumnsParamTyped(TypedDict, total=False):
+class ColumnsParamTyped(TypedDict, total=False):
     id: Required[List[IDParam]]
     """The IDs of the documents."""
 
@@ -19,4 +19,4 @@ class DocumentColumnsParamTyped(TypedDict, total=False):
     """The vector embeddings of the documents."""
 
 
-DocumentColumnsParam: TypeAlias = Union[DocumentColumnsParamTyped, Dict[str, Iterable[object]]]
+ColumnsParam: TypeAlias = Union[ColumnsParamTyped, Dict[str, Iterable[object]]]
