@@ -55,6 +55,18 @@ class Row(BaseModel):
     def __getitem__(self, key: str) -> object:
         return getattr(self, key)
 
+    @overload
+    def __setitem__(self, key: Literal["id"], value: ID) -> None: ...
+
+    @overload
+    def __setitem__(self, key: Literal["vector"], value: Optional[Vector]) -> None: ...
+
+    @overload
+    def __setitem__(self, key: Literal["$dist"], value: float) -> None: ...
+
+    def __setitem__(self, key: str, value: object) -> None:
+        setattr(self, key, value)
+
     def __contains__(self, key: str) -> bool:
         return hasattr(self, key)
 
