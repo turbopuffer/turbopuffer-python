@@ -33,10 +33,10 @@ class Row(BaseModel):
     """A vector embedding associated with a document."""
 
     if TYPE_CHECKING:
-        # Stub to indicate that arbitrary properties are accepted.
-        # To access properties that are not valid identifiers you can use `getattr`, e.g.
-        # `getattr(obj, '$type')`
-        def __getattr__(self, attr: str) -> object: ...
+         # Stub to indicate that arbitrary properties are accepted.
+         # To access properties that are not valid identifiers you can use `getattr`, e.g.
+         # `getattr(obj, '$type')`
+         def __getattr__(self, attr: str) -> object: ...
 
     @staticmethod
     def from_dict(values: RowDict) -> "Row":
