@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.0-alpha.13 (2025-06-06)
+
+Full Changelog: [v0.5.0-alpha.12...v0.5.0-alpha.13](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.12...v0.5.0-alpha.13)
+
+### Features
+
+* **api:** api update ([a016ffc](https://github.com/turbopuffer/turbopuffer-python/commit/a016ffc01f043eb8bd1b7061531966385e871461))
+* **types:** add __setitem__ support to Row ([c2a4554](https://github.com/turbopuffer/turbopuffer-python/commit/c2a4554c7cd00e546ebd7a1447a42d6d863ec425))
+
+
+### Bug Fixes
+
+* **guide:** update UPGRADING.md ([c124d29](https://github.com/turbopuffer/turbopuffer-python/commit/c124d29ff94340c301e6e90ca294dda73bef9e7a))
+* restore TYPE_CHECKING conditional in Row ([7d070a3](https://github.com/turbopuffer/turbopuffer-python/commit/7d070a38599511770269b82a3ce63ad9ce4dfb49))
+* update supplemental codegen version ([1c68e54](https://github.com/turbopuffer/turbopuffer-python/commit/1c68e5414807fd5f0970b197e434c47ef8db123b))
+
 ## 0.5.0-alpha.12 (2025-06-03)
 
 Full Changelog: [v0.5.0-alpha.11...v0.5.0-alpha.12](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.11...v0.5.0-alpha.12)
