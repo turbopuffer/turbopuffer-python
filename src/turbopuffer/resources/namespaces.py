@@ -683,6 +683,14 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceSchemaResponse,
         )
 
+    async def exists(self) -> bool:
+        """Check whether the namespace exists."""
+        try:
+            await self.schema()
+            return True
+        except NotFoundError:
+            return False
+
     async def update_schema(
         self,
         *,
