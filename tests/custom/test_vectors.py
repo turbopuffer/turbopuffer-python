@@ -310,8 +310,7 @@ def test_query_vectors(tpuf: Turbopuffer):
 def test_delete_all(tpuf: Turbopuffer):
     ns = tpuf.namespace(test_prefix + "client_test")
 
-    schema = ns.schema()
-    assert schema is not None
+    assert ns.exists() is True
 
     ns.delete_all()
 
@@ -685,3 +684,16 @@ def test_query_vectors_vector_encoding_format(tpuf: Turbopuffer):
             return [numpy.float32(x) for x in floats]
 
         assert float32_list(vector_set.rows[0].vector) == float32_list([0.1, 0.2, 0.3])
+
+
+def test_exists(tpuf: Turbopuffer):
+    ns = tpuf.namespace(test_prefix + "exists-test")
+    assert ns.exists() is False
+
+    ns.write(
+        upsert_rows=[
+            {"id": 1, "vector": [0.1, 0.2, 0.3]},
+        ],
+        distance_metric="euclidean_squared",
+    )
+    assert ns.exists() is True

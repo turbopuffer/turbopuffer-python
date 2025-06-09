@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0-alpha.14 (2025-06-09)
+
+Full Changelog: [v0.5.0-alpha.13...v0.5.0-alpha.14](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.13...v0.5.0-alpha.14)
+
+### Features
+
+* add deprecation shims ([cfd1438](https://github.com/turbopuffer/turbopuffer-python/commit/cfd14380cf584c5c96b5d414cc8e417f89b20643))
+* add Namespace.exists() async method ([117c3f0](https://github.com/turbopuffer/turbopuffer-python/commit/117c3f0be2d016a11c94844cacae25faca67f566))
+* restore Namespace.exists() method ([c6f2f9c](https://github.com/turbopuffer/turbopuffer-python/commit/c6f2f9cd4c3340eb6208260ac69c6cbe0642d206))
+
+
+### Bug Fixes
+
+* specify distance_metric in exists tests ([f52ac9b](https://github.com/turbopuffer/turbopuffer-python/commit/f52ac9ba6079b3a43952f9e5779d2b8089af9f63))
+
 ## 0.5.0-alpha.13 (2025-06-06)
 
 Full Changelog: [v0.5.0-alpha.12...v0.5.0-alpha.13](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.12...v0.5.0-alpha.13)

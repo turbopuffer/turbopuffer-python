@@ -1,6 +1,7 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import typing as _t
+from typing_extensions import deprecated
 
 from . import types
 from ._types import NOT_GIVEN, Omit, NoneType, NotGiven, Transport, ProxiesTypes
@@ -97,3 +98,34 @@ for __name in __all__:
         except (TypeError, AttributeError):
             # Some of our exported symbols are builtins which we can't set attributes for.
             pass
+
+
+# TODO(benesch): remove these shims when sufficient time has passed (say, Sep 2025).
+class Namespace:
+    @deprecated(
+        "use turbopuffer.Turbopuffer().namespace() instead; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
+    )
+    def __init__(self, namespace: str):
+        raise NotImplementedError(
+            "the turbopuffer.Namespace class has been removed; use turbopuffer.Turbopuffer().namespace() instead; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
+        )
+
+
+class VectorRow:
+    @deprecated(
+        "use turbopuffer.Row() instead; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
+    )
+    def __init__(self, namespace: str):
+        raise NotImplementedError(
+            "the turbopuffer.VectorRow() class has been removed; use turbopuffer.Row() instead; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
+        )
+
+
+class VectorColumns:
+    @deprecated(
+        "use turbopuffer.Columns() instead; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
+    )
+    def __init__(self, namespace: str):
+        raise NotImplementedError(
+            "the turbopuffer.VectorColumns() class has been removed; use turbopuffer.Columns() instead; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
+        )
