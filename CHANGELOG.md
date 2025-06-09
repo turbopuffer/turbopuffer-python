@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.0-alpha.15 (2025-06-09)
+
+Full Changelog: [v0.5.0-alpha.14...v0.5.0-alpha.15](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.14...v0.5.0-alpha.15)
+
+### Features
+
+* improve deprecation warnings ([b38de2e](https://github.com/turbopuffer/turbopuffer-python/commit/b38de2eb4e063b0d9534862cfc517764ca1f56b1))
+
+
+### Bug Fixes
+
+* typings of deprecation warnings ([e0c7e8a](https://github.com/turbopuffer/turbopuffer-python/commit/e0c7e8a5688540d5ffecbc0fdcc1295530a8e19d))
+
 ## 0.5.0-alpha.14 (2025-06-09)
 
 Full Changelog: [v0.5.0-alpha.13...v0.5.0-alpha.14](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.13...v0.5.0-alpha.14)
