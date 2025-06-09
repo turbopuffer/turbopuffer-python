@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol
-from typing_extensions import override
+from typing_extensions import override, deprecated
 
 from ..resources import namespaces
 
@@ -28,6 +28,12 @@ class NamespaceMixin:
 class Namespace(namespaces.NamespacesResource, NamespaceMixin):
     def __init__(self, client: Turbopuffer) -> None:
         super().__init__(client)
+
+    @deprecated("method removed; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help")
+    def metadata(self) -> None:
+        raise NotImplementedError(
+            "the Namespace.metadata() method has been removed; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
+        )
 
 
 class NamespaceWithRawResponse(namespaces.NamespacesResourceWithRawResponse, NamespaceMixin):
