@@ -694,5 +694,6 @@ def test_exists(tpuf: Turbopuffer):
         upsert_rows=[
             {"id": 1, "vector": [0.1, 0.2, 0.3]},
         ],
+        distance_metric="euclidean_squared",
     )
     assert ns.exists() is True

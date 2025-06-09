@@ -35,5 +35,6 @@ async def test_exists(async_tpuf: AsyncTurbopuffer):
         upsert_rows=[
             {"id": 1, "vector": [0.1, 0.2, 0.3]},
         ],
+        distance_metric="euclidean_squared",
     )
     assert (await ns.exists()) is True
