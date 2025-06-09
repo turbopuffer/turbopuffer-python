@@ -76,6 +76,8 @@ nodeenv==1.8.0
     # via pyright
 nox==2023.4.22
 numpy==2.0.2
+orjson==3.10.18
+    # via turbopuffer
 packaging==23.2
     # via nox
     # via pytest

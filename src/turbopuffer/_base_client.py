@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sys
-import json
 import time
 import uuid
 import email
@@ -41,6 +40,7 @@ from pydantic import PrivateAttr
 
 from . import _exceptions
 from ._qs import Querystring
+from .lib import json
 from ._files import to_httpx_files, async_to_httpx_files
 from ._types import (
     NOT_GIVEN,
@@ -497,6 +497,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         params = _merge_mappings(self.default_query, options.params)
         content_type = headers.get("Content-Type")
         files = options.files
+        content = None
 
         # If the given Content-Type header is multipart/form-data then it
         # has to be removed so that httpx can generate the header with
@@ -526,6 +527,10 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             # https://github.com/encode/httpx/discussions/2399#discussioncomment-3814186
             if not files:
                 files = cast(HttpxRequestFiles, ForceMultipartDict())
+        elif is_given(json_data) and json_data is not None:
+            # Use our own json library for serialization, which might be faster
+            # than httpx's, and at worst will be the same (stdlib json).
+            content = json.dumps(json_data)
 
         prepared_url = self._prepare_url(options.url)
         if "_" in prepared_url.host:
@@ -543,7 +548,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             # so that passing a `TypedDict` doesn't cause an error.
             # https://github.com/microsoft/pyright/issues/3526#event-6715453066
             params=self.qs.stringify(cast(Mapping[str, Any], params)) if params else None,
-            json=json_data if is_given(json_data) else None,
+            content=content,
             files=files,
             **kwargs,
         )

@@ -28,6 +28,12 @@ The REST API documentation can be found on [turbopuffer.com](https://turbopuffer
 pip install --pre turbopuffer
 ```
 
+Or, if you're able to run C binaries for JSON encoding:
+
+```sh
+pip install --pre turbopuffer[fast]
+```
+
 ## Usage
 
 ```python

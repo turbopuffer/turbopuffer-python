@@ -25,6 +25,7 @@ import anyio
 import httpx
 import pydantic
 
+from .lib import json
 from ._types import NoneType
 from ._utils import is_given, extract_type_arg, is_annotated_type, is_type_alias_type, extract_type_var_from_base
 from ._models import BaseModel, is_basemodel
@@ -240,7 +241,7 @@ class BaseAPIResponse(Generic[R]):
         if not content_type.endswith("json"):
             if is_basemodel(cast_to):
                 try:
-                    data = response.json()
+                    data = json.loads(response.content)
                 except Exception as exc:
                     log.debug("Could not read JSON from response data due to %s - %s", type(exc), exc)
                 else:
@@ -262,7 +263,7 @@ class BaseAPIResponse(Generic[R]):
             # handle the response however you need to.
             return response.text  # type: ignore
 
-        data = response.json()
+        data = json.loads(response.content)
 
         return self._client._process_response_data(
             data=data,

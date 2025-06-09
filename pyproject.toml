@@ -36,6 +36,9 @@ classifiers = [
   "License :: OSI Approved :: MIT License"
 ]
 
+[project.optional-dependencies]
+fast = ["orjson>=3.10.18, <4"]
+
 [project.urls]
 Homepage = "https://github.com/turbopuffer/turbopuffer-python"
 Repository = "https://github.com/turbopuffer/turbopuffer-python"

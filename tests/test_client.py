@@ -1033,7 +1033,7 @@ class TestAsyncTurbopuffer:
         ):
             client.copy(set_default_query={}, default_query={"foo": "Bar"})
 
-    def test_copy_signature(self, client: TurbopufferStd) -> None:
+    def test_copy_signature(self, client: Turbopuffer) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
