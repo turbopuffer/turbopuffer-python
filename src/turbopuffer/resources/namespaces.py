@@ -24,6 +24,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
+from .._exceptions import NotFoundError
 from .._base_client import make_request_options
 from ..types.custom import Filter, RankBy, AggregateBy
 from ..types.id_param import IDParam
@@ -300,6 +301,14 @@ class NamespacesResource(SyncAPIResource):
             ),
             cast_to=NamespaceSchemaResponse,
         )
+
+    def exists(self) -> bool:
+        """Check whether the namespace exists."""
+        try:
+            self.schema()
+            return True
+        except NotFoundError:
+            return False
 
     def update_schema(
         self,
