@@ -36,6 +36,7 @@ import httpx
 import distro
 import pydantic
 from httpx import URL
+from aiohttp import ClientSession
 from pydantic import PrivateAttr
 
 from . import _exceptions
@@ -83,6 +84,8 @@ from ._exceptions import (
     APIConnectionError,
     APIResponseValidationError,
 )
+from .lib.transport_httpx import HttpxTransport
+from .lib.transport_aiohttp import AiohttpTransport
 
 log: logging.Logger = logging.getLogger(__name__)
 
@@ -779,6 +782,7 @@ class _DefaultHttpxClient(httpx.Client):
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
+        kwargs.setdefault("transport", HttpxTransport())
         super().__init__(**kwargs)
 
 
@@ -949,12 +953,17 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
 
         retries_taken = 0
         for retries_taken in range(max_retries + 1):
+            request_start = time.monotonic()
+
             options = model_copy(input_options)
             options = self._prepare_options(options)
 
             remaining_retries = max_retries - retries_taken
             request = self._build_request(options, retries_taken=retries_taken)
             self._prepare_request(request)
+            request.extensions["clock"] = {
+                "request_start": request_start,
+            }
 
             kwargs: HttpxSendArgs = {}
             if self.custom_auth is not None:
@@ -1279,6 +1288,7 @@ class _DefaultAsyncHttpxClient(httpx.AsyncClient):
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
+        kwargs.setdefault("transport", AiohttpTransport(client=lambda: ClientSession()))
         super().__init__(**kwargs)
 
 
@@ -1452,12 +1462,17 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
 
         retries_taken = 0
         for retries_taken in range(max_retries + 1):
+            request_start = time.monotonic()
+
             options = model_copy(input_options)
             options = await self._prepare_options(options)
 
             remaining_retries = max_retries - retries_taken
             request = self._build_request(options, retries_taken=retries_taken)
             await self._prepare_request(request)
+            request.extensions["clock"] = {
+                "request_start": request_start,
+            }
 
             kwargs: HttpxSendArgs = {}
             if self.custom_auth is not None:

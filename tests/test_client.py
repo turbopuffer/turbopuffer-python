@@ -21,7 +21,11 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from turbopuffer import Turbopuffer, AsyncTurbopuffer, APIResponseValidationError
+from turbopuffer import (
+    Turbopuffer,
+    AsyncTurbopuffer as AsyncTurbopufferStd,
+    APIResponseValidationError,
+)
 from turbopuffer._types import Omit
 from turbopuffer._models import BaseModel, FinalRequestOptions
 from turbopuffer.resources import namespaces
@@ -30,6 +34,7 @@ from turbopuffer._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     BaseClient,
+    DefaultAsyncHttpxClient,
     make_request_options,
 )
 
@@ -38,6 +43,15 @@ from .utils import update_env
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 api_key = "tpuf_A1..."
 region = "gcp-us-central1"
+
+
+# Our custom HTTP client doesn't support mocking, so restore the Stainless
+# default in this file only.
+class AsyncTurbopuffer(AsyncTurbopufferStd):
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(
+            *args, **{"http_client": DefaultAsyncHttpxClient(transport=httpx.AsyncHTTPTransport()), **kwargs}
+        )
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -1019,13 +1033,13 @@ class TestAsyncTurbopuffer:
         ):
             client.copy(set_default_query={}, default_query={"foo": "Bar"})
 
-    def test_copy_signature(self) -> None:
+    def test_copy_signature(self, client: TurbopufferStd) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
-            self.client.__init__,  # type: ignore[misc]
+            client.__init__,  # type: ignore[misc]
         )
-        copy_signature = inspect.signature(self.client.copy)
+        copy_signature = inspect.signature(client.copy)
         exclude_params = {"transport", "proxies", "_strict_response_validation"}
 
         for name in init_signature.parameters.keys():
@@ -1638,12 +1652,11 @@ class TestAsyncTurbopuffer:
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
         self,
-        async_client: AsyncTurbopuffer,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
     ) -> None:
-        client = async_client.with_options(max_retries=4)
+        client = self.client.with_options(max_retries=4)
 
         nb_retries = 0
 
@@ -1667,10 +1680,8 @@ class TestAsyncTurbopuffer:
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
-    async def test_omit_retry_count_header(
-        self, async_client: AsyncTurbopuffer, failures_before_success: int, respx_mock: MockRouter
-    ) -> None:
-        client = async_client.with_options(max_retries=4)
+    async def test_omit_retry_count_header(self, failures_before_success: int, respx_mock: MockRouter) -> None:
+        client = self.client.with_options(max_retries=4)
 
         nb_retries = 0
 
@@ -1691,10 +1702,8 @@ class TestAsyncTurbopuffer:
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
-    async def test_overwrite_retry_count_header(
-        self, async_client: AsyncTurbopuffer, failures_before_success: int, respx_mock: MockRouter
-    ) -> None:
-        client = async_client.with_options(max_retries=4)
+    async def test_overwrite_retry_count_header(self, failures_before_success: int, respx_mock: MockRouter) -> None:
+        client = self.client.with_options(max_retries=4)
 
         nb_retries = 0
 
