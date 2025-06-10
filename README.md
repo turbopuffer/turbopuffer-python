@@ -10,7 +10,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs/auth). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
