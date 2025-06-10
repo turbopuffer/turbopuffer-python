@@ -30,6 +30,12 @@ Or, if you're able to run C binaries for JSON encoding:
 pip install --pre turbopuffer[fast]
 ```
 
+Or, if you're able to run C binaries for JSON encoding:
+
+```sh
+pip install --pre turbopuffer[fast]
+```
+
 ## Usage
 
 ```python
