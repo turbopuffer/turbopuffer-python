@@ -1,4 +1,4 @@
-from typing import Iterator
+from typing import Iterator, AsyncIterator
 
 import pytest
 
@@ -12,5 +12,5 @@ def tpuf() -> Iterator[Turbopuffer]:
 
 
 @pytest.fixture(scope="session")
-def async_tpuf() -> Iterator[AsyncTurbopuffer]:
+async def async_tpuf() -> AsyncIterator[AsyncTurbopuffer]:
     yield AsyncTurbopuffer()

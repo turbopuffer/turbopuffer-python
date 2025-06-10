@@ -9,6 +9,8 @@ authors = [
 ]
 dependencies = [
     "httpx>=0.23.0, <1",
+    "aiohttp>=3.12.11, <4",
+    "urllib3>=2.4.0, <3",
     "pydantic>=1.9.0, <3",
     "pybase64>=1.4.1, <2",
     "typing-extensions>=4.13, <5",
@@ -33,6 +35,9 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "License :: OSI Approved :: MIT License"
 ]
+
+[project.optional-dependencies]
+fast = ["orjson>=3.10.18, <4"]
 
 [project.urls]
 Homepage = "https://github.com/turbopuffer/turbopuffer-python"

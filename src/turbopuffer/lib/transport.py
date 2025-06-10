@@ -1,0 +1,1 @@
+MIN_GZIP_SIZE = 1024

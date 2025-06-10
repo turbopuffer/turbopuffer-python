@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sys
-import json
 import time
 import uuid
 import email
@@ -36,10 +35,12 @@ import httpx
 import distro
 import pydantic
 from httpx import URL
+from aiohttp import ClientSession
 from pydantic import PrivateAttr
 
 from . import _exceptions
 from ._qs import Querystring
+from .lib import json
 from ._files import to_httpx_files, async_to_httpx_files
 from ._types import (
     NOT_GIVEN,
@@ -83,6 +84,8 @@ from ._exceptions import (
     APIConnectionError,
     APIResponseValidationError,
 )
+from .lib.transport_httpx import HttpxTransport
+from .lib.transport_aiohttp import AiohttpTransport
 
 log: logging.Logger = logging.getLogger(__name__)
 
@@ -494,6 +497,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         params = _merge_mappings(self.default_query, options.params)
         content_type = headers.get("Content-Type")
         files = options.files
+        content = None
 
         # If the given Content-Type header is multipart/form-data then it
         # has to be removed so that httpx can generate the header with
@@ -523,6 +527,10 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             # https://github.com/encode/httpx/discussions/2399#discussioncomment-3814186
             if not files:
                 files = cast(HttpxRequestFiles, ForceMultipartDict())
+        elif is_given(json_data) and json_data is not None:
+            # Use our own json library for serialization, which might be faster
+            # than httpx's, and at worst will be the same (stdlib json).
+            content = json.dumps(json_data)
 
         prepared_url = self._prepare_url(options.url)
         if "_" in prepared_url.host:
@@ -540,7 +548,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             # so that passing a `TypedDict` doesn't cause an error.
             # https://github.com/microsoft/pyright/issues/3526#event-6715453066
             params=self.qs.stringify(cast(Mapping[str, Any], params)) if params else None,
-            json=json_data if is_given(json_data) else None,
+            content=content,
             files=files,
             **kwargs,
         )
@@ -779,6 +787,7 @@ class _DefaultHttpxClient(httpx.Client):
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
+        kwargs.setdefault("transport", HttpxTransport())
         super().__init__(**kwargs)
 
 
@@ -949,12 +958,17 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
 
         retries_taken = 0
         for retries_taken in range(max_retries + 1):
+            request_start = time.monotonic()
+
             options = model_copy(input_options)
             options = self._prepare_options(options)
 
             remaining_retries = max_retries - retries_taken
             request = self._build_request(options, retries_taken=retries_taken)
             self._prepare_request(request)
+            request.extensions["clock"] = {
+                "request_start": request_start,
+            }
 
             kwargs: HttpxSendArgs = {}
             if self.custom_auth is not None:
@@ -1279,6 +1293,7 @@ class _DefaultAsyncHttpxClient(httpx.AsyncClient):
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
+        kwargs.setdefault("transport", AiohttpTransport(client=lambda: ClientSession()))
         super().__init__(**kwargs)
 
 
@@ -1452,12 +1467,17 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
 
         retries_taken = 0
         for retries_taken in range(max_retries + 1):
+            request_start = time.monotonic()
+
             options = model_copy(input_options)
             options = await self._prepare_options(options)
 
             remaining_retries = max_retries - retries_taken
             request = self._build_request(options, retries_taken=retries_taken)
             await self._prepare_request(request)
+            request.extensions["clock"] = {
+                "request_start": request_start,
+            }
 
             kwargs: HttpxSendArgs = {}
             if self.custom_auth is not None:
