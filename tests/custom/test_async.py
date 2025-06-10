@@ -1,10 +1,7 @@
-import pytest
-
 from turbopuffer import AsyncTurbopuffer
 from tests.custom import test_prefix
 
 
-@pytest.mark.asyncio
 async def test_order_by_attribute(async_tpuf: AsyncTurbopuffer):
     ns = async_tpuf.namespace(test_prefix + "order_by_attribute")
 
@@ -26,7 +23,6 @@ async def test_order_by_attribute(async_tpuf: AsyncTurbopuffer):
     assert [item.id for item in results.rows] == [4, 3, 2, 1]
 
 
-@pytest.mark.asyncio
 async def test_exists(async_tpuf: AsyncTurbopuffer):
     ns = async_tpuf.namespace(test_prefix + "exists-test-async")
     assert (await ns.exists()) is False

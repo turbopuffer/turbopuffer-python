@@ -2,30 +2,32 @@
 
 <a href="https://pypi.org/project/turbopuffer/"><img src="https://img.shields.io/pypi/v/turbopuffer.svg" alt="PyPI version" align="right"></a>
 
-The Turbopuffer Python library provides convenient access to the Turbopuffer REST API from any Python 3.8+
+The Turbopuffer Python library provides convenient access to the Turbopuffer HTTP API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-
-> [!WARNING]
-> **This version of the turbopuffer Python client is in alpha.**
+> [!IMPORTANT]
+> **The latest version of the Python SDK (v0.5) contains several breaking changes.**
 >
-> You may encounter bugs or performance issues. APIs are subject to change.
->
-> The stable version of the turbopuffer Python client is [v0.4.1](https://pypi.org/project/turbopuffer/0.4.1/).
-
+> Consult [UPGRADING.md](./UPGRADING.md) for details.
 
 ## Documentation
 
-The REST API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs).
+The HTTP API documentation can be found at [turbopuffer.com/docs](https://turbopuffer.com/docs).
 
 ## Installation
 
 ```sh
 # install from PyPI
-pip install --pre turbopuffer
+pip install turbopuffer
+```
+
+Or, if you're able to run C binaries for JSON encoding:
+
+```sh
+pip install --pre turbopuffer[fast]
 ```
 
 ## Usage

@@ -1,11 +1,11 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .._models import BaseModel
+from ..lib.performance import ClientPerformance
 
 __all__ = ["QueryPerformance"]
 
 
-class QueryPerformance(BaseModel):
+class QueryPerformance(ClientPerformance):
     approx_namespace_size: int
     """the approximate number of documents in the namespace."""
 

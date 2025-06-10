@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.0 (2025-06-10)
+
+Full Changelog: [v0.5.0-alpha.15...v0.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.15...v0.5.0)
+
+### Features
+
+* improve performance with custom transports ([#111](https://github.com/turbopuffer/turbopuffer-python/issues/111)) ([7def3c6](https://github.com/turbopuffer/turbopuffer-python/commit/7def3c64a5664b616a53b560252839ef36fbd010))
+
+
+### Bug Fixes
+
+* **README:** align docs link with other SDKs ([91b8b69](https://github.com/turbopuffer/turbopuffer-python/commit/91b8b698a3ac76a40b94646cf49ece9e94f79b8d))
+
 ## 0.5.0-alpha.15 (2025-06-09)
 
 Full Changelog: [v0.5.0-alpha.14...v0.5.0-alpha.15](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.14...v0.5.0-alpha.15)

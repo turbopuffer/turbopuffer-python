@@ -50,7 +50,6 @@ class Namespace(namespaces.NamespacesResource, NamespaceMixin):
         )
 
 
-
 class NamespaceWithRawResponse(namespaces.NamespacesResourceWithRawResponse, NamespaceMixin):
     def __init__(self, client: Turbopuffer) -> None:
         super().__init__(namespaces.NamespacesResource(client))
