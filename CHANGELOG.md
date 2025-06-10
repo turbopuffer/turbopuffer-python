@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.1 (2025-06-10)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0...v0.5.1)
+
+### Bug Fixes
+
+* **tests:** mock delete whne testing namespace default params ([072f33a](https://github.com/turbopuffer/turbopuffer-python/commit/072f33a9758fcfc20cad675971f6efb91aba7b00))
+
+
+### Chores
+
+* sync repo ([3f7d6f7](https://github.com/turbopuffer/turbopuffer-python/commit/3f7d6f72db281f013bbe3fc4ff1e56392d61fd05))
+
 ## 0.5.0 (2025-06-10)
 
 Full Changelog: [v0.5.0-alpha.15...v0.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.15...v0.5.0)
