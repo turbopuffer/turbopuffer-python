@@ -15,7 +15,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The HTTP API documentation can be found on [turbopuffer.com](https://turbopuffer.com/docs).
+The HTTP API documentation can be found at [turbopuffer.com/docs](https://turbopuffer.com/docs).
 
 ## Installation
 
