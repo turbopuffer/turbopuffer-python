@@ -407,8 +407,13 @@ class TestTurbopuffer:
         url = httpx.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
-    def test_default_namespace_client_params(self) -> None:
+    @pytest.mark.respx(base_url=base_url)
+    def test_default_namespace_client_params(self, respx_mock: MockRouter) -> None:
         client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+
+        respx_mock.delete("/v2/namespaces/My Default Namespace").mock(
+            return_value=httpx.Response(200, json={"status": "OK"})
+        )
 
         with client as c2:
             with pytest.raises(ValueError, match="Missing default_namespace argument;"):
@@ -1249,8 +1254,13 @@ class TestAsyncTurbopuffer:
         url = httpx.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
-    async def test_default_namespace_client_params(self) -> None:
+    @pytest.mark.respx(base_url=base_url)
+    async def test_default_namespace_client_params(self, respx_mock: MockRouter) -> None:
         client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+
+        respx_mock.delete("/v2/namespaces/My Default Namespace").mock(
+            return_value=httpx.Response(200, json={"status": "OK"})
+        )
 
         async with client as c2:
             with pytest.raises(ValueError, match="Missing default_namespace argument;"):
