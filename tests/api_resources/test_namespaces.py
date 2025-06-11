@@ -15,6 +15,7 @@ from turbopuffer.types import (
     NamespaceRecallResponse,
     NamespaceSchemaResponse,
     NamespaceDeleteAllResponse,
+    NamespaceMultiQueryResponse,
     NamespaceUpdateSchemaResponse,
     NamespaceHintCacheWarmResponse,
 )
@@ -92,6 +93,72 @@ class TestNamespaces:
     def test_path_params_hint_cache_warm(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.hint_cache_warm()
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_multi_query(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.multi_query(
+            namespace="namespace",
+            queries=[{}],
+        )
+        assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_multi_query_with_all_params(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.multi_query(
+            namespace="namespace",
+            queries=[
+                {
+                    "aggregate_by": {"foo": "bar"},
+                    "distance_metric": "cosine_distance",
+                    "filters": {},
+                    "include_attributes": True,
+                    "rank_by": {},
+                    "top_k": 0,
+                }
+            ],
+            consistency={"level": "strong"},
+            vector_encoding="float",
+        )
+        assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_raw_response_multi_query(self, client: Turbopuffer) -> None:
+        response = client.namespaces.with_raw_response.multi_query(
+            namespace="namespace",
+            queries=[{}],
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = response.parse()
+        assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_streaming_response_multi_query(self, client: Turbopuffer) -> None:
+        with client.namespaces.with_streaming_response.multi_query(
+            namespace="namespace",
+            queries=[{}],
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = response.parse()
+            assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_path_params_multi_query(self, client: Turbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            client.namespaces.with_raw_response.multi_query(
+                namespace="",
+                queries=[{}],
+            )
 
     @pytest.mark.skip()
     @parametrize
@@ -397,6 +464,72 @@ class TestAsyncNamespaces:
     async def test_path_params_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespace("").with_raw_response.hint_cache_warm()
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_multi_query(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.multi_query(
+            namespace="namespace",
+            queries=[{}],
+        )
+        assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_multi_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.multi_query(
+            namespace="namespace",
+            queries=[
+                {
+                    "aggregate_by": {"foo": "bar"},
+                    "distance_metric": "cosine_distance",
+                    "filters": {},
+                    "include_attributes": True,
+                    "rank_by": {},
+                    "top_k": 0,
+                }
+            ],
+            consistency={"level": "strong"},
+            vector_encoding="float",
+        )
+        assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_raw_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
+        response = await async_client.namespaces.with_raw_response.multi_query(
+            namespace="namespace",
+            queries=[{}],
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = await response.parse()
+        assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_streaming_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
+        async with async_client.namespaces.with_streaming_response.multi_query(
+            namespace="namespace",
+            queries=[{}],
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = await response.parse()
+            assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_path_params_multi_query(self, async_client: AsyncTurbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            await async_client.namespaces.with_raw_response.multi_query(
+                namespace="",
+                queries=[{}],
+            )
 
     @pytest.mark.skip()
     @parametrize
