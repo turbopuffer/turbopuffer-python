@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.5.1 (2025-06-11)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0...v0.5.1)
+
+### Bug Fixes
+
+* **api:** api update ([3ccebd7](https://github.com/turbopuffer/turbopuffer-python/commit/3ccebd7c50e9ce9e15bf77a958bb549ea27e60f1))
+* **api:** api update ([67bf8ed](https://github.com/turbopuffer/turbopuffer-python/commit/67bf8ed988cb20a5c133337a1e0cf98d43faf083))
+* **api:** api update ([1a725e2](https://github.com/turbopuffer/turbopuffer-python/commit/1a725e2b6c2a3da1637b82457a90d030f74206ee))
+* **test:** custom code ([107f9ae](https://github.com/turbopuffer/turbopuffer-python/commit/107f9aeb34fb1ff6ec63ef0bebc4ca3eeb975df9))
+* **tests:** mock delete whne testing namespace default params ([072f33a](https://github.com/turbopuffer/turbopuffer-python/commit/072f33a9758fcfc20cad675971f6efb91aba7b00))
+
+
+### Chores
+
+* **internal:** codegen related update ([5fa49e7](https://github.com/turbopuffer/turbopuffer-python/commit/5fa49e77a0167caea75dd9abc22c63b5779d8bc1))
+* sync repo ([3f7d6f7](https://github.com/turbopuffer/turbopuffer-python/commit/3f7d6f72db281f013bbe3fc4ff1e56392d61fd05))
+
 ## 0.5.0 (2025-06-10)
 
 Full Changelog: [v0.5.0-alpha.15...v0.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.15...v0.5.0)
