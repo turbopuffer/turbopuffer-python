@@ -109,8 +109,8 @@ There are, however, several breaking changes as a result of this rewrite:
   import turbopuffer as tpuf
 
   rows = [
-      tpuf.VectorRow(id=2, vector=[0.1, 0.1], attributes={'attr1': 'one', 'attr2': 'a'}),
-      tpuf.VectorRow(id=7, vector=[0.2, 0.2], attributes={'attr1': 'two', 'attr2': 'b'}),
+      tpuf.VectorRow(id=1, vector=[0.1, 0.1], attributes={'attr1': 'one', 'attr2': 'a'}),
+      tpuf.VectorRow(id=2, vector=[0.2, 0.2], attributes={'attr1': 'two', 'attr2': 'b'}),
   ]
 
   columns = tpuf.VectorColumns(
@@ -130,8 +130,8 @@ There are, however, several breaking changes as a result of this rewrite:
   from turbopuffer.types import RowParam, ColumnsParam
 
   rows: List[RowParam] = [
-      {'id': 2, 'vector': [0.1, 0.1], 'attr1': 'one', 'attr2': 'a'},
-      {'id': 7, 'vector': [0.2, 0.2], 'attr1': 'two', 'attr2': 'b'},
+      {'id': 1, 'vector': [0.1, 0.1], 'attr1': 'one', 'attr2': 'a'},
+      {'id': 2, 'vector': [0.2, 0.2], 'attr1': 'two', 'attr2': 'b'},
   ]
 
   columns: ColumnsParam = {
