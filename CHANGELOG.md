@@ -6,10 +6,7 @@ Full Changelog: [v0.5.0...v0.5.1](https://github.com/turbopuffer/turbopuffer-pyt
 
 ### Bug Fixes
 
-* **api:** api update ([3ccebd7](https://github.com/turbopuffer/turbopuffer-python/commit/3ccebd7c50e9ce9e15bf77a958bb549ea27e60f1))
-* **api:** api update ([67bf8ed](https://github.com/turbopuffer/turbopuffer-python/commit/67bf8ed988cb20a5c133337a1e0cf98d43faf083))
-* **api:** api update ([1a725e2](https://github.com/turbopuffer/turbopuffer-python/commit/1a725e2b6c2a3da1637b82457a90d030f74206ee))
-* **test:** custom code ([107f9ae](https://github.com/turbopuffer/turbopuffer-python/commit/107f9aeb34fb1ff6ec63ef0bebc4ca3eeb975df9))
+* **api:** add support for new multi-query api
 * **tests:** mock delete whne testing namespace default params ([072f33a](https://github.com/turbopuffer/turbopuffer-python/commit/072f33a9758fcfc20cad675971f6efb91aba7b00))
 
 
