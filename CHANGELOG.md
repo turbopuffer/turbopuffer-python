@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.2 (2025-06-11)
+
+Full Changelog: [v0.5.1...v0.5.2](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.1...v0.5.2)
+
+### Bug Fixes
+
+* **docs:** add note about attribute flattening to upgrade guide ([#115](https://github.com/turbopuffer/turbopuffer-python/issues/115)) ([568348d](https://github.com/turbopuffer/turbopuffer-python/commit/568348dc7e3a06dcdcd59aa488c346f2c717ffa3))
+* **tests:** mock delete when testing namespace default params ([#116](https://github.com/turbopuffer/turbopuffer-python/issues/116)) ([db587e8](https://github.com/turbopuffer/turbopuffer-python/commit/db587e860af7951d8549a70cff86c93e9f6259ca))
+
+
+### Chores
+
+* prepare for release ([89006af](https://github.com/turbopuffer/turbopuffer-python/commit/89006afdb329c74cd7d91e857c86aaed9a065696))
+
 ## 0.5.1 (2025-06-11)
 
 Full Changelog: [v0.5.0...v0.5.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0...v0.5.1)
