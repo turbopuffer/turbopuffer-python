@@ -101,6 +101,47 @@ There are, however, several breaking changes as a result of this rewrite:
   columns_param: ColumnsParam = { ... }  # when used in a request
   ```
 
+- The `Row` and `Columns` types flatten attributes:
+
+  Old:
+
+  ```py
+  import turbopuffer as tpuf
+
+  rows = [
+      tpuf.VectorRow(id=2, vector=[0.1, 0.1], attributes={'attr1': 'one', 'attr2': 'a'}),
+      tpuf.VectorRow(id=7, vector=[0.2, 0.2], attributes={'attr1': 'two', 'attr2': 'b'}),
+  ]
+
+  columns = tpuf.VectorColumns(
+      ids=[1, 2],
+      vectors=[[0.1, 0.1], [0.2, 0.2]],
+      attributes={
+          "attr1": ["one", "two"],
+          "attr2": ["a", "b"],
+      },
+  )
+  ```
+
+  New:
+
+  ```py
+  from typing import List
+  from turbopuffer.types import RowParam, ColumnsParam
+
+  rows: List[RowParam] = [
+      {'id': 2, 'vector': [0.1, 0.1], 'attr1': 'one', 'attr2': 'a'},
+      {'id': 7, 'vector': [0.2, 0.2], 'attr1': 'two', 'attr2': 'b'},
+  ]
+
+  columns: ColumnsParam = {
+      'id': [1, 2],
+      'vector': [[0.1, 0.1], [0.2, 0.2]],
+      'attr1': ["one", "two"],
+      "attr2": ["a", "b"],
+  }
+  ```
+
 - The `filters` and `rank_by` parameters to the `query` method now require
   tuples rather than lists, if using a type checker like Mypy or Pyright.
 
