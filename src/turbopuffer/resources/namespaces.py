@@ -12,6 +12,7 @@ from ..types import (
     namespace_query_params,
     namespace_write_params,
     namespace_recall_params,
+    namespace_multi_query_params,
     namespace_update_schema_params,
 )
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
@@ -37,6 +38,7 @@ from ..types.namespace_write_response import NamespaceWriteResponse
 from ..types.namespace_recall_response import NamespaceRecallResponse
 from ..types.namespace_schema_response import NamespaceSchemaResponse
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
+from ..types.namespace_multi_query_response import NamespaceMultiQueryResponse
 from ..types.namespace_update_schema_response import NamespaceUpdateSchemaResponse
 from ..types.namespace_hint_cache_warm_response import NamespaceHintCacheWarmResponse
 
@@ -131,6 +133,56 @@ class NamespacesResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NamespaceHintCacheWarmResponse,
+        )
+
+    def multi_query(
+        self,
+        *,
+        namespace: str | None = None,
+        queries: Iterable[namespace_multi_query_params.Query],
+        consistency: namespace_multi_query_params.Consistency | NotGiven = NOT_GIVEN,
+        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceMultiQueryResponse:
+        """
+        Issue multiple concurrent queries filter or search documents.
+
+        Args:
+          consistency: The consistency level for a query.
+
+          vector_encoding: The encoding to use for vectors in the response.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._post(
+            f"/v2/namespaces/{namespace}/query?stainless_overload=multiQuery",
+            body=maybe_transform(
+                {
+                    "queries": queries,
+                    "consistency": consistency,
+                    "vector_encoding": vector_encoding,
+                },
+                namespace_multi_query_params.NamespaceMultiQueryParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceMultiQueryResponse,
         )
 
     def query(
@@ -506,6 +558,56 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceHintCacheWarmResponse,
         )
 
+    async def multi_query(
+        self,
+        *,
+        namespace: str | None = None,
+        queries: Iterable[namespace_multi_query_params.Query],
+        consistency: namespace_multi_query_params.Consistency | NotGiven = NOT_GIVEN,
+        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> NamespaceMultiQueryResponse:
+        """
+        Issue multiple concurrent queries filter or search documents.
+
+        Args:
+          consistency: The consistency level for a query.
+
+          vector_encoding: The encoding to use for vectors in the response.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._post(
+            f"/v2/namespaces/{namespace}/query?stainless_overload=multiQuery",
+            body=await async_maybe_transform(
+                {
+                    "queries": queries,
+                    "consistency": consistency,
+                    "vector_encoding": vector_encoding,
+                },
+                namespace_multi_query_params.NamespaceMultiQueryParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceMultiQueryResponse,
+        )
+
     async def query(
         self,
         *,
@@ -799,6 +901,9 @@ class NamespacesResourceWithRawResponse:
         self.hint_cache_warm = to_raw_response_wrapper(
             namespaces.hint_cache_warm,
         )
+        self.multi_query = to_raw_response_wrapper(
+            namespaces.multi_query,
+        )
         self.query = to_raw_response_wrapper(
             namespaces.query,
         )
@@ -825,6 +930,9 @@ class AsyncNamespacesResourceWithRawResponse:
         )
         self.hint_cache_warm = async_to_raw_response_wrapper(
             namespaces.hint_cache_warm,
+        )
+        self.multi_query = async_to_raw_response_wrapper(
+            namespaces.multi_query,
         )
         self.query = async_to_raw_response_wrapper(
             namespaces.query,
@@ -853,6 +961,9 @@ class NamespacesResourceWithStreamingResponse:
         self.hint_cache_warm = to_streamed_response_wrapper(
             namespaces.hint_cache_warm,
         )
+        self.multi_query = to_streamed_response_wrapper(
+            namespaces.multi_query,
+        )
         self.query = to_streamed_response_wrapper(
             namespaces.query,
         )
@@ -879,6 +990,9 @@ class AsyncNamespacesResourceWithStreamingResponse:
         )
         self.hint_cache_warm = async_to_streamed_response_wrapper(
             namespaces.hint_cache_warm,
+        )
+        self.multi_query = async_to_streamed_response_wrapper(
+            namespaces.multi_query,
         )
         self.query = async_to_streamed_response_wrapper(
             namespaces.query,
