@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.3 (2025-06-12)
+
+Full Changelog: [v0.5.2...v0.5.3](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.2...v0.5.3)
+
+### Bug Fixes
+
+* mark urllib3 optional ([#118](https://github.com/turbopuffer/turbopuffer-python/issues/118)) ([85ab0de](https://github.com/turbopuffer/turbopuffer-python/commit/85ab0deef64843b47bc33bce267a098a11006355))
+
 ## 0.5.2 (2025-06-11)
 
 Full Changelog: [v0.5.1...v0.5.2](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.1...v0.5.2)
