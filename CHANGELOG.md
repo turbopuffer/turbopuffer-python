@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.4 (2025-06-14)
+
+Full Changelog: [v0.5.3...v0.5.4](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.3...v0.5.4)
+
+### Bug Fixes
+
+* **client:** correctly parse binary response | stream ([aa37450](https://github.com/turbopuffer/turbopuffer-python/commit/aa37450a59f799ad9ce2b7eabe6f540faad1ecbd))
+
+
+### Chores
+
+* **tests:** run tests in parallel ([687c922](https://github.com/turbopuffer/turbopuffer-python/commit/687c9228f2d38be8a5c231753fd998938b1bb86f))
+
 ## 0.5.3 (2025-06-12)
 
 Full Changelog: [v0.5.2...v0.5.3](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.2...v0.5.3)
