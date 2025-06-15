@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.5 (2025-06-15)
+
+Full Changelog: [v0.5.4...v0.5.5](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.4...v0.5.5)
+
+### Bug Fixes
+
+* remove type annotation that's invalid in Python 3.8 ([#123](https://github.com/turbopuffer/turbopuffer-python/issues/123)) ([8dddad5](https://github.com/turbopuffer/turbopuffer-python/commit/8dddad5cbb0b76ec64f07ef92795f6c1a8b60423))
+
 ## 0.5.4 (2025-06-15)
 
 Full Changelog: [v0.5.3...v0.5.4](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.3...v0.5.4)
