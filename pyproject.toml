@@ -1,6 +1,6 @@
 [project]
 name = "turbopuffer"
-version = "0.5.3"
+version = "0.5.4"
 description = "The official Python library for the turbopuffer API"
 dynamic = ["readme"]
 license = "MIT"
@@ -9,7 +9,7 @@ authors = [
 ]
 dependencies = [
     "httpx>=0.23.0, <1",
-    "aiohttp>=3.12.11, <4",
+    "aiohttp>=3.10.11, <4",
     "pydantic>=1.9.0, <3",
     "pybase64>=1.4.1, <2",
     "typing-extensions>=4.13, <5",
@@ -36,8 +36,8 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-fast = ["orjson>=3.10.18, <4"]
-urllib3 = ["urllib3>=2.4.0, <3"]
+fast = ["orjson>=3.10.15, <4"]
+urllib3 = ["urllib3>=2.2.3, <3"]
 
 [project.urls]
 Homepage = "https://github.com/turbopuffer/turbopuffer-python"
@@ -61,6 +61,7 @@ dev-dependencies = [
     "importlib-metadata>=6.7.0",
     "rich>=13.7.1",
     "nest_asyncio==1.6.0",
+    "pytest-xdist>=3.6.1",
     "numpy",
 ]
 
@@ -133,7 +134,7 @@ replacement = '[\1](https://github.com/turbopuffer/turbopuffer-python/tree/main/
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--tb=short"
+addopts = "--tb=short -n auto"
 xfail_strict = true
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
