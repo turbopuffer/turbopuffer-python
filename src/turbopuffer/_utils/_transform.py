@@ -40,7 +40,7 @@ _T = TypeVar("_T")
 # Unfortunately we don't get nice types like `Vector` directly.
 VectorRowAnnotation = Union[Iterable[float], str]
 VectorColumnAnnotation = Union[List[VectorRowAnnotation], Iterable[float], str]
-VectorAnnotations = cast(list[type], [VectorRowAnnotation, VectorColumnAnnotation])
+VectorAnnotations = cast(List[type], [VectorRowAnnotation, VectorColumnAnnotation])
 
 PropertyFormat = Literal["iso8601", "base64", "custom"]
 
