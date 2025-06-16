@@ -134,7 +134,7 @@ replacement = '[\1](https://github.com/turbopuffer/turbopuffer-python/tree/main/
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--tb=short -n auto"
+addopts = "--tb=short -n auto --dist loadgroup"
 xfail_strict = true
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
