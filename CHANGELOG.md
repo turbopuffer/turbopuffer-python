@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.6 (2025-06-16)
+
+Full Changelog: [v0.5.5...v0.5.6](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.5...v0.5.6)
+
+### Bug Fixes
+
+* don't run grouped tests in parallel ([#125](https://github.com/turbopuffer/turbopuffer-python/issues/125)) ([9024587](https://github.com/turbopuffer/turbopuffer-python/commit/902458767faf238a7fd9bb012bf7026dc2a83a3b))
+
 ## 0.5.5 (2025-06-15)
 
 Full Changelog: [v0.5.4...v0.5.5](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.4...v0.5.5)
