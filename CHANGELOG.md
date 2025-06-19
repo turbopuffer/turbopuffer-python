@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.7 (2025-06-19)
+
+Full Changelog: [v0.5.6...v0.5.7](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.6...v0.5.7)
+
+### Bug Fixes
+
+* strict types for async query and multi_query APIs ([#127](https://github.com/turbopuffer/turbopuffer-python/issues/127)) ([a5d2982](https://github.com/turbopuffer/turbopuffer-python/commit/a5d2982bd4fcc5cdd3e585a3ebc1f19158082cb6))
+
+
+### Chores
+
+* **ci:** enable for pull requests ([d975004](https://github.com/turbopuffer/turbopuffer-python/commit/d975004fda35132fd9b580e06c8bf0ab9a27a4ae))
+* **internal:** update conftest.py ([50476ac](https://github.com/turbopuffer/turbopuffer-python/commit/50476ac2de7ea6b0b7443d23f24ad1ab2b4529c1))
+* **tests:** add tests for httpx client instantiation & proxies ([a44fc4f](https://github.com/turbopuffer/turbopuffer-python/commit/a44fc4f90fa597dc86fa2222d84183996adce109))
+
 ## 0.5.6 (2025-06-16)
 
 Full Changelog: [v0.5.5...v0.5.6](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.5...v0.5.6)
