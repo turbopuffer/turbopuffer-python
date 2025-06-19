@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Dict, Iterable
 from typing_extensions import Literal, Required, TypedDict
 
+from .custom import Filter, RankBy, AggregateBy
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
 from .include_attributes_param import IncludeAttributesParam
@@ -25,7 +26,7 @@ class NamespaceMultiQueryParams(TypedDict, total=False):
 
 
 class Query(TypedDict, total=False):
-    aggregate_by: Dict[str, object]
+    aggregate_by: Dict[str, AggregateBy]
     """
     Aggregations to compute over all documents in the namespace that match the
     filters.
@@ -34,7 +35,7 @@ class Query(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    filters: object
+    filters: Filter
     """Exact filters for attributes to refine search results for.
 
     Think of it as a SQL WHERE clause.
@@ -43,7 +44,7 @@ class Query(TypedDict, total=False):
     include_attributes: IncludeAttributesParam
     """Whether to include attributes in the response."""
 
-    rank_by: object
+    rank_by: RankBy
     """How to rank the documents in the namespace."""
 
     top_k: int
