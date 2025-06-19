@@ -110,11 +110,9 @@ class TestNamespaces:
             namespace="namespace",
             queries=[
                 {
-                    "aggregate_by": {"foo": "bar"},
                     "distance_metric": "cosine_distance",
-                    "filters": {},
                     "include_attributes": True,
-                    "rank_by": {},
+                    "rank_by": ("id", "asc"),
                     "top_k": 0,
                 }
             ],
@@ -481,11 +479,9 @@ class TestAsyncNamespaces:
             namespace="namespace",
             queries=[
                 {
-                    "aggregate_by": {"foo": "bar"},
                     "distance_metric": "cosine_distance",
-                    "filters": {},
                     "include_attributes": True,
-                    "rank_by": {},
+                    "rank_by": ("id", "asc"),
                     "top_k": 0,
                 }
             ],
@@ -541,12 +537,10 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_method_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").query(
-            aggregate_by={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
-            filters={},
             include_attributes=True,
-            rank_by={},
+            rank_by=("id", "asc"),
             top_k=0,
             vector_encoding="float",
         )
