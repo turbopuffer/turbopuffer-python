@@ -10,6 +10,7 @@ from .id_param import IDParam as IDParam
 from .language import Language as Language
 from .row_param import RowParam as RowParam
 from .tokenizer import Tokenizer as Tokenizer
+from .query_param import QueryParam as QueryParam
 from .vector_param import VectorParam as VectorParam
 from .columns_param import ColumnsParam as ColumnsParam
 from .query_billing import QueryBilling as QueryBilling

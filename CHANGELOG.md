@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.5.8 (2025-06-20)
+
+Full Changelog: [v0.5.7...v0.5.8](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.7...v0.5.8)
+
+### Features
+
+* **api:** introduce dedicated Query model ([bc09dc2](https://github.com/turbopuffer/turbopuffer-python/commit/bc09dc28b8a548ae9a06b2cb54e3698e37e563df))
+
+
+### Bug Fixes
+
+* strict types for new QueryParam type ([fae8c4d](https://github.com/turbopuffer/turbopuffer-python/commit/fae8c4d7f79d52f7996c1638492b28b9b72874aa))
+
+
+### Chores
+
+* **readme:** update badges ([d03eb1a](https://github.com/turbopuffer/turbopuffer-python/commit/d03eb1a5e6be5f24219f40e1274dba253c15c327))
+
+
+### Documentation
+
+* **client:** fix httpx.Timeout documentation reference ([320cee5](https://github.com/turbopuffer/turbopuffer-python/commit/320cee594b3984151dd589d38d872bf287f240ad))
+
 ## 0.5.7 (2025-06-19)
 
 Full Changelog: [v0.5.6...v0.5.7](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.6...v0.5.7)
