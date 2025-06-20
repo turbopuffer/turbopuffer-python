@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 (2025-06-20)
+
+Full Changelog: [v0.5.8...v0.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.8...v0.6.0)
+
+### Features
+
+* **client:** add support for aiohttp ([4d58a72](https://github.com/turbopuffer/turbopuffer-python/commit/4d58a72dcc7a4209911c8bc69c1aa8abec38486b))
+
 ## 0.5.8 (2025-06-20)
 
 Full Changelog: [v0.5.7...v0.5.8](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.7...v0.5.8)
