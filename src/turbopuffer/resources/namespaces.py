@@ -28,6 +28,7 @@ from .._response import (
 from .._base_client import make_request_options
 from ..types.id_param import IDParam
 from ..types.row_param import RowParam
+from ..types.query_param import QueryParam
 from ..types.columns_param import ColumnsParam
 from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
@@ -139,7 +140,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        queries: Iterable[namespace_multi_query_params.Query],
+        queries: Iterable[QueryParam],
         consistency: namespace_multi_query_params.Consistency | NotGiven = NOT_GIVEN,
         vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -562,7 +563,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        queries: Iterable[namespace_multi_query_params.Query],
+        queries: Iterable[QueryParam],
         consistency: namespace_multi_query_params.Consistency | NotGiven = NOT_GIVEN,
         vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
