@@ -36,13 +36,13 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
+aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.6"]
 fast = ["orjson>=3.10.15, <4"]
 urllib3 = ["urllib3>=2.2.3, <3"]
 
 [project.urls]
 Homepage = "https://github.com/turbopuffer/turbopuffer-python"
 Repository = "https://github.com/turbopuffer/turbopuffer-python"
-
 
 [tool.rye]
 managed = true
