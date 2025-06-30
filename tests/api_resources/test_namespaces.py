@@ -396,6 +396,7 @@ class TestNamespaces:
             namespace="namespace",
             copy_from_namespace="copy_from_namespace",
             delete_by_filter={},
+            delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             distance_metric="cosine_distance",
             encryption={"cmek": {"key_name": "key_name"}},
@@ -403,6 +404,7 @@ class TestNamespaces:
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
             },
+            patch_condition={},
             patch_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -414,6 +416,7 @@ class TestNamespaces:
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
             },
+            upsert_condition={},
             upsert_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -833,6 +836,7 @@ class TestAsyncNamespaces:
             namespace="namespace",
             copy_from_namespace="copy_from_namespace",
             delete_by_filter={},
+            delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             distance_metric="cosine_distance",
             encryption={"cmek": {"key_name": "key_name"}},
@@ -840,6 +844,7 @@ class TestAsyncNamespaces:
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
             },
+            patch_condition={},
             patch_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -851,6 +856,7 @@ class TestAsyncNamespaces:
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
             },
+            upsert_condition={},
             upsert_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
