@@ -408,13 +408,16 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
         delete_by_filter: Filter | NotGiven = NOT_GIVEN,
+        delete_condition: object | NotGiven = NOT_GIVEN,
         deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
         patch_columns: ColumnsParam | NotGiven = NOT_GIVEN,
+        patch_condition: object | NotGiven = NOT_GIVEN,
         patch_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
         upsert_columns: ColumnsParam | NotGiven = NOT_GIVEN,
+        upsert_condition: object | NotGiven = NOT_GIVEN,
         upsert_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -431,6 +434,9 @@ class NamespacesResource(SyncAPIResource):
 
           delete_by_filter: The filter specifying which documents to delete.
 
+          delete_condition: A condition evaluated against the current value of each document targeted by a
+              delete write. Only documents that pass the condition are deleted.
+
           distance_metric: A function used to calculate vector similarity.
 
           encryption: The encryption configuration for a namespace.
@@ -438,10 +444,16 @@ class NamespacesResource(SyncAPIResource):
           patch_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
 
+          patch_condition: A condition evaluated against the current value of each document targeted by a
+              patch write. Only documents that pass the condition are patched.
+
           schema: The schema of the attributes attached to the documents.
 
           upsert_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
+
+          upsert_condition: A condition evaluated against the current value of each document targeted by an
+              upsert write. Only documents that pass the condition are upserted.
 
           extra_headers: Send extra headers
 
@@ -461,13 +473,16 @@ class NamespacesResource(SyncAPIResource):
                 {
                     "copy_from_namespace": copy_from_namespace,
                     "delete_by_filter": delete_by_filter,
+                    "delete_condition": delete_condition,
                     "deletes": deletes,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
                     "patch_columns": patch_columns,
+                    "patch_condition": patch_condition,
                     "patch_rows": patch_rows,
                     "schema": schema,
                     "upsert_columns": upsert_columns,
+                    "upsert_condition": upsert_condition,
                     "upsert_rows": upsert_rows,
                 },
                 namespace_write_params.NamespaceWriteParams,
@@ -839,13 +854,16 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
         delete_by_filter: object | NotGiven = NOT_GIVEN,
+        delete_condition: object | NotGiven = NOT_GIVEN,
         deletes: List[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
         patch_columns: ColumnsParam | NotGiven = NOT_GIVEN,
+        patch_condition: object | NotGiven = NOT_GIVEN,
         patch_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
         schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
         upsert_columns: ColumnsParam | NotGiven = NOT_GIVEN,
+        upsert_condition: object | NotGiven = NOT_GIVEN,
         upsert_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -862,6 +880,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           delete_by_filter: The filter specifying which documents to delete.
 
+          delete_condition: A condition evaluated against the current value of each document targeted by a
+              delete write. Only documents that pass the condition are deleted.
+
           distance_metric: A function used to calculate vector similarity.
 
           encryption: The encryption configuration for a namespace.
@@ -869,10 +890,16 @@ class AsyncNamespacesResource(AsyncAPIResource):
           patch_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
 
+          patch_condition: A condition evaluated against the current value of each document targeted by a
+              patch write. Only documents that pass the condition are patched.
+
           schema: The schema of the attributes attached to the documents.
 
           upsert_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
+
+          upsert_condition: A condition evaluated against the current value of each document targeted by an
+              upsert write. Only documents that pass the condition are upserted.
 
           extra_headers: Send extra headers
 
@@ -892,13 +919,16 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 {
                     "copy_from_namespace": copy_from_namespace,
                     "delete_by_filter": delete_by_filter,
+                    "delete_condition": delete_condition,
                     "deletes": deletes,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
                     "patch_columns": patch_columns,
+                    "patch_condition": patch_condition,
                     "patch_rows": patch_rows,
                     "schema": schema,
                     "upsert_columns": upsert_columns,
+                    "upsert_condition": upsert_condition,
                     "upsert_rows": upsert_rows,
                 },
                 namespace_write_params.NamespaceWriteParams,

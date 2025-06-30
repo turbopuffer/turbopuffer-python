@@ -23,6 +23,12 @@ class NamespaceWriteParams(TypedDict, total=False):
     delete_by_filter: object
     """The filter specifying which documents to delete."""
 
+    delete_condition: object
+    """
+    A condition evaluated against the current value of each document targeted by a
+    delete write. Only documents that pass the condition are deleted.
+    """
+
     deletes: List[IDParam]
 
     distance_metric: DistanceMetric
@@ -37,6 +43,12 @@ class NamespaceWriteParams(TypedDict, total=False):
     Each key is a column name, mapped to an array of values for that column.
     """
 
+    patch_condition: object
+    """
+    A condition evaluated against the current value of each document targeted by a
+    patch write. Only documents that pass the condition are patched.
+    """
+
     patch_rows: Iterable[RowParam]
 
     schema: Dict[str, AttributeSchemaParam]
@@ -46,6 +58,12 @@ class NamespaceWriteParams(TypedDict, total=False):
     """A list of documents in columnar format.
 
     Each key is a column name, mapped to an array of values for that column.
+    """
+
+    upsert_condition: object
+    """
+    A condition evaluated against the current value of each document targeted by an
+    upsert write. Only documents that pass the condition are upserted.
     """
 
     upsert_rows: Iterable[RowParam]
