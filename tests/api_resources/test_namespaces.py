@@ -336,7 +336,6 @@ class TestNamespaces:
     def test_method_write_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").write(
             copy_from_namespace="copy_from_namespace",
-            delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             distance_metric="cosine_distance",
             encryption={"cmek": {"key_name": "key_name"}},
@@ -344,7 +343,6 @@ class TestNamespaces:
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
             },
-            patch_condition={},
             patch_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -356,7 +354,6 @@ class TestNamespaces:
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
             },
-            upsert_condition={},
             upsert_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
