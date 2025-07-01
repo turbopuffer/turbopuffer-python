@@ -4,7 +4,15 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-api_gen_image=ghcr.io/turbopuffer/turbopuffer-apigen:a0fadb05b2ace488d63f3f4393d64c2db4734ecc
+apigen_image=ghcr.io/turbopuffer/turbopuffer-apigen:a0fadb05b2ace488d63f3f4393d64c2db4734ecc
+
+apigen() {
+    if [[ "$TURBOPUFFER_DEV_APIGEN" ]]; then
+        cargo run --manifest-path=../turbopuffer-apigen/Cargo.toml "$@"
+    else
+        docker run -v "$(pwd):/work" "$apigen_image" "$@"
+    fi
+}
 
 echo "==> Generating code"
-docker run -v "$(pwd):/work" "$api_gen_image" python > src/turbopuffer/types/custom.py
+apigen python > src/turbopuffer/types/custom.py
