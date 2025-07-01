@@ -1,5 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from typing import Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
@@ -20,3 +21,12 @@ class NamespaceWriteResponse(BaseModel):
 
     status: Literal["OK"]
     """The status of the request."""
+
+    rows_deleted: Optional[int] = None
+    """The number of rows deleted by the write request."""
+
+    rows_patched: Optional[int] = None
+    """The number of rows patched by the write request."""
+
+    rows_upserted: Optional[int] = None
+    """The number of rows upserted by the write request."""
