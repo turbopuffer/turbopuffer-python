@@ -42,27 +42,36 @@ pip install --pre turbopuffer[fast]
 import os
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer(
+tpuf = Turbopuffer(
     # Pick the right region https://turbopuffer.com/docs/regions
     region="gcp-us-central1",
     # This is the default and can be omitted
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),
 )
 
-response = client.namespace("products").write(
-    distance_metric="cosine_distance",
-    upsert_rows=[
-        {
-            "id": "2108ed60-6851-49a0-9016-8325434f3845",
-            "vector": [0.1, 0.2],
-            "attributes": {
-                "name": "Red boots",
-                "price": 34.99,
-            },
-        }
-    ],
+ns = tpuf.namespace("example")
+
+# Query nearest neighbors with a vector.
+vector_result = ns.query(
+      rank_by=("vector", "ANN", [0.1, 0.2]),
+      top_k=10,
+      filters=("And", (("name", "Eq", "foo"), ("public", "Eq", 1))),
+      include_attributes=["name"],
 )
-print(response.rows_affected)
+print(vector_result.rows)
+# [Row(id=1, vector=None, $dist=0.009067952632904053, name='foo')]
+
+# Full-text search on an attribute.
+fts_result = ns.query(
+  top_k=10,
+  filters=("name", "Eq", "foo"),
+  rank_by=('text', 'BM25', 'quick walrus'),
+)
+print(fts_result.rows)
+# [Row(id=1, vector=None, $dist=0.19, name='foo')]
+# [Row(id=2, vector=None, $dist=0.168, name='foo')]
+
+# See https://turbopuffer.com/docs/quickstart for more.
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -79,30 +88,38 @@ import os
 import asyncio
 from turbopuffer import AsyncTurbopuffer
 
-client = AsyncTurbopuffer(
+tpuf = AsyncTurbopuffer(
     # Pick the right region https://turbopuffer.com/docs/regions
     region="gcp-us-central1",
     # This is the default and can be omitted
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),
 )
 
+ns = tpuf.namespace("example")
+
 
 async def main() -> None:
-    response = await client.namespaces.write(
-        namespace="products",
-        distance_metric="cosine_distance",
-        upsert_rows=[
-            {
-                "id": "2108ed60-6851-49a0-9016-8325434f3845",
-                "vector": [0.1, 0.2],
-                "attributes": {
-                    "name": "Red boots",
-                    "price": 34.99,
-                },
-            }
-        ],
+    # Query nearest neighbors with a vector.
+    vector_result = await ns.query(
+        rank_by=("vector", "ANN", [0.1, 0.2]),
+        top_k=10,
+        filters=("And", (("name", "Eq", "foo"), ("public", "Eq", 1))),
+        include_attributes=["name"],
     )
-    print(response.rows_affected)
+    print(vector_result.rows)
+    # [Row(id=1, vector=None, $dist=0.009067952632904053, name='foo')]
+
+    # Full-text search on an attribute.
+    fts_result = await ns.query(
+    top_k=10,
+    filters=("name", "Eq", "foo"),
+    rank_by=('text', 'BM25', 'quick walrus'),
+    )
+    print(fts_result.rows)
+    # [Row(id=1, vector=None, $dist=0.19, name='foo')]
+    # [Row(id=2, vector=None, $dist=0.168, name='foo')]
+
+    # See https://turbopuffer.com/docs/quickstart for more.
 
 
 asyncio.run(main())
