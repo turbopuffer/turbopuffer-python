@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.5.9 (2025-07-01)
+
+Full Changelog: [v0.5.8...v0.5.9](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.8...v0.5.9)
+
+### Features
+
+* **client:** add support for aiohttp ([4d58a72](https://github.com/turbopuffer/turbopuffer-python/commit/4d58a72dcc7a4209911c8bc69c1aa8abec38486b))
+
+
+### Bug Fixes
+
+* add support for `$ref_new` expressions ([#132](https://github.com/turbopuffer/turbopuffer-python/issues/132)) ([943228e](https://github.com/turbopuffer/turbopuffer-python/commit/943228e59158468f13a2002cc4446211cf03a639))
+* **api:** api update ([303f8bb](https://github.com/turbopuffer/turbopuffer-python/commit/303f8bb649c66fad8f1331d0cd32016403b091d5))
+* **api:** api update ([e8fee42](https://github.com/turbopuffer/turbopuffer-python/commit/e8fee42be99526a9015ae7cebd3b78d78dfe1ff6))
+* **ci:** correct conditional ([13b08d9](https://github.com/turbopuffer/turbopuffer-python/commit/13b08d964844351835d1d256524675544002653e))
+* **ci:** release-doctor — report correct token name ([9ca4a70](https://github.com/turbopuffer/turbopuffer-python/commit/9ca4a70480d6536d37815ca96f790a60cc37f97d))
+* correct name of stainless bot ([#133](https://github.com/turbopuffer/turbopuffer-python/issues/133)) ([acab273](https://github.com/turbopuffer/turbopuffer-python/commit/acab273999c22ec0719b7f8d8e25eeaf219279f0))
+* **README:** improve headline example ([#131](https://github.com/turbopuffer/turbopuffer-python/issues/131)) ([7db0fb2](https://github.com/turbopuffer/turbopuffer-python/commit/7db0fb229944b040de5b8da0dc6389358d70804d))
+* strict types for write conditions ([#130](https://github.com/turbopuffer/turbopuffer-python/issues/130)) ([75c4515](https://github.com/turbopuffer/turbopuffer-python/commit/75c45150da8f183bdcddb70ab142d4eeed17a218))
+
+
+### Chores
+
+* **ci:** only run for pushes and fork pull requests ([4e928d3](https://github.com/turbopuffer/turbopuffer-python/commit/4e928d310d7ba1022850ced923625c9d869ee73d))
+* **tests:** skip some failing tests on the latest python versions ([d2c4814](https://github.com/turbopuffer/turbopuffer-python/commit/d2c4814ee0c3f9dcccd97b64d3c186242c18a9d7))
+
 ## 0.5.8 (2025-06-20)
 
 Full Changelog: [v0.5.7...v0.5.8](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.7...v0.5.8)
