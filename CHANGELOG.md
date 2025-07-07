@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.10 (2025-07-07)
+
+Full Changelog: [v0.5.9...v0.5.10](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.9...v0.5.10)
+
+### Bug Fixes
+
+* **api:** add support for [Not]Contains[Any] operators ([#135](https://github.com/turbopuffer/turbopuffer-python/issues/135)) ([286db87](https://github.com/turbopuffer/turbopuffer-python/commit/286db871a4c558d74fd34103fefd7b915b9bb1c7))
+* **api:** api update ([afecdd0](https://github.com/turbopuffer/turbopuffer-python/commit/afecdd0bbcbf0a8b40f1d6802a55fc4ecb24128e))
+
+
+### Chores
+
+* **ci:** change upload type ([99ba1aa](https://github.com/turbopuffer/turbopuffer-python/commit/99ba1aa8c8f208de772e8bd5f9ef955726a89280))
+
 ## 0.5.9 (2025-07-01)
 
 Full Changelog: [v0.5.8...v0.5.9](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.8...v0.5.9)
