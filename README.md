@@ -28,7 +28,6 @@ import os
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
-    region="gcp-us-central1",
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -64,7 +63,6 @@ import asyncio
 from turbopuffer import AsyncTurbopuffer
 
 client = AsyncTurbopuffer(
-    region="gcp-us-central1",
     api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -114,7 +112,6 @@ from turbopuffer import AsyncTurbopuffer
 
 async def main() -> None:
     async with AsyncTurbopuffer(
-        region="gcp-us-central1",
         api_key=os.environ.get("TURBOPUFFER_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
@@ -156,9 +153,7 @@ This library provides auto-paginating iterators with each list response, so you 
 ```python
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer(
-    region="gcp-us-central1",
-)
+client = Turbopuffer()
 
 all_clients = []
 # Automatically fetches more pages as needed.
@@ -176,9 +171,7 @@ Or, asynchronously:
 import asyncio
 from turbopuffer import AsyncTurbopuffer
 
-client = AsyncTurbopuffer(
-    region="gcp-us-central1",
-)
+client = AsyncTurbopuffer()
 
 
 async def main() -> None:
@@ -229,9 +222,7 @@ Nested parameters are dictionaries, typed using `TypedDict`, for example:
 ```python
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer(
-    region="gcp-us-central1",
-)
+client = Turbopuffer()
 
 response = client.namespaces.write(
     namespace="namespace",
@@ -253,9 +244,7 @@ All errors inherit from `turbopuffer.APIError`.
 import turbopuffer
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer(
-    region="gcp-us-central1",
-)
+client = Turbopuffer()
 
 try:
     client.namespaces(
@@ -298,7 +287,6 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
-    region="gcp-us-central1",
     # default is 2
     max_retries=0,
 )
@@ -319,14 +307,12 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
-    region="gcp-us-central1",
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
 client = Turbopuffer(
-    region="gcp-us-central1",
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
@@ -373,9 +359,7 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 ```py
 from turbopuffer import Turbopuffer
 
-client = Turbopuffer(
-    region="gcp-us-central1",
-)
+client = Turbopuffer()
 response = client.with_raw_response.namespaces(
     prefix="foo",
 )
@@ -454,7 +438,6 @@ import httpx
 from turbopuffer import Turbopuffer, DefaultHttpxClient
 
 client = Turbopuffer(
-    region="gcp-us-central1",
     # Or use the `TURBOPUFFER_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
@@ -477,9 +460,7 @@ By default the library closes underlying HTTP connections whenever the client is
 ```py
 from turbopuffer import Turbopuffer
 
-with Turbopuffer(
-    region="gcp-us-central1",
-) as client:
+with Turbopuffer() as client:
   # make requests here
   ...
 

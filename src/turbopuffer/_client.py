@@ -67,7 +67,7 @@ class Turbopuffer(SyncAPIClient):
 
     # client options
     api_key: str
-    region: str
+    region: str | None
     default_namespace: str | None
 
     def __init__(
@@ -111,10 +111,6 @@ class Turbopuffer(SyncAPIClient):
 
         if region is None:
             region = os.environ.get("TURBOPUFFER_REGION")
-        if region is None:
-            raise TurbopufferError(
-                "The region client option must be set either by passing region to the client or by setting the TURBOPUFFER_REGION environment variable"
-            )
         self.region = region
 
         self.default_namespace = default_namespace
@@ -315,7 +311,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
 
     # client options
     api_key: str
-    region: str
+    region: str | None
     default_namespace: str | None
 
     def __init__(
@@ -359,10 +355,6 @@ class AsyncTurbopuffer(AsyncAPIClient):
 
         if region is None:
             region = os.environ.get("TURBOPUFFER_REGION")
-        if region is None:
-            raise TurbopufferError(
-                "The region client option must be set either by passing region to the client or by setting the TURBOPUFFER_REGION environment variable"
-            )
         self.region = region
 
         self.default_namespace = default_namespace

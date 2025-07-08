@@ -38,7 +38,6 @@ from .utils import update_env
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 api_key = "tpuf_A1..."
-region = "gcp-us-central1"
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -52,7 +51,7 @@ def _low_retry_timeout(*_args: Any, **_kwargs: Any) -> float:
 
 
 class TestTurbopuffer:
-    client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+    client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     def test_raw_response(self, respx_mock: MockRouter) -> None:
@@ -82,10 +81,6 @@ class TestTurbopuffer:
         assert copied.api_key == "another tpuf_A1..."
         assert self.client.api_key == "tpuf_A1..."
 
-        copied = self.client.copy(region="another gcp-us-central1")
-        assert copied.region == "another gcp-us-central1"
-        assert self.client.region == "gcp-us-central1"
-
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
         copied = self.client.copy(max_retries=7)
@@ -104,11 +99,7 @@ class TestTurbopuffer:
 
     def test_copy_default_headers(self) -> None:
         client = Turbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -142,11 +133,7 @@ class TestTurbopuffer:
 
     def test_copy_default_query(self) -> None:
         client = Turbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            default_query={"foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -272,11 +259,7 @@ class TestTurbopuffer:
 
     def test_client_timeout_option(self) -> None:
         client = Turbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            timeout=httpx.Timeout(0),
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -287,11 +270,7 @@ class TestTurbopuffer:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
             client = Turbopuffer(
-                base_url=base_url,
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -301,11 +280,7 @@ class TestTurbopuffer:
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
             client = Turbopuffer(
-                base_url=base_url,
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -315,11 +290,7 @@ class TestTurbopuffer:
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = Turbopuffer(
-                base_url=base_url,
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -332,18 +303,13 @@ class TestTurbopuffer:
                 Turbopuffer(
                     base_url=base_url,
                     api_key=api_key,
-                    region=region,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     def test_default_headers_option(self) -> None:
         client = Turbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
@@ -352,7 +318,6 @@ class TestTurbopuffer:
         client2 = Turbopuffer(
             base_url=base_url,
             api_key=api_key,
-            region=region,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -364,22 +329,18 @@ class TestTurbopuffer:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
         with pytest.raises(TurbopufferError):
             with update_env(**{"TURBOPUFFER_API_KEY": Omit()}):
-                client2 = Turbopuffer(base_url=base_url, api_key=None, region=region, _strict_response_validation=True)
+                client2 = Turbopuffer(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
         client = Turbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            default_query={"query_param": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -396,7 +357,7 @@ class TestTurbopuffer:
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
     def test_default_namespace_client_params(self) -> None:
-        client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with client as c2:
             with pytest.raises(ValueError, match="Missing default_namespace argument;"):
@@ -405,7 +366,6 @@ class TestTurbopuffer:
         client = Turbopuffer(
             base_url=base_url,
             api_key=api_key,
-            region=region,
             _strict_response_validation=True,
             default_namespace="My Default Namespace",
         )
@@ -597,7 +557,7 @@ class TestTurbopuffer:
 
     def test_base_url_setter(self) -> None:
         client = Turbopuffer(
-            base_url="https://example.com/from_init", api_key=api_key, region=region, _strict_response_validation=True
+            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
 
@@ -607,22 +567,18 @@ class TestTurbopuffer:
 
     def test_base_url_env(self) -> None:
         with update_env(TURBOPUFFER_BASE_URL="http://localhost:5000/from/env"):
-            client = Turbopuffer(api_key=api_key, region=region, _strict_response_validation=True)
+            client = Turbopuffer(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
             Turbopuffer(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             Turbopuffer(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                region=region,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -643,15 +599,11 @@ class TestTurbopuffer:
         "client",
         [
             Turbopuffer(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             Turbopuffer(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                region=region,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -672,15 +624,11 @@ class TestTurbopuffer:
         "client",
         [
             Turbopuffer(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             Turbopuffer(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                region=region,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -698,7 +646,7 @@ class TestTurbopuffer:
         assert request.url == "https://myapi.com/foo"
 
     def test_copied_client_does_not_close_http(self) -> None:
-        client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -709,7 +657,7 @@ class TestTurbopuffer:
         assert not client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -731,11 +679,7 @@ class TestTurbopuffer:
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
             Turbopuffer(
-                base_url=base_url,
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
-                max_retries=cast(Any, None),
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
     @pytest.mark.respx(base_url=base_url)
@@ -745,12 +689,12 @@ class TestTurbopuffer:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        strict_client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=False)
+        client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -778,7 +722,7 @@ class TestTurbopuffer:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = Turbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -913,7 +857,7 @@ class TestTurbopuffer:
 
 
 class TestAsyncTurbopuffer:
-    client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+    client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
@@ -945,10 +889,6 @@ class TestAsyncTurbopuffer:
         assert copied.api_key == "another tpuf_A1..."
         assert self.client.api_key == "tpuf_A1..."
 
-        copied = self.client.copy(region="another gcp-us-central1")
-        assert copied.region == "another gcp-us-central1"
-        assert self.client.region == "gcp-us-central1"
-
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
         copied = self.client.copy(max_retries=7)
@@ -967,11 +907,7 @@ class TestAsyncTurbopuffer:
 
     def test_copy_default_headers(self) -> None:
         client = AsyncTurbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -1005,11 +941,7 @@ class TestAsyncTurbopuffer:
 
     def test_copy_default_query(self) -> None:
         client = AsyncTurbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            default_query={"foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -1135,11 +1067,7 @@ class TestAsyncTurbopuffer:
 
     async def test_client_timeout_option(self) -> None:
         client = AsyncTurbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            timeout=httpx.Timeout(0),
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1150,11 +1078,7 @@ class TestAsyncTurbopuffer:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
             client = AsyncTurbopuffer(
-                base_url=base_url,
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1164,11 +1088,7 @@ class TestAsyncTurbopuffer:
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
             client = AsyncTurbopuffer(
-                base_url=base_url,
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1178,11 +1098,7 @@ class TestAsyncTurbopuffer:
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = AsyncTurbopuffer(
-                base_url=base_url,
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1195,18 +1111,13 @@ class TestAsyncTurbopuffer:
                 AsyncTurbopuffer(
                     base_url=base_url,
                     api_key=api_key,
-                    region=region,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     def test_default_headers_option(self) -> None:
         client = AsyncTurbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
@@ -1215,7 +1126,6 @@ class TestAsyncTurbopuffer:
         client2 = AsyncTurbopuffer(
             base_url=base_url,
             api_key=api_key,
-            region=region,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -1227,24 +1137,18 @@ class TestAsyncTurbopuffer:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
         with pytest.raises(TurbopufferError):
             with update_env(**{"TURBOPUFFER_API_KEY": Omit()}):
-                client2 = AsyncTurbopuffer(
-                    base_url=base_url, api_key=None, region=region, _strict_response_validation=True
-                )
+                client2 = AsyncTurbopuffer(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
         client = AsyncTurbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            region=region,
-            _strict_response_validation=True,
-            default_query={"query_param": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -1261,7 +1165,7 @@ class TestAsyncTurbopuffer:
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
     async def test_default_namespace_client_params(self) -> None:
-        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         async with client as c2:
             with pytest.raises(ValueError, match="Missing default_namespace argument;"):
@@ -1270,7 +1174,6 @@ class TestAsyncTurbopuffer:
         client = AsyncTurbopuffer(
             base_url=base_url,
             api_key=api_key,
-            region=region,
             _strict_response_validation=True,
             default_namespace="My Default Namespace",
         )
@@ -1462,7 +1365,7 @@ class TestAsyncTurbopuffer:
 
     def test_base_url_setter(self) -> None:
         client = AsyncTurbopuffer(
-            base_url="https://example.com/from_init", api_key=api_key, region=region, _strict_response_validation=True
+            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
 
@@ -1472,22 +1375,18 @@ class TestAsyncTurbopuffer:
 
     def test_base_url_env(self) -> None:
         with update_env(TURBOPUFFER_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncTurbopuffer(api_key=api_key, region=region, _strict_response_validation=True)
+            client = AsyncTurbopuffer(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
             AsyncTurbopuffer(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             AsyncTurbopuffer(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                region=region,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1508,15 +1407,11 @@ class TestAsyncTurbopuffer:
         "client",
         [
             AsyncTurbopuffer(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             AsyncTurbopuffer(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                region=region,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1537,15 +1432,11 @@ class TestAsyncTurbopuffer:
         "client",
         [
             AsyncTurbopuffer(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             AsyncTurbopuffer(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                region=region,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1563,7 +1454,7 @@ class TestAsyncTurbopuffer:
         assert request.url == "https://myapi.com/foo"
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -1575,7 +1466,7 @@ class TestAsyncTurbopuffer:
         assert not client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         async with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -1598,11 +1489,7 @@ class TestAsyncTurbopuffer:
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
             AsyncTurbopuffer(
-                base_url=base_url,
-                api_key=api_key,
-                region=region,
-                _strict_response_validation=True,
-                max_retries=cast(Any, None),
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
     @pytest.mark.respx(base_url=base_url)
@@ -1613,14 +1500,12 @@ class TestAsyncTurbopuffer:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncTurbopuffer(
-            base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True
-        )
+        strict_client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=False)
+        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = await client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1649,7 +1534,7 @@ class TestAsyncTurbopuffer:
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     @pytest.mark.asyncio
     async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, region=region, _strict_response_validation=True)
+        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
