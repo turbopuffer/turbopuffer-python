@@ -580,17 +580,19 @@ class TestTurbopuffer:
             assert client.base_url == "http://localhost:5000/from/env/"
 
     def test_region_substitution_works_with_default_url(self) -> None:
-        client = Turbopuffer(api_key=api_key, region="my-cool-region")
-        assert str(client.base_url) == "https://my-cool-region.turbopuffer.com"
-        assert client.region == "my-cool-region"
+        with update_env(TURBOPUFFER_BASE_URL=Omit()):
+            client = Turbopuffer(api_key=api_key, region="my-cool-region")
+            assert str(client.base_url) == "https://my-cool-region.turbopuffer.com"
+            assert client.region == "my-cool-region"
 
     def test_region_required_with_default_url(self) -> None:
-        with pytest.raises(TurbopufferError) as exc_info:
-            Turbopuffer(api_key=api_key)
-        assert (
-            "region is required, but not set (baseUrl has a {region} placeholder: https://{region}.turbopuffer.com)"
-            in str(exc_info.value)
-        )
+        with update_env(TURBOPUFFER_BASE_URL=Omit()):
+            with pytest.raises(TurbopufferError) as exc_info:
+                Turbopuffer(api_key=api_key)
+            assert (
+                "region is required, but not set (baseUrl has a {region} placeholder: https://{region}.turbopuffer.com)"
+                in str(exc_info.value)
+            )
 
     def test_region_not_required_with_complete_url(self) -> None:
         client = Turbopuffer(api_key=api_key, base_url="https://tpuf.example.com")
@@ -1422,17 +1424,19 @@ class TestAsyncTurbopuffer:
             assert client.base_url == "http://localhost:5000/from/env/"
 
     def test_region_substitution_works_with_default_url(self) -> None:
-        client = AsyncTurbopuffer(api_key=api_key, region="my-cool-region")
-        assert str(client.base_url) == "https://my-cool-region.turbopuffer.com"
-        assert client.region == "my-cool-region"
+        with update_env(TURBOPUFFER_BASE_URL=Omit()):
+            client = AsyncTurbopuffer(api_key=api_key, region="my-cool-region")
+            assert str(client.base_url) == "https://my-cool-region.turbopuffer.com"
+            assert client.region == "my-cool-region"
 
     def test_region_required_with_default_url(self) -> None:
-        with pytest.raises(TurbopufferError) as exc_info:
-            AsyncTurbopuffer(api_key=api_key)
-        assert (
-            "region is required, but not set (baseUrl has a {region} placeholder: https://{region}.turbopuffer.com)"
-            in str(exc_info.value)
-        )
+        with update_env(TURBOPUFFER_BASE_URL=Omit()):
+            with pytest.raises(TurbopufferError) as exc_info:
+                AsyncTurbopuffer(api_key=api_key)
+            assert (
+                "region is required, but not set (baseUrl has a {region} placeholder: https://{region}.turbopuffer.com)"
+                in str(exc_info.value)
+            )
 
     def test_region_not_required_with_complete_url(self) -> None:
         client = AsyncTurbopuffer(api_key=api_key, base_url="https://tpuf.example.com")
