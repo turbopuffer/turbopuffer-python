@@ -675,10 +675,6 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
     def base_url(self) -> URL:
         return self._base_url
 
-    @base_url.setter
-    def base_url(self, url: URL | str) -> None:
-        self._base_url = self._enforce_trailing_slash(url if isinstance(url, URL) else URL(url))
-
     def platform_headers(self) -> Dict[str, str]:
         # the actual implementation is in a separate `lru_cache` decorated
         # function because adding `lru_cache` to methods will leak memory
