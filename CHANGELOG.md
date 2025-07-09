@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.11 (2025-07-09)
+
+Full Changelog: [v0.5.10...v0.5.11](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.10...v0.5.11)
+
+### Bug Fixes
+
+* **api:** api update ([4ea9eda](https://github.com/turbopuffer/turbopuffer-python/commit/4ea9eda6acd86390dc223c0224d76c594776cacc))
+* don't require region unless baseUrl contains {region} placeholder ([#137](https://github.com/turbopuffer/turbopuffer-python/issues/137)) ([b63b7c8](https://github.com/turbopuffer/turbopuffer-python/commit/b63b7c81854479a7644e66a843fa7794b67d41c2))
+
+
+### Chores
+
+* **internal:** bump pinned h11 dep ([4f70ea2](https://github.com/turbopuffer/turbopuffer-python/commit/4f70ea23a2ae016006e6a90e625de6b9b8884453))
+* **package:** mark python 3.13 as supported ([7e91954](https://github.com/turbopuffer/turbopuffer-python/commit/7e919541aa45a494a021fd5728b792b7f048eb19))
+
 ## 0.5.10 (2025-07-07)
 
 Full Changelog: [v0.5.9...v0.5.10](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.9...v0.5.10)
