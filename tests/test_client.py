@@ -370,7 +370,8 @@ class TestTurbopuffer:
         url = httpx.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
-    def test_default_namespace_client_params(self) -> None:
+    @pytest.mark.respx(base_url=base_url)
+    def test_default_namespace_client_params(self, respx_mock: MockRouter) -> None:
         client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         respx_mock.delete("/v2/namespaces/My Default Namespace").mock(
@@ -573,20 +574,48 @@ class TestTurbopuffer:
         assert isinstance(response, Model)
         assert response.foo == 2
 
-    def test_base_url_setter(self) -> None:
-        client = Turbopuffer(
-            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
-        )
-        assert client.base_url == "https://example.com/from_init/"
-
-        client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
-
-        assert client.base_url == "https://example.com/from_setter/"
-
     def test_base_url_env(self) -> None:
         with update_env(TURBOPUFFER_BASE_URL="http://localhost:5000/from/env"):
             client = Turbopuffer(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
+
+    def test_region_substitution_works_with_default_url(self) -> None:
+        client = Turbopuffer(api_key=api_key, region="my-cool-region")
+        assert str(client.base_url) == "https://my-cool-region.turbopuffer.com"
+        assert client.region == "my-cool-region"
+
+    def test_region_required_with_default_url(self) -> None:
+        with pytest.raises(TurbopufferError) as exc_info:
+            Turbopuffer(api_key=api_key)
+        assert (
+            "region is required, but not set (baseUrl has a {region} placeholder: https://{region}.turbopuffer.com)"
+            in str(exc_info.value)
+        )
+
+    def test_region_not_required_with_complete_url(self) -> None:
+        client = Turbopuffer(api_key=api_key, base_url="https://tpuf.example.com")
+        assert str(client.base_url) == "https://tpuf.example.com"
+        assert client.region is None
+
+    def test_error_when_region_missing_but_url_has_placeholder(self) -> None:
+        with pytest.raises(TurbopufferError) as exc_info:
+            Turbopuffer(api_key=api_key, base_url="https://tpuf-{region}.example.com")
+        assert (
+            "region is required, but not set (baseUrl has a {region} placeholder: https://tpuf-{region}.example.com)"
+            in str(exc_info.value)
+        )
+
+    def test_error_when_region_provided_but_url_has_no_placeholder(self) -> None:
+        with pytest.raises(TurbopufferError) as exc_info:
+            Turbopuffer(
+                api_key=api_key,
+                region="gcp-us-central1",
+                base_url="https://tpuf.example.com",
+            )
+        assert (
+            "region is set, but would be ignored (baseUrl does not contain {region} placeholder: https://tpuf.example.com)"
+            in str(exc_info.value)
+        )
 
     @pytest.mark.parametrize(
         "client",
@@ -1183,7 +1212,8 @@ class TestAsyncTurbopuffer:
         url = httpx.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
-    async def test_default_namespace_client_params(self) -> None:
+    @pytest.mark.respx(base_url=base_url)
+    async def test_default_namespace_client_params(self, respx_mock: MockRouter) -> None:
         client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         respx_mock.delete("/v2/namespaces/My Default Namespace").mock(
@@ -1386,20 +1416,48 @@ class TestAsyncTurbopuffer:
         assert isinstance(response, Model)
         assert response.foo == 2
 
-    def test_base_url_setter(self) -> None:
-        client = AsyncTurbopuffer(
-            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
-        )
-        assert client.base_url == "https://example.com/from_init/"
-
-        client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
-
-        assert client.base_url == "https://example.com/from_setter/"
-
     def test_base_url_env(self) -> None:
         with update_env(TURBOPUFFER_BASE_URL="http://localhost:5000/from/env"):
             client = AsyncTurbopuffer(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
+
+    def test_region_substitution_works_with_default_url(self) -> None:
+        client = AsyncTurbopuffer(api_key=api_key, region="my-cool-region")
+        assert str(client.base_url) == "https://my-cool-region.turbopuffer.com"
+        assert client.region == "my-cool-region"
+
+    def test_region_required_with_default_url(self) -> None:
+        with pytest.raises(TurbopufferError) as exc_info:
+            AsyncTurbopuffer(api_key=api_key)
+        assert (
+            "region is required, but not set (baseUrl has a {region} placeholder: https://{region}.turbopuffer.com)"
+            in str(exc_info.value)
+        )
+
+    def test_region_not_required_with_complete_url(self) -> None:
+        client = AsyncTurbopuffer(api_key=api_key, base_url="https://tpuf.example.com")
+        assert str(client.base_url) == "https://tpuf.example.com"
+        assert client.region is None
+
+    def test_error_when_region_missing_but_url_has_placeholder(self) -> None:
+        with pytest.raises(TurbopufferError) as exc_info:
+            AsyncTurbopuffer(api_key=api_key, base_url="https://tpuf-{region}.example.com")
+        assert (
+            "region is required, but not set (baseUrl has a {region} placeholder: https://tpuf-{region}.example.com)"
+            in str(exc_info.value)
+        )
+
+    def test_error_when_region_provided_but_url_has_no_placeholder(self) -> None:
+        with pytest.raises(TurbopufferError) as exc_info:
+            AsyncTurbopuffer(
+                api_key=api_key,
+                region="gcp-us-central1",
+                base_url="https://tpuf.example.com",
+            )
+        assert (
+            "region is set, but would be ignored (baseUrl does not contain {region} placeholder: https://tpuf.example.com)"
+            in str(exc_info.value)
+        )
 
     @pytest.mark.parametrize(
         "client",
