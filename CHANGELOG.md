@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.12 (2025-07-10)
+
+Full Changelog: [v0.5.11...v0.5.12](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.11...v0.5.12)
+
+### Bug Fixes
+
+* **api:** api update ([b49220a](https://github.com/turbopuffer/turbopuffer-python/commit/b49220a2fa8b88a107ea8f0fbb20671bd29266fe))
+* **api:** api update ([1a49cae](https://github.com/turbopuffer/turbopuffer-python/commit/1a49caec78bbc71c1678bbc4b89b8d3017269c6b))
+* don't set region in tests if base URL doesn't support it ([b7e8297](https://github.com/turbopuffer/turbopuffer-python/commit/b7e8297f705be97edee77f41487c51ae7bc975cb))
+* explicitly omit TURBOPUFFER_BASE_URL from env when necessary ([9075015](https://github.com/turbopuffer/turbopuffer-python/commit/9075015991d9afa886d31a327a55959699aaeda7))
+* **parsing:** correctly handle nested discriminated unions ([7c63c5e](https://github.com/turbopuffer/turbopuffer-python/commit/7c63c5e93af2e7615ea0eb10f40e28926ac319f3))
+* update tests for new metadata endpoint ([a6799d3](https://github.com/turbopuffer/turbopuffer-python/commit/a6799d30683595281cfd14dfff014cc1725407d0))
+
 ## 0.5.11 (2025-07-09)
 
 Full Changelog: [v0.5.10...v0.5.11](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.10...v0.5.11)
