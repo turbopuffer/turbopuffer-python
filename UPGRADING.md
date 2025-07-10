@@ -198,10 +198,10 @@ There are, however, several breaking changes as a result of this rewrite:
   )
   ```
 
-- The `metadata` method has been removed.
+- The metadata returned by the `metadata` method has changed.
 
-  - To query for the number of documents in a namespace, use a `count` aggregate
-    query instead.
+  - The number of documents in the namespace is no longer returned. Use a
+    `count` aggregate query instead.
 
     ```py
     results = tpuf.namespace('ns').query(
@@ -210,11 +210,8 @@ There are, however, several breaking changes as a result of this rewrite:
     print(results.aggregations['count'])
     ```
 
-  - To determine the dimensionality of the vectors in a namespace, use
-    `schema` instead and inspect the type of the `vector` attribute.
-
-  - There is no replacement for accessing the `created_at` field. [Contact us]
-    if you need this field.
+  - The vector dimensionality is no longer returned as a top-level field.
+    Instead, inspect the `vector` attribute of the `schema` field.
 
 - The `export` method has been removed.
 

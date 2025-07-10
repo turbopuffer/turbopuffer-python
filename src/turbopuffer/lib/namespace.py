@@ -32,12 +32,6 @@ class Namespace(namespaces.NamespacesResource, NamespaceMixin):
     # TODO(benesch): remove these shims when sufficient time has passed (say, Sep 2025).
 
     @deprecated("method removed; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help")
-    def metadata(self) -> None:
-        raise NotImplementedError(
-            "the Namespace.metadata() method has been removed; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
-        )
-
-    @deprecated("method removed; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help")
     def dimensions(self) -> None:
         raise NotImplementedError(
             "the Namespace.dimensions() method has been removed; see https://github.com/turbopuffer/turbopuffer-python/blob/main/UPGRADING.md for help"
