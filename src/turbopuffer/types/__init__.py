@@ -21,6 +21,7 @@ from .vector_encoding import VectorEncoding as VectorEncoding
 from .full_text_search import FullTextSearch as FullTextSearch
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .query_performance import QueryPerformance as QueryPerformance
+from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
