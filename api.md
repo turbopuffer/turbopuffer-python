@@ -26,6 +26,7 @@ from turbopuffer.types import (
     ID,
     IncludeAttributes,
     Language,
+    NamespaceMetadata,
     Query,
     QueryBilling,
     QueryPerformance,
