@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.13 (2025-07-11)
+
+Full Changelog: [v0.5.12...v0.5.13](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.12...v0.5.13)
+
+### Chores
+
+* **readme:** fix version rendering on pypi ([a6cd632](https://github.com/turbopuffer/turbopuffer-python/commit/a6cd63219712e840a79a8cf0e96cb1b3a89708dd))
+
 ## 0.5.12 (2025-07-10)
 
 Full Changelog: [v0.5.11...v0.5.12](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.11...v0.5.12)
