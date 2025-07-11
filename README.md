@@ -1,5 +1,6 @@
 # Turbopuffer Python API library  <a href="https://turbopuffer.com"><img src="https://github.com/user-attachments/assets/8d6cca4c-10b7-4d3a-9782-696053baf44e" align="right"></a>
 
+<!-- prettier-ignore -->
 <a href="https://pypi.org/project/turbopuffer/"><img src="https://img.shields.io/pypi/v/turbopuffer.svg?label=pypi%20(stable)" alt="PyPI version" align="right"></a>
 
 The Turbopuffer Python library provides convenient access to the Turbopuffer HTTP API from any Python 3.8+
