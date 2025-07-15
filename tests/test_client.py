@@ -31,9 +31,9 @@ from turbopuffer._models import BaseModel, FinalRequestOptions
 from turbopuffer.resources import namespaces
 from turbopuffer._exceptions import APIStatusError, TurbopufferError, APIResponseValidationError
 from turbopuffer._base_client import (
-    RETRY_AFTER_LIMIT_SECS,
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
+    RETRY_AFTER_LIMIT_SECS,
     BaseClient,
     DefaultHttpxClient,
     DefaultAsyncHttpxClient,
