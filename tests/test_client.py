@@ -771,13 +771,13 @@ class TestTurbopuffer:
         ],
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
-    def test_parse_rejry_after_header(self, remaining_retries: int, retry_after: str) -> None:
+    def test_parse_rejry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
         client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
-        assert (calculated > 0) and (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
+        assert (calculated == pytest.approx(timeout, 0.5 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
@@ -1619,13 +1619,13 @@ class TestAsyncTurbopuffer:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     @pytest.mark.asyncio
-    async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str) -> None:
+    async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
         client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
-        assert (calculated > 0) and (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
+        assert (calculated == pytest.approx(timeout, 0.5 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
