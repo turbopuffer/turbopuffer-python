@@ -358,6 +358,7 @@ class BaseAsyncPage(BasePage[_T], Generic[_T]):
 _HttpxClientT = TypeVar("_HttpxClientT", bound=Union[httpx.Client, httpx.AsyncClient])
 _DefaultStreamT = TypeVar("_DefaultStreamT", bound=Union[Stream[Any], AsyncStream[Any]])
 
+RETRY_AFTER_LIMIT = 60 * 30
 
 class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
     _client: _HttpxClientT
@@ -732,7 +733,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
 
         # If the API asks us to wait a certain amount of time (and it's a reasonable amount), just do what it says.
         retry_after = self._parse_retry_after_header(response_headers)
-        if retry_after is not None and 0 < retry_after <= 60:
+        if retry_after is not None and 0 < retry_after <= RETRY_AFTER_LIMIT:
             return retry_after
 
         # Also cap retry count to 1000 to avoid any potential overflows with `pow`
