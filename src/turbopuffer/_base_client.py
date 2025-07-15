@@ -113,6 +113,7 @@ else:
         # taken from https://github.com/encode/httpx/blob/3ba5fe0d7ac70222590e759c31442b1cab263791/httpx/_config.py#L366
         HTTPX_DEFAULT_TIMEOUT = Timeout(5.0)
 
+RETRY_AFTER_LIMIT_SECS = 60 * 30  # 30 minutes
 
 class PageInfo:
     """Stores the necessary information to build the request to retrieve the next page.
@@ -358,7 +359,6 @@ class BaseAsyncPage(BasePage[_T], Generic[_T]):
 _HttpxClientT = TypeVar("_HttpxClientT", bound=Union[httpx.Client, httpx.AsyncClient])
 _DefaultStreamT = TypeVar("_DefaultStreamT", bound=Union[Stream[Any], AsyncStream[Any]])
 
-RETRY_AFTER_LIMIT_SECS = 60 * 30  # 30 minutes
 
 class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
     _client: _HttpxClientT
