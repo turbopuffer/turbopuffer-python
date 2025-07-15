@@ -358,7 +358,7 @@ class BaseAsyncPage(BasePage[_T], Generic[_T]):
 _HttpxClientT = TypeVar("_HttpxClientT", bound=Union[httpx.Client, httpx.AsyncClient])
 _DefaultStreamT = TypeVar("_DefaultStreamT", bound=Union[Stream[Any], AsyncStream[Any]])
 
-RETRY_AFTER_LIMIT = 60 * 30
+RETRY_AFTER_LIMIT_SECS = 60 * 30  # 30 minutes
 
 class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
     _client: _HttpxClientT
