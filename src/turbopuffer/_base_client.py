@@ -733,7 +733,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
 
         # If the API asks us to wait a certain amount of time (and it's a reasonable amount), just do what it says.
         retry_after = self._parse_retry_after_header(response_headers)
-        if retry_after is not None and 0 < retry_after <= RETRY_AFTER_LIMIT:
+        if retry_after is not None and 0 < retry_after <= RETRY_AFTER_LIMIT_SECS:
             return retry_after
 
         # Also cap retry count to 1000 to avoid any potential overflows with `pow`
