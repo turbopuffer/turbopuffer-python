@@ -771,7 +771,7 @@ class TestTurbopuffer:
         ],
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
-    def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
+    def test_parse_rejry_after_header(self, remaining_retries: int, retry_after: str) -> None:
         client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
@@ -1619,7 +1619,7 @@ class TestAsyncTurbopuffer:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     @pytest.mark.asyncio
-    async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
+    async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str) -> None:
         client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
