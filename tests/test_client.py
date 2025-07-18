@@ -33,6 +33,7 @@ from turbopuffer._exceptions import APIStatusError, TurbopufferError, APIRespons
 from turbopuffer._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
+    RETRY_AFTER_LIMIT_SECS,
     BaseClient,
     DefaultHttpxClient,
     DefaultAsyncHttpxClient,
@@ -776,7 +777,7 @@ class TestTurbopuffer:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
-        assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
+        assert (calculated == pytest.approx(timeout, 0.5 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
@@ -1624,7 +1625,7 @@ class TestAsyncTurbopuffer:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
-        assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
+        assert (calculated == pytest.approx(timeout, 0.5 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)

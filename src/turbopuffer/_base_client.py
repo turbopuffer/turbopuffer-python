@@ -113,6 +113,7 @@ else:
         # taken from https://github.com/encode/httpx/blob/3ba5fe0d7ac70222590e759c31442b1cab263791/httpx/_config.py#L366
         HTTPX_DEFAULT_TIMEOUT = Timeout(5.0)
 
+RETRY_AFTER_LIMIT_SECS = 60 * 30  # 30 minutes
 
 class PageInfo:
     """Stores the necessary information to build the request to retrieve the next page.
@@ -732,7 +733,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
 
         # If the API asks us to wait a certain amount of time (and it's a reasonable amount), just do what it says.
         retry_after = self._parse_retry_after_header(response_headers)
-        if retry_after is not None and 0 < retry_after <= 60:
+        if retry_after is not None and 0 < retry_after <= RETRY_AFTER_LIMIT_SECS:
             return retry_after
 
         # Also cap retry count to 1000 to avoid any potential overflows with `pow`
