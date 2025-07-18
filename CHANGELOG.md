@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.5.13 (2025-07-18)
+
+Full Changelog: [v0.5.12...v0.5.13](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.12...v0.5.13)
+
+### Features
+
+* clean up environment call outs ([f0c7314](https://github.com/turbopuffer/turbopuffer-python/commit/f0c73145365f897255517af9f4d417bb064886e2))
+
+
+### Bug Fixes
+
+* **client:** don't send Content-Type header on GET requests ([534cd40](https://github.com/turbopuffer/turbopuffer-python/commit/534cd40ef0af133f854f5336dcf16922fa08332a))
+
+
+### Chores
+
+* **readme:** fix version rendering on pypi ([341d3a3](https://github.com/turbopuffer/turbopuffer-python/commit/341d3a332a8b18886c7de9ac606d63258142ecc4))
+
 ## 0.5.12 (2025-07-10)
 
 Full Changelog: [v0.5.11...v0.5.12](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.11...v0.5.12)
