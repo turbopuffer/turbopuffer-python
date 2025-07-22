@@ -1,7 +1,8 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import TYPE_CHECKING, Literal, Optional, overload
+from typing import TYPE_CHECKING, Literal, Dict, Optional, overload
 from typing_extensions import TypedDict
+from pydantic import Field as FieldInfo
 
 from .id import ID
 from .vector import Vector
@@ -32,6 +33,7 @@ class Row(BaseModel):
     vector: Optional[Vector] = None
     """A vector embedding associated with a document."""
 
+    __pydantic_extra__: Dict[str, object] = FieldInfo(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
     if TYPE_CHECKING:
         # Stub to indicate that arbitrary properties are accepted.
         # To access properties that are not valid identifiers you can use `getattr`, e.g.
