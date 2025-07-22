@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.14 (2025-07-22)
+
+Full Changelog: [v0.5.13...v0.5.14](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.13...v0.5.14)
+
+### Bug Fixes
+
+* **parsing:** ignore empty metadata ([1c750c2](https://github.com/turbopuffer/turbopuffer-python/commit/1c750c228f2b028355d402a5085c3ddadc9bb749))
+* **parsing:** parse extra field types ([fc021b2](https://github.com/turbopuffer/turbopuffer-python/commit/fc021b2c8f046e00055ea8b7ac302c2708a47cf3))
+
 ## 0.5.13 (2025-07-18)
 
 Full Changelog: [v0.5.12...v0.5.13](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.12...v0.5.13)
