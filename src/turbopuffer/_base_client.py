@@ -115,6 +115,7 @@ else:
 
 RETRY_AFTER_LIMIT_SECS = 60 * 30  # 30 minutes
 
+
 class PageInfo:
     """Stores the necessary information to build the request to retrieve the next page.
 

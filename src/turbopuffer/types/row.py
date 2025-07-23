@@ -1,7 +1,8 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import TYPE_CHECKING, Literal, Dict, Optional, overload
+from typing import TYPE_CHECKING, Dict, Literal, Optional, overload
 from typing_extensions import TypedDict
+
 from pydantic import Field as FieldInfo
 
 from .id import ID
