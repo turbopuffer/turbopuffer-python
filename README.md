@@ -39,10 +39,6 @@ response = client.namespaces.write(
         {
             "id": "2108ed60-6851-49a0-9016-8325434f3845",
             "vector": [0.1, 0.2],
-            "attributes": {
-                "name": "Red boots",
-                "price": 34.99,
-            },
         }
     ],
 )
@@ -76,10 +72,6 @@ async def main() -> None:
             {
                 "id": "2108ed60-6851-49a0-9016-8325434f3845",
                 "vector": [0.1, 0.2],
-                "attributes": {
-                    "name": "Red boots",
-                    "price": 34.99,
-                },
             }
         ],
     )
@@ -122,10 +114,6 @@ async def main() -> None:
                 {
                     "id": "2108ed60-6851-49a0-9016-8325434f3845",
                     "vector": [0.1, 0.2],
-                    "attributes": {
-                        "name": "Red boots",
-                        "price": 34.99,
-                    },
                 }
             ],
         )
