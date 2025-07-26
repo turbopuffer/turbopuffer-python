@@ -10,8 +10,17 @@ try:
 
 except ImportError:
     import json
+    from datetime import datetime
+    from typing_extensions import override
 
     loads = json.loads
 
     def dumps(obj: Any) -> bytes:
-        return json.dumps(obj).encode()
+        return json.dumps(obj, cls=_DateTimeEncoder).encode()
+
+    class _DateTimeEncoder(json.JSONEncoder):
+        @override
+        def default(self, o: Any) -> Any:
+            if isinstance(o, datetime):
+                return o.isoformat()
+            return super().default(o)
