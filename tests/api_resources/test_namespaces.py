@@ -146,6 +146,7 @@ class TestNamespaces:
             queries=[
                 {
                     "distance_metric": "cosine_distance",
+                    "exclude_attributes": ["string"],
                     "include_attributes": True,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
@@ -555,6 +556,7 @@ class TestAsyncNamespaces:
             queries=[
                 {
                     "distance_metric": "cosine_distance",
+                    "exclude_attributes": ["string"],
                     "include_attributes": True,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
