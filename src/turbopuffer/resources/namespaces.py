@@ -229,6 +229,7 @@ class NamespacesResource(SyncAPIResource):
         aggregate_by: Dict[str, object] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: object | NotGiven = NOT_GIVEN,
@@ -251,6 +252,9 @@ class NamespacesResource(SyncAPIResource):
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
+
+          exclude_attributes: List of attribute names to exclude from the response. All other attributes will
+              be included in the response.
 
           filters: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
@@ -282,6 +286,7 @@ class NamespacesResource(SyncAPIResource):
                     "aggregate_by": aggregate_by,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
+                    "exclude_attributes": exclude_attributes,
                     "filters": filters,
                     "include_attributes": include_attributes,
                     "rank_by": rank_by,
@@ -702,6 +707,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         aggregate_by: Dict[str, object] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
+        exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: object | NotGiven = NOT_GIVEN,
@@ -724,6 +730,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
+
+          exclude_attributes: List of attribute names to exclude from the response. All other attributes will
+              be included in the response.
 
           filters: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
@@ -755,6 +764,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "aggregate_by": aggregate_by,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
+                    "exclude_attributes": exclude_attributes,
                     "filters": filters,
                     "include_attributes": include_attributes,
                     "rank_by": rank_by,

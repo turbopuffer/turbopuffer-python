@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, List
 from typing_extensions import Literal, TypedDict
 
 from .distance_metric import DistanceMetric
@@ -26,6 +26,12 @@ class NamespaceQueryParams(TypedDict, total=False):
 
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
+
+    exclude_attributes: List[str]
+    """List of attribute names to exclude from the response.
+
+    All other attributes will be included in the response.
+    """
 
     filters: object
     """Exact filters for attributes to refine search results for.
