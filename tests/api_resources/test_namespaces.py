@@ -146,6 +146,7 @@ class TestNamespaces:
             queries=[
                 {
                     "distance_metric": "cosine_distance",
+                    "exclude_attributes": ["string"],
                     "include_attributes": True,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
@@ -205,6 +206,7 @@ class TestNamespaces:
         namespace = client.namespace("namespace").query(
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
+            exclude_attributes=["string"],
             include_attributes=True,
             rank_by=("id", "asc"),
             top_k=0,
@@ -554,6 +556,7 @@ class TestAsyncNamespaces:
             queries=[
                 {
                     "distance_metric": "cosine_distance",
+                    "exclude_attributes": ["string"],
                     "include_attributes": True,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
@@ -613,6 +616,7 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespace("namespace").query(
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
+            exclude_attributes=["string"],
             include_attributes=True,
             rank_by=("id", "asc"),
             top_k=0,
