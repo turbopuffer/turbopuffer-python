@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.15 (2025-07-28)
+
+Full Changelog: [v0.5.14...v0.5.15](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.14...v0.5.15)
+
+### Bug Fixes
+
+* **api:** api update ([ed06b6f](https://github.com/turbopuffer/turbopuffer-python/commit/ed06b6f1aa3d72dd3e6b3a4317dbe326b0b8ee7c))
+* more precise types for filters that take arrays ([3f8a227](https://github.com/turbopuffer/turbopuffer-python/commit/3f8a2272b3ea062468dd8454f157c2295fc32e37))
+* serialize datetime objects when orjson isn't installed ([#143](https://github.com/turbopuffer/turbopuffer-python/issues/143)) ([c194fc6](https://github.com/turbopuffer/turbopuffer-python/commit/c194fc6bae0cf1ab0696fa98736de78ef99a536a))
+
+
+### Chores
+
+* **project:** add settings file for vscode ([c843ee0](https://github.com/turbopuffer/turbopuffer-python/commit/c843ee0a0e91b50b97222fef804aa464de841903))
+
 ## 0.5.14 (2025-07-22)
 
 Full Changelog: [v0.5.13...v0.5.14](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.13...v0.5.14)
