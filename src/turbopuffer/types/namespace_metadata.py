@@ -15,6 +15,9 @@ class NamespaceMetadata(BaseModel):
     approx_logical_bytes: int
     """The approximate number of logical bytes in the namespace."""
 
+    approx_row_count: int
+    """The approximate number of rows in the namespace."""
+
     created_at: datetime
     """The timestamp when the namespace was created."""
 
