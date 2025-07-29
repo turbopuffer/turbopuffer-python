@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.16 (2025-07-29)
+
+Full Changelog: [v0.5.15...v0.5.16](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.15...v0.5.16)
+
+### Bug Fixes
+
+* add support for regex filter ([6fb42f9](https://github.com/turbopuffer/turbopuffer-python/commit/6fb42f9cc98ada3def222c9ca1b639ffe10f1434))
+* **api:** api update ([12a8eb6](https://github.com/turbopuffer/turbopuffer-python/commit/12a8eb6e068bf23a3df3553df2d20c9f87caffb0))
+* **api:** api update ([c84043a](https://github.com/turbopuffer/turbopuffer-python/commit/c84043a92c31555a0d1f7c7f320d0a1ad7147261))
+* **api:** api update ([8eeaf90](https://github.com/turbopuffer/turbopuffer-python/commit/8eeaf90624de0d7aafca55cb139ba2651838cfc2))
+
 ## 0.5.15 (2025-07-28)
 
 Full Changelog: [v0.5.14...v0.5.15](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.14...v0.5.15)
