@@ -100,7 +100,7 @@ class TestTurbopuffer:
         # options that have a default are overridden correctly
         copied = self.client.copy(max_retries=7)
         assert copied.max_retries == 7
-        assert self.client.max_retries == 2
+        assert self.client.max_retries == 4
 
         copied2 = copied.copy(max_retries=6)
         assert copied2.max_retries == 6
@@ -753,20 +753,20 @@ class TestTurbopuffer:
         "remaining_retries,retry_after,timeout",
         [
             [3, "20", 20],
-            [3, "0", 0.5],
-            [3, "-10", 0.5],
+            [3, "0", 0.25],
+            [3, "-10", 0.25],
             [3, "60", 60],
-            [3, "61", 0.5],
+            [3, "61", 0.25],
             [3, "Fri, 29 Sep 2023 16:26:57 GMT", 20],
-            [3, "Fri, 29 Sep 2023 16:26:37 GMT", 0.5],
-            [3, "Fri, 29 Sep 2023 16:26:27 GMT", 0.5],
+            [3, "Fri, 29 Sep 2023 16:26:37 GMT", 0.25],
+            [3, "Fri, 29 Sep 2023 16:26:27 GMT", 0.25],
             [3, "Fri, 29 Sep 2023 16:27:37 GMT", 60],
-            [3, "Fri, 29 Sep 2023 16:27:38 GMT", 0.5],
-            [3, "99999999999999999999999999999999999", 0.5],
-            [3, "Zun, 29 Sep 2023 16:26:27 GMT", 0.5],
-            [3, "", 0.5],
-            [2, "", 0.5 * 2.0],
-            [1, "", 0.5 * 4.0],
+            [3, "Fri, 29 Sep 2023 16:27:38 GMT", 0.25],
+            [3, "99999999999999999999999999999999999", 0.25],
+            [3, "Zun, 29 Sep 2023 16:26:27 GMT", 0.25],
+            [3, "", 0.25],
+            [2, "", 0.25 * 2.0],
+            [1, "", 0.25 * 4.0],
             [-1100, "", 8],  # test large number potentially overflowing
         ],
     )
@@ -777,7 +777,7 @@ class TestTurbopuffer:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
-        assert (calculated == pytest.approx(timeout, 0.5 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
+        assert (calculated == pytest.approx(timeout, 0.25 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
@@ -944,7 +944,7 @@ class TestAsyncTurbopuffer:
         # options that have a default are overridden correctly
         copied = self.client.copy(max_retries=7)
         assert copied.max_retries == 7
-        assert self.client.max_retries == 2
+        assert self.client.max_retries == 4
 
         copied2 = copied.copy(max_retries=6)
         assert copied2.max_retries == 6
@@ -1600,20 +1600,20 @@ class TestAsyncTurbopuffer:
         "remaining_retries,retry_after,timeout",
         [
             [3, "20", 20],
-            [3, "0", 0.5],
-            [3, "-10", 0.5],
+            [3, "0", 0.25],
+            [3, "-10", 0.25],
             [3, "60", 60],
-            [3, "61", 0.5],
+            [3, "61", 0.25],
             [3, "Fri, 29 Sep 2023 16:26:57 GMT", 20],
-            [3, "Fri, 29 Sep 2023 16:26:37 GMT", 0.5],
-            [3, "Fri, 29 Sep 2023 16:26:27 GMT", 0.5],
+            [3, "Fri, 29 Sep 2023 16:26:37 GMT", 0.25],
+            [3, "Fri, 29 Sep 2023 16:26:27 GMT", 0.25],
             [3, "Fri, 29 Sep 2023 16:27:37 GMT", 60],
-            [3, "Fri, 29 Sep 2023 16:27:38 GMT", 0.5],
-            [3, "99999999999999999999999999999999999", 0.5],
-            [3, "Zun, 29 Sep 2023 16:26:27 GMT", 0.5],
-            [3, "", 0.5],
-            [2, "", 0.5 * 2.0],
-            [1, "", 0.5 * 4.0],
+            [3, "Fri, 29 Sep 2023 16:27:38 GMT", 0.25],
+            [3, "99999999999999999999999999999999999", 0.25],
+            [3, "Zun, 29 Sep 2023 16:26:27 GMT", 0.25],
+            [3, "", 0.25],
+            [2, "", 0.25 * 2.0],
+            [1, "", 0.25 * 4.0],
             [-1100, "", 8],  # test large number potentially overflowing
         ],
     )
@@ -1625,7 +1625,7 @@ class TestAsyncTurbopuffer:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
-        assert (calculated == pytest.approx(timeout, 0.5 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
+        assert (calculated == pytest.approx(timeout, 0.25 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
