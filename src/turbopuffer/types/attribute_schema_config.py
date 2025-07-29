@@ -24,6 +24,9 @@ class AttributeSchemaConfig(BaseModel):
     `filterable: true`.
     """
 
+    regex: Optional[bool] = None
+    """Whether to enable Regex filters on this attribute."""
+
     type: Optional[AttributeType] = None
     """The data type of the attribute.
 
