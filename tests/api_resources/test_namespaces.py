@@ -17,6 +17,7 @@ from turbopuffer.types import (
     NamespaceSchemaResponse,
     NamespaceDeleteAllResponse,
     NamespaceMultiQueryResponse,
+    NamespaceExplainQueryResponse,
     NamespaceUpdateSchemaResponse,
     NamespaceHintCacheWarmResponse,
 )
@@ -66,6 +67,65 @@ class TestNamespaces:
     def test_path_params_delete_all(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespaces.with_raw_response.delete_all(
+                namespace="",
+            )
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_explain_query(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.explain_query(
+            namespace="namespace",
+        )
+        assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_explain_query_with_all_params(self, client: Turbopuffer) -> None:
+        namespace = client.namespaces.explain_query(
+            namespace="namespace",
+            aggregate_by={"foo": "bar"},
+            consistency={"level": "strong"},
+            distance_metric="cosine_distance",
+            exclude_attributes=["string"],
+            filters={},
+            include_attributes=True,
+            rank_by={},
+            top_k=0,
+            vector_encoding="float",
+        )
+        assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_raw_response_explain_query(self, client: Turbopuffer) -> None:
+        response = client.namespaces.with_raw_response.explain_query(
+            namespace="namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = response.parse()
+        assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_streaming_response_explain_query(self, client: Turbopuffer) -> None:
+        with client.namespaces.with_streaming_response.explain_query(
+            namespace="namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = response.parse()
+            assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_path_params_explain_query(self, client: Turbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            client.namespaces.with_raw_response.explain_query(
                 namespace="",
             )
 
@@ -550,6 +610,65 @@ class TestAsyncNamespaces:
     async def test_path_params_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespaces.with_raw_response.delete_all(
+                namespace="",
+            )
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_explain_query(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.explain_query(
+            namespace="namespace",
+        )
+        assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_explain_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
+        namespace = await async_client.namespaces.explain_query(
+            namespace="namespace",
+            aggregate_by={"foo": "bar"},
+            consistency={"level": "strong"},
+            distance_metric="cosine_distance",
+            exclude_attributes=["string"],
+            filters={},
+            include_attributes=True,
+            rank_by={},
+            top_k=0,
+            vector_encoding="float",
+        )
+        assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_raw_response_explain_query(self, async_client: AsyncTurbopuffer) -> None:
+        response = await async_client.namespaces.with_raw_response.explain_query(
+            namespace="namespace",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        namespace = await response.parse()
+        assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_streaming_response_explain_query(self, async_client: AsyncTurbopuffer) -> None:
+        async with async_client.namespaces.with_streaming_response.explain_query(
+            namespace="namespace",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            namespace = await response.parse()
+            assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_path_params_explain_query(self, async_client: AsyncTurbopuffer) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            await async_client.namespaces.with_raw_response.explain_query(
                 namespace="",
             )
 

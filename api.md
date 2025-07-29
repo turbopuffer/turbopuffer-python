@@ -36,6 +36,7 @@ from turbopuffer.types import (
     VectorEncoding,
     WriteBilling,
     NamespaceDeleteAllResponse,
+    NamespaceExplainQueryResponse,
     NamespaceHintCacheWarmResponse,
     NamespaceMultiQueryResponse,
     NamespaceQueryResponse,
@@ -49,6 +50,7 @@ from turbopuffer.types import (
 Methods:
 
 - <code title="delete /v2/namespaces/{namespace}">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">delete_all</a>(\*, namespace) -> <a href="./src/turbopuffer/types/namespace_delete_all_response.py">NamespaceDeleteAllResponse</a></code>
+- <code title="post /v2/namespaces/{namespace}/explain_query">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">explain_query</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_explain_query_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_explain_query_response.py">NamespaceExplainQueryResponse</a></code>
 - <code title="get /v1/namespaces/{namespace}/hint_cache_warm">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">hint_cache_warm</a>(\*, namespace) -> <a href="./src/turbopuffer/types/namespace_hint_cache_warm_response.py">NamespaceHintCacheWarmResponse</a></code>
 - <code title="get /v1/namespaces/{namespace}/metadata">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">metadata</a>(\*, namespace) -> <a href="./src/turbopuffer/types/namespace_metadata.py">NamespaceMetadata</a></code>
 - <code title="post /v2/namespaces/{namespace}/query?stainless_overload=multiQuery">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">multi_query</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_multi_query_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_multi_query_response.py">NamespaceMultiQueryResponse</a></code>
