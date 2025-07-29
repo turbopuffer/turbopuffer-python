@@ -22,6 +22,7 @@ Filter = Union[
     Tuple[str, Literal["NotGlob"], str],
     Tuple[str, Literal["IGlob"], str],
     Tuple[str, Literal["NotIGlob"], str],
+    Tuple[str, Literal["Regex"], str],
     Tuple[str, Literal["ContainsAllTokens"], str],
     Tuple[str, Literal["ContainsAllTokens"], Sequence[str]],
     Tuple[Literal["Not"], "Filter"],
