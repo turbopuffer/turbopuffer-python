@@ -25,6 +25,9 @@ class AttributeSchemaConfigParam(TypedDict, total=False):
     `filterable: true`.
     """
 
+    regex: bool
+    """Whether to enable Regex filters on this attribute."""
+
     type: AttributeType
     """The data type of the attribute.
 
