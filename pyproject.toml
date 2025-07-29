@@ -1,6 +1,6 @@
 [project]
 name = "turbopuffer"
-version = "0.5.15"
+version = "0.5.16"
 description = "The official Python library for the turbopuffer API"
 dynamic = ["readme"]
 license = "MIT"
