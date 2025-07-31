@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0 (2025-07-31)
+
+Full Changelog: [v0.5.17...v0.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.17...v0.6.0)
+
+### Features
+
+* **client:** support file upload requests ([ffdbc5d](https://github.com/turbopuffer/turbopuffer-python/commit/ffdbc5d585b348a39551c016ba1d8afc77687fa4))
+
+
+### Bug Fixes
+
+* **api:** api update ([18eee10](https://github.com/turbopuffer/turbopuffer-python/commit/18eee10603b4113034623568f927d9ab5295f6b2))
+* **api:** api update ([dcf8fd1](https://github.com/turbopuffer/turbopuffer-python/commit/dcf8fd16ab08f2d238ec578015e25a48b8852ded))
+
 ## 0.5.17 (2025-07-29)
 
 Full Changelog: [v0.5.16...v0.5.17](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.16...v0.5.17)
