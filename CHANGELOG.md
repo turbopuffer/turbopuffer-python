@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.1 (2025-08-08)
+
+Full Changelog: [v0.6.0...v0.6.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.0...v0.6.1)
+
+### Bug Fixes
+
+* use strict types for explain_query ([#148](https://github.com/turbopuffer/turbopuffer-python/issues/148)) ([7c3bff1](https://github.com/turbopuffer/turbopuffer-python/commit/7c3bff1fd7ac3dd1bb60ba0dd983314d61eef95e))
+
+
+### Chores
+
+* **internal:** fix ruff target version ([3e5ec06](https://github.com/turbopuffer/turbopuffer-python/commit/3e5ec067bb06d0f4e6c9b72aeb483362a4f050d9))
+
 ## 0.6.0 (2025-07-31)
 
 Full Changelog: [v0.5.17...v0.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.17...v0.6.0)
