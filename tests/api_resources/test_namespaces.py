@@ -72,13 +72,10 @@ class TestNamespaces:
     @parametrize
     def test_method_explain_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").explain_query(
-            aggregate_by={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
-            filters={},
             include_attributes=True,
-            rank_by={},
             top_k=0,
             vector_encoding="float",
         )
@@ -529,13 +526,10 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_method_explain_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").explain_query(
-            aggregate_by={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
-            filters={},
             include_attributes=True,
-            rank_by={},
             top_k=0,
             vector_encoding="float",
         )
