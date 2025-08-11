@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.2 (2025-08-11)
+
+Full Changelog: [v0.6.1...v0.6.2](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.1...v0.6.2)
+
+### Chores
+
+* **internal:** update comment in script ([368d5dd](https://github.com/turbopuffer/turbopuffer-python/commit/368d5dd1e766e7890aee6b89d52560291911571f))
+* update @stainless-api/prism-cli to v5.15.0 ([38948fa](https://github.com/turbopuffer/turbopuffer-python/commit/38948fabee3a13a5008957fe92499d767949d249))
+
 ## 0.6.1 (2025-08-08)
 
 Full Changelog: [v0.6.0...v0.6.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.0...v0.6.1)
