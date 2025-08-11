@@ -2,7 +2,7 @@
 
 from typing import Any, Tuple, Union, Literal, Sequence, TypedDict
 
-AggregateBy = Tuple[Literal["Count"], str]
+AggregateBy = Union[Tuple[Literal["Count"]], Tuple[Literal["Count"], str]]
 ExprRefNew = TypedDict("ExprRefNew", {"$ref_new": str})
 Expr = ExprRefNew
 Filter = Union[
