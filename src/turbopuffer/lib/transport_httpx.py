@@ -1,5 +1,6 @@
 import gzip
 import time
+from typing import Any
 from typing_extensions import override
 
 import httpx
@@ -8,7 +9,7 @@ from .transport import MIN_GZIP_SIZE
 
 
 class HttpxTransport(httpx.HTTPTransport):
-    def __init__(self, compression: bool = True, **kwargs):
+    def __init__(self, compression: bool = True, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.compression = compression
 

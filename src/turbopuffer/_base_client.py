@@ -800,18 +800,22 @@ class _DefaultHttpxClient(httpx.Client):
 
 
 if TYPE_CHECKING:
-    DefaultHttpxClient = httpx.Client
-    """An alias to `httpx.Client` that provides the same defaults that this SDK
-    uses internally.
+    class DefaultHttpxClient(httpx.Client):
+        """An alias to `httpx.Client` that provides the same defaults that this SDK
+        uses internally.
 
-    This is useful because overriding the `http_client` with your own instance of
-    `httpx.Client` will result in httpx's defaults being used, not ours.
-    """
+        This is useful because overriding the `http_client` with your own instance of
+        `httpx.Client` will result in httpx's defaults being used, not ours.
+        """
+        def __init__(self, *, compression: bool = True, **kwargs: Any) -> None: ...
 else:
     DefaultHttpxClient = _DefaultHttpxClient
 
 
 class SyncHttpxClientWrapper(DefaultHttpxClient):
+    def __init__(self, *, compression: bool = True, **kwargs: Any) -> None:
+        super().__init__(compression=compression, **kwargs)
+        
     def __del__(self) -> None:
         if self.is_closed:
             return
@@ -1333,13 +1337,14 @@ else:
 
 
 if TYPE_CHECKING:
-    DefaultAsyncHttpxClient = httpx.AsyncClient
-    """An alias to `httpx.AsyncClient` that provides the same defaults that this SDK
-    uses internally.
+    class DefaultAsyncHttpxClient(httpx.AsyncClient):
+        """An alias to `httpx.AsyncClient` that provides the same defaults that this SDK
+        uses internally.
 
-    This is useful because overriding the `http_client` with your own instance of
-    `httpx.AsyncClient` will result in httpx's defaults being used, not ours.
-    """
+        This is useful because overriding the `http_client` with your own instance of
+        `httpx.AsyncClient` will result in httpx's defaults being used, not ours.
+        """
+        def __init__(self, *, compression: bool = True, **kwargs: Any) -> None: ...
 
     DefaultAioHttpClient = httpx.AsyncClient
     """An alias to `httpx.AsyncClient` that changes the default HTTP transport to `aiohttp`."""
@@ -1349,6 +1354,9 @@ else:
 
 
 class AsyncHttpxClientWrapper(DefaultAsyncHttpxClient):
+    def __init__(self, *, compression: bool = True, **kwargs: Any) -> None:
+        super().__init__(compression=compression, **kwargs)
+        
     def __del__(self) -> None:
         if self.is_closed:
             return
