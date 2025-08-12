@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.3 (2025-08-12)
+
+Full Changelog: [v0.6.2...v0.6.3](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.2...v0.6.3)
+
+### Bug Fixes
+
+* remove 200 error code for hint_cache_warm API call (always 202 now) ([77df5be](https://github.com/turbopuffer/turbopuffer-python/commit/77df5be5bddbff03429ccff6cd316145a0a5e90e))
+
+
+### Chores
+
+* **internal:** codegen related update ([b4c305d](https://github.com/turbopuffer/turbopuffer-python/commit/b4c305d444cd4958a85774ecb2a7d07b583b670c))
+
 ## 0.6.2 (2025-08-11)
 
 Full Changelog: [v0.6.1...v0.6.2](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.1...v0.6.2)
