@@ -28,13 +28,13 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestNamespaces:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_delete_all(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").delete_all()
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_delete_all(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.delete_all()
@@ -44,7 +44,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_delete_all(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.delete_all() as response:
@@ -56,19 +56,19 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_delete_all(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.delete_all()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_explain_query(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").explain_query()
         assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_explain_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").explain_query(
@@ -81,7 +81,7 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_explain_query(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.explain_query()
@@ -91,7 +91,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_explain_query(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.explain_query() as response:
@@ -103,19 +103,19 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_explain_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.explain_query()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_hint_cache_warm(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").hint_cache_warm()
         assert_matches_type(NamespaceHintCacheWarmResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_hint_cache_warm(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.hint_cache_warm()
@@ -125,7 +125,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceHintCacheWarmResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_hint_cache_warm(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.hint_cache_warm() as response:
@@ -137,19 +137,19 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_hint_cache_warm(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.hint_cache_warm()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_metadata(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").metadata()
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_metadata(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.metadata()
@@ -159,7 +159,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_metadata(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.metadata() as response:
@@ -171,13 +171,13 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_metadata(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.metadata()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_multi_query(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").multi_query(
@@ -186,7 +186,7 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_multi_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").multi_query(
@@ -205,7 +205,7 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_multi_query(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.multi_query(
@@ -218,7 +218,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_multi_query(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.multi_query(
@@ -233,7 +233,7 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_multi_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -242,13 +242,13 @@ class TestNamespaces:
                 queries=[{}],
             )
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_query(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").query()
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").query(
@@ -262,7 +262,7 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_query(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.query()
@@ -272,7 +272,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_query(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.query() as response:
@@ -284,19 +284,19 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.query()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_recall(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").recall()
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_recall_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").recall(
@@ -306,7 +306,7 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_recall(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.recall()
@@ -316,7 +316,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_recall(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.recall() as response:
@@ -328,19 +328,19 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_recall(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.recall()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_schema(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").schema()
         assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_schema(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.schema()
@@ -350,7 +350,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_schema(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.schema() as response:
@@ -362,19 +362,19 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_schema(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.schema()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_update_schema(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").update_schema()
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_update_schema_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").update_schema(
@@ -382,7 +382,7 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_update_schema(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.update_schema()
@@ -392,7 +392,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_update_schema(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.update_schema() as response:
@@ -404,19 +404,19 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_update_schema(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespace("").with_raw_response.update_schema()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_write(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").write()
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_write_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").write(
@@ -448,7 +448,7 @@ class TestNamespaces:
         )
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_write(self, client: Turbopuffer) -> None:
         response = client.namespace("namespace").with_raw_response.write()
@@ -458,7 +458,7 @@ class TestNamespaces:
         namespace = response.parse()
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_write(self, client: Turbopuffer) -> None:
         with client.namespace("namespace").with_streaming_response.write() as response:
@@ -470,7 +470,7 @@ class TestNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_path_params_write(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -482,13 +482,13 @@ class TestAsyncNamespaces:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").delete_all()
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.delete_all()
@@ -498,7 +498,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.delete_all() as response:
@@ -510,19 +510,19 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespace("").with_raw_response.delete_all()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_explain_query(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").explain_query()
         assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_explain_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").explain_query(
@@ -535,7 +535,7 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_explain_query(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.explain_query()
@@ -545,7 +545,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_explain_query(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.explain_query() as response:
@@ -557,19 +557,19 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_explain_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespace("").with_raw_response.explain_query()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").hint_cache_warm()
         assert_matches_type(NamespaceHintCacheWarmResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.hint_cache_warm()
@@ -579,7 +579,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceHintCacheWarmResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.hint_cache_warm() as response:
@@ -591,7 +591,7 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(
@@ -600,13 +600,13 @@ class TestAsyncNamespaces:
         ):
             await async_client.namespace("").with_raw_response.hint_cache_warm()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_metadata(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").metadata()
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_metadata(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.metadata()
@@ -616,7 +616,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_metadata(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.metadata() as response:
@@ -628,13 +628,13 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_metadata(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespace("").with_raw_response.metadata()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").multi_query(
@@ -643,7 +643,7 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_multi_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").multi_query(
@@ -662,7 +662,7 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.multi_query(
@@ -675,7 +675,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.multi_query(
@@ -690,7 +690,7 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
@@ -699,13 +699,13 @@ class TestAsyncNamespaces:
                 queries=[{}],
             )
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_query(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").query()
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").query(
@@ -719,7 +719,7 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_query(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.query()
@@ -729,7 +729,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_query(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.query() as response:
@@ -741,19 +741,19 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespace("").with_raw_response.query()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_recall(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").recall()
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_recall_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").recall(
@@ -764,7 +764,7 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_recall(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.recall()
@@ -774,7 +774,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_recall(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.recall() as response:
@@ -786,19 +786,19 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_recall(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespace("").with_raw_response.recall()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_schema(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").schema()
         assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_schema(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.schema()
@@ -808,7 +808,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_schema(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.schema() as response:
@@ -820,19 +820,19 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_schema(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespace("").with_raw_response.schema()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_update_schema(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").update_schema()
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_update_schema_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").update_schema(
@@ -840,7 +840,7 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_update_schema(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.update_schema()
@@ -850,7 +850,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_update_schema(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.update_schema() as response:
@@ -862,19 +862,19 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_update_schema(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespace("").with_raw_response.update_schema()
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_write(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").write()
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_write_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").write(
@@ -910,7 +910,7 @@ class TestAsyncNamespaces:
         )
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_write(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespace("namespace").with_raw_response.write()
@@ -920,7 +920,7 @@ class TestAsyncNamespaces:
         namespace = await response.parse()
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_write(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespace("namespace").with_streaming_response.write() as response:
@@ -932,7 +932,7 @@ class TestAsyncNamespaces:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip()
+    @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_path_params_write(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
