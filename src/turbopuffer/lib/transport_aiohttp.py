@@ -68,9 +68,8 @@ class AiohttpResponseStream(httpx.AsyncByteStream):
 
 
 class AiohttpTransport(httpx.AsyncBaseTransport):
-    def __init__(self, client: typing.Union[ClientSession, typing.Callable[[], ClientSession]], compression: bool = True) -> None:
+    def __init__(self, client: typing.Union[ClientSession, typing.Callable[[], ClientSession]]) -> None:
         self.client = client
-        self.compression = compression
 
     @override
     async def handle_async_request(
@@ -80,6 +79,7 @@ class AiohttpTransport(httpx.AsyncBaseTransport):
         clock = request.extensions["clock"]
         timeout = request.extensions.get("timeout", {})
         sni_hostname = request.extensions.get("sni_hostname")
+        compression = request.extensions.get("compression", True)
 
         if not isinstance(self.client, ClientSession):
             self.client = self.client()
@@ -88,7 +88,7 @@ class AiohttpTransport(httpx.AsyncBaseTransport):
         content = request.content
         clock["compress_start"] = time.monotonic()
         clock["compress_end"] = clock["compress_start"]  # overwritten later if we actually compress
-        if self.compression and len(request.content) > MIN_GZIP_SIZE:
+        if compression and len(request.content) > MIN_GZIP_SIZE:
             loop = asyncio.get_event_loop()
             content = await loop.run_in_executor(None, lambda: gzip.compress(content, compresslevel=1))
             request.headers["Content-Encoding"] = "gzip"

@@ -791,31 +791,27 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
 
 
 class _DefaultHttpxClient(httpx.Client):
-    def __init__(self, *, compression: bool = True, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
-        kwargs.setdefault("transport", HttpxTransport(compression=compression))
+        kwargs.setdefault("transport", HttpxTransport())
         super().__init__(**kwargs)
 
 
 if TYPE_CHECKING:
-    class DefaultHttpxClient(httpx.Client):
-        """An alias to `httpx.Client` that provides the same defaults that this SDK
-        uses internally.
+    DefaultHttpxClient = httpx.Client
+    """An alias to `httpx.Client` that provides the same defaults that this SDK
+    uses internally.
 
-        This is useful because overriding the `http_client` with your own instance of
-        `httpx.Client` will result in httpx's defaults being used, not ours.
-        """
-        def __init__(self, *, compression: bool = True, **kwargs: Any) -> None: ...
+    This is useful because overriding the `http_client` with your own instance of
+    `httpx.Client` will result in httpx's defaults being used, not ours.
+    """
 else:
     DefaultHttpxClient = _DefaultHttpxClient
 
 
 class SyncHttpxClientWrapper(DefaultHttpxClient):
-    def __init__(self, *, compression: bool = True, **kwargs: Any) -> None:
-        super().__init__(compression=compression, **kwargs)
-        
     def __del__(self) -> None:
         if self.is_closed:
             return
@@ -829,6 +825,7 @@ class SyncHttpxClientWrapper(DefaultHttpxClient):
 class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
     _client: httpx.Client
     _default_stream_cls: type[Stream[Any]] | None = None
+    compression: bool
 
     def __init__(
         self,
@@ -871,11 +868,11 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             custom_headers=custom_headers,
             _strict_response_validation=_strict_response_validation,
         )
+        self.compression = compression
         self._client = http_client or SyncHttpxClientWrapper(
             base_url=base_url,
             # cast to a valid type because mypy doesn't understand our type narrowing
             timeout=cast(Timeout, timeout),
-            compression=compression,
         )
 
     def is_closed(self) -> bool:
@@ -918,6 +915,8 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         This is useful for cases where you want to add certain headers based off of
         the request properties, e.g. `url`, `method` etc.
         """
+        # Add compression setting to request extensions
+        request.extensions["compression"] = self.compression
         return None
 
     @overload
@@ -1310,11 +1309,11 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
 
 
 class _DefaultAsyncHttpxClient(httpx.AsyncClient):
-    def __init__(self, *, compression: bool = True, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
-        kwargs.setdefault("transport", AiohttpTransport(client=lambda: ClientSession(), compression=compression))
+        kwargs.setdefault("transport", AiohttpTransport(client=lambda: ClientSession()))
         super().__init__(**kwargs)
 
 
@@ -1337,14 +1336,13 @@ else:
 
 
 if TYPE_CHECKING:
-    class DefaultAsyncHttpxClient(httpx.AsyncClient):
-        """An alias to `httpx.AsyncClient` that provides the same defaults that this SDK
-        uses internally.
+    DefaultAsyncHttpxClient = httpx.AsyncClient
+    """An alias to `httpx.AsyncClient` that provides the same defaults that this SDK
+    uses internally.
 
-        This is useful because overriding the `http_client` with your own instance of
-        `httpx.AsyncClient` will result in httpx's defaults being used, not ours.
-        """
-        def __init__(self, *, compression: bool = True, **kwargs: Any) -> None: ...
+    This is useful because overriding the `http_client` with your own instance of
+    `httpx.AsyncClient` will result in httpx's defaults being used, not ours.
+    """
 
     DefaultAioHttpClient = httpx.AsyncClient
     """An alias to `httpx.AsyncClient` that changes the default HTTP transport to `aiohttp`."""
@@ -1354,9 +1352,6 @@ else:
 
 
 class AsyncHttpxClientWrapper(DefaultAsyncHttpxClient):
-    def __init__(self, *, compression: bool = True, **kwargs: Any) -> None:
-        super().__init__(compression=compression, **kwargs)
-        
     def __del__(self) -> None:
         if self.is_closed:
             return
@@ -1371,6 +1366,7 @@ class AsyncHttpxClientWrapper(DefaultAsyncHttpxClient):
 class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
     _client: httpx.AsyncClient
     _default_stream_cls: type[AsyncStream[Any]] | None = None
+    compression: bool
 
     def __init__(
         self,
@@ -1413,11 +1409,11 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
             custom_headers=custom_headers,
             _strict_response_validation=_strict_response_validation,
         )
+        self.compression = compression
         self._client = http_client or AsyncHttpxClientWrapper(
             base_url=base_url,
             # cast to a valid type because mypy doesn't understand our type narrowing
             timeout=cast(Timeout, timeout),
-            compression=compression,
         )
 
     def is_closed(self) -> bool:
@@ -1457,6 +1453,8 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         This is useful for cases where you want to add certain headers based off of
         the request properties, e.g. `url`, `method` etc.
         """
+        # Add compression setting to request extensions
+        request.extensions["compression"] = self.compression
         return None
 
     @overload

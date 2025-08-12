@@ -220,12 +220,7 @@ class Turbopuffer(SyncAPIClient):
         elif set_default_query is not None:
             params = set_default_query
 
-        # Compression cannot be changed via copy() to avoid client lifecycle issues
-        if compression is not None and compression != self.compression:
-            raise ValueError("Compression setting cannot be changed via copy(). Create a new client instance instead.")
-        
         http_client = http_client or self._client
-            
         return self.__class__(
             api_key=api_key or self.api_key,
             region=region or self.region,
@@ -236,7 +231,7 @@ class Turbopuffer(SyncAPIClient):
             max_retries=max_retries if is_given(max_retries) else self.max_retries,
             default_headers=headers,
             default_query=params,
-            compression=compression or self.compression,
+            compression=compression if compression is not None else self.compression,
             **_extra_kwargs,
         )
 
@@ -491,12 +486,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         elif set_default_query is not None:
             params = set_default_query
 
-        # Compression cannot be changed via copy() to avoid client lifecycle issues
-        if compression is not None and compression != self.compression:
-            raise ValueError("Compression setting cannot be changed via copy(). Create a new client instance instead.")
-        
         http_client = http_client or self._client
-            
         return self.__class__(
             api_key=api_key or self.api_key,
             region=region or self.region,
@@ -507,7 +497,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
             max_retries=max_retries if is_given(max_retries) else self.max_retries,
             default_headers=headers,
             default_query=params,
-            compression=compression or self.compression,
+            compression=compression if compression is not None else self.compression,
             **_extra_kwargs,
         )
 
