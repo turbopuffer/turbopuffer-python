@@ -222,17 +222,14 @@ class Turbopuffer(SyncAPIClient):
 
         final_compression = compression if compression is not None else self.compression
         
-        # Determine http_client: only create new if compression explicitly changes
-        if compression is not None and compression != self.compression:
-            # Compression is changing - need new client (unless custom client provided)
-            if http_client is not None:
-                # User provided custom client, use it
-                pass
-            else:
-                # No custom client provided, let constructor create new one
-                http_client = None
+        # Only create new client if compression explicitly changes and no custom client provided
+        if (compression is not None and 
+            compression != self.compression and 
+            http_client is None):
+            # Compression is changing and no custom client - create new client
+            http_client = None
         else:
-            # Compression not changing - reuse existing client
+            # Reuse existing client
             http_client = http_client or self._client
             
         return self.__class__(
@@ -502,17 +499,14 @@ class AsyncTurbopuffer(AsyncAPIClient):
 
         final_compression = compression if compression is not None else self.compression
         
-        # Determine http_client: only create new if compression explicitly changes
-        if compression is not None and compression != self.compression:
-            # Compression is changing - need new client (unless custom client provided)
-            if http_client is not None:
-                # User provided custom client, use it
-                pass
-            else:
-                # No custom client provided, let constructor create new one
-                http_client = None
+        # Only create new client if compression explicitly changes and no custom client provided
+        if (compression is not None and 
+            compression != self.compression and 
+            http_client is None):
+            # Compression is changing and no custom client - create new client
+            http_client = None
         else:
-            # Compression not changing - reuse existing client
+            # Reuse existing client
             http_client = http_client or self._client
             
         return self.__class__(
