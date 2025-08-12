@@ -791,11 +791,11 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
 
 
 class _DefaultHttpxClient(httpx.Client):
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, *, compression: bool = True, **kwargs: Any) -> None:
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
-        kwargs.setdefault("transport", HttpxTransport())
+        kwargs.setdefault("transport", HttpxTransport(compression=compression))
         super().__init__(**kwargs)
 
 
@@ -837,6 +837,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
         _strict_response_validation: bool,
+        compression: bool = True,
     ) -> None:
         if not is_given(timeout):
             # if the user passed in a custom http client with a non-default
@@ -870,6 +871,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             base_url=base_url,
             # cast to a valid type because mypy doesn't understand our type narrowing
             timeout=cast(Timeout, timeout),
+            compression=compression,
         )
 
     def is_closed(self) -> bool:
@@ -1304,11 +1306,11 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
 
 
 class _DefaultAsyncHttpxClient(httpx.AsyncClient):
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, *, compression: bool = True, **kwargs: Any) -> None:
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
-        kwargs.setdefault("transport", AiohttpTransport(client=lambda: ClientSession()))
+        kwargs.setdefault("transport", AiohttpTransport(client=lambda: ClientSession(), compression=compression))
         super().__init__(**kwargs)
 
 
@@ -1373,6 +1375,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         http_client: httpx.AsyncClient | None = None,
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
+        compression: bool = True,
     ) -> None:
         if not is_given(timeout):
             # if the user passed in a custom http client with a non-default
@@ -1406,6 +1409,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
             base_url=base_url,
             # cast to a valid type because mypy doesn't understand our type narrowing
             timeout=cast(Timeout, timeout),
+            compression=compression,
         )
 
     def is_closed(self) -> bool:
