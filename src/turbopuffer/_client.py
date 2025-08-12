@@ -220,17 +220,12 @@ class Turbopuffer(SyncAPIClient):
         elif set_default_query is not None:
             params = set_default_query
 
-        final_compression = compression if compression is not None else self.compression
+        # Compression cannot be changed via copy() to avoid client lifecycle issues
+        if compression is not None and compression != self.compression:
+            raise ValueError("Compression setting cannot be changed via copy(). Create a new client instance instead.")
         
-        # Only create new client if compression explicitly changes and no custom client provided
-        if (compression is not None and 
-            compression != self.compression and 
-            http_client is None):
-            # Compression is changing and no custom client - create new client
-            http_client = None
-        else:
-            # Reuse existing client
-            http_client = http_client or self._client
+        final_compression = self.compression
+        http_client = http_client or self._client
             
         return self.__class__(
             api_key=api_key or self.api_key,
@@ -497,17 +492,12 @@ class AsyncTurbopuffer(AsyncAPIClient):
         elif set_default_query is not None:
             params = set_default_query
 
-        final_compression = compression if compression is not None else self.compression
+        # Compression cannot be changed via copy() to avoid client lifecycle issues
+        if compression is not None and compression != self.compression:
+            raise ValueError("Compression setting cannot be changed via copy(). Create a new client instance instead.")
         
-        # Only create new client if compression explicitly changes and no custom client provided
-        if (compression is not None and 
-            compression != self.compression and 
-            http_client is None):
-            # Compression is changing and no custom client - create new client
-            http_client = None
-        else:
-            # Reuse existing client
-            http_client = http_client or self._client
+        final_compression = self.compression
+        http_client = http_client or self._client
             
         return self.__class__(
             api_key=api_key or self.api_key,
