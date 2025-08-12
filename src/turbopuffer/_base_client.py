@@ -367,6 +367,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
     _base_url: URL
     max_retries: int
     timeout: Union[float, Timeout, None]
+    compression: bool
     _strict_response_validation: bool
     _idempotency_header: str | None
     _default_stream_cls: type[_DefaultStreamT] | None = None
@@ -381,11 +382,13 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         timeout: float | Timeout | None = DEFAULT_TIMEOUT,
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
+        compression: bool = True,
     ) -> None:
         self._version = version
         self._base_url = self._enforce_trailing_slash(URL(base_url))
         self.max_retries = max_retries
         self.timeout = timeout
+        self.compression = compression
         self._custom_headers = custom_headers or {}
         self._custom_query = custom_query or {}
         self._strict_response_validation = _strict_response_validation
@@ -825,7 +828,6 @@ class SyncHttpxClientWrapper(DefaultHttpxClient):
 class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
     _client: httpx.Client
     _default_stream_cls: type[Stream[Any]] | None = None
-    compression: bool
 
     def __init__(
         self,
@@ -867,8 +869,8 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             custom_query=custom_query,
             custom_headers=custom_headers,
             _strict_response_validation=_strict_response_validation,
+            compression=compression,
         )
-        self.compression = compression
         self._client = http_client or SyncHttpxClientWrapper(
             base_url=base_url,
             # cast to a valid type because mypy doesn't understand our type narrowing
@@ -1366,7 +1368,6 @@ class AsyncHttpxClientWrapper(DefaultAsyncHttpxClient):
 class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
     _client: httpx.AsyncClient
     _default_stream_cls: type[AsyncStream[Any]] | None = None
-    compression: bool
 
     def __init__(
         self,
@@ -1408,8 +1409,8 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
             custom_query=custom_query,
             custom_headers=custom_headers,
             _strict_response_validation=_strict_response_validation,
+            compression=compression,
         )
-        self.compression = compression
         self._client = http_client or AsyncHttpxClientWrapper(
             base_url=base_url,
             # cast to a valid type because mypy doesn't understand our type narrowing

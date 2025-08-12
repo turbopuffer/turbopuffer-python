@@ -75,7 +75,6 @@ class Turbopuffer(SyncAPIClient):
     api_key: str
     region: str | None
     default_namespace: str | None
-    compression: bool
 
     def __init__(
         self,
@@ -123,7 +122,6 @@ class Turbopuffer(SyncAPIClient):
         self.region = region
 
         self.default_namespace = default_namespace
-        self.compression = compression
 
         if base_url is None:
             base_url = os.environ.get("TURBOPUFFER_BASE_URL")
@@ -341,7 +339,6 @@ class AsyncTurbopuffer(AsyncAPIClient):
     api_key: str
     region: str | None
     default_namespace: str | None
-    compression: bool
 
     def __init__(
         self,
@@ -389,7 +386,6 @@ class AsyncTurbopuffer(AsyncAPIClient):
         self.region = region
 
         self.default_namespace = default_namespace
-        self.compression = compression
 
         if base_url is None:
             base_url = os.environ.get("TURBOPUFFER_BASE_URL")
