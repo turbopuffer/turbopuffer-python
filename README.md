@@ -500,6 +500,18 @@ with Turbopuffer() as client:
 # HTTP client is now closed
 ```
 
+### Compression
+
+By default the library will compress all requests and responses with gzip. When the client is CPU constrained or when not limited by bandwidth you may want to disable compression. You can disable compression by setting `compression=False`. 
+
+```py
+from turbopuffer import Turbopuffer
+
+client = Turbopuffer(
+    compression=False,
+)
+```
+
 ## Versioning
 
 This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:

@@ -367,6 +367,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
     _base_url: URL
     max_retries: int
     timeout: Union[float, Timeout, None]
+    compression: bool
     _strict_response_validation: bool
     _idempotency_header: str | None
     _default_stream_cls: type[_DefaultStreamT] | None = None
@@ -381,11 +382,13 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         timeout: float | Timeout | None = DEFAULT_TIMEOUT,
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
+        compression: bool = True,
     ) -> None:
         self._version = version
         self._base_url = self._enforce_trailing_slash(URL(base_url))
         self.max_retries = max_retries
         self.timeout = timeout
+        self.compression = compression
         self._custom_headers = custom_headers or {}
         self._custom_query = custom_query or {}
         self._strict_response_validation = _strict_response_validation
@@ -837,6 +840,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
         _strict_response_validation: bool,
+        compression: bool = True,
     ) -> None:
         if not is_given(timeout):
             # if the user passed in a custom http client with a non-default
@@ -865,6 +869,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             custom_query=custom_query,
             custom_headers=custom_headers,
             _strict_response_validation=_strict_response_validation,
+            compression=compression,
         )
         self._client = http_client or SyncHttpxClientWrapper(
             base_url=base_url,
@@ -912,6 +917,8 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         This is useful for cases where you want to add certain headers based off of
         the request properties, e.g. `url`, `method` etc.
         """
+        # Add compression setting to request extensions
+        request.extensions["compression"] = self.compression
         return None
 
     @overload
@@ -1373,6 +1380,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         http_client: httpx.AsyncClient | None = None,
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
+        compression: bool = True,
     ) -> None:
         if not is_given(timeout):
             # if the user passed in a custom http client with a non-default
@@ -1401,6 +1409,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
             custom_query=custom_query,
             custom_headers=custom_headers,
             _strict_response_validation=_strict_response_validation,
+            compression=compression,
         )
         self._client = http_client or AsyncHttpxClientWrapper(
             base_url=base_url,
@@ -1445,6 +1454,8 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         This is useful for cases where you want to add certain headers based off of
         the request properties, e.g. `url`, `method` etc.
         """
+        # Add compression setting to request extensions
+        request.extensions["compression"] = self.compression
         return None
 
     @overload
