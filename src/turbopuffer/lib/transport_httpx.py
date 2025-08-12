@@ -1,6 +1,5 @@
 import gzip
 import time
-from typing import Any
 from typing_extensions import override
 
 import httpx
