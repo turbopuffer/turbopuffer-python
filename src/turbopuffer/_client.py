@@ -91,6 +91,8 @@ class Turbopuffer(SyncAPIClient):
         # We provide a `DefaultHttpxClient` class that you can pass to retain the default values we use for `limits`, `timeout` & `follow_redirects`.
         # See the [httpx documentation](https://www.python-httpx.org/api/#client) for more details.
         http_client: httpx.Client | None = None,
+        # Enable or disable request compression. When enabled, requests larger than 1024 bytes are automatically compressed with gzip.
+        compression: bool = True,
         # Enable or disable schema validation for data returned by the API.
         # When enabled an error APIResponseValidationError is raised
         # if the API responds with invalid data for the expected schema.
@@ -148,6 +150,7 @@ class Turbopuffer(SyncAPIClient):
             custom_headers=default_headers,
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
+            compression=compression,
         )
 
         self.with_raw_response = TurbopufferWithRawResponse(self)
@@ -191,6 +194,7 @@ class Turbopuffer(SyncAPIClient):
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
         set_default_query: Mapping[str, object] | None = None,
+        compression: bool | None = None,
         _extra_kwargs: Mapping[str, Any] = {},
     ) -> Self:
         """
@@ -225,6 +229,7 @@ class Turbopuffer(SyncAPIClient):
             max_retries=max_retries if is_given(max_retries) else self.max_retries,
             default_headers=headers,
             default_query=params,
+            compression=compression if compression is not None else self.compression,
             **_extra_kwargs,
         )
 
@@ -350,6 +355,8 @@ class AsyncTurbopuffer(AsyncAPIClient):
         # We provide a `DefaultAsyncHttpxClient` class that you can pass to retain the default values we use for `limits`, `timeout` & `follow_redirects`.
         # See the [httpx documentation](https://www.python-httpx.org/api/#asyncclient) for more details.
         http_client: httpx.AsyncClient | None = None,
+        # Enable or disable request compression. When enabled, requests larger than 1024 bytes are automatically compressed with gzip.
+        compression: bool = True,
         # Enable or disable schema validation for data returned by the API.
         # When enabled an error APIResponseValidationError is raised
         # if the API responds with invalid data for the expected schema.
@@ -407,6 +414,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
             custom_headers=default_headers,
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
+            compression=compression,
         )
 
         self.with_raw_response = AsyncTurbopufferWithRawResponse(self)
@@ -450,6 +458,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
         set_default_query: Mapping[str, object] | None = None,
+        compression: bool | None = None,
         _extra_kwargs: Mapping[str, Any] = {},
     ) -> Self:
         """
@@ -484,6 +493,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
             max_retries=max_retries if is_given(max_retries) else self.max_retries,
             default_headers=headers,
             default_query=params,
+            compression=compression if compression is not None else self.compression,
             **_extra_kwargs,
         )
 
