@@ -9,7 +9,7 @@ __all__ = ["NamespaceHintCacheWarmResponse"]
 
 
 class NamespaceHintCacheWarmResponse(BaseModel):
-    status: Literal["OK"]
+    status: Literal["ACCEPTED"]
     """The status of the request."""
 
     message: Optional[str] = None
