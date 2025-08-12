@@ -224,7 +224,6 @@ class Turbopuffer(SyncAPIClient):
         if compression is not None and compression != self.compression:
             raise ValueError("Compression setting cannot be changed via copy(). Create a new client instance instead.")
         
-        final_compression = self.compression
         http_client = http_client or self._client
             
         return self.__class__(
@@ -237,7 +236,7 @@ class Turbopuffer(SyncAPIClient):
             max_retries=max_retries if is_given(max_retries) else self.max_retries,
             default_headers=headers,
             default_query=params,
-            compression=final_compression,
+            compression=compression or self.compression,
             **_extra_kwargs,
         )
 
@@ -496,7 +495,6 @@ class AsyncTurbopuffer(AsyncAPIClient):
         if compression is not None and compression != self.compression:
             raise ValueError("Compression setting cannot be changed via copy(). Create a new client instance instead.")
         
-        final_compression = self.compression
         http_client = http_client or self._client
             
         return self.__class__(
@@ -509,7 +507,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
             max_retries=max_retries if is_given(max_retries) else self.max_retries,
             default_headers=headers,
             default_query=params,
-            compression=final_compression,
+            compression=compression or self.compression,
             **_extra_kwargs,
         )
 
