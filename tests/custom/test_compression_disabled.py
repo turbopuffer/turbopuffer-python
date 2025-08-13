@@ -1,11 +1,12 @@
 import os
-import pytest
-from typing import Dict, Any
+from typing import Any, Dict
 
-import turbopuffer
-from turbopuffer import Turbopuffer, AsyncTurbopuffer
+import pytest
+
+from turbopuffer import Turbopuffer, AsyncTurbopuffer, NotFoundError
 from tests.custom import test_prefix
 from tests.custom.conftest import region
+
 
 # Helper to get client kwargs that work in both local and production environments
 def get_test_client_kwargs() -> Dict[str, Any]:
@@ -26,13 +27,13 @@ def test_compression_disabled(tpuf: Turbopuffer):
         tpuf.with_options(compression=False),  # via with_options()
         Turbopuffer(**kwargs),  # via constructor
     ]
-    
+
     for i, client in enumerate(clients):
         ns = client.namespace(f"{test_prefix}compression-disabled-{i}")
 
         try:
             ns.delete_all()
-        except turbopuffer.NotFoundError:
+        except NotFoundError:
             pass
 
         ns.write(
@@ -77,7 +78,7 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
 
     try:
         await ns.delete_all()
-    except turbopuffer.NotFoundError:
+    except NotFoundError:
         pass
 
     await ns.write(
@@ -112,7 +113,7 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
 
         try:
             await ns2.delete_all()
-        except turbopuffer.NotFoundError:
+        except NotFoundError:
             pass
 
         await ns2.write(
