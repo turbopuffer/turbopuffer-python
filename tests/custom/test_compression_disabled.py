@@ -3,7 +3,7 @@ from typing import Any, Dict
 
 import pytest
 
-from turbopuffer import Turbopuffer, AsyncTurbopuffer, NotFoundError
+from turbopuffer import Turbopuffer, NotFoundError, AsyncTurbopuffer
 from tests.custom import test_prefix
 from tests.custom.conftest import region
 
