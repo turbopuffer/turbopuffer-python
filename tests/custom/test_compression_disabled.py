@@ -12,7 +12,7 @@ def test_compression_disabled(tpuf: Turbopuffer):
         tpuf.with_options(compression=False),  # via with_options()
         Turbopuffer(region=region, compression=False),  # via constructor
     ]
-    
+
     for i, client in enumerate(clients):
         ns = client.namespace(f"{test_prefix}compression-disabled-{i}")
 
@@ -47,13 +47,9 @@ def test_compression_disabled(tpuf: Turbopuffer):
         assert perf.client_deserialize_ms > 0
 
 
-def test_compression_disabled_constructor():
+def test_compression_disabled_constructor(tpuf: Turbopuffer):
     # Test that compression can be disabled via constructor
-    client = Turbopuffer(
-        api_key="test",
-        region="aws-us-east-2", 
-        compression=False
-    )
+    client = Turbopuffer(api_key=tpuf.api_key, base_url=tpuf.original_base_url, region=tpuf.region, compression=False)
     assert client.compression is False
 
 
@@ -127,11 +123,9 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
 
 
 @pytest.mark.asyncio
-async def test_async_compression_disabled_constructor():
+async def test_async_compression_disabled_constructor(async_tpuf: AsyncTurbopuffer):
     # Test that compression can be disabled via constructor
     client = AsyncTurbopuffer(
-        api_key="test",
-        region="aws-us-east-2",
-        compression=False
+        api_key=async_tpuf.api_key, base_url=async_tpuf.original_base_url, region=async_tpuf.region, compression=False
     )
     assert client.compression is False
