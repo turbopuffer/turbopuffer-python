@@ -1,16 +1,30 @@
+import os
 import pytest
+from typing import Dict, Any
 
 import turbopuffer
 from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from tests.custom import test_prefix
 from tests.custom.conftest import region
 
+# Helper to get client kwargs that work in both local and production environments
+def get_test_client_kwargs() -> Dict[str, Any]:
+    # If there's an explicit base URL set that doesn't use {region}, use it directly
+    base_url = os.environ.get("TURBOPUFFER_BASE_URL")
+    if base_url and "{region}" not in base_url:
+        return {"base_url": base_url}
+    else:
+        # Use region-based approach for production URLs
+        return {"region": region}
+
 
 def test_compression_disabled(tpuf: Turbopuffer):
     # Test both ways of disabling compression
+    kwargs = get_test_client_kwargs()
+    kwargs["compression"] = False
     clients = [
         tpuf.with_options(compression=False),  # via with_options()
-        Turbopuffer(region=region, compression=False),  # via constructor
+        Turbopuffer(**kwargs),  # via constructor
     ]
     
     for i, client in enumerate(clients):
@@ -49,11 +63,9 @@ def test_compression_disabled(tpuf: Turbopuffer):
 
 def test_compression_disabled_constructor():
     # Test that compression can be disabled via constructor
-    client = Turbopuffer(
-        api_key="test",
-        region="aws-us-east-2", 
-        compression=False
-    )
+    kwargs = get_test_client_kwargs()
+    kwargs["compression"] = False
+    client = Turbopuffer(**kwargs)
     assert client.compression is False
 
 
@@ -93,7 +105,9 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
     assert perf.client_deserialize_ms > 0
 
     # Test via constructor (with proper async context manager)
-    async with AsyncTurbopuffer(region=region, compression=False) as constructor_client:
+    kwargs = get_test_client_kwargs()
+    kwargs["compression"] = False
+    async with AsyncTurbopuffer(**kwargs) as constructor_client:
         ns2 = constructor_client.namespace(f"{test_prefix}async-compression-disabled-constructor")
 
         try:
@@ -129,9 +143,7 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
 @pytest.mark.asyncio
 async def test_async_compression_disabled_constructor():
     # Test that compression can be disabled via constructor
-    client = AsyncTurbopuffer(
-        api_key="test",
-        region="aws-us-east-2",
-        compression=False
-    )
+    kwargs = get_test_client_kwargs()
+    kwargs["compression"] = False
+    client = AsyncTurbopuffer(**kwargs)
     assert client.compression is False
