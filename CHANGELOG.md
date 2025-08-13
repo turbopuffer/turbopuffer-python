@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.4 (2025-08-13)
+
+Full Changelog: [v0.6.3...v0.6.4](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.3...v0.6.4)
+
 ## 0.6.3 (2025-08-12)
 
 Full Changelog: [v0.6.2...v0.6.3](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.2...v0.6.3)
