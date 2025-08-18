@@ -113,6 +113,7 @@ class NamespacesResource(SyncAPIResource):
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
+        group_by: List[str] | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: object | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -140,6 +141,9 @@ class NamespacesResource(SyncAPIResource):
 
           filters: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
+
+          group_by: Groups documents by the specified attributes (the "group key") before computing
+              aggregates. Aggregates are computed separately for each group.
 
           include_attributes: Whether to include attributes in the response.
 
@@ -170,6 +174,7 @@ class NamespacesResource(SyncAPIResource):
                     "distance_metric": distance_metric,
                     "exclude_attributes": exclude_attributes,
                     "filters": filters,
+                    "group_by": group_by,
                     "include_attributes": include_attributes,
                     "rank_by": rank_by,
                     "top_k": top_k,
@@ -312,6 +317,7 @@ class NamespacesResource(SyncAPIResource):
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
+        group_by: List[str] | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: object | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -339,6 +345,9 @@ class NamespacesResource(SyncAPIResource):
 
           filters: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
+
+          group_by: Groups documents by the specified attributes (the "group key") before computing
+              aggregates. Aggregates are computed separately for each group.
 
           include_attributes: Whether to include attributes in the response.
 
@@ -369,6 +378,7 @@ class NamespacesResource(SyncAPIResource):
                     "distance_metric": distance_metric,
                     "exclude_attributes": exclude_attributes,
                     "filters": filters,
+                    "group_by": group_by,
                     "include_attributes": include_attributes,
                     "rank_by": rank_by,
                     "top_k": top_k,
@@ -670,6 +680,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
+        group_by: List[str] | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: object | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -697,6 +708,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           filters: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
+
+          group_by: Groups documents by the specified attributes (the "group key") before computing
+              aggregates. Aggregates are computed separately for each group.
 
           include_attributes: Whether to include attributes in the response.
 
@@ -727,6 +741,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "distance_metric": distance_metric,
                     "exclude_attributes": exclude_attributes,
                     "filters": filters,
+                    "group_by": group_by,
                     "include_attributes": include_attributes,
                     "rank_by": rank_by,
                     "top_k": top_k,
@@ -869,6 +884,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
         filters: object | NotGiven = NOT_GIVEN,
+        group_by: List[str] | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: object | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -896,6 +912,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           filters: Exact filters for attributes to refine search results for. Think of it as a SQL
               WHERE clause.
+
+          group_by: Groups documents by the specified attributes (the "group key") before computing
+              aggregates. Aggregates are computed separately for each group.
 
           include_attributes: Whether to include attributes in the response.
 
@@ -926,6 +945,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "distance_metric": distance_metric,
                     "exclude_attributes": exclude_attributes,
                     "filters": filters,
+                    "group_by": group_by,
                     "include_attributes": include_attributes,
                     "rank_by": rank_by,
                     "top_k": top_k,

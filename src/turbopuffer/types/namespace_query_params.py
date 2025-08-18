@@ -39,6 +39,12 @@ class NamespaceQueryParams(TypedDict, total=False):
     Think of it as a SQL WHERE clause.
     """
 
+    group_by: List[str]
+    """
+    Groups documents by the specified attributes (the "group key") before computing
+    aggregates. Aggregates are computed separately for each group.
+    """
+
     include_attributes: IncludeAttributesParam
     """Whether to include attributes in the response."""
 
