@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.5 (2025-08-18)
+
+Full Changelog: [v0.6.4...v0.6.5](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.4...v0.6.5)
+
+### Bug Fixes
+
+* **api:** add support for `group_by` query parameter ([c809351](https://github.com/turbopuffer/turbopuffer-python/commit/c8093514e1bd5ce169ab594f4e532b7e4deae7b6))
+
 ## 0.6.4 (2025-08-13)
 
 Full Changelog: [v0.6.3...v0.6.4](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.3...v0.6.4)
