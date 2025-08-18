@@ -11,6 +11,8 @@ __all__ = ["NamespaceMultiQueryResponse", "Result"]
 
 
 class Result(BaseModel):
+    aggregation_groups: Optional[List[Row]] = None
+
     aggregations: Optional[Dict[str, object]] = None
 
     rows: Optional[List[Row]] = None

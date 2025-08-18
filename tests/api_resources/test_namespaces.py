@@ -75,6 +75,7 @@ class TestNamespaces:
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
+
             include_attributes=True,
             top_k=0,
             vector_encoding="float",
@@ -195,6 +196,7 @@ class TestNamespaces:
                 {
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
+
                     "include_attributes": True,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
@@ -255,6 +257,7 @@ class TestNamespaces:
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
+
             include_attributes=True,
             rank_by=("id", "asc"),
             top_k=0,
@@ -529,6 +532,7 @@ class TestAsyncNamespaces:
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
+
             include_attributes=True,
             top_k=0,
             vector_encoding="float",
@@ -652,6 +656,7 @@ class TestAsyncNamespaces:
                 {
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
+
                     "include_attributes": True,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
@@ -712,6 +717,7 @@ class TestAsyncNamespaces:
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
+
             include_attributes=True,
             rank_by=("id", "asc"),
             top_k=0,

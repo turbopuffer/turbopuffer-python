@@ -17,6 +17,8 @@ class NamespaceQueryResponse(BaseModel):
     performance: QueryPerformance
     """The performance information for a query."""
 
+    aggregation_groups: Optional[List[Row]] = None
+
     aggregations: Optional[Dict[str, object]] = None
 
     rows: Optional[List[Row]] = None
