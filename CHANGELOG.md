@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.6 (2025-08-22)
+
+Full Changelog: [v0.6.5...v0.6.6](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.5...v0.6.6)
+
+### Chores
+
+* update github action ([9fe3df7](https://github.com/turbopuffer/turbopuffer-python/commit/9fe3df78346c03091da5c793980f40a68c9e8c8c))
+
 ## 0.6.5 (2025-08-18)
 
 Full Changelog: [v0.6.4...v0.6.5](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.4...v0.6.5)
