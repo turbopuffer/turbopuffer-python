@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.0.0 (2025-08-28)
+
+Full Changelog: [v0.6.5...v1.0.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.5...v1.0.0)
+
+### Features
+
+* Make word_v2 the default FTS tokenizer ([4b566d7](https://github.com/turbopuffer/turbopuffer-python/commit/4b566d752773bd7216dd5183fda8f4284be9e36e))
+
+
+### Bug Fixes
+
+* avoid newer type syntax ([a5fb4a6](https://github.com/turbopuffer/turbopuffer-python/commit/a5fb4a6c546d712aafe395ff281c67d5f9a2591c))
+
+
+### Chores
+
+* **internal:** change ci workflow machines ([eaed93c](https://github.com/turbopuffer/turbopuffer-python/commit/eaed93c8b03d03ace9c417551141ddc6ef45bca7))
+* **internal:** update pyright exclude list ([b7ad4ef](https://github.com/turbopuffer/turbopuffer-python/commit/b7ad4ef6b40eab65f7a66fb6bee8f9e935808369))
+* update github action ([9fe3df7](https://github.com/turbopuffer/turbopuffer-python/commit/9fe3df78346c03091da5c793980f40a68c9e8c8c))
+
 ## 0.6.5 (2025-08-18)
 
 Full Changelog: [v0.6.4...v0.6.5](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.4...v0.6.5)
