@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.0 (2025-09-02)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.0.0...v1.1.0)
+
+### Features
+
+* **types:** replace List[str] with SequenceNotStr in params ([212f234](https://github.com/turbopuffer/turbopuffer-python/commit/212f234b09822f7fd315cff43c6f7676ab2202c0))
+
+
+### Chores
+
+* **internal:** add Sequence related utils ([f5b1d00](https://github.com/turbopuffer/turbopuffer-python/commit/f5b1d001ed91192de5082feb7058d2150e73a1d8))
+
 ## 1.0.0 (2025-08-28)
 
 Full Changelog: [v0.6.5...v1.0.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.5...v1.0.0)
