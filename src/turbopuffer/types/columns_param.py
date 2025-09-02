@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Union, Iterable
+from typing import Dict, Union, Iterable
 from typing_extensions import Required, TypeAlias, TypedDict
 
+from .._types import SequenceNotStr
 from .id_param import IDParam
 from .vector_param import VectorParam
 
@@ -12,10 +13,10 @@ __all__ = ["ColumnsParam"]
 
 
 class ColumnsParamTyped(TypedDict, total=False):
-    id: Required[List[IDParam]]
+    id: Required[SequenceNotStr[IDParam]]
     """The IDs of the documents."""
 
-    vector: Union[List[VectorParam], Iterable[float], str]
+    vector: Union[SequenceNotStr[VectorParam], Iterable[float], str]
     """The vector embeddings of the documents."""
 
 

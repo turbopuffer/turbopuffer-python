@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Dict
 from typing_extensions import TypedDict
 
 # Without this seemingly unnecessary import of `RankByText`, calling
@@ -10,6 +10,7 @@ from typing_extensions import TypedDict
 # be some sort of bug with scoping and recursive types (`RankByText` is
 # recursive).
 from .custom import Filter, RankBy, RankByText as RankByText, AggregateBy
+from .._types import SequenceNotStr
 from .distance_metric import DistanceMetric
 from .include_attributes_param import IncludeAttributesParam
 
@@ -26,7 +27,7 @@ class QueryParam(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    exclude_attributes: List[str]
+    exclude_attributes: SequenceNotStr[str]
     """List of attribute names to exclude from the response.
 
     All other attributes will be included in the response.
@@ -38,7 +39,7 @@ class QueryParam(TypedDict, total=False):
     Think of it as a SQL WHERE clause.
     """
 
-    group_by: List[str]
+    group_by: SequenceNotStr[str]
     """
     Groups documents by the specified attributes (the "group key") before computing
     aggregates. Aggregates are computed separately for each group.

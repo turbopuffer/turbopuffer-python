@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Dict
 from typing_extensions import Literal, TypedDict
 
 from .custom import Filter, AggregateBy
+from .._types import SequenceNotStr
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
 from .include_attributes_param import IncludeAttributesParam
@@ -28,7 +29,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    exclude_attributes: List[str]
+    exclude_attributes: SequenceNotStr[str]
     """List of attribute names to exclude from the response.
 
     All other attributes will be included in the response.
@@ -40,7 +41,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     Think of it as a SQL WHERE clause.
     """
 
-    group_by: List[str]
+    group_by: SequenceNotStr[str]
     """
     Groups documents by the specified attributes (the "group key") before computing
     aggregates. Aggregates are computed separately for each group.

@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Iterable
+from typing import Dict, Iterable
 from typing_extensions import Required, TypedDict
 
+from .._types import SequenceNotStr
 from .id_param import IDParam
 from .row_param import RowParam
 from .columns_param import ColumnsParam
@@ -29,7 +30,7 @@ class NamespaceWriteParams(TypedDict, total=False):
     delete write. Only documents that pass the condition are deleted.
     """
 
-    deletes: List[IDParam]
+    deletes: SequenceNotStr[IDParam]
 
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""

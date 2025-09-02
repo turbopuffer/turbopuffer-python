@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Iterable
+from typing import Dict, Iterable
 
 import httpx
 
@@ -16,7 +16,7 @@ from ..types import (
     namespace_explain_query_params,
     namespace_update_schema_params,
 )
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven, SequenceNotStr
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -113,9 +113,9 @@ class NamespacesResource(SyncAPIResource):
         aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
         consistency: namespace_explain_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
+        exclude_attributes: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         filters: Filter | NotGiven = NOT_GIVEN,
-        group_by: List[str] | NotGiven = NOT_GIVEN,
+        group_by: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: RankBy | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -317,9 +317,9 @@ class NamespacesResource(SyncAPIResource):
         aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
+        exclude_attributes: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         filters: Filter | NotGiven = NOT_GIVEN,
-        group_by: List[str] | NotGiven = NOT_GIVEN,
+        group_by: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: RankBy | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -541,7 +541,7 @@ class NamespacesResource(SyncAPIResource):
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
         delete_by_filter: Filter | NotGiven = NOT_GIVEN,
         delete_condition: Filter | NotGiven = NOT_GIVEN,
-        deletes: List[IDParam] | NotGiven = NOT_GIVEN,
+        deletes: SequenceNotStr[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
         patch_columns: ColumnsParam | NotGiven = NOT_GIVEN,
@@ -688,9 +688,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
         aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
         consistency: namespace_explain_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
+        exclude_attributes: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         filters: Filter | NotGiven = NOT_GIVEN,
-        group_by: List[str] | NotGiven = NOT_GIVEN,
+        group_by: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: RankBy | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -892,9 +892,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
         aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
         consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        exclude_attributes: List[str] | NotGiven = NOT_GIVEN,
+        exclude_attributes: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         filters: Filter | NotGiven = NOT_GIVEN,
-        group_by: List[str] | NotGiven = NOT_GIVEN,
+        group_by: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
         include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
         rank_by: RankBy | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -1116,7 +1116,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         copy_from_namespace: str | NotGiven = NOT_GIVEN,
         delete_by_filter: object | NotGiven = NOT_GIVEN,
         delete_condition: object | NotGiven = NOT_GIVEN,
-        deletes: List[IDParam] | NotGiven = NOT_GIVEN,
+        deletes: SequenceNotStr[IDParam] | NotGiven = NOT_GIVEN,
         distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
         encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
         patch_columns: ColumnsParam | NotGiven = NOT_GIVEN,
