@@ -19,6 +19,7 @@ from ._utils import (
     is_sequence,
 )
 from .._files import is_base64_file_input
+from .._types import SequenceNotStr
 from ._typing import (
     is_list_type,
     is_union_type,
@@ -41,7 +42,7 @@ _T = TypeVar("_T")
 # HACK: annotations to sniff out that indicate data is of a vector type.
 # Unfortunately we don't get nice types like `Vector` directly.
 VectorRowAnnotation = Union[Iterable[float], str]
-VectorColumnAnnotation = Union[List[VectorRowAnnotation], Iterable[float], str]
+VectorColumnAnnotation = Union[SequenceNotStr[VectorRowAnnotation], Iterable[float], str]
 VectorAnnotations = cast(List[type], [VectorRowAnnotation, VectorColumnAnnotation])
 
 PropertyFormat = Literal["iso8601", "base64", "custom"]
