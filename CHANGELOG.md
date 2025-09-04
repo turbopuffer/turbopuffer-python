@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.2.0 (2025-09-04)
+
+Full Changelog: [v1.1.0...v1.2.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.1.0...v1.2.0)
+
+### Features
+
+* improve future compat with pydantic v3 ([819a5d1](https://github.com/turbopuffer/turbopuffer-python/commit/819a5d154c7352ea4e85b99775529d074aad73f7))
+
+
+### Chores
+
+* **internal:** move mypy configurations to `pyproject.toml` file ([f72115d](https://github.com/turbopuffer/turbopuffer-python/commit/f72115da5c839670e24798693998afef60f3a038))
+
 ## 1.1.0 (2025-09-02)
 
 Full Changelog: [v1.0.0...v1.1.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.0.0...v1.1.0)
