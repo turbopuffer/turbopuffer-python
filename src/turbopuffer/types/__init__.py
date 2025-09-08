@@ -18,6 +18,7 @@ from .attribute_type import AttributeType as AttributeType
 from .distance_metric import DistanceMetric as DistanceMetric
 from .vector_encoding import VectorEncoding as VectorEncoding
 from .full_text_search import FullTextSearch as FullTextSearch
+from .aggregation_group import AggregationGroup as AggregationGroup
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .query_performance import QueryPerformance as QueryPerformance
 from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
