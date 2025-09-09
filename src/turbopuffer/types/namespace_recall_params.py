@@ -14,6 +14,12 @@ class NamespaceRecallParams(TypedDict, total=False):
     filters: object
     """Filter by attributes. Same syntax as the query endpoint."""
 
+    include_ground_truth: bool
+    """
+    Include ground truth data (query vectors and true nearest neighbors) in the
+    response.
+    """
+
     num: int
     """The number of searches to run."""
 

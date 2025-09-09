@@ -303,6 +303,7 @@ class TestNamespaces:
     @parametrize
     def test_method_recall_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").recall(
+            include_ground_truth=True,
             num=0,
             queries=[0],
             top_k=0,
@@ -764,6 +765,7 @@ class TestAsyncNamespaces:
     async def test_method_recall_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").recall(
             filters={},
+            include_ground_truth=True,
             num=0,
             queries=[0],
             top_k=0,
