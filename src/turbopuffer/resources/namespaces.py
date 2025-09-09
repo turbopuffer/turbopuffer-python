@@ -399,6 +399,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         namespace: str | None = None,
         filters: object | NotGiven = NOT_GIVEN,
+        include_ground_truth: bool | NotGiven = NOT_GIVEN,
         num: int | NotGiven = NOT_GIVEN,
         queries: Iterable[float] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -415,6 +416,9 @@ class NamespacesResource(SyncAPIResource):
           filters: Filter by attributes.
 
         Same syntax as the query endpoint.
+
+          include_ground_truth: Include ground truth data (query vectors and true nearest neighbors) in the
+              response.
 
           num: The number of searches to run.
 
@@ -440,6 +444,7 @@ class NamespacesResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "filters": filters,
+                    "include_ground_truth": include_ground_truth,
                     "num": num,
                     "queries": queries,
                     "top_k": top_k,
@@ -974,6 +979,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         namespace: str | None = None,
         filters: object | NotGiven = NOT_GIVEN,
+        include_ground_truth: bool | NotGiven = NOT_GIVEN,
         num: int | NotGiven = NOT_GIVEN,
         queries: Iterable[float] | NotGiven = NOT_GIVEN,
         top_k: int | NotGiven = NOT_GIVEN,
@@ -990,6 +996,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
           filters: Filter by attributes.
 
         Same syntax as the query endpoint.
+
+          include_ground_truth: Include ground truth data (query vectors and true nearest neighbors) in the
+              response.
 
           num: The number of searches to run.
 
@@ -1015,6 +1024,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "filters": filters,
+                    "include_ground_truth": include_ground_truth,
                     "num": num,
                     "queries": queries,
                     "top_k": top_k,
