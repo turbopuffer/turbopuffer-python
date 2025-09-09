@@ -356,6 +356,7 @@ class TestNamespaces:
         namespace = client.namespaces.recall(
             namespace="namespace",
             filters={},
+            include_ground_truth=True,
             num=0,
             queries=[0],
             top_k=0,
@@ -902,6 +903,7 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespaces.recall(
             namespace="namespace",
             filters={},
+            include_ground_truth=True,
             num=0,
             queries=[0],
             top_k=0,
