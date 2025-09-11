@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.0 (2025-09-11)
+
+Full Changelog: [v1.1.0...v1.2.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.1.0...v1.2.0)
+
+### Features
+
+* improve future compat with pydantic v3 ([819a5d1](https://github.com/turbopuffer/turbopuffer-python/commit/819a5d154c7352ea4e85b99775529d074aad73f7))
+* spec: add dedicated type for AggregationGroup response ([c8bc23f](https://github.com/turbopuffer/turbopuffer-python/commit/c8bc23f80212ce8d4923af09160c542d5e0b609d))
+* tpuf: add include_ground_truth option to recall endpoint ([2128270](https://github.com/turbopuffer/turbopuffer-python/commit/21282704752e68f67fa784d8c89edc0a4e8b6056))
+
+
+### Chores
+
+* **internal:** codegen related update ([5c8f96b](https://github.com/turbopuffer/turbopuffer-python/commit/5c8f96bcab380f3cc6c10b6faced0b30bcf3fdd1))
+* **internal:** move mypy configurations to `pyproject.toml` file ([f72115d](https://github.com/turbopuffer/turbopuffer-python/commit/f72115da5c839670e24798693998afef60f3a038))
+
 ## 1.1.0 (2025-09-02)
 
 Full Changelog: [v1.0.0...v1.1.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.0.0...v1.1.0)
