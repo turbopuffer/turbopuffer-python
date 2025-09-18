@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Union, Mapping
+from typing import Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -12,7 +12,6 @@ from . import _exceptions
 from ._qs import Querystring
 from .types import client_namespaces_params
 from ._types import (
-    NOT_GIVEN,
     Body,
     Omit,
     Query,
@@ -22,6 +21,8 @@ from ._types import (
     Transport,
     ProxiesTypes,
     RequestOptions,
+    omit,
+    not_given,
 )
 from ._utils import (
     is_given,
@@ -77,7 +78,7 @@ class Turbopuffer(SyncAPIClient):
         region: str | None = None,
         default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -162,9 +163,9 @@ class Turbopuffer(SyncAPIClient):
         region: str | None = None,
         default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.Client | None = None,
-        max_retries: int | NotGiven = NOT_GIVEN,
+        max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -213,15 +214,15 @@ class Turbopuffer(SyncAPIClient):
     def namespaces(
         self,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        page_size: int | NotGiven = NOT_GIVEN,
-        prefix: str | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        page_size: int | Omit = omit,
+        prefix: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncNamespacePage[NamespaceSummary]:
         """
         List namespaces.
@@ -321,7 +322,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         region: str | None = None,
         default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -406,9 +407,9 @@ class AsyncTurbopuffer(AsyncAPIClient):
         region: str | None = None,
         default_namespace: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.AsyncClient | None = None,
-        max_retries: int | NotGiven = NOT_GIVEN,
+        max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -457,15 +458,15 @@ class AsyncTurbopuffer(AsyncAPIClient):
     def namespaces(
         self,
         *,
-        cursor: str | NotGiven = NOT_GIVEN,
-        page_size: int | NotGiven = NOT_GIVEN,
-        prefix: str | NotGiven = NOT_GIVEN,
+        cursor: str | Omit = omit,
+        page_size: int | Omit = omit,
+        prefix: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[NamespaceSummary, AsyncNamespacePage[NamespaceSummary]]:
         """
         List namespaces.
