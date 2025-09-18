@@ -93,9 +93,9 @@ propcache==0.3.1
     # via yarl
 pybase64==1.4.1
     # via turbopuffer
-pydantic==2.10.3
+pydantic==2.11.9
     # via turbopuffer
-pydantic-core==2.27.1
+pydantic-core==2.33.2
     # via pydantic
 pygments==2.18.0
     # via rich
@@ -131,6 +131,9 @@ typing-extensions==4.13.2
     # via pydantic-core
     # via pyright
     # via turbopuffer
+    # via typing-inspection
+typing-inspection==0.4.1
+    # via pydantic
 urllib3==2.4.0
     # via turbopuffer
 virtualenv==20.24.5
