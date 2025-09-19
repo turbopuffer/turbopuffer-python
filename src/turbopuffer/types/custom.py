@@ -2,6 +2,9 @@
 
 from typing import Any, Tuple, Union, Literal, Sequence, TypedDict
 
+from .bm25_clause_params import Bm25ClauseParams
+from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams
+
 AggregateBy = Union[Tuple[Literal["Count"]], Tuple[Literal["Count"], str]]
 ExprRefNew = TypedDict("ExprRefNew", {"$ref_new": str})
 Expr = ExprRefNew
@@ -29,6 +32,8 @@ Filter = Union[
     Tuple[str, Literal["Regex"], str],
     Tuple[str, Literal["ContainsAllTokens"], str],
     Tuple[str, Literal["ContainsAllTokens"], Sequence[str]],
+    Tuple[str, Literal["ContainsAllTokens"], str, ContainsAllTokensFilterParams],
+    Tuple[str, Literal["ContainsAllTokens"], Sequence[str], ContainsAllTokensFilterParams],
     Tuple[Literal["Not"], "Filter"],
     Tuple[Literal["And"], Sequence["Filter"]],
     Tuple[Literal["Or"], Sequence["Filter"]],
@@ -37,6 +42,8 @@ RankByVector = Tuple[str, Literal["ANN"], Sequence[float]]
 RankByText = Union[
     Tuple[str, Literal["BM25"], str],
     Tuple[str, Literal["BM25"], Sequence[str]],
+    Tuple[str, Literal["BM25"], str, Bm25ClauseParams],
+    Tuple[str, Literal["BM25"], Sequence[str], Bm25ClauseParams],
     Tuple[Literal["Sum"], Sequence["RankByText"]],
     Tuple[Literal["Max"], Sequence["RankByText"]],
     Tuple[Literal["Product"], Tuple[float, "RankByText"]],
