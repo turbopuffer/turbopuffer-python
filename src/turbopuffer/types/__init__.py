@@ -22,6 +22,7 @@ from .full_text_search import FullTextSearch as FullTextSearch
 from .aggregation_group import AggregationGroup as AggregationGroup
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .query_performance import QueryPerformance as QueryPerformance
+from .bm25_clause_params import Bm25ClauseParams as Bm25ClauseParams
 from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
@@ -45,4 +46,5 @@ from .namespace_multi_query_response import NamespaceMultiQueryResponse as Names
 from .namespace_update_schema_params import NamespaceUpdateSchemaParams as NamespaceUpdateSchemaParams
 from .namespace_explain_query_response import NamespaceExplainQueryResponse as NamespaceExplainQueryResponse
 from .namespace_update_schema_response import NamespaceUpdateSchemaResponse as NamespaceUpdateSchemaResponse
+from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams as ContainsAllTokensFilterParams
 from .namespace_hint_cache_warm_response import NamespaceHintCacheWarmResponse as NamespaceHintCacheWarmResponse
