@@ -16,7 +16,7 @@ from ..types import (
     namespace_explain_query_params,
     namespace_update_schema_params,
 )
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven, SequenceNotStr
+from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -80,7 +80,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceDeleteAllResponse:
         """
         Delete namespace.
@@ -110,22 +110,22 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
-        consistency: namespace_explain_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        exclude_attributes: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        filters: Filter | NotGiven = NOT_GIVEN,
-        group_by: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
-        rank_by: RankBy | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
-        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
+        aggregate_by: Dict[str, AggregateBy] | Omit = omit,
+        consistency: namespace_explain_query_params.Consistency | Omit = omit,
+        distance_metric: DistanceMetric | Omit = omit,
+        exclude_attributes: SequenceNotStr[str] | Omit = omit,
+        filters: Filter | Omit = omit,
+        group_by: SequenceNotStr[str] | Omit = omit,
+        include_attributes: IncludeAttributesParam | Omit = omit,
+        rank_by: RankBy | Omit = omit,
+        top_k: int | Omit = omit,
+        vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceExplainQueryResponse:
         """
         Explain a query plan.
@@ -199,7 +199,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceHintCacheWarmResponse:
         """
         Warm the cache for a namespace.
@@ -234,7 +234,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMetadata:
         """
         Get metadata about a namespace.
@@ -265,14 +265,14 @@ class NamespacesResource(SyncAPIResource):
         *,
         namespace: str | None = None,
         queries: Iterable[QueryParam],
-        consistency: namespace_multi_query_params.Consistency | NotGiven = NOT_GIVEN,
-        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
+        consistency: namespace_multi_query_params.Consistency | Omit = omit,
+        vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMultiQueryResponse:
         """
         Issue multiple concurrent queries filter or search documents.
@@ -314,22 +314,22 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
-        consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        exclude_attributes: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        filters: Filter | NotGiven = NOT_GIVEN,
-        group_by: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
-        rank_by: RankBy | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
-        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
+        aggregate_by: Dict[str, AggregateBy] | Omit = omit,
+        consistency: namespace_query_params.Consistency | Omit = omit,
+        distance_metric: DistanceMetric | Omit = omit,
+        exclude_attributes: SequenceNotStr[str] | Omit = omit,
+        filters: Filter | Omit = omit,
+        group_by: SequenceNotStr[str] | Omit = omit,
+        include_attributes: IncludeAttributesParam | Omit = omit,
+        rank_by: RankBy | Omit = omit,
+        top_k: int | Omit = omit,
+        vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceQueryResponse:
         """
         Query, filter, full-text search and vector search documents.
@@ -398,17 +398,17 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        filters: object | NotGiven = NOT_GIVEN,
-        include_ground_truth: bool | NotGiven = NOT_GIVEN,
-        num: int | NotGiven = NOT_GIVEN,
-        queries: Iterable[float] | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
+        filters: object | Omit = omit,
+        include_ground_truth: bool | Omit = omit,
+        num: int | Omit = omit,
+        queries: Iterable[float] | Omit = omit,
+        top_k: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceRecallResponse:
         """Evaluate recall.
 
@@ -466,7 +466,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceSchemaResponse:
         """
         Get namespace schema.
@@ -504,13 +504,13 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, AttributeSchemaParam] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceUpdateSchemaResponse:
         """
         Update namespace schema.
@@ -543,25 +543,25 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        copy_from_namespace: str | NotGiven = NOT_GIVEN,
-        delete_by_filter: Filter | NotGiven = NOT_GIVEN,
-        delete_condition: Filter | NotGiven = NOT_GIVEN,
-        deletes: SequenceNotStr[IDParam] | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
-        patch_columns: ColumnsParam | NotGiven = NOT_GIVEN,
-        patch_condition: Filter | NotGiven = NOT_GIVEN,
-        patch_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
-        upsert_columns: ColumnsParam | NotGiven = NOT_GIVEN,
-        upsert_condition: Filter | NotGiven = NOT_GIVEN,
-        upsert_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
+        copy_from_namespace: str | Omit = omit,
+        delete_by_filter: Filter | Omit = omit,
+        delete_condition: Filter | Omit = omit,
+        deletes: SequenceNotStr[IDParam] | Omit = omit,
+        distance_metric: DistanceMetric | Omit = omit,
+        encryption: namespace_write_params.Encryption | Omit = omit,
+        patch_columns: ColumnsParam | Omit = omit,
+        patch_condition: Filter | Omit = omit,
+        patch_rows: Iterable[RowParam] | Omit = omit,
+        schema: Dict[str, AttributeSchemaParam] | Omit = omit,
+        upsert_columns: ColumnsParam | Omit = omit,
+        upsert_condition: Filter | Omit = omit,
+        upsert_rows: Iterable[RowParam] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceWriteResponse:
         """
         Create, update, or delete documents.
@@ -660,7 +660,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceDeleteAllResponse:
         """
         Delete namespace.
@@ -690,22 +690,22 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
-        consistency: namespace_explain_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        exclude_attributes: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        filters: Filter | NotGiven = NOT_GIVEN,
-        group_by: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
-        rank_by: RankBy | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
-        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
+        aggregate_by: Dict[str, AggregateBy] | Omit = omit,
+        consistency: namespace_explain_query_params.Consistency | Omit = omit,
+        distance_metric: DistanceMetric | Omit = omit,
+        exclude_attributes: SequenceNotStr[str] | Omit = omit,
+        filters: Filter | Omit = omit,
+        group_by: SequenceNotStr[str] | Omit = omit,
+        include_attributes: IncludeAttributesParam | Omit = omit,
+        rank_by: RankBy | Omit = omit,
+        top_k: int | Omit = omit,
+        vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceExplainQueryResponse:
         """
         Explain a query plan.
@@ -779,7 +779,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceHintCacheWarmResponse:
         """
         Warm the cache for a namespace.
@@ -814,7 +814,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMetadata:
         """
         Get metadata about a namespace.
@@ -845,14 +845,14 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         namespace: str | None = None,
         queries: Iterable[QueryParam],
-        consistency: namespace_multi_query_params.Consistency | NotGiven = NOT_GIVEN,
-        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
+        consistency: namespace_multi_query_params.Consistency | Omit = omit,
+        vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMultiQueryResponse:
         """
         Issue multiple concurrent queries filter or search documents.
@@ -894,22 +894,22 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        aggregate_by: Dict[str, AggregateBy] | NotGiven = NOT_GIVEN,
-        consistency: namespace_query_params.Consistency | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        exclude_attributes: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        filters: Filter | NotGiven = NOT_GIVEN,
-        group_by: SequenceNotStr[str] | NotGiven = NOT_GIVEN,
-        include_attributes: IncludeAttributesParam | NotGiven = NOT_GIVEN,
-        rank_by: RankBy | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
-        vector_encoding: VectorEncoding | NotGiven = NOT_GIVEN,
+        aggregate_by: Dict[str, AggregateBy] | Omit = omit,
+        consistency: namespace_query_params.Consistency | Omit = omit,
+        distance_metric: DistanceMetric | Omit = omit,
+        exclude_attributes: SequenceNotStr[str] | Omit = omit,
+        filters: Filter | Omit = omit,
+        group_by: SequenceNotStr[str] | Omit = omit,
+        include_attributes: IncludeAttributesParam | Omit = omit,
+        rank_by: RankBy | Omit = omit,
+        top_k: int | Omit = omit,
+        vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceQueryResponse:
         """
         Query, filter, full-text search and vector search documents.
@@ -978,17 +978,17 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        filters: object | NotGiven = NOT_GIVEN,
-        include_ground_truth: bool | NotGiven = NOT_GIVEN,
-        num: int | NotGiven = NOT_GIVEN,
-        queries: Iterable[float] | NotGiven = NOT_GIVEN,
-        top_k: int | NotGiven = NOT_GIVEN,
+        filters: object | Omit = omit,
+        include_ground_truth: bool | Omit = omit,
+        num: int | Omit = omit,
+        queries: Iterable[float] | Omit = omit,
+        top_k: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceRecallResponse:
         """Evaluate recall.
 
@@ -1046,7 +1046,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceSchemaResponse:
         """
         Get namespace schema.
@@ -1084,13 +1084,13 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
+        schema: Dict[str, AttributeSchemaParam] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceUpdateSchemaResponse:
         """
         Update namespace schema.
@@ -1123,25 +1123,25 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        copy_from_namespace: str | NotGiven = NOT_GIVEN,
-        delete_by_filter: object | NotGiven = NOT_GIVEN,
-        delete_condition: object | NotGiven = NOT_GIVEN,
-        deletes: SequenceNotStr[IDParam] | NotGiven = NOT_GIVEN,
-        distance_metric: DistanceMetric | NotGiven = NOT_GIVEN,
-        encryption: namespace_write_params.Encryption | NotGiven = NOT_GIVEN,
-        patch_columns: ColumnsParam | NotGiven = NOT_GIVEN,
-        patch_condition: object | NotGiven = NOT_GIVEN,
-        patch_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
-        schema: Dict[str, AttributeSchemaParam] | NotGiven = NOT_GIVEN,
-        upsert_columns: ColumnsParam | NotGiven = NOT_GIVEN,
-        upsert_condition: object | NotGiven = NOT_GIVEN,
-        upsert_rows: Iterable[RowParam] | NotGiven = NOT_GIVEN,
+        copy_from_namespace: str | Omit = omit,
+        delete_by_filter: object | Omit = omit,
+        delete_condition: object | Omit = omit,
+        deletes: SequenceNotStr[IDParam] | Omit = omit,
+        distance_metric: DistanceMetric | Omit = omit,
+        encryption: namespace_write_params.Encryption | Omit = omit,
+        patch_columns: ColumnsParam | Omit = omit,
+        patch_condition: object | Omit = omit,
+        patch_rows: Iterable[RowParam] | Omit = omit,
+        schema: Dict[str, AttributeSchemaParam] | Omit = omit,
+        upsert_columns: ColumnsParam | Omit = omit,
+        upsert_condition: object | Omit = omit,
+        upsert_rows: Iterable[RowParam] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceWriteResponse:
         """
         Create, update, or delete documents.
