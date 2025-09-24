@@ -5,7 +5,7 @@ import numpy
 import pytest
 
 import turbopuffer
-from turbopuffer import NOT_GIVEN, NotGiven, Turbopuffer
+from turbopuffer import Omit, Turbopuffer, omit
 from tests.custom import test_prefix
 from turbopuffer.types import (
     Row,
@@ -661,7 +661,7 @@ def test_query_vectors_vector_encoding_format(tpuf: Turbopuffer):
         distance_metric="euclidean_squared",
     )
 
-    vector_encodings: List[Union[NotGiven, VectorEncoding]] = [NOT_GIVEN, "float", "base64"]
+    vector_encodings: List[Union[Omit, VectorEncoding]] = [omit, "float", "base64"]
     for vector_encoding in vector_encodings:
         vector_set = ns.query(
             top_k=1,
