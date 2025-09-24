@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.3.0 (2025-09-24)
+
+Full Changelog: [v1.2.0...v1.3.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.2.0...v1.3.0)
+
+### Features
+
+* add WithParams variant to BM25 and ContainsAllTokens ([cef6f72](https://github.com/turbopuffer/turbopuffer-python/commit/cef6f72c519212528135565fcea2ac1fe169c519))
+
+
+### Bug Fixes
+
+* **compat:** compat with `pydantic&lt;2.8.0` when using additional fields ([1268479](https://github.com/turbopuffer/turbopuffer-python/commit/126847904b5739e5c6ef4803846fd0e7567a485d))
+
+
+### Chores
+
+* do not install brew dependencies in ./scripts/bootstrap by default ([024c0a4](https://github.com/turbopuffer/turbopuffer-python/commit/024c0a4d72851696b058df1d5f76fb7798cf9288))
+* **internal:** update pydantic dependency ([067d75e](https://github.com/turbopuffer/turbopuffer-python/commit/067d75ec42a305be9f9d5b03424c0486825289b4))
+* **types:** change optional parameter type from NotGiven to Omit ([8d6c3cb](https://github.com/turbopuffer/turbopuffer-python/commit/8d6c3cb1ad8e34e3f01e93b31e569536ee8d49e6))
+
 ## 1.2.0 (2025-09-11)
 
 Full Changelog: [v1.1.0...v1.2.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.1.0...v1.2.0)
