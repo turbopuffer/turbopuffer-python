@@ -88,4 +88,4 @@ class Row(BaseModel):
         extra_len = 0
         if self.model_extra is not None:
             extra_len = len(self.model_extra)
-        return len(self.model_fields) + extra_len
+        return len(Row.model_fields) + extra_len
