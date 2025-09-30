@@ -202,7 +202,7 @@ class NamespacesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceHintCacheWarmResponse:
         """
-        Warm the cache for a namespace.
+        Signal turbopuffer to prepare for low-latency requests.
 
         Args:
           extra_headers: Send extra headers
@@ -782,7 +782,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> NamespaceHintCacheWarmResponse:
         """
-        Warm the cache for a namespace.
+        Signal turbopuffer to prepare for low-latency requests.
 
         Args:
           extra_headers: Send extra headers
