@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.1 (2025-10-06)
+
+Full Changelog: [v1.3.0...v1.3.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.3.0...v1.3.1)
+
+### Documentation
+
+* hint_cache_warm also update header and openapi ([2088d85](https://github.com/turbopuffer/turbopuffer-python/commit/2088d8564c13541a52887bb872194527dfc2eede))
+
 ## 1.3.0 (2025-09-24)
 
 Full Changelog: [v1.2.0...v1.3.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.2.0...v1.3.0)
