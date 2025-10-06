@@ -46,8 +46,8 @@ RankByText = Union[
     Tuple[str, Literal["BM25"], Sequence[str], Bm25ClauseParams],
     Tuple[Literal["Sum"], Sequence["RankByText"]],
     Tuple[Literal["Max"], Sequence["RankByText"]],
-    Tuple[Literal["Product"], Tuple[float, "RankByText"]],
-    Tuple[Literal["Product"], Tuple["RankByText", float]],
+    Tuple[Literal["Product"], float, "RankByText"],
+    Tuple[Literal["Product"], "RankByText", float],
 ]
 RankByAttributeOrder = Union[Literal["asc"], Literal["desc"]]
 RankByAttribute = Tuple[str, RankByAttributeOrder]

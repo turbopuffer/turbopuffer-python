@@ -135,26 +135,24 @@ def test_bm25_product_operator(tpuf: Turbopuffer):
 
     # Try out a bunch of query variations
     queries: list[RankBy] = [
-        ("Product", (0.5, ("title", "BM25", "quick brown"))),
-        ("Product", (("title", "BM25", "quick brown"), 0.5)),
+        ("Product", 0.5, ("title", "BM25", "quick brown")),
+        ("Product", ("title", "BM25", "quick brown"), 0.5),
         (
             "Sum",
             [
-                ("Product", (0.5, ("title", "BM25", "quick brown"))),
+                ("Product", 0.5, ("title", "BM25", "quick brown")),
                 ("content", "BM25", "brown"),
             ],
         ),
         (
             "Product",
+            0.5,
             (
-                0.5,
-                (
-                    "Sum",
-                    [
-                        ("Product", (0.5, ("title", "BM25", "quick brown"))),
-                        ("content", "BM25", "brown"),
-                    ],
-                ),
+                "Sum",
+                [
+                    ("Product", 0.5, ("title", "BM25", "quick brown")),
+                    ("content", "BM25", "brown"),
+                ],
             ),
         ),
     ]
