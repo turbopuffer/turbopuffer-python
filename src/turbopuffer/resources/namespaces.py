@@ -547,6 +547,7 @@ class NamespacesResource(SyncAPIResource):
         delete_by_filter: Filter | Omit = omit,
         delete_condition: Filter | Omit = omit,
         deletes: SequenceNotStr[IDParam] | Omit = omit,
+        disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: namespace_write_params.Encryption | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
@@ -573,6 +574,8 @@ class NamespacesResource(SyncAPIResource):
 
           delete_condition: A condition evaluated against the current value of each document targeted by a
               delete write. Only documents that pass the condition are deleted.
+
+          disable_backpressure: Disables write throttling (HTTP 429 responses) during high-volume ingestion.
 
           distance_metric: A function used to calculate vector similarity.
 
@@ -612,6 +615,7 @@ class NamespacesResource(SyncAPIResource):
                     "delete_by_filter": delete_by_filter,
                     "delete_condition": delete_condition,
                     "deletes": deletes,
+                    "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
                     "patch_columns": patch_columns,
@@ -1127,6 +1131,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         delete_by_filter: object | Omit = omit,
         delete_condition: object | Omit = omit,
         deletes: SequenceNotStr[IDParam] | Omit = omit,
+        disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: namespace_write_params.Encryption | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
@@ -1153,6 +1158,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           delete_condition: A condition evaluated against the current value of each document targeted by a
               delete write. Only documents that pass the condition are deleted.
+
+          disable_backpressure: Disables write throttling (HTTP 429 responses) during high-volume ingestion.
 
           distance_metric: A function used to calculate vector similarity.
 
@@ -1192,6 +1199,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "delete_by_filter": delete_by_filter,
                     "delete_condition": delete_condition,
                     "deletes": deletes,
+                    "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
                     "patch_columns": patch_columns,

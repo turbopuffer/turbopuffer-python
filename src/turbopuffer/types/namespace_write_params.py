@@ -32,6 +32,9 @@ class NamespaceWriteParams(TypedDict, total=False):
 
     deletes: SequenceNotStr[IDParam]
 
+    disable_backpressure: bool
+    """Disables write throttling (HTTP 429 responses) during high-volume ingestion."""
+
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
