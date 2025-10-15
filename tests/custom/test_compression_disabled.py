@@ -100,16 +100,19 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
 @respx.mock
 def test_accept_encoding_header_disabled():
     """Verify Accept-Encoding: identity header is sent when compression is disabled."""
-    route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v1/vectors").mock(
+    # Mock the query endpoint
+    query_route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v2/namespaces/test/query").mock(
         return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
     )
 
-    client = Turbopuffer(region=region, compression=False)
+    # Use standard httpx client for mocking to work
+    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    client = Turbopuffer(region=region, compression=False, http_client=http_client)
     ns = client.namespace("test")
     ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
 
-    assert route.called
-    request = route.calls.last.request
+    assert query_route.called
+    request = query_route.calls.last.request
     assert request.headers.get("Accept-Encoding") == "identity"
 
 
@@ -117,14 +120,17 @@ def test_accept_encoding_header_disabled():
 @pytest.mark.asyncio
 async def test_async_accept_encoding_header_disabled():
     """Verify Accept-Encoding: identity header is sent when compression is disabled (async)."""
-    route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v1/vectors").mock(
+    # Mock the query endpoint
+    query_route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v2/namespaces/test/query").mock(
         return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
     )
 
-    async with AsyncTurbopuffer(region=region, compression=False) as client:
+    # Use standard httpx client for mocking to work
+    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    async with AsyncTurbopuffer(region=region, compression=False, http_client=http_client) as client:
         ns = client.namespace("test")
         await ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
 
-    assert route.called
-    request = route.calls.last.request
+    assert query_route.called
+    request = query_route.calls.last.request
     assert request.headers.get("Accept-Encoding") == "identity"
