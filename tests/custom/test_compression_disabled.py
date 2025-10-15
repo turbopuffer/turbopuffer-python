@@ -29,7 +29,12 @@ def test_compression_disabled(tpuf: Turbopuffer):
             upsert_rows=[
                 {
                     "id": 1,
-                    "vector": [0.1] * 1024,
+                    "vector": [0.1] * 4096,
+                    "title": "test doc",
+                },
+                {
+                    "id": 2,
+                    "vector": [0.2] * 4096,
                     "title": "test doc",
                 },
             ],
@@ -37,18 +42,20 @@ def test_compression_disabled(tpuf: Turbopuffer):
         )
 
         # This request is large enough to normally be compressed, but compression is disabled.
-        result = ns.query(
-            rank_by=("vector", "ANN", [0.1] * 1024),
-            top_k=1,
+        response = ns.with_raw_response.query(
+            rank_by=("vector", "ANN", [0.1] * 4096),
+            top_k=2,
             include_attributes=True,
         )
 
-        perf = result.performance
+        perf = response.parse().performance
         assert perf.client_total_ms > 0
         assert perf.client_compress_ms == 0  # Should be 0 since compression is disabled
         assert perf.client_response_ms is not None and perf.client_response_ms > 0
         assert perf.client_body_read_ms is not None and perf.client_body_read_ms > 0
         assert perf.client_deserialize_ms > 0
+
+        assert "Content-Encoding" not in response.headers
 
 
 @pytest.mark.asyncio
@@ -74,20 +81,25 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
                 upsert_rows=[
                     {
                         "id": 1,
-                        "vector": [0.1] * 1024,
+                        "vector": [0.1] * 4096,
+                        "title": "test doc",
+                    },
+                    {
+                        "id": 2,
+                        "vector": [0.2] * 4096,
                         "title": "test doc",
                     },
                 ],
                 distance_metric="euclidean_squared",
             )
 
-            result = await ns.query(
-                rank_by=("vector", "ANN", [0.1] * 1024),
-                top_k=1,
+            response = await ns.with_raw_response.query(
+                rank_by=("vector", "ANN", [0.1] * 4096),
+                top_k=2,
                 include_attributes=True,
             )
 
-            perf = result.performance
+            perf = (await response.parse()).performance
             assert perf.client_total_ms > 0
             assert (
                 perf.client_compress_ms == 0
@@ -95,6 +107,8 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
             assert perf.client_response_ms is not None and perf.client_response_ms > 0
             assert perf.client_body_read_ms is not None and perf.client_body_read_ms > 0
             assert perf.client_deserialize_ms > 0
+
+            assert "Content-Encoding" not in response.headers
 
 
 @respx.mock
