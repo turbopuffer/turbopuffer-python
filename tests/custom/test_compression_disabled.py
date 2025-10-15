@@ -1,4 +1,5 @@
 import httpx
+import respx
 import pytest
 
 import turbopuffer
@@ -14,74 +15,55 @@ def test_compression_disabled(tpuf: Turbopuffer):
         Turbopuffer(region=region, compression=False),  # via constructor
     ]
 
-    def _test_client(client: Turbopuffer, index: int) -> None:
+    for i, client in enumerate(clients):
         assert client.compression is False
 
-        # Capture request headers using an event hook
-        captured_headers: dict[str, str] = {}
+        ns = client.namespace(f"{test_prefix}compression-disabled-{i}")
 
-        def capture_request(request: httpx.Request) -> None:
-            captured_headers["Accept-Encoding"] = request.headers.get("Accept-Encoding", "")
+        try:
+            ns.delete_all()
+        except turbopuffer.NotFoundError:
+            pass
 
-        # Create a custom HTTP client with event hooks
-        with httpx.Client(event_hooks={"request": [capture_request]}) as http_client:
-            client_with_hooks = client.with_options(http_client=http_client)
+        ns.write(
+            upsert_rows=[
+                {
+                    "id": 1,
+                    "vector": [0.1] * 1024,
+                    "title": "test doc",
+                },
+            ],
+            distance_metric="euclidean_squared",
+        )
 
-            ns = client_with_hooks.namespace(f"{test_prefix}compression-disabled-{index}")
+        # This request is large enough to normally be compressed, but compression is disabled.
+        result = ns.query(
+            rank_by=("vector", "ANN", [0.1] * 1024),
+            top_k=1,
+            include_attributes=True,
+        )
 
-            try:
-                ns.delete_all()
-            except turbopuffer.NotFoundError:
-                pass
-
-            ns.write(
-                upsert_rows=[
-                    {
-                        "id": 1,
-                        "vector": [0.1] * 1024,
-                        "title": "test doc",
-                    },
-                ],
-                distance_metric="euclidean_squared",
-            )
-
-            # This request is large enough to normally be compressed, but compression is disabled.
-            result = ns.query(
-                rank_by=("vector", "ANN", [0.1] * 1024),
-                top_k=1,
-                include_attributes=True,
-            )
-
-            # Verify Accept-Encoding: identity header was sent
-            assert captured_headers.get("Accept-Encoding") == "identity"
-
-            perf = result.performance
-            assert perf.client_total_ms > 0
-            assert perf.client_compress_ms == 0  # Should be 0 since compression is disabled
-            assert perf.client_response_ms is not None and perf.client_response_ms > 0
-            assert perf.client_body_read_ms is not None and perf.client_body_read_ms > 0
-            assert perf.client_deserialize_ms > 0
-
-    for i, client in enumerate(clients):
-        _test_client(client, i)
+        perf = result.performance
+        assert perf.client_total_ms > 0
+        assert perf.client_compress_ms == 0  # Should be 0 since compression is disabled
+        assert perf.client_response_ms is not None and perf.client_response_ms > 0
+        assert perf.client_body_read_ms is not None and perf.client_body_read_ms > 0
+        assert perf.client_deserialize_ms > 0
 
 
 @pytest.mark.asyncio
 async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
-    async def _test_client(client: AsyncTurbopuffer, index: int) -> None:
-        assert client.compression is False
+    # Test both ways of disabling compression
+    async with AsyncTurbopuffer(region=region, compression=False) as constructor_client:
+        clients = [
+            async_tpuf.with_options(compression=False),  # via with_options()
+            constructor_client,  # via constructor
+        ]
 
-        # Capture request headers using an event hook
-        captured_headers: dict[str, str] = {}
+        for i, client in enumerate(clients):
+            assert client.compression is False
 
-        async def capture_request(request: httpx.Request) -> None:
-            captured_headers["Accept-Encoding"] = request.headers.get("Accept-Encoding", "")
-
-        # Create a custom HTTP client with event hooks
-        async with httpx.AsyncClient(event_hooks={"request": [capture_request]}) as http_client:
-            client_with_hooks = client.with_options(http_client=http_client)
-
-            ns = client_with_hooks.namespace(f"{test_prefix}compression-disabled-{index}")
+            ns = client.namespace(f"{test_prefix}compression-disabled-{i}")
 
             try:
                 await ns.delete_all()
@@ -105,9 +87,6 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
                 include_attributes=True,
             )
 
-            # Verify Accept-Encoding: identity header was sent
-            assert captured_headers.get("Accept-Encoding") == "identity"
-
             perf = result.performance
             assert perf.client_total_ms > 0
             assert (
@@ -117,12 +96,35 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
             assert perf.client_body_read_ms is not None and perf.client_body_read_ms > 0
             assert perf.client_deserialize_ms > 0
 
-    # Test both ways of disabling compression
-    async with AsyncTurbopuffer(region=region, compression=False) as constructor_client:
-        clients = [
-            async_tpuf.with_options(compression=False),  # via with_options()
-            constructor_client,  # via constructor
-        ]
 
-        for i, client in enumerate(clients):
-            await _test_client(client, i)
+@respx.mock
+def test_accept_encoding_header_disabled():
+    """Verify Accept-Encoding: identity header is sent when compression is disabled."""
+    route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v1/vectors").mock(
+        return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
+    )
+
+    client = Turbopuffer(region=region, compression=False)
+    ns = client.namespace("test")
+    ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
+
+    assert route.called
+    request = route.calls.last.request
+    assert request.headers.get("Accept-Encoding") == "identity"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_accept_encoding_header_disabled():
+    """Verify Accept-Encoding: identity header is sent when compression is disabled (async)."""
+    route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v1/vectors").mock(
+        return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
+    )
+
+    async with AsyncTurbopuffer(region=region, compression=False) as client:
+        ns = client.namespace("test")
+        await ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
+
+    assert route.called
+    request = route.calls.last.request
+    assert request.headers.get("Accept-Encoding") == "identity"

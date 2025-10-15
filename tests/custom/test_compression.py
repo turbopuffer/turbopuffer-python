@@ -1,56 +1,45 @@
 import httpx
+import respx
 import pytest
 
 import turbopuffer
 from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from tests.custom import test_prefix
+from tests.custom.conftest import region
 
 
 def test_compression_auto_on(tpuf: Turbopuffer):
-    # Capture request headers using an event hook
-    captured_headers: dict[str, str] = {}
+    ns = tpuf.namespace(test_prefix + "compression-auto-on")
 
-    def capture_request(request: httpx.Request) -> None:
-        captured_headers["Accept-Encoding"] = request.headers.get("Accept-Encoding", "")
+    try:
+        ns.delete_all()
+    except turbopuffer.NotFoundError:
+        pass
 
-    # Create a custom HTTP client with event hooks
-    with httpx.Client(event_hooks={"request": [capture_request]}) as http_client:
-        client_with_hooks = tpuf.with_options(http_client=http_client)
+    ns.write(
+        upsert_rows=[
+            {
+                "id": 1,
+                "vector": [0.1] * 1024,
+                "title": "test doc",
+            },
+        ],
+        distance_metric="euclidean_squared",
+    )
 
-        ns = client_with_hooks.namespace(test_prefix + "compression-auto-on")
+    # This request is large enough to be compressed.
+    result = ns.query(
+        rank_by=("vector", "ANN", [0.1] * 1024),
+        top_k=1,
+        include_attributes=True,
+    )
 
-        try:
-            ns.delete_all()
-        except turbopuffer.NotFoundError:
-            pass
-
-        ns.write(
-            upsert_rows=[
-                {
-                    "id": 1,
-                    "vector": [0.1] * 1024,
-                    "title": "test doc",
-                },
-            ],
-            distance_metric="euclidean_squared",
-        )
-
-        # This request is large enough to be compressed.
-        result = ns.query(
-            rank_by=("vector", "ANN", [0.1] * 1024),
-            top_k=1,
-            include_attributes=True,
-        )
-
-        # Verify Accept-Encoding: gzip header was sent
-        assert captured_headers.get("Accept-Encoding") == "gzip"
-
-        perf = result.performance
-        assert perf.client_total_ms > 0
-        assert perf.client_compress_ms > 0
-        assert perf.client_response_ms is not None and perf.client_response_ms > 0
-        assert perf.client_body_read_ms is not None and perf.client_body_read_ms > 0
-        assert perf.client_deserialize_ms > 0
+    perf = result.performance
+    assert perf.client_total_ms > 0
+    assert perf.client_compress_ms > 0
+    assert perf.client_response_ms is not None and perf.client_response_ms > 0
+    assert perf.client_body_read_ms is not None and perf.client_body_read_ms > 0
+    assert perf.client_deserialize_ms > 0
 
 
 def test_compression_auto_off(tpuf: Turbopuffer):
@@ -154,3 +143,36 @@ async def test_async_compression_auto_off(async_tpuf: AsyncTurbopuffer):
     assert perf.client_response_ms is not None and perf.client_response_ms > 0
     assert perf.client_body_read_ms is not None and perf.client_body_read_ms > 0
     assert perf.client_deserialize_ms > 0
+
+
+@respx.mock
+def test_accept_encoding_header_enabled():
+    """Verify Accept-Encoding: gzip header is sent when compression is enabled."""
+    route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v1/vectors").mock(
+        return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
+    )
+
+    client = Turbopuffer(region=region, compression=True)
+    ns = client.namespace("test")
+    ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
+
+    assert route.called
+    request = route.calls.last.request
+    assert request.headers.get("Accept-Encoding") == "gzip"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_accept_encoding_header_enabled():
+    """Verify Accept-Encoding: gzip header is sent when compression is enabled (async)."""
+    route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v1/vectors").mock(
+        return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
+    )
+
+    async with AsyncTurbopuffer(region=region, compression=True) as client:
+        ns = client.namespace("test")
+        await ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
+
+    assert route.called
+    request = route.calls.last.request
+    assert request.headers.get("Accept-Encoding") == "gzip"
