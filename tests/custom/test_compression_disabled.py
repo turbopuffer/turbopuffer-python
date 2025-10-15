@@ -5,6 +5,7 @@ import pytest
 import turbopuffer
 from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from tests.custom import test_prefix
+from tests.conftest import base_url
 from tests.custom.conftest import region
 
 
@@ -115,13 +116,13 @@ async def test_async_compression_disabled(async_tpuf: AsyncTurbopuffer):
 def test_accept_encoding_header_disabled():
     """Verify Accept-Encoding: identity header is sent when compression is disabled."""
     # Mock the query endpoint
-    query_route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v2/namespaces/test/query").mock(
+    query_route = respx.post(f"{base_url}/v2/namespaces/test/query").mock(
         return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
     )
 
     # Use standard httpx client for mocking to work
     http_client = httpx.Client(transport=httpx.HTTPTransport())
-    client = Turbopuffer(region=region, compression=False, http_client=http_client)
+    client = Turbopuffer(base_url=base_url, compression=False, http_client=http_client)
     ns = client.namespace("test")
     ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
 
@@ -135,13 +136,13 @@ def test_accept_encoding_header_disabled():
 async def test_async_accept_encoding_header_disabled():
     """Verify Accept-Encoding: identity header is sent when compression is disabled (async)."""
     # Mock the query endpoint
-    query_route = respx.post(f"https://{region or 'api'}.turbopuffer.com/v2/namespaces/test/query").mock(
+    query_route = respx.post(f"{base_url}/v2/namespaces/test/query").mock(
         return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
     )
 
     # Use standard httpx client for mocking to work
     http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
-    async with AsyncTurbopuffer(region=region, compression=False, http_client=http_client) as client:
+    async with AsyncTurbopuffer(base_url=base_url, compression=False, http_client=http_client) as client:
         ns = client.namespace("test")
         await ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
 
