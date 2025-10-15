@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.0 (2025-10-15)
+
+Full Changelog: [v1.3.1...v1.4.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.3.1...v1.4.0)
+
+### Features
+
+* Add float, []float and []bool to the list of valid types in the OpenAPI spec. ([11b13d8](https://github.com/turbopuffer/turbopuffer-python/commit/11b13d8b27d5af4bc01c52bbf53cbf6e313a110b))
+* Promote disable_backpressure to first-class Write property ([adf659a](https://github.com/turbopuffer/turbopuffer-python/commit/adf659ad1c9a45180d6c18531ded370fa433bed4))
+
+
+### Chores
+
+* **internal:** detect missing future annotations with ruff ([6e631de](https://github.com/turbopuffer/turbopuffer-python/commit/6e631de8f0af1da81f15b9890cb49b1adcedfcde))
+
 ## 1.3.1 (2025-10-06)
 
 Full Changelog: [v1.3.0...v1.3.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.3.0...v1.3.1)
