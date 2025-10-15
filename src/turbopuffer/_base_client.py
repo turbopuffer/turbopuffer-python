@@ -460,6 +460,13 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             if timeout is not None:
                 headers["x-stainless-read-timeout"] = str(timeout)
 
+        # Set Accept-Encoding header based on compression setting
+        if "accept-encoding" not in lower_custom_headers:
+            if self.compression:
+                headers["Accept-Encoding"] = "gzip"
+            else:
+                headers["Accept-Encoding"] = "identity"
+
         return headers
 
     def _prepare_url(self, url: str) -> URL:
