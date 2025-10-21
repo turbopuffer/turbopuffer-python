@@ -12,7 +12,7 @@ from .columns_param import ColumnsParam
 from .distance_metric import DistanceMetric
 from .attribute_schema_param import AttributeSchemaParam
 
-__all__ = ["NamespaceWriteParams", "Encryption", "EncryptionCmek"]
+__all__ = ["NamespaceWriteParams", "Encryption", "EncryptionCmek", "PatchByFilter"]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
@@ -40,6 +40,9 @@ class NamespaceWriteParams(TypedDict, total=False):
 
     encryption: Encryption
     """The encryption configuration for a namespace."""
+
+    patch_by_filter: PatchByFilter
+    """The patch and filter specifying which documents to patch."""
 
     patch_columns: ColumnsParam
     """A list of documents in columnar format.
@@ -84,3 +87,10 @@ class EncryptionCmek(TypedDict, total=False):
 
 class Encryption(TypedDict, total=False):
     cmek: EncryptionCmek
+
+
+class PatchByFilter(TypedDict, total=False):
+    filters: object
+    """Filter by attributes. Same syntax as the query endpoint."""
+
+    patch: Dict[str, object]
