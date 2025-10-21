@@ -540,6 +540,7 @@ class NamespacesResource(SyncAPIResource):
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: namespace_write_params.Encryption | Omit = omit,
+        patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
         patch_condition: object | Omit = omit,
         patch_rows: Iterable[RowParam] | Omit = omit,
@@ -570,6 +571,8 @@ class NamespacesResource(SyncAPIResource):
           distance_metric: A function used to calculate vector similarity.
 
           encryption: The encryption configuration for a namespace.
+
+          patch_by_filter: The patch and filter specifying which documents to patch.
 
           patch_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
@@ -608,6 +611,7 @@ class NamespacesResource(SyncAPIResource):
                     "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
+                    "patch_by_filter": patch_by_filter,
                     "patch_columns": patch_columns,
                     "patch_condition": patch_condition,
                     "patch_rows": patch_rows,
@@ -1116,6 +1120,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: namespace_write_params.Encryption | Omit = omit,
+        patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
         patch_condition: object | Omit = omit,
         patch_rows: Iterable[RowParam] | Omit = omit,
@@ -1146,6 +1151,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
           distance_metric: A function used to calculate vector similarity.
 
           encryption: The encryption configuration for a namespace.
+
+          patch_by_filter: The patch and filter specifying which documents to patch.
 
           patch_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
@@ -1184,6 +1191,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
+                    "patch_by_filter": patch_by_filter,
                     "patch_columns": patch_columns,
                     "patch_condition": patch_condition,
                     "patch_rows": patch_rows,
