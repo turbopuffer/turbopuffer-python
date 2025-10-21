@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.5.0 (2025-10-21)
+
+Full Changelog: [v1.4.1...v1.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.4.1...v1.5.0)
+
+### Features
+
+* Metadata endpoint updates (e.g. to track indexing progress) ([03baa87](https://github.com/turbopuffer/turbopuffer-python/commit/03baa8777f150cae9f8f4f0342d50b57d67dc96f))
+* required for patch_by_filter :facepalm: ([fd6692f](https://github.com/turbopuffer/turbopuffer-python/commit/fd6692fe39ebc331c096df48dfb2f8def6dc991b))
+* stainless: add patch_by_filter ([e097f85](https://github.com/turbopuffer/turbopuffer-python/commit/e097f856064715c1010e26a1b8969596bb1870ae))
+
+
+### Chores
+
+* bump `httpx-aiohttp` version to 0.1.9 ([eba6dd4](https://github.com/turbopuffer/turbopuffer-python/commit/eba6dd41e90bc0994248e260bc3052d876a7438f))
+* Correct python types for patch by filter (and conditional writes) ([#172](https://github.com/turbopuffer/turbopuffer-python/issues/172)) ([fb3257e](https://github.com/turbopuffer/turbopuffer-python/commit/fb3257e98d0fed3fe64385acbafd0c19ba191600))
+
 ## 1.4.1 (2025-10-15)
 
 Full Changelog: [v1.4.0...v1.4.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.4.0...v1.4.1)
