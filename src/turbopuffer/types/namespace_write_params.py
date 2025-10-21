@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable
+from typing import Dict, Union, Iterable
 from typing_extensions import Required, TypedDict
 
-from .._types import SequenceNotStr
+from .._types import Omit, SequenceNotStr
 from .id_param import IDParam
 from .row_param import RowParam
+from ..types.custom import Filter
 from .columns_param import ColumnsParam
 from .distance_metric import DistanceMetric
 from .attribute_schema_param import AttributeSchemaParam
@@ -21,10 +22,10 @@ class NamespaceWriteParams(TypedDict, total=False):
     copy_from_namespace: str
     """The namespace to copy documents from."""
 
-    delete_by_filter: object
+    delete_by_filter: Union[Filter, Omit]
     """The filter specifying which documents to delete."""
 
-    delete_condition: object
+    delete_condition: Union[Filter, Omit]
     """
     A condition evaluated against the current value of each document targeted by a
     delete write. Only documents that pass the condition are deleted.
@@ -50,7 +51,7 @@ class NamespaceWriteParams(TypedDict, total=False):
     Each key is a column name, mapped to an array of values for that column.
     """
 
-    patch_condition: object
+    patch_condition: Union[Filter, Omit]
     """
     A condition evaluated against the current value of each document targeted by a
     patch write. Only documents that pass the condition are patched.
@@ -67,7 +68,7 @@ class NamespaceWriteParams(TypedDict, total=False):
     Each key is a column name, mapped to an array of values for that column.
     """
 
-    upsert_condition: object
+    upsert_condition: Union[Filter, Omit]
     """
     A condition evaluated against the current value of each document targeted by an
     upsert write. Only documents that pass the condition are upserted.
@@ -90,7 +91,7 @@ class Encryption(TypedDict, total=False):
 
 
 class PatchByFilter(TypedDict, total=False):
-    filters: object
+    filters: Filter
     """Filter by attributes. Same syntax as the query endpoint."""
 
     patch: Dict[str, object]
