@@ -427,7 +427,7 @@ class TestNamespaces:
             distance_metric="cosine_distance",
             encryption={"cmek": {"key_name": "key_name"}},
             patch_by_filter={
-                "filters": {},
+                "filters": ("name", "Eq", "foo"),
                 "patch": {"foo": "bar"},
             },
             patch_columns={
@@ -893,7 +893,7 @@ class TestAsyncNamespaces:
             distance_metric="cosine_distance",
             encryption={"cmek": {"key_name": "key_name"}},
             patch_by_filter={
-                "filters": {},
+                "filters": ("name", "Eq", "foo"),
                 "patch": {"foo": "bar"},
             },
             patch_columns={
