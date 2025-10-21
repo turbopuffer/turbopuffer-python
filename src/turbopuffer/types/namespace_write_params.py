@@ -91,7 +91,7 @@ class Encryption(TypedDict, total=False):
 
 
 class PatchByFilter(TypedDict, total=False):
-    filters: Filter
+    filters: Required[Filter]
     """Filter by attributes. Same syntax as the query endpoint."""
 
-    patch: Dict[str, object]
+    patch: Required[Dict[str, object]]
