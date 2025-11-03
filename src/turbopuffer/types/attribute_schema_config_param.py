@@ -2,17 +2,30 @@
 
 from __future__ import annotations
 
-from typing_extensions import TypedDict
+from typing import Union
+from typing_extensions import TypeAlias, TypedDict
 
 from .attribute_type import AttributeType
+from .distance_metric import DistanceMetric
 from .full_text_search_param import FullTextSearchParam
 
-__all__ = ["AttributeSchemaConfigParam"]
+__all__ = ["AttributeSchemaConfigParam", "Ann", "AnnAnnConfig"]
+
+
+class AnnAnnConfig(TypedDict, total=False):
+    distance_metric: DistanceMetric
+    """A function used to calculate vector similarity."""
+
+
+Ann: TypeAlias = Union[bool, AnnAnnConfig]
 
 
 class AttributeSchemaConfigParam(TypedDict, total=False):
-    ann: bool
-    """Whether to create an approximate nearest neighbor index for the attribute."""
+    ann: Ann
+    """Whether to create an approximate nearest neighbor index for the attribute.
+
+    Can be a boolean or a detailed configuration object.
+    """
 
     filterable: bool
     """Whether or not the attributes can be used in filters."""
