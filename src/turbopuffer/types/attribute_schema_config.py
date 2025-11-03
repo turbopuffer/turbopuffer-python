@@ -1,17 +1,30 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
+from typing import Union, Optional
+from typing_extensions import TypeAlias
 
 from .._models import BaseModel
 from .attribute_type import AttributeType
+from .distance_metric import DistanceMetric
 from .full_text_search import FullTextSearch
 
-__all__ = ["AttributeSchemaConfig"]
+__all__ = ["AttributeSchemaConfig", "Ann", "AnnAnnConfig"]
+
+
+class AnnAnnConfig(BaseModel):
+    distance_metric: Optional[DistanceMetric] = None
+    """A function used to calculate vector similarity."""
+
+
+Ann: TypeAlias = Union[bool, AnnAnnConfig]
 
 
 class AttributeSchemaConfig(BaseModel):
-    ann: Optional[bool] = None
-    """Whether to create an approximate nearest neighbor index for the attribute."""
+    ann: Optional[Ann] = None
+    """Whether to create an approximate nearest neighbor index for the attribute.
+
+    Can be a boolean or a detailed configuration object.
+    """
 
     filterable: Optional[bool] = None
     """Whether or not the attributes can be used in filters."""
