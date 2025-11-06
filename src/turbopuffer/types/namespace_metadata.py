@@ -16,8 +16,8 @@ __all__ = [
     "EncryptionCmek",
     "EncryptionCmekCmek",
     "Index",
-    "IndexStatus",
-    "IndexUnionMember1",
+    "IndexIndexUpToDate",
+    "IndexIndexUpdating",
 ]
 
 
@@ -38,11 +38,11 @@ class EncryptionCmek(BaseModel):
 Encryption: TypeAlias = Union[EncryptionSse, EncryptionCmek]
 
 
-class IndexStatus(BaseModel):
+class IndexIndexUpToDate(BaseModel):
     status: Literal["up-to-date"]
 
 
-class IndexUnionMember1(BaseModel):
+class IndexIndexUpdating(BaseModel):
     status: Literal["updating"]
 
     unindexed_bytes: int
@@ -52,7 +52,7 @@ class IndexUnionMember1(BaseModel):
     """
 
 
-Index: TypeAlias = Union[IndexStatus, IndexUnionMember1]
+Index: TypeAlias = Union[IndexIndexUpToDate, IndexIndexUpdating]
 
 
 class NamespaceMetadata(BaseModel):
