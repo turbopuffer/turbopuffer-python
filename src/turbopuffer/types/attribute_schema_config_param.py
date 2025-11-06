@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Union
-from typing_extensions import TypeAlias, TypedDict
+from typing_extensions import Required, TypeAlias, TypedDict
 
 from .attribute_type import AttributeType
 from .distance_metric import DistanceMetric
@@ -21,6 +21,13 @@ Ann: TypeAlias = Union[bool, AnnAnnConfig]
 
 
 class AttributeSchemaConfigParam(TypedDict, total=False):
+    type: Required[AttributeType]
+    """The data type of the attribute.
+
+    Valid values: string, int, uint, float, uuid, datetime, bool, []string, []int,
+    []uint, []float, []uuid, []datetime, []bool, [DIMS]f16, [DIMS]f32.
+    """
+
     ann: Ann
     """Whether to create an approximate nearest neighbor index for the attribute.
 
@@ -40,10 +47,3 @@ class AttributeSchemaConfigParam(TypedDict, total=False):
 
     regex: bool
     """Whether to enable Regex filters on this attribute."""
-
-    type: AttributeType
-    """The data type of the attribute.
-
-    Valid values: string, int, uint, float, uuid, datetime, bool, []string, []int,
-    []uint, []float, []uuid, []datetime, []bool, [DIMS]f16, [DIMS]f32.
-    """
