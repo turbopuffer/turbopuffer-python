@@ -20,6 +20,13 @@ Ann: TypeAlias = Union[bool, AnnAnnConfig]
 
 
 class AttributeSchemaConfig(BaseModel):
+    type: AttributeType
+    """The data type of the attribute.
+
+    Valid values: string, int, uint, float, uuid, datetime, bool, []string, []int,
+    []uint, []float, []uuid, []datetime, []bool, [DIMS]f16, [DIMS]f32.
+    """
+
     ann: Optional[Ann] = None
     """Whether to create an approximate nearest neighbor index for the attribute.
 
@@ -39,10 +46,3 @@ class AttributeSchemaConfig(BaseModel):
 
     regex: Optional[bool] = None
     """Whether to enable Regex filters on this attribute."""
-
-    type: Optional[AttributeType] = None
-    """The data type of the attribute.
-
-    Valid values: string, int, uint, float, uuid, datetime, bool, []string, []int,
-    []uint, []float, []uuid, []datetime, []bool, [DIMS]f16, [DIMS]f32.
-    """
