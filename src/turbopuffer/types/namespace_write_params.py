@@ -19,7 +19,11 @@ class NamespaceWriteParams(TypedDict, total=False):
     namespace: str
 
     copy_from_namespace: str
-    """The namespace to copy documents from."""
+    """The namespace to copy documents from.
+
+    When copying, you can optionally specify an `encryption` parameter to encrypt
+    the destination namespace with a different CMEK key than the source namespace.
+    """
 
     delete_by_filter: object
     """The filter specifying which documents to delete."""
