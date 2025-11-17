@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.0 (2025-11-17)
+
+Full Changelog: [v1.6.0...v1.7.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.6.0...v1.7.0)
+
+### Features
+
+* spec: add support for cross-org CFN to SDKs ([8d4cb17](https://github.com/turbopuffer/turbopuffer-python/commit/8d4cb17108cf5f14af4aee321b656ad5a0fbfece))
+
 ## 1.6.0 (2025-11-17)
 
 Full Changelog: [v1.5.0...v1.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.5.0...v1.6.0)
