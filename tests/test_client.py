@@ -26,7 +26,6 @@ from turbopuffer import (
 from turbopuffer._types import Omit
 from turbopuffer._utils import asyncify
 from turbopuffer._models import BaseModel, FinalRequestOptions
-from turbopuffer.resources import namespaces
 from turbopuffer._exceptions import APIStatusError, TurbopufferError, APIResponseValidationError
 from turbopuffer._base_client import (
     DEFAULT_TIMEOUT,
@@ -53,6 +52,13 @@ class AsyncTurbopuffer(AsyncTurbopufferStd):
         super().__init__(
             *args, **{"http_client": DefaultAsyncHttpxClient(transport=httpx.AsyncHTTPTransport()), **kwargs}
         )
+
+
+@pytest.fixture
+def async_client(async_client: AsyncTurbopuffer):
+    new_client = async_client.with_options(http_client=DefaultAsyncHttpxClient(transport=httpx.AsyncHTTPTransport()))
+    new_client._strict_response_validation = async_client._strict_response_validation
+    yield new_client
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -381,26 +387,7 @@ class TestTurbopuffer:
         url = httpx.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
-    @pytest.mark.respx(base_url=base_url)
-    def test_default_namespace_client_params(self, respx_mock: MockRouter) -> None:
-        client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-
-        respx_mock.delete("/v2/namespaces/My Default Namespace").mock(
-            return_value=httpx.Response(200, json={"status": "OK"})
-        )
-
-        with client as c2:
-            with pytest.raises(ValueError, match="Missing default_namespace argument;"):
-                namespaces.NamespacesResource(c2).delete_all()
-
-        client = Turbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            _strict_response_validation=True,
-            default_namespace="My Default Namespace",
-        )
-        with client as c2:
-            namespaces.NamespacesResource(c2).delete_all()
+        client.close()
 
     def test_request_extra_json(self, client: Turbopuffer) -> None:
         request = client._build_request(
@@ -1037,13 +1024,15 @@ class TestAsyncTurbopuffer:
         ):
             client.copy(set_default_query={}, default_query={"foo": "Bar"})
 
-    def test_copy_signature(self, client: Turbopuffer) -> None:
+        await client.close()
+
+    def test_copy_signature(self, async_client: AsyncTurbopuffer) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
-            client.__init__,  # type: ignore[misc]
+            async_client.__init__,  # type: ignore[misc]
         )
-        copy_signature = inspect.signature(client.copy)
+        copy_signature = inspect.signature(async_client.copy)
         exclude_params = {"transport", "proxies", "_strict_response_validation"}
 
         for name in init_signature.parameters.keys():
@@ -1237,26 +1226,7 @@ class TestAsyncTurbopuffer:
         url = httpx.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
-    @pytest.mark.respx(base_url=base_url)
-    async def test_default_namespace_client_params(self, respx_mock: MockRouter) -> None:
-        client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-
-        respx_mock.delete("/v2/namespaces/My Default Namespace").mock(
-            return_value=httpx.Response(200, json={"status": "OK"})
-        )
-
-        async with client as c2:
-            with pytest.raises(ValueError, match="Missing default_namespace argument;"):
-                await c2.namespace("").delete_all()
-
-        client = AsyncTurbopuffer(
-            base_url=base_url,
-            api_key=api_key,
-            _strict_response_validation=True,
-            default_namespace="My Default Namespace",
-        )
-        async with client as c2:
-            await namespaces.AsyncNamespacesResource(c2).delete_all()
+        await client.close()
 
     def test_request_extra_json(self, client: Turbopuffer) -> None:
         request = client._build_request(
@@ -1653,7 +1623,7 @@ class TestAsyncTurbopuffer:
     ) -> None:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
-        calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
+        calculated = async_client._calculate_retry_timeout(remaining_retries, options, headers)
         assert (calculated == pytest.approx(timeout, 0.25 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -1662,11 +1632,12 @@ class TestAsyncTurbopuffer:
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
         self,
+        async_client: AsyncTurbopuffer,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
     ) -> None:
-        client = self.client.with_options(max_retries=4)
+        client = async_client.with_options(max_retries=4)
 
         nb_retries = 0
 
@@ -1689,9 +1660,10 @@ class TestAsyncTurbopuffer:
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
-    async def test_omit_retry_count_header(self, failures_before_success: int, respx_mock: MockRouter) -> None:
-        client = self.client.with_options(max_retries=4)
+    async def test_omit_retry_count_header(
+        self, async_client: AsyncTurbopuffer, failures_before_success: int, respx_mock: MockRouter
+    ) -> None:
+        client = async_client.with_options(max_retries=4)
 
         nb_retries = 0
 
@@ -1711,9 +1683,10 @@ class TestAsyncTurbopuffer:
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    @pytest.mark.asyncio
-    async def test_overwrite_retry_count_header(self, failures_before_success: int, respx_mock: MockRouter) -> None:
-        client = self.client.with_options(max_retries=4)
+    async def test_overwrite_retry_count_header(
+        self, async_client: AsyncTurbopuffer, failures_before_success: int, respx_mock: MockRouter
+    ) -> None:
+        client = async_client.with_options(max_retries=4)
 
         nb_retries = 0
 
