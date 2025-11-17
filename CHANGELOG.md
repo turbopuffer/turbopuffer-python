@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.6.0 (2025-11-17)
+
+Full Changelog: [v1.5.0...v1.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.5.0...v1.6.0)
+
+### Features
+
+* Add vector attribute schema to metadata endpoint ([0d4d216](https://github.com/turbopuffer/turbopuffer-python/commit/0d4d2169a7048f20308490b17fa4cbc184f85112))
+* Allow for a CMEK key to be specified in copy_from_namespace ([2e85faa](https://github.com/turbopuffer/turbopuffer-python/commit/2e85faa4b5cacfbd3b840ed80c3d8c528e2aeff9))
+* Make `type` required on `AttributeSchemaConfig` ([677d239](https://github.com/turbopuffer/turbopuffer-python/commit/677d2390c9640bbf80eb74ad258e9b9ea7a5e9dd))
+* openapi: Fix stainless warnings ([b12a54b](https://github.com/turbopuffer/turbopuffer-python/commit/b12a54b9b9062be3efca3618c2a9cbbbfc3e7ef2))
+* openapi: name variants of `NamespaceMetadata.index` ([ddc8d26](https://github.com/turbopuffer/turbopuffer-python/commit/ddc8d268b08466967e3134c1cd2995e52d4efb46))
+
+
+### Bug Fixes
+
+* **client:** close streams without requiring full consumption ([b8d32f3](https://github.com/turbopuffer/turbopuffer-python/commit/b8d32f3d1af9fd7052bc0ea52c8446ae4ea3a61b))
+* compat with Python 3.14 ([67195f2](https://github.com/turbopuffer/turbopuffer-python/commit/67195f2f74449cc4e50d494d46bdbb736e3f8375))
+* **compat:** update signatures of `model_dump` and `model_dump_json` for Pydantic v1 ([595f416](https://github.com/turbopuffer/turbopuffer-python/commit/595f416c6d8d1362fb2108444af9d41fae8eb6e5))
+
+
+### Chores
+
+* **internal/tests:** avoid race condition with implicit client cleanup ([4230de9](https://github.com/turbopuffer/turbopuffer-python/commit/4230de956fb48b58753bef7dccfc271d6f9111c2))
+* **internal/tests:** avoid race condition with implicit client cleanup ([1386b25](https://github.com/turbopuffer/turbopuffer-python/commit/1386b251b944769f4023e2c2cf6f589e05fa1db7))
+* **internal:** grammar fix (it's -&gt; its) ([7620a5a](https://github.com/turbopuffer/turbopuffer-python/commit/7620a5a61739540fe0fa528a643e6921cf415148))
+* **package:** drop Python 3.8 support ([b0a801e](https://github.com/turbopuffer/turbopuffer-python/commit/b0a801e514f06a672dd575aaf00d8ea0935582a4))
+
 ## 1.5.0 (2025-10-21)
 
 Full Changelog: [v1.4.1...v1.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.4.1...v1.5.0)
