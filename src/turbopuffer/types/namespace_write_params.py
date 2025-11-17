@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable
-from typing_extensions import Required, TypedDict
+from typing import Dict, Union, Iterable
+from typing_extensions import Required, TypeAlias, TypedDict
 
 from .._types import SequenceNotStr
 from .id_param import IDParam
@@ -12,18 +12,21 @@ from .columns_param import ColumnsParam
 from .distance_metric import DistanceMetric
 from .attribute_schema_param import AttributeSchemaParam
 
-__all__ = ["NamespaceWriteParams", "Encryption", "EncryptionCmek", "PatchByFilter"]
+__all__ = [
+    "NamespaceWriteParams",
+    "CopyFromNamespace",
+    "CopyFromNamespaceCopyFromNamespaceConfig",
+    "Encryption",
+    "EncryptionCmek",
+    "PatchByFilter",
+]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
     namespace: str
 
-    copy_from_namespace: str
-    """The namespace to copy documents from.
-
-    When copying, you can optionally specify an `encryption` parameter to encrypt
-    the destination namespace with a different CMEK key than the source namespace.
-    """
+    copy_from_namespace: CopyFromNamespace
+    """The namespace to copy documents from."""
 
     delete_by_filter: object
     """The filter specifying which documents to delete."""
@@ -78,6 +81,17 @@ class NamespaceWriteParams(TypedDict, total=False):
     """
 
     upsert_rows: Iterable[RowParam]
+
+
+class CopyFromNamespaceCopyFromNamespaceConfig(TypedDict, total=False):
+    source_api_key: Required[str]
+    """An API key for the organization containing the source namespace"""
+
+    source_namespace: Required[str]
+    """The namespace to copy documents from."""
+
+
+CopyFromNamespace: TypeAlias = Union[str, CopyFromNamespaceCopyFromNamespaceConfig]
 
 
 class EncryptionCmek(TypedDict, total=False):

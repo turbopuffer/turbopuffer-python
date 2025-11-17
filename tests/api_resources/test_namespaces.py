@@ -503,7 +503,7 @@ class TestNamespaces:
     def test_method_write_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.write(
             namespace="namespace",
-            copy_from_namespace="copy_from_namespace",
+            copy_from_namespace="string",
             delete_by_filter={},
             delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
@@ -1055,7 +1055,7 @@ class TestAsyncNamespaces:
     async def test_method_write_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.write(
             namespace="namespace",
-            copy_from_namespace="copy_from_namespace",
+            copy_from_namespace="string",
             delete_by_filter={},
             delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],

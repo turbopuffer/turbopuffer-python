@@ -533,7 +533,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        copy_from_namespace: str | Omit = omit,
+        copy_from_namespace: namespace_write_params.CopyFromNamespace | Omit = omit,
         delete_by_filter: object | Omit = omit,
         delete_condition: object | Omit = omit,
         deletes: SequenceNotStr[IDParam] | Omit = omit,
@@ -559,9 +559,7 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          copy_from_namespace: The namespace to copy documents from. When copying, you can optionally specify
-              an `encryption` parameter to encrypt the destination namespace with a different
-              CMEK key than the source namespace.
+          copy_from_namespace: The namespace to copy documents from.
 
           delete_by_filter: The filter specifying which documents to delete.
 
@@ -1115,7 +1113,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        copy_from_namespace: str | Omit = omit,
+        copy_from_namespace: namespace_write_params.CopyFromNamespace | Omit = omit,
         delete_by_filter: object | Omit = omit,
         delete_condition: object | Omit = omit,
         deletes: SequenceNotStr[IDParam] | Omit = omit,
@@ -1141,9 +1139,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
-          copy_from_namespace: The namespace to copy documents from. When copying, you can optionally specify
-              an `encryption` parameter to encrypt the destination namespace with a different
-              CMEK key than the source namespace.
+          copy_from_namespace: The namespace to copy documents from.
 
           delete_by_filter: The filter specifying which documents to delete.
 
