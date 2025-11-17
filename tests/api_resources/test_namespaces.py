@@ -421,7 +421,7 @@ class TestNamespaces:
     @parametrize
     def test_method_write_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").write(
-            copy_from_namespace="copy_from_namespace",
+            copy_from_namespace="string",
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
             distance_metric="cosine_distance",
@@ -885,7 +885,7 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_method_write_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").write(
-            copy_from_namespace="copy_from_namespace",
+            copy_from_namespace="string",
             delete_by_filter={},
             delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
