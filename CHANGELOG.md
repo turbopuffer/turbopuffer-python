@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.8.0 (2025-11-25)
+
+Full Changelog: [v1.7.0...v1.8.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.7.0...v1.8.0)
+
+### Features
+
+* site: add ascii_folding to docs and SDKs ([7be788c](https://github.com/turbopuffer/turbopuffer-python/commit/7be788cb25ccac18a21ef05dec58c3e9556c3adb))
+
+
+### Chores
+
+* **internal:** codegen related update ([93ebd24](https://github.com/turbopuffer/turbopuffer-python/commit/93ebd246fd667d3393733b0e531c297b3ba80b01))
+
 ## 1.7.0 (2025-11-17)
 
 Full Changelog: [v1.6.0...v1.7.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.6.0...v1.7.0)
