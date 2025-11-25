@@ -5,7 +5,7 @@ from typing import Any, Tuple, Union, Literal, Sequence, TypedDict
 from .bm25_clause_params import Bm25ClauseParams
 from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams
 
-AggregateBy = Union[Tuple[Literal["Count"]], Tuple[Literal["Count"], str]]
+AggregateBy = Union[Tuple[Literal["Count"]], Tuple[Literal["Sum"], str], Tuple[Literal["Count"], str]]
 ExprRefNew = TypedDict("ExprRefNew", {"$ref_new": str})
 Expr = ExprRefNew
 Filter = Union[
@@ -34,6 +34,8 @@ Filter = Union[
     Tuple[str, Literal["ContainsAllTokens"], Sequence[str]],
     Tuple[str, Literal["ContainsAllTokens"], str, ContainsAllTokensFilterParams],
     Tuple[str, Literal["ContainsAllTokens"], Sequence[str], ContainsAllTokensFilterParams],
+    Tuple[str, Literal["ContainsTokenSequence"], str],
+    Tuple[str, Literal["ContainsTokenSequence"], Sequence[str]],
     Tuple[Literal["Not"], "Filter"],
     Tuple[Literal["And"], Sequence["Filter"]],
     Tuple[Literal["Or"], Sequence["Filter"]],
