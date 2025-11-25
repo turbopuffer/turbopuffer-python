@@ -10,6 +10,12 @@ __all__ = ["FullTextSearchConfig"]
 
 
 class FullTextSearchConfig(BaseModel):
+    ascii_folding: Optional[bool] = None
+    """
+    Whether to convert each non-ASCII character in a token to its ASCII equivalent,
+    if one exists (e.g., à -> a). Defaults to `false` (i.e., no folding).
+    """
+
     b: Optional[float] = None
     """The `b` document length normalization parameter for BM25. Defaults to `0.75`."""
 
