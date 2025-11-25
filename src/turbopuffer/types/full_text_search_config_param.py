@@ -11,6 +11,12 @@ __all__ = ["FullTextSearchConfigParam"]
 
 
 class FullTextSearchConfigParam(TypedDict, total=False):
+    ascii_folding: bool
+    """
+    Whether to convert each non-ASCII character in a token to its ASCII equivalent,
+    if one exists (e.g., à -> a). Defaults to `false` (i.e., no folding).
+    """
+
     b: float
     """The `b` document length normalization parameter for BM25. Defaults to `0.75`."""
 
