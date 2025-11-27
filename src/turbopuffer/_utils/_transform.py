@@ -250,8 +250,8 @@ def _transform_recursive(
             )
 
         for subtype in get_args(stripped_type):
-            data = cast(object, _transform_recursive(data, annotation=annotation, inner_type=subtype))
-        return data
+            data = _transform_recursive(data, annotation=annotation, inner_type=subtype)  # pyright: ignore[reportUnknownArgumentType]
+        return data  # pyright: ignore[reportUnknownVariableType]
 
     if isinstance(data, pydantic.BaseModel):
         return model_dump(data, exclude_unset=True, mode="json")
@@ -460,8 +460,8 @@ async def _async_transform_recursive(
             return tuple(transformed_items)
 
         for subtype in get_args(stripped_type):
-            data = cast(object, await _async_transform_recursive(data, annotation=annotation, inner_type=subtype))
-        return data
+            data = await _async_transform_recursive(data, annotation=annotation, inner_type=subtype)  # pyright: ignore[reportUnknownArgumentType]
+        return data  # pyright: ignore[reportUnknownVariableType]
 
     if isinstance(data, pydantic.BaseModel):
         return model_dump(data, exclude_unset=True, mode="json")
