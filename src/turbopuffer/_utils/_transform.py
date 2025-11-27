@@ -155,7 +155,8 @@ def _maybe_transform_key(key: str, type_: type) -> str:
 
 
 def _no_transform_needed(annotation: type) -> bool:
-    return annotation == float or annotation == int
+    # Expanded to include more primitives that never need transformation
+    return annotation in (float, int, str, bool, type(None))
 
 
 def _transform_recursive(
@@ -178,12 +179,26 @@ def _transform_recursive(
     """
     from .._compat import model_dump
 
-    if inner_type is None:
-        inner_type = annotation
+    # Fast path for primitive types that never need transformation.
+    # This avoids expensive type introspection for the most common cases.
+    if data is None or isinstance(data, (int, float, bool, str)):
+        return data
 
-    # Fast path for vector encoding.
+    # Fast path for vector encoding - must come BEFORE list-of-primitives check
+    # because vectors are lists of floats that need base64 encoding.
     if annotation in VectorAnnotations:
         return _encode_vector(data)
+
+    # Fast path for lists of primitives - avoid per-element recursion and type introspection.
+    # Safe because VectorAnnotations check above handles vectors that need encoding.
+    if isinstance(data, list) and data and isinstance(data[0], (int, float, str)):
+        return cast(object, data)
+
+    # Narrow type for pyright after complex isinstance checks above.
+    data = cast(object, data)
+
+    if inner_type is None:
+        inner_type = annotation
 
     stripped_type = strip_annotated_type(inner_type)
     origin = get_origin(stripped_type) or stripped_type
@@ -192,7 +207,9 @@ def _transform_recursive(
 
     if origin == dict and is_mapping(data):
         items_type = get_args(stripped_type)[1]
-        return {key: _transform_recursive(value, annotation=items_type) for key, value in data.items()}
+        return cast(object, {
+            key: _transform_recursive(value, annotation=items_type) for key, value in data.items()
+        })
 
     if (
         # List[T]
@@ -224,9 +241,17 @@ def _transform_recursive(
         #
         # TODO: there may be edge cases where the same normalized field name will transform to two different names
         # in different subtypes.
+        #
+        # Fast path for tuples without dicts (e.g. Filter, RankBy) - skip Union subtype iteration.
+        if isinstance(data, tuple) and not any(isinstance(item, dict) for item in cast(tuple[object, ...], data)):
+            return tuple(
+                _transform_recursive(item, annotation=cast(type, object), inner_type=cast(type, object))
+                for item in cast(tuple[object, ...], data)
+            )
+
         for subtype in get_args(stripped_type):
-            data = _transform_recursive(data, annotation=annotation, inner_type=subtype)
-        return data
+            data = _transform_recursive(cast(object, data), annotation=annotation, inner_type=cast(type, subtype))
+        return cast(object, data)
 
     if isinstance(data, pydantic.BaseModel):
         return model_dump(data, exclude_unset=True, mode="json")
@@ -362,12 +387,26 @@ async def _async_transform_recursive(
     """
     from .._compat import model_dump
 
-    if inner_type is None:
-        inner_type = annotation
+    # Fast path for primitive types that never need transformation.
+    # This avoids expensive type introspection for the most common cases.
+    if data is None or isinstance(data, (int, float, bool, str)):
+        return data
 
-    # Fast path for vector encoding.
+    # Fast path for vector encoding - must come BEFORE list-of-primitives check
+    # because vectors are lists of floats that need base64 encoding.
     if annotation in VectorAnnotations:
         return _encode_vector(data)
+
+    # Fast path for lists of primitives - avoid per-element recursion and type introspection.
+    # Safe because VectorAnnotations check above handles vectors that need encoding.
+    if isinstance(data, list) and data and isinstance(data[0], (int, float, str)):
+        return cast(object, data)
+
+    # Narrow type for pyright after complex isinstance checks above.
+    data = cast(object, data)
+
+    if inner_type is None:
+        inner_type = annotation
 
     stripped_type = strip_annotated_type(inner_type)
     origin = get_origin(stripped_type) or stripped_type
@@ -376,7 +415,9 @@ async def _async_transform_recursive(
 
     if origin == dict and is_mapping(data):
         items_type = get_args(stripped_type)[1]
-        return {key: _transform_recursive(value, annotation=items_type) for key, value in data.items()}
+        return cast(object, {
+            key: _transform_recursive(value, annotation=items_type) for key, value in data.items()
+        })
 
     if (
         # List[T]
@@ -408,9 +449,19 @@ async def _async_transform_recursive(
         #
         # TODO: there may be edge cases where the same normalized field name will transform to two different names
         # in different subtypes.
+        #
+        # Fast path for tuples without dicts (e.g. Filter, RankBy) - skip Union subtype iteration.
+        if isinstance(data, tuple) and not any(isinstance(item, dict) for item in cast(tuple[object, ...], data)):
+            transformed_items: list[object] = []
+            for item in cast(tuple[object, ...], data):
+                transformed_items.append(
+                    await _async_transform_recursive(item, annotation=cast(type, object), inner_type=cast(type, object))
+                )
+            return tuple(transformed_items)
+
         for subtype in get_args(stripped_type):
-            data = await _async_transform_recursive(data, annotation=annotation, inner_type=subtype)
-        return data
+            data = await _async_transform_recursive(cast(object, data), annotation=annotation, inner_type=cast(type, subtype))
+        return cast(object, data)
 
     if isinstance(data, pydantic.BaseModel):
         return model_dump(data, exclude_unset=True, mode="json")
