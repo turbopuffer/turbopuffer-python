@@ -194,6 +194,10 @@ def _transform_recursive(
     if isinstance(data, list) and data and isinstance(data[0], (int, float, str)):
         return cast(object, data)
 
+    # Narrow type for pyright after complex isinstance checks above.
+    # Without this, pyright thinks data could still be list[Unknown].
+    data = cast(object, data)
+
     if inner_type is None:
         inner_type = annotation
 
@@ -204,7 +208,9 @@ def _transform_recursive(
 
     if origin == dict and is_mapping(data):
         items_type = get_args(stripped_type)[1]
-        return {key: _transform_recursive(value, annotation=items_type) for key, value in data.items()}
+        return {
+            key: _transform_recursive(value, annotation=items_type) for key, value in data.items()
+        }  # pyright: ignore[reportUnknownVariableType]
 
     if (
         # List[T]
@@ -217,7 +223,7 @@ def _transform_recursive(
         # dicts are technically iterable, but it is an iterable on the keys of the dict and is not usually
         # intended as an iterable, so we don't transform it.
         if isinstance(data, dict):
-            return cast(object, data)
+            return data  # pyright: ignore[reportUnknownVariableType]
 
         inner_type = extract_type_arg(stripped_type, 0)
         if _no_transform_needed(inner_type):
@@ -239,17 +245,16 @@ def _transform_recursive(
         #
         # Fast path for tuples without dicts (e.g. Filter, RankBy) - skip Union subtype iteration.
         if isinstance(data, tuple) and not any(isinstance(item, dict) for item in cast(tuple[object, ...], data)):
-            return cast(
-                object,
-                tuple(
-                    _transform_recursive(cast(object, item), annotation=cast(type, object), inner_type=cast(type, object))
-                    for item in cast(tuple[object, ...], data)
-                ),
+            return tuple(
+                _transform_recursive(item, annotation=cast(type, object), inner_type=cast(type, object))
+                for item in cast(tuple[object, ...], data)
             )
 
         for subtype in get_args(stripped_type):
-            data = _transform_recursive(cast(object, data), annotation=annotation, inner_type=subtype)
-        return cast(object, data)
+            data = _transform_recursive(
+                data, annotation=annotation, inner_type=subtype  # pyright: ignore[reportUnknownArgumentType]
+            )
+        return data  # pyright: ignore[reportUnknownVariableType]
 
     if isinstance(data, pydantic.BaseModel):
         return model_dump(data, exclude_unset=True, mode="json")
@@ -400,6 +405,10 @@ async def _async_transform_recursive(
     if isinstance(data, list) and data and isinstance(data[0], (int, float, str)):
         return cast(object, data)
 
+    # Narrow type for pyright after complex isinstance checks above.
+    # Without this, pyright thinks data could still be list[Unknown].
+    data = cast(object, data)
+
     if inner_type is None:
         inner_type = annotation
 
@@ -410,7 +419,9 @@ async def _async_transform_recursive(
 
     if origin == dict and is_mapping(data):
         items_type = get_args(stripped_type)[1]
-        return {key: _transform_recursive(value, annotation=items_type) for key, value in data.items()}
+        return {
+            key: _transform_recursive(value, annotation=items_type) for key, value in data.items()
+        }  # pyright: ignore[reportUnknownVariableType]
 
     if (
         # List[T]
@@ -423,7 +434,7 @@ async def _async_transform_recursive(
         # dicts are technically iterable, but it is an iterable on the keys of the dict and is not usually
         # intended as an iterable, so we don't transform it.
         if isinstance(data, dict):
-            return cast(object, data)
+            return data  # pyright: ignore[reportUnknownVariableType]
 
         inner_type = extract_type_arg(stripped_type, 0)
         if _no_transform_needed(inner_type):
@@ -448,13 +459,15 @@ async def _async_transform_recursive(
             transformed_items: list[object] = []
             for item in cast(tuple[object, ...], data):
                 transformed_items.append(
-                    await _async_transform_recursive(cast(object, item), annotation=cast(type, object), inner_type=cast(type, object))
+                    await _async_transform_recursive(item, annotation=cast(type, object), inner_type=cast(type, object))
                 )
-            return cast(object, tuple(transformed_items))
+            return tuple(transformed_items)
 
         for subtype in get_args(stripped_type):
-            data = await _async_transform_recursive(cast(object, data), annotation=annotation, inner_type=subtype)
-        return cast(object, data)
+            data = await _async_transform_recursive(
+                data, annotation=annotation, inner_type=subtype  # pyright: ignore[reportUnknownArgumentType]
+            )
+        return data  # pyright: ignore[reportUnknownVariableType]
 
     if isinstance(data, pydantic.BaseModel):
         return model_dump(data, exclude_unset=True, mode="json")
