@@ -155,7 +155,8 @@ def _maybe_transform_key(key: str, type_: type) -> str:
 
 
 def _no_transform_needed(annotation: type) -> bool:
-    return annotation == float or annotation == int
+    # Expanded to include more primitives that never need transformation
+    return annotation in (float, int, str, bool, type(None))
 
 
 def _transform_recursive(
@@ -177,6 +178,15 @@ def _transform_recursive(
             Defaults to the same value as the `annotation` argument.
     """
     from .._compat import model_dump
+
+    # Fast path for primitive types that never need transformation.
+    # This avoids expensive type introspection for the most common cases.
+    if data is None or isinstance(data, (int, float, bool, str)):
+        return data
+
+    # Fast path for lists of primitives - avoid per-element recursion and type introspection.
+    if isinstance(data, list) and data and isinstance(data[0], (int, float, str)):
+        return data
 
     if inner_type is None:
         inner_type = annotation
@@ -224,6 +234,14 @@ def _transform_recursive(
         #
         # TODO: there may be edge cases where the same normalized field name will transform to two different names
         # in different subtypes.
+        #
+        # Fast path for tuples without dicts (e.g. Filter, RankBy) - skip Union subtype iteration.
+        if isinstance(data, tuple) and not any(isinstance(item, dict) for item in data):
+            return tuple(
+                _transform_recursive(cast(object, item), annotation=cast(type, object), inner_type=cast(type, object))
+                for item in data
+            )
+        
         for subtype in get_args(stripped_type):
             data = _transform_recursive(data, annotation=annotation, inner_type=subtype)
         return data
@@ -362,6 +380,15 @@ async def _async_transform_recursive(
     """
     from .._compat import model_dump
 
+    # Fast path for primitive types that never need transformation.
+    # This avoids expensive type introspection for the most common cases.
+    if data is None or isinstance(data, (int, float, bool, str)):
+        return data
+
+    # Fast path for lists of primitives - avoid per-element recursion and type introspection.
+    if isinstance(data, list) and data and isinstance(data[0], (int, float, str)):
+        return data
+
     if inner_type is None:
         inner_type = annotation
 
@@ -408,6 +435,16 @@ async def _async_transform_recursive(
         #
         # TODO: there may be edge cases where the same normalized field name will transform to two different names
         # in different subtypes.
+        #
+        # Fast path for tuples without dicts (e.g. Filter, RankBy) - skip Union subtype iteration.
+        if isinstance(data, tuple) and not any(isinstance(item, dict) for item in data):
+            transformed_items = []
+            for item in data:
+                transformed_items.append(
+                    await _async_transform_recursive(cast(object, item), annotation=cast(type, object), inner_type=cast(type, object))
+                )
+            return tuple(transformed_items)
+        
         for subtype in get_args(stripped_type):
             data = await _async_transform_recursive(data, annotation=annotation, inner_type=subtype)
         return data
