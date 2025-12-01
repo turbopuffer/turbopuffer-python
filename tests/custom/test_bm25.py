@@ -59,12 +59,12 @@ def test_bm25(tpuf: Turbopuffer):
         top_k=2,
         rank_by=(
             "Sum",
-            [("blabla", "BM25", "walrus tusk"), ("blabla", "BM25", "jumping fox")],
+            [("blabla", "BM25", "walrus slow"), ("blabla", "BM25", "jumping fox")],
         ),
         filters=("fact_id", "NotEq", "z"),
     )
     assert result.rows is not None
-    assert [item.id for item in result.rows] == [2, 4]
+    assert [item.id for item in result.rows] == [4, 2]
 
     # Upsert with row-based upsert format
     ns.write(
