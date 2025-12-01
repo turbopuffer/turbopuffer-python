@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.8.1 (2025-12-01)
+
+Full Changelog: [v1.8.0...v1.8.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.8.0...v1.8.1)
+
+### Bug Fixes
+
+* ensure streams are always closed ([91cb8d5](https://github.com/turbopuffer/turbopuffer-python/commit/91cb8d54dd7804c88c5b9c1c659a806c0d664fd0))
+* **tests:** use BM25 query with distinct scores ([#179](https://github.com/turbopuffer/turbopuffer-python/issues/179)) ([508994e](https://github.com/turbopuffer/turbopuffer-python/commit/508994e52f0e5ef3ddf347a3f4fd22dc0f855531))
+
+
+### Chores
+
+* **deps:** mypy 1.18.1 has a regression, pin to 1.17 ([8cebf8f](https://github.com/turbopuffer/turbopuffer-python/commit/8cebf8f09dea0252da7570c08bb924fb5fcb3587))
+
 ## 1.8.0 (2025-11-25)
 
 Full Changelog: [v1.7.0...v1.8.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.7.0...v1.8.0)
