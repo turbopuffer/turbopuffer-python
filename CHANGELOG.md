@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.0-beta.2 (2025-12-02)
+
+Full Changelog: [v1.9.0-beta.1...v1.9.0-beta.2](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.1...v1.9.0-beta.2)
+
 ## 1.9.0-beta.1 (2025-12-02)
 
 Full Changelog: [v1.8.1...v1.9.0-beta.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.8.1...v1.9.0-beta.1)
