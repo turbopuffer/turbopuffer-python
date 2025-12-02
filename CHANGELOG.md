@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.9.0-beta.1 (2025-12-02)
+
+Full Changelog: [v1.8.1...v1.9.0-beta.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.8.1...v1.9.0-beta.1)
+
+### Performance Improvements
+
+* skip unneeded transformations for primitive types and tuples ([#178](https://github.com/turbopuffer/turbopuffer-python/issues/178)) ([8dbed44](https://github.com/turbopuffer/turbopuffer-python/commit/8dbed446745e90dc010e56cc6e47ffcb719fd094))
+
 ## 1.8.1 (2025-12-01)
 
 Full Changelog: [v1.8.0...v1.8.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.8.0...v1.8.1)
