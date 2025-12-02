@@ -17,7 +17,7 @@ The REST API documentation can be found on [turbopuffer.com](https://turbopuffer
 
 ```sh
 # install from PyPI
-pip install turbopuffer
+pip install --pre turbopuffer
 ```
 
 ## Usage
@@ -91,7 +91,7 @@ You can enable this by installing `aiohttp`:
 
 ```sh
 # install from PyPI
-pip install turbopuffer[aiohttp]
+pip install --pre turbopuffer[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
