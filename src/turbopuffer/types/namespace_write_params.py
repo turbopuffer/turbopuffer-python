@@ -90,11 +90,14 @@ class NamespaceWriteParams(TypedDict, total=False):
 
 
 class CopyFromNamespaceCopyFromNamespaceConfig(TypedDict, total=False):
-    source_api_key: Required[str]
-    """An API key for the organization containing the source namespace"""
-
     source_namespace: Required[str]
     """The namespace to copy documents from."""
+
+    source_api_key: str
+    """(Optional) An API key for the organization containing the source namespace"""
+
+    source_region: str
+    """(Optional) The region of the source namespace."""
 
 
 CopyFromNamespace: TypeAlias = Union[str, CopyFromNamespaceCopyFromNamespaceConfig]
