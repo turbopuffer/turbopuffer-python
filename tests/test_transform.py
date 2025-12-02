@@ -1,12 +1,20 @@
 from __future__ import annotations
 
+# turbopuffer: Skip entire file - we use an optimized transform that bypasses Stainless
+# type-based transformations. Our _turbopuffer_transform only handles vector encoding
+# and Omit/NotGiven stripping, not field aliasing, date formatting, etc.
+# See _transform.py for details on why this optimization was needed (async performance).
+import pytest
+
+pytestmark = pytest.mark.skip(
+    reason="turbopuffer uses optimized transform that bypasses Stainless type-based transformations"
+)
+
 import io
 import pathlib
 from typing import Any, Dict, List, Union, TypeVar, Iterable, Optional, cast
 from datetime import date, datetime
 from typing_extensions import Required, Annotated, TypedDict
-
-import pytest
 
 from turbopuffer._types import Base64FileInput, omit, not_given
 from turbopuffer._utils import (
