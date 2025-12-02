@@ -31,6 +31,9 @@ class NamespaceWriteParams(TypedDict, total=False):
     delete_by_filter: object
     """The filter specifying which documents to delete."""
 
+    delete_by_filter_allow_partial: bool
+    """Allow partial completion when filter matches too many documents."""
+
     delete_condition: object
     """
     A condition evaluated against the current value of each document targeted by a
@@ -50,6 +53,9 @@ class NamespaceWriteParams(TypedDict, total=False):
 
     patch_by_filter: PatchByFilter
     """The patch and filter specifying which documents to patch."""
+
+    patch_by_filter_allow_partial: bool
+    """Allow partial completion when filter matches too many documents."""
 
     patch_columns: ColumnsParam
     """A list of documents in columnar format.

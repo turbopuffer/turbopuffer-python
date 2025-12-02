@@ -505,6 +505,7 @@ class TestNamespaces:
             namespace="namespace",
             copy_from_namespace="string",
             delete_by_filter={},
+            delete_by_filter_allow_partial=True,
             delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
@@ -514,6 +515,7 @@ class TestNamespaces:
                 "filters": {},
                 "patch": {"foo": "bar"},
             },
+            patch_by_filter_allow_partial=True,
             patch_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
@@ -1057,6 +1059,7 @@ class TestAsyncNamespaces:
             namespace="namespace",
             copy_from_namespace="string",
             delete_by_filter={},
+            delete_by_filter_allow_partial=True,
             delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
@@ -1066,6 +1069,7 @@ class TestAsyncNamespaces:
                 "filters": {},
                 "patch": {"foo": "bar"},
             },
+            patch_by_filter_allow_partial=True,
             patch_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],

@@ -535,12 +535,14 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         copy_from_namespace: namespace_write_params.CopyFromNamespace | Omit = omit,
         delete_by_filter: object | Omit = omit,
+        delete_by_filter_allow_partial: bool | Omit = omit,
         delete_condition: object | Omit = omit,
         deletes: SequenceNotStr[IDParam] | Omit = omit,
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: namespace_write_params.Encryption | Omit = omit,
         patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
+        patch_by_filter_allow_partial: bool | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
         patch_condition: object | Omit = omit,
         patch_rows: Iterable[RowParam] | Omit = omit,
@@ -563,6 +565,8 @@ class NamespacesResource(SyncAPIResource):
 
           delete_by_filter: The filter specifying which documents to delete.
 
+          delete_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
+
           delete_condition: A condition evaluated against the current value of each document targeted by a
               delete write. Only documents that pass the condition are deleted.
 
@@ -573,6 +577,8 @@ class NamespacesResource(SyncAPIResource):
           encryption: The encryption configuration for a namespace.
 
           patch_by_filter: The patch and filter specifying which documents to patch.
+
+          patch_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
 
           patch_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
@@ -606,12 +612,14 @@ class NamespacesResource(SyncAPIResource):
                 {
                     "copy_from_namespace": copy_from_namespace,
                     "delete_by_filter": delete_by_filter,
+                    "delete_by_filter_allow_partial": delete_by_filter_allow_partial,
                     "delete_condition": delete_condition,
                     "deletes": deletes,
                     "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
                     "patch_by_filter": patch_by_filter,
+                    "patch_by_filter_allow_partial": patch_by_filter_allow_partial,
                     "patch_columns": patch_columns,
                     "patch_condition": patch_condition,
                     "patch_rows": patch_rows,
@@ -1115,12 +1123,14 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         copy_from_namespace: namespace_write_params.CopyFromNamespace | Omit = omit,
         delete_by_filter: object | Omit = omit,
+        delete_by_filter_allow_partial: bool | Omit = omit,
         delete_condition: object | Omit = omit,
         deletes: SequenceNotStr[IDParam] | Omit = omit,
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: namespace_write_params.Encryption | Omit = omit,
         patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
+        patch_by_filter_allow_partial: bool | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
         patch_condition: object | Omit = omit,
         patch_rows: Iterable[RowParam] | Omit = omit,
@@ -1143,6 +1153,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           delete_by_filter: The filter specifying which documents to delete.
 
+          delete_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
+
           delete_condition: A condition evaluated against the current value of each document targeted by a
               delete write. Only documents that pass the condition are deleted.
 
@@ -1153,6 +1165,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
           encryption: The encryption configuration for a namespace.
 
           patch_by_filter: The patch and filter specifying which documents to patch.
+
+          patch_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
 
           patch_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
@@ -1186,12 +1200,14 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 {
                     "copy_from_namespace": copy_from_namespace,
                     "delete_by_filter": delete_by_filter,
+                    "delete_by_filter_allow_partial": delete_by_filter_allow_partial,
                     "delete_condition": delete_condition,
                     "deletes": deletes,
                     "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
                     "patch_by_filter": patch_by_filter,
+                    "patch_by_filter_allow_partial": patch_by_filter_allow_partial,
                     "patch_columns": patch_columns,
                     "patch_condition": patch_condition,
                     "patch_rows": patch_rows,
