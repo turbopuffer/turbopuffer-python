@@ -99,7 +99,7 @@ def maybe_transform(
 # The generic _transform_recursive iterates through 40+ union variants per tuple,
 # but turbopuffer only needs to encode 'vector' fields to base64 and strip Omit/NotGiven.
 def _turbopuffer_transform(obj: object) -> object:
-    from .._types import NotGiven, Omit
+    from .._types import NotGiven, Omit  # noqa: I001
 
     if obj is None or isinstance(obj, (int, float, bool, str)):
         return obj
@@ -135,7 +135,7 @@ def _turbopuffer_transform(obj: object) -> object:
 # Wrapper over _transform_recursive providing fake types
 def transform(
     data: _T,
-    expected_type: object,
+    expected_type: object,  # noqa: ARG001 - kept for API compatibility
 ) -> _T:
     """Transform dictionaries based off of type information from the given type, for example:
 
@@ -359,7 +359,7 @@ async def async_maybe_transform(
 
 async def async_transform(
     data: _T,
-    expected_type: object,
+    expected_type: object,  # noqa: ARG001 - kept for API compatibility
 ) -> _T:
     """Transform dictionaries based off of type information from the given type, for example:
 
