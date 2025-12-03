@@ -89,6 +89,7 @@ numpy==2.0.2
 orjson==3.10.18
     # via turbopuffer
 packaging==23.2
+    # via dependency-groups
     # via nox
     # via pytest
 pathspec==0.12.1
