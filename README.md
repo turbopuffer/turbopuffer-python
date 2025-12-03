@@ -9,11 +9,6 @@ and offers both synchronous and asynchronous clients powered by [httpx](https://
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-> [!IMPORTANT]
-> **The latest version of the Python SDK (v0.5) contains several breaking changes.**
->
-> Consult [UPGRADING.md](./UPGRADING.md) for details.
-
 ## Documentation
 
 The HTTP API documentation can be found at [turbopuffer.com/docs](https://turbopuffer.com/docs).
