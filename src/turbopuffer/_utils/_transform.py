@@ -173,7 +173,6 @@ def _maybe_transform_key(key: str, type_: type) -> str:
 
 def _no_transform_needed(annotation: type) -> bool:
     return annotation == float or annotation == int
-    return annotation == float or annotation == int
 
 
 def _transform_recursive(
@@ -206,7 +205,6 @@ def _transform_recursive(
 
     if origin == dict and is_mapping(data):
         items_type = get_args(stripped_type)[1]
-        return {key: _transform_recursive(value, annotation=items_type) for key, value in data.items()}
         return {key: _transform_recursive(value, annotation=items_type) for key, value in data.items()}
 
     if (
