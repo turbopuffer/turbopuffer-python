@@ -352,7 +352,6 @@ async def async_transform(
     It should be noted that the transformations that this function does are not represented in the type system.
     """
     # turbopuffer: Use simple vector encoding instead of generic type-based transform.
-    # This avoids expensive type introspection that blocks the event loop.
     return cast(_T, _turbopuffer_transform(data))
 
 
