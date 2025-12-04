@@ -32,6 +32,9 @@ class NamespaceWriteParams(TypedDict, total=False):
     delete_by_filter: Union[Filter, Omit]
     """The filter specifying which documents to delete."""
 
+    delete_by_filter_allow_partial: bool
+    """Allow partial completion when filter matches too many documents."""
+
     delete_condition: Union[Filter, Omit]
     """
     A condition evaluated against the current value of each document targeted by a
@@ -51,6 +54,9 @@ class NamespaceWriteParams(TypedDict, total=False):
 
     patch_by_filter: PatchByFilter
     """The patch and filter specifying which documents to patch."""
+
+    patch_by_filter_allow_partial: bool
+    """Allow partial completion when filter matches too many documents."""
 
     patch_columns: ColumnsParam
     """A list of documents in columnar format.
@@ -85,11 +91,14 @@ class NamespaceWriteParams(TypedDict, total=False):
 
 
 class CopyFromNamespaceCopyFromNamespaceConfig(TypedDict, total=False):
-    source_api_key: Required[str]
-    """An API key for the organization containing the source namespace"""
-
     source_namespace: Required[str]
     """The namespace to copy documents from."""
+
+    source_api_key: str
+    """(Optional) An API key for the organization containing the source namespace"""
+
+    source_region: str
+    """(Optional) The region of the source namespace."""
 
 
 CopyFromNamespace: TypeAlias = Union[str, CopyFromNamespaceCopyFromNamespaceConfig]

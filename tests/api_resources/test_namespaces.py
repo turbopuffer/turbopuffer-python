@@ -422,6 +422,7 @@ class TestNamespaces:
     def test_method_write_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").write(
             copy_from_namespace="string",
+            delete_by_filter_allow_partial=True,
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
             distance_metric="cosine_distance",
@@ -430,6 +431,7 @@ class TestNamespaces:
                 "filters": ("name", "Eq", "foo"),
                 "patch": {"foo": "bar"},
             },
+            patch_by_filter_allow_partial=True,
             patch_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
@@ -887,6 +889,7 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespace("namespace").write(
             copy_from_namespace="string",
             delete_by_filter={},
+            delete_by_filter_allow_partial=True,
             delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
@@ -896,6 +899,7 @@ class TestAsyncNamespaces:
                 "filters": ("name", "Eq", "foo"),
                 "patch": {"foo": "bar"},
             },
+            patch_by_filter_allow_partial=True,
             patch_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],

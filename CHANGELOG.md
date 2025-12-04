@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.9.0-beta.3 (2025-12-02)
+
+Full Changelog: [v1.9.0-beta.2...v1.9.0-beta.3](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.2...v1.9.0-beta.3)
+
+### Features
+
+* sdks: add &lt;patch|delete&gt;_by_filter_allow_partial options ([ffac88a](https://github.com/turbopuffer/turbopuffer-python/commit/ffac88af0fb787776ed96076c892e4d70b8fd85d))
+
+
+### Chores
+
+* **docs:** use environment variables for authentication in code snippets ([26df7ea](https://github.com/turbopuffer/turbopuffer-python/commit/26df7ea743c81e4e66ef1ebe72d32ef91ac29f79))
+* update lockfile ([679604c](https://github.com/turbopuffer/turbopuffer-python/commit/679604c9a2fafe668fdebbf482514dd9d7362955))
+
+
+### Documentation
+
+* add cross-region copy_from_namespace to write API docs ([749b349](https://github.com/turbopuffer/turbopuffer-python/commit/749b349674e317d0af41461b5c55d17e70265248))
+
+## 1.9.0-beta.2 (2025-12-02)
+
+Full Changelog: [v1.9.0-beta.1...v1.9.0-beta.2](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.1...v1.9.0-beta.2)
+
 ## 1.9.0-beta.1 (2025-12-02)
 
 Full Changelog: [v1.8.1...v1.9.0-beta.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.8.1...v1.9.0-beta.1)
