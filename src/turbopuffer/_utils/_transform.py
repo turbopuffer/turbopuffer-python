@@ -3,7 +3,7 @@ from __future__ import annotations
 import io
 import base64
 import pathlib
-from typing import Any, List, Union, Mapping, TypeVar, Iterable, cast
+from typing import Any, List, Mapping, TypeVar, cast
 from datetime import date, datetime
 from typing_extensions import Literal, get_args, override, get_type_hints as _get_type_hints
 
@@ -19,7 +19,6 @@ from ._utils import (
     is_sequence,
 )
 from .._files import is_base64_file_input
-from .._types import SequenceNotStr
 from ._compat import get_origin, is_typeddict
 from ._typing import (
     is_list_type,
@@ -38,12 +37,6 @@ _T = TypeVar("_T")
 
 # TODO: support for drilling globals() and locals()
 # TODO: ensure works correctly with forward references in all cases
-
-# HACK: annotations to sniff out that indicate data is of a vector type.
-# Unfortunately we don't get nice types like `Vector` directly.
-VectorRowAnnotation = Union[Iterable[float], str]
-VectorColumnAnnotation = Union[SequenceNotStr[VectorRowAnnotation], Iterable[float], str]
-VectorAnnotations = cast(List[type], [VectorRowAnnotation, VectorColumnAnnotation])
 
 PropertyFormat = Literal["iso8601", "base64", "custom"]
 
@@ -96,8 +89,6 @@ def maybe_transform(
 
 
 # turbopuffer: Simple transform without expensive type introspection.
-# The generic _transform_recursive iterates through 40+ union variants per tuple,
-# but turbopuffer only needs to encode 'vector' fields to base64 and strip Omit/NotGiven.
 def _turbopuffer_transform(obj: object) -> object:
     from .._types import NotGiven, Omit  # noqa: I001
 
@@ -109,26 +100,15 @@ def _turbopuffer_transform(obj: object) -> object:
             # Strip Omit and NotGiven values
             if isinstance(v, (Omit, NotGiven)):
                 continue
-            if k == "vector" and isinstance(v, list) and v:
-                first = cast(object, v[0])
-                # Single vector: [0.1, 0.2, 0.3]
-                if isinstance(first, (int, float)) and not isinstance(first, bool):
-                    result[k] = b64encode_vector(cast(List[float], v))
-                # List of vectors (ColumnsParam): [[0.1, 0.2], [0.3, 0.4]]
-                elif isinstance(first, list) and first and isinstance(first[0], (int, float)) and not isinstance(first[0], bool):
-                    result[k] = [b64encode_vector(vec) for vec in cast(List[List[float]], v)]
-                else:
-                    result[k] = _turbopuffer_transform(cast(object, v))
+            if k == "vector":
+                result[k] = _encode_vector(v)
             else:
-                result[k] = _turbopuffer_transform(cast(object, v))
+                result[k] = _turbopuffer_transform(v)
         return result
     if isinstance(obj, list):
         return [_turbopuffer_transform(i) for i in cast(List[object], obj)]
     if isinstance(obj, tuple):
         return tuple(_turbopuffer_transform(i) for i in cast(tuple[object, ...], obj))
-    if isinstance(obj, pydantic.BaseModel):
-        from .._compat import model_dump
-        return _turbopuffer_transform(model_dump(obj, exclude_unset=True, mode="json"))
     return obj
 
 
@@ -153,7 +133,6 @@ def transform(
     It should be noted that the transformations that this function does are not represented in the type system.
     """
     # turbopuffer: Use simple vector encoding instead of generic type-based transform.
-    # This avoids expensive type introspection that blocks the event loop.
     return cast(_T, _turbopuffer_transform(data))
 
 
@@ -218,10 +197,6 @@ def _transform_recursive(
 
     if inner_type is None:
         inner_type = annotation
-
-    # Fast path for vector encoding.
-    if annotation in VectorAnnotations:
-        return _encode_vector(data)
 
     stripped_type = strip_annotated_type(inner_type)
     origin = get_origin(stripped_type) or stripped_type
@@ -403,10 +378,6 @@ async def _async_transform_recursive(
 
     if inner_type is None:
         inner_type = annotation
-
-    # Fast path for vector encoding.
-    if annotation in VectorAnnotations:
-        return _encode_vector(data)
 
     stripped_type = strip_annotated_type(inner_type)
     origin = get_origin(stripped_type) or stripped_type
