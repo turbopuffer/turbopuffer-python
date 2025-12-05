@@ -31,6 +31,7 @@ from ._typing import (
     strip_annotated_type,
 )
 from ..lib.vector import b64encode_vector
+from .._types import NotGiven, Omit
 
 _T = TypeVar("_T")
 
@@ -90,7 +91,6 @@ def maybe_transform(
 
 # turbopuffer: Simple transform without expensive type introspection.
 def _turbopuffer_transform(obj: object) -> object:
-    from .._types import NotGiven, Omit  # noqa: I001
 
     if obj is None or isinstance(obj, (int, float, bool, str)):
         return obj
