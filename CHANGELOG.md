@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.9.0 (2025-12-05)
+
+Full Changelog: [v1.9.0-beta.4...v1.9.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.4...v1.9.0)
+
+### Chores
+
+* codegen updates ([df997d6](https://github.com/turbopuffer/turbopuffer-python/commit/df997d67516e1193239247f3794dc4fcf6812df4))
+
 ## 1.9.0-beta.4 (2025-12-04)
 
 Full Changelog: [v1.9.0-beta.3...v1.9.0-beta.4](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.3...v1.9.0-beta.4)
