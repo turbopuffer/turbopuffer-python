@@ -17,7 +17,7 @@ The HTTP API documentation can be found at [turbopuffer.com/docs](https://turbop
 
 ```sh
 # install from PyPI
-pip install --pre turbopuffer[fast]
+pip install turbopuffer[fast]
 ```
 
 Or, if you're unable to run C binaries for JSON encoding:
@@ -125,7 +125,7 @@ You can enable this by installing `aiohttp`:
 
 ```sh
 # install from PyPI
-pip install --pre turbopuffer[aiohttp]
+pip install turbopuffer[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
