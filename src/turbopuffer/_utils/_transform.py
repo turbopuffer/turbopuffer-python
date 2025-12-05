@@ -19,6 +19,7 @@ from ._utils import (
     is_sequence,
 )
 from .._files import is_base64_file_input
+from .._types import Omit, NotGiven
 from ._compat import get_origin, is_typeddict
 from ._typing import (
     is_list_type,
@@ -31,7 +32,6 @@ from ._typing import (
     strip_annotated_type,
 )
 from ..lib.vector import b64encode_vector
-from .._types import NotGiven, Omit
 
 _T = TypeVar("_T")
 
