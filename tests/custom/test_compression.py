@@ -1,12 +1,13 @@
 import httpx
-import pytest
 import respx
+import pytest
 
 import turbopuffer
-from tests.conftest import base_url
+from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from tests.custom import test_prefix
+from tests.conftest import base_url
 from tests.custom.conftest import region
-from turbopuffer import AsyncTurbopuffer, Turbopuffer
+
 
 def test_compression_disabled_by_default(tpuf: Turbopuffer):
     ns = tpuf.namespace(test_prefix + "compression-disabled-default")
