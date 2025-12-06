@@ -17,6 +17,7 @@ dependencies = [
   "anyio>=3.5.0, <5",
   "distro>=1.7.0, <2",
   "sniffio",
+  "orjson>=3.10.15, <4",
 ]
 
 requires-python = ">= 3.9"
@@ -40,7 +41,7 @@ classifiers = [
 
 [project.optional-dependencies]
 aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.9"]
-fast = ["orjson>=3.10.15, <4"]
+fast = []
 urllib3 = ["urllib3>=2.2.3, <3"]
 
 [project.urls]
