@@ -17,13 +17,7 @@ The HTTP API documentation can be found at [turbopuffer.com/docs](https://turbop
 
 ```sh
 # install from PyPI
-pip install turbopuffer[fast]
-```
-
-Or, if you're unable to run C binaries for JSON encoding:
-
-```sh
-pip install --pre turbopuffer
+pip install turbopuffer
 ```
 
 ## Usage
