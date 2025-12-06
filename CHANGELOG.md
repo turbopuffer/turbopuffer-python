@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.10.0 (2025-12-06)
+
+Full Changelog: [v1.9.1...v1.10.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.1...v1.10.0)
+
+### Features
+
+* always install orjson, even without the [fast] extra ([#192](https://github.com/turbopuffer/turbopuffer-python/issues/192)) ([06a1420](https://github.com/turbopuffer/turbopuffer-python/commit/06a1420645f551ec9e22a931d0ff69dff2dd6814))
+* disable compression by default ([#190](https://github.com/turbopuffer/turbopuffer-python/issues/190)) ([34c1e32](https://github.com/turbopuffer/turbopuffer-python/commit/34c1e32989df97fa9baf25b079a8c3d7a8d1ddae))
+
 ## 1.9.1 (2025-12-05)
 
 Full Changelog: [v1.9.0...v1.9.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0...v1.9.1)

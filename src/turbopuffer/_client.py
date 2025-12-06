@@ -93,7 +93,7 @@ class Turbopuffer(SyncAPIClient):
         # See the [httpx documentation](https://www.python-httpx.org/api/#client) for more details.
         http_client: httpx.Client | None = None,
         # Enable or disable request compression. When enabled, requests larger than 1024 bytes are automatically compressed with gzip.
-        compression: bool = True,
+        compression: bool = False,
         # Enable or disable schema validation for data returned by the API.
         # When enabled an error APIResponseValidationError is raised
         # if the API responds with invalid data for the expected schema.
@@ -357,7 +357,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         # See the [httpx documentation](https://www.python-httpx.org/api/#asyncclient) for more details.
         http_client: httpx.AsyncClient | None = None,
         # Enable or disable request compression. When enabled, requests larger than 1024 bytes are automatically compressed with gzip.
-        compression: bool = True,
+        compression: bool = False,
         # Enable or disable schema validation for data returned by the API.
         # When enabled an error APIResponseValidationError is raised
         # if the API responds with invalid data for the expected schema.

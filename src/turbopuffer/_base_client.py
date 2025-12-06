@@ -382,7 +382,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         timeout: float | Timeout | None = DEFAULT_TIMEOUT,
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
-        compression: bool = True,
+        compression: bool = False,
     ) -> None:
         self._version = version
         self._base_url = self._enforce_trailing_slash(URL(base_url))
@@ -847,7 +847,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
         _strict_response_validation: bool,
-        compression: bool = True,
+        compression: bool = False,
     ) -> None:
         if not is_given(timeout):
             # if the user passed in a custom http client with a non-default
@@ -1387,7 +1387,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         http_client: httpx.AsyncClient | None = None,
         custom_headers: Mapping[str, str] | None = None,
         custom_query: Mapping[str, object] | None = None,
-        compression: bool = True,
+        compression: bool = False,
     ) -> None:
         if not is_given(timeout):
             # if the user passed in a custom http client with a non-default
