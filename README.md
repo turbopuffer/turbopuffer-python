@@ -492,13 +492,13 @@ with Turbopuffer() as client:
 
 ### Compression
 
-By default the library will compress all requests and responses with gzip. When the client is CPU constrained or when not limited by bandwidth you may want to disable compression. You can disable compression by setting `compression=False`. 
+By default, the library does not use compression. This is optimal for most use cases where CPU efficiency is prioritized over bandwidth. If your application is bandwidth-constrained but has available CPU resources, you may benefit from enabling compression:
 
 ```py
 from turbopuffer import Turbopuffer
 
 client = Turbopuffer(
-    compression=False,
+    compression=True,
 )
 ```
 
