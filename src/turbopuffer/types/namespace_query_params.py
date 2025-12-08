@@ -61,6 +61,8 @@ class NamespaceQueryParams(TypedDict, total=False):
 
 
 class Consistency(TypedDict, total=False):
+    """The consistency level for a query."""
+
     level: Literal["strong", "eventual"]
     """The query's consistency level.
 

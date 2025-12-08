@@ -12,6 +12,8 @@ __all__ = ["NamespaceQueryResponse"]
 
 
 class NamespaceQueryResponse(BaseModel):
+    """The result of a query."""
+
     billing: QueryBilling
     """The billing information for a query."""
 

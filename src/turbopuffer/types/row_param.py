@@ -12,6 +12,8 @@ __all__ = ["RowParam"]
 
 
 class RowParamTyped(TypedDict, total=False):
+    """A single document, in a row-based format."""
+
     id: Required[IDParam]
     """An identifier for a document."""
 

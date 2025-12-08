@@ -9,6 +9,8 @@ __all__ = ["NamespaceHintCacheWarmResponse"]
 
 
 class NamespaceHintCacheWarmResponse(BaseModel):
+    """The response to a successful cache warm request."""
+
     status: Literal["ACCEPTED"]
     """The status of the request."""
 

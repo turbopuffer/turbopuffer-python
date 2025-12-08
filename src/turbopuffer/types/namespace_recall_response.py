@@ -17,6 +17,8 @@ class GroundTruth(BaseModel):
 
 
 class NamespaceRecallResponse(BaseModel):
+    """The response to a successful cache warm request."""
+
     avg_ann_count: float
     """
     The average number of documents retrieved by the approximate nearest neighbor

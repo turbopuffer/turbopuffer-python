@@ -13,6 +13,8 @@ __all__ = ["AttributeSchemaConfigParam", "Ann", "AnnAnnConfig"]
 
 
 class AnnAnnConfig(TypedDict, total=False):
+    """Configuration options for ANN (Approximate Nearest Neighbor) indexing."""
+
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
@@ -21,6 +23,8 @@ Ann: TypeAlias = Union[bool, AnnAnnConfig]
 
 
 class AttributeSchemaConfigParam(TypedDict, total=False):
+    """Detailed configuration for an attribute attached to a document."""
+
     type: Required[AttributeType]
     """The data type of the attribute.
 

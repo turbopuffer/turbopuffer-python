@@ -9,6 +9,8 @@ __all__ = ["WriteBilling"]
 
 
 class WriteBilling(BaseModel):
+    """The billing information for a write request."""
+
     billable_logical_bytes_written: int
     """The number of billable logical bytes written to the namespace."""
 

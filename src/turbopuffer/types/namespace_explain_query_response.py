@@ -8,5 +8,7 @@ __all__ = ["NamespaceExplainQueryResponse"]
 
 
 class NamespaceExplainQueryResponse(BaseModel):
+    """The response to a successful query explain."""
+
     plan_text: Optional[str] = None
     """The textual representation of the query plan."""
