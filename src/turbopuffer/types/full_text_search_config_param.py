@@ -11,6 +11,8 @@ __all__ = ["FullTextSearchConfigParam"]
 
 
 class FullTextSearchConfigParam(TypedDict, total=False):
+    """Configuration options for full-text search."""
+
     ascii_folding: bool
     """
     Whether to convert each non-ASCII character in a token to its ASCII equivalent,

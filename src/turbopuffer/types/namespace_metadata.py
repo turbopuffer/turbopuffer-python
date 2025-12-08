@@ -32,6 +32,10 @@ class EncryptionCmekCmek(BaseModel):
 
 
 class EncryptionCmek(BaseModel):
+    """
+    Indicates that the namespace is encrypted with a customer-managed encryption key (CMEK).
+    """
+
     cmek: EncryptionCmekCmek
 
 
@@ -56,6 +60,8 @@ Index: TypeAlias = Union[IndexIndexUpToDate, IndexIndexUpdating]
 
 
 class NamespaceMetadata(BaseModel):
+    """Metadata about a namespace."""
+
     approx_logical_bytes: int
     """The approximate number of logical bytes in the namespace."""
 

@@ -12,6 +12,8 @@ __all__ = ["Row"]
 
 
 class Row(BaseModel):
+    """A single document, in a row-based format."""
+
     id: ID
     """An identifier for a document."""
 

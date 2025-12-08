@@ -6,6 +6,8 @@ __all__ = ["QueryPerformance"]
 
 
 class QueryPerformance(BaseModel):
+    """The performance information for a query."""
+
     approx_namespace_size: int
     """the approximate number of documents in the namespace."""
 

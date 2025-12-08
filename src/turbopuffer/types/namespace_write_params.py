@@ -113,10 +113,14 @@ class EncryptionCmek(TypedDict, total=False):
 
 
 class Encryption(TypedDict, total=False):
+    """The encryption configuration for a namespace."""
+
     cmek: EncryptionCmek
 
 
 class PatchByFilter(TypedDict, total=False):
+    """The patch and filter specifying which documents to patch."""
+
     filters: Required[object]
     """Filter by attributes. Same syntax as the query endpoint."""
 
