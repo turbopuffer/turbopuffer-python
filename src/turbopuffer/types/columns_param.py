@@ -13,6 +13,11 @@ __all__ = ["ColumnsParam"]
 
 
 class ColumnsParamTyped(TypedDict, total=False):
+    """A list of documents in columnar format.
+
+    Each key is a column name, mapped to an array of values for that column.
+    """
+
     id: Required[SequenceNotStr[IDParam]]
     """The IDs of the documents."""
 

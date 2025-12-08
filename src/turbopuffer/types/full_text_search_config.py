@@ -10,6 +10,8 @@ __all__ = ["FullTextSearchConfig"]
 
 
 class FullTextSearchConfig(BaseModel):
+    """Configuration options for full-text search."""
+
     ascii_folding: Optional[bool] = None
     """
     Whether to convert each non-ASCII character in a token to its ASCII equivalent,

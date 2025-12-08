@@ -8,5 +8,7 @@ __all__ = ["ContainsAllTokensFilterParams"]
 
 
 class ContainsAllTokensFilterParams(TypedDict, total=False):
+    """Additional (optional) parameters for the ContainsAllTokens filter."""
+
     last_as_prefix: bool
     """Whether to treat the last token in the query input as a literal prefix."""

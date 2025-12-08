@@ -8,5 +8,7 @@ __all__ = ["NamespaceDeleteAllResponse"]
 
 
 class NamespaceDeleteAllResponse(BaseModel):
+    """The response to a successful namespace deletion request."""
+
     status: Literal["OK"]
     """The status of the request."""

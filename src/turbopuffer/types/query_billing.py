@@ -6,6 +6,8 @@ __all__ = ["QueryBilling"]
 
 
 class QueryBilling(BaseModel):
+    """The billing information for a query."""
+
     billable_logical_bytes_queried: int
     """The number of billable logical bytes queried from the namespace."""
 

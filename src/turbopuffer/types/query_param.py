@@ -18,6 +18,8 @@ __all__ = ["QueryParam"]
 
 
 class QueryParam(TypedDict, total=False):
+    """Query, filter, full-text search and vector search documents."""
+
     aggregate_by: Dict[str, AggregateBy]
     """
     Aggregations to compute over all documents in the namespace that match the

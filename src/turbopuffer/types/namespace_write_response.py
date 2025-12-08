@@ -10,6 +10,8 @@ __all__ = ["NamespaceWriteResponse"]
 
 
 class NamespaceWriteResponse(BaseModel):
+    """The response to a successful write request."""
+
     billing: WriteBilling
     """The billing information for a write request."""
 
