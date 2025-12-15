@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.11.0 (2025-12-15)
+
+Full Changelog: [v1.10.0...v1.11.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.10.0...v1.11.0)
+
+### Features
+
+* add word_v3 to the spec ([634b7f2](https://github.com/turbopuffer/turbopuffer-python/commit/634b7f272e71bfabda310649d136f613bae83ed1))
+
+
+### Bug Fixes
+
+* **types:** allow pyright to infer TypedDict types within SequenceNotStr ([2c2a4bc](https://github.com/turbopuffer/turbopuffer-python/commit/2c2a4bc039d797b11981d1da388fd2cc5e31f78b))
+
+
+### Chores
+
+* add missing docstrings ([1f04083](https://github.com/turbopuffer/turbopuffer-python/commit/1f04083d328be8f1f1805bfc55bd044ee2e56324))
+* **internal:** add missing files argument to base client ([7afed9a](https://github.com/turbopuffer/turbopuffer-python/commit/7afed9a2bbc1184ce28430316035383cf248ee8f))
+
 ## 1.10.0 (2025-12-06)
 
 Full Changelog: [v1.9.1...v1.10.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.1...v1.10.0)
