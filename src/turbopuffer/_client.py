@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -29,6 +29,7 @@ from ._utils import (
     maybe_transform,
     get_async_library,
 )
+from ._compat import cached_property
 from ._version import __version__
 from ._response import (
     to_raw_response_wrapper,
@@ -36,7 +37,6 @@ from ._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .resources import namespaces
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from .pagination import SyncNamespacePage, AsyncNamespacePage
 from ._exceptions import APIStatusError, TurbopufferError
@@ -48,6 +48,10 @@ from ._base_client import (
     make_request_options,
 )
 from .types.namespace_summary import NamespaceSummary
+
+if TYPE_CHECKING:
+    from .resources import namespaces
+    from .resources.namespaces import NamespacesResource, AsyncNamespacesResource
 
 __all__ = [
     "Timeout",
@@ -62,10 +66,6 @@ __all__ = [
 
 
 class Turbopuffer(SyncAPIClient):
-    namespaces: namespaces.NamespacesResource
-    with_raw_response: TurbopufferWithRawResponse
-    with_streaming_response: TurbopufferWithStreamedResponse
-
     # client options
     api_key: str
     region: str | None
@@ -132,9 +132,19 @@ class Turbopuffer(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.namespaces = namespaces.NamespacesResource(self)
-        self.with_raw_response = TurbopufferWithRawResponse(self)
-        self.with_streaming_response = TurbopufferWithStreamedResponse(self)
+    @cached_property
+    def namespaces(self) -> NamespacesResource:
+        from .resources.namespaces import NamespacesResource
+
+        return NamespacesResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> TurbopufferWithRawResponse:
+        return TurbopufferWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> TurbopufferWithStreamedResponse:
+        return TurbopufferWithStreamedResponse(self)
 
     @property
     @override
@@ -306,10 +316,6 @@ class Turbopuffer(SyncAPIClient):
 
 
 class AsyncTurbopuffer(AsyncAPIClient):
-    namespaces: namespaces.AsyncNamespacesResource
-    with_raw_response: AsyncTurbopufferWithRawResponse
-    with_streaming_response: AsyncTurbopufferWithStreamedResponse
-
     # client options
     api_key: str
     region: str | None
@@ -376,9 +382,19 @@ class AsyncTurbopuffer(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.namespaces = namespaces.AsyncNamespacesResource(self)
-        self.with_raw_response = AsyncTurbopufferWithRawResponse(self)
-        self.with_streaming_response = AsyncTurbopufferWithStreamedResponse(self)
+    @cached_property
+    def namespaces(self) -> AsyncNamespacesResource:
+        from .resources.namespaces import AsyncNamespacesResource
+
+        return AsyncNamespacesResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncTurbopufferWithRawResponse:
+        return AsyncTurbopufferWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncTurbopufferWithStreamedResponse:
+        return AsyncTurbopufferWithStreamedResponse(self)
 
     @property
     @override
@@ -550,39 +566,71 @@ class AsyncTurbopuffer(AsyncAPIClient):
 
 
 class TurbopufferWithRawResponse:
+    _client: Turbopuffer
+
     def __init__(self, client: Turbopuffer) -> None:
-        self.namespaces = namespaces.NamespacesResourceWithRawResponse(client.namespaces)
+        self._client = client
 
         self.namespaces = to_raw_response_wrapper(
             client.namespaces,
         )
 
+    @cached_property
+    def namespaces(self) -> namespaces.NamespacesResourceWithRawResponse:
+        from .resources.namespaces import NamespacesResourceWithRawResponse
+
+        return NamespacesResourceWithRawResponse(self._client.namespaces)
+
 
 class AsyncTurbopufferWithRawResponse:
+    _client: AsyncTurbopuffer
+
     def __init__(self, client: AsyncTurbopuffer) -> None:
-        self.namespaces = namespaces.AsyncNamespacesResourceWithRawResponse(client.namespaces)
+        self._client = client
 
         self.namespaces = async_to_raw_response_wrapper(
             client.namespaces,
         )
 
+    @cached_property
+    def namespaces(self) -> namespaces.AsyncNamespacesResourceWithRawResponse:
+        from .resources.namespaces import AsyncNamespacesResourceWithRawResponse
+
+        return AsyncNamespacesResourceWithRawResponse(self._client.namespaces)
+
 
 class TurbopufferWithStreamedResponse:
+    _client: Turbopuffer
+
     def __init__(self, client: Turbopuffer) -> None:
-        self.namespaces = namespaces.NamespacesResourceWithStreamingResponse(client.namespaces)
+        self._client = client
 
         self.namespaces = to_streamed_response_wrapper(
             client.namespaces,
         )
 
+    @cached_property
+    def namespaces(self) -> namespaces.NamespacesResourceWithStreamingResponse:
+        from .resources.namespaces import NamespacesResourceWithStreamingResponse
+
+        return NamespacesResourceWithStreamingResponse(self._client.namespaces)
+
 
 class AsyncTurbopufferWithStreamedResponse:
+    _client: AsyncTurbopuffer
+
     def __init__(self, client: AsyncTurbopuffer) -> None:
-        self.namespaces = namespaces.AsyncNamespacesResourceWithStreamingResponse(client.namespaces)
+        self._client = client
 
         self.namespaces = async_to_streamed_response_wrapper(
             client.namespaces,
         )
+
+    @cached_property
+    def namespaces(self) -> namespaces.AsyncNamespacesResourceWithStreamingResponse:
+        from .resources.namespaces import AsyncNamespacesResourceWithStreamingResponse
+
+        return AsyncNamespacesResourceWithStreamingResponse(self._client.namespaces)
 
 
 Client = Turbopuffer
