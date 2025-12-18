@@ -6,5 +6,7 @@ __all__ = ["NamespaceSummary"]
 
 
 class NamespaceSummary(BaseModel):
+    """A summary of a namespace."""
+
     id: str
     """The namespace ID."""

@@ -28,6 +28,8 @@ RowDict = TypedDict(  # type: ignore[misc]
 
 
 class Row(BaseModel):
+    """A single document, in a row-based format."""
+
     id: ID
     """An identifier for a document."""
 

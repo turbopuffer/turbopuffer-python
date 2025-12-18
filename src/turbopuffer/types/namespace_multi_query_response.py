@@ -20,6 +20,8 @@ class Result(BaseModel):
 
 
 class NamespaceMultiQueryResponse(BaseModel):
+    """The result of a multi-query."""
+
     billing: QueryBilling
     """The billing information for a query."""
 
