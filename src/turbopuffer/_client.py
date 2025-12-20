@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Any, Mapping
+from typing import Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -29,7 +29,6 @@ from ._utils import (
     maybe_transform,
     get_async_library,
 )
-from ._compat import cached_property
 from ._version import __version__
 from ._response import (
     to_raw_response_wrapper,
@@ -56,10 +55,6 @@ from .lib.namespace import (
     AsyncNamespaceWithStreamingResponse,
 )
 from .types.namespace_summary import NamespaceSummary
-
-if TYPE_CHECKING:
-    from .resources import namespaces
-    from .resources.namespaces import NamespacesResource, AsyncNamespacesResource
 
 __all__ = [
     "Timeout",
