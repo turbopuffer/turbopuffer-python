@@ -12,8 +12,13 @@ if ! git diff --exit-code; then
     exit 1
 fi
 
-echo "==> Running lints"
-rye run lint
+if [ "$1" = "--fix" ]; then
+  echo "==> Running lints with --fix"
+  rye run fix:ruff
+else
+  echo "==> Running lints"
+  rye run lint
+fi
 
 echo "==> Making sure it imports"
 rye run python -c 'import turbopuffer'
