@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.12.0 (2025-12-20)
+
+Full Changelog: [v1.11.0...v1.12.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.11.0...v1.12.0)
+
+### Features
+
+* remove compatibility shims ([#196](https://github.com/turbopuffer/turbopuffer-python/issues/196)) ([fde7344](https://github.com/turbopuffer/turbopuffer-python/commit/fde7344ad9962cdb7c77d444e01c0ebbcd193915))
+
+
+### Bug Fixes
+
+* use async_to_httpx_files in patch method ([19d2b70](https://github.com/turbopuffer/turbopuffer-python/commit/19d2b70db29f232da9f489b5b83b1d43dae62f94))
+
+
+### Chores
+
+* **internal:** codegen related update ([76f6c01](https://github.com/turbopuffer/turbopuffer-python/commit/76f6c012dc2e11e6d6c85b1b7fdd2133fb79a34c))
+* speedup initial import ([f98097d](https://github.com/turbopuffer/turbopuffer-python/commit/f98097de4d399b4c7e19b1234820eae12e880ba8))
+
 ## 1.11.0 (2025-12-15)
 
 Full Changelog: [v1.10.0...v1.11.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.10.0...v1.11.0)
