@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.12.1 (2026-01-09)
+
+Full Changelog: [v1.12.0...v1.12.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.12.0...v1.12.1)
+
+### Chores
+
+* **internal:** codegen related update ([726e66a](https://github.com/turbopuffer/turbopuffer-python/commit/726e66a2923f99a0a143312d2aa699c12c2f547f))
+
 ## 1.12.0 (2025-12-20)
 
 Full Changelog: [v1.11.0...v1.12.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.11.0...v1.12.0)
