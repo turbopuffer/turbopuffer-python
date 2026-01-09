@@ -53,4 +53,10 @@ RankByText = Union[
 ]
 RankByAttributeOrder = Union[Literal["asc"], Literal["desc"]]
 RankByAttribute = Tuple[str, RankByAttributeOrder]
-RankBy = Union[RankByVector, RankByText, RankByAttribute]
+RankByAttributes = Sequence[RankByAttribute]
+RankBy = Union[
+    RankByVector,
+    RankByText,
+    RankByAttribute,
+    RankByAttributes,
+]
