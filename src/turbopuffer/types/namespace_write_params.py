@@ -71,6 +71,13 @@ class NamespaceWriteParams(TypedDict, total=False):
 
     patch_rows: Iterable[RowParam]
 
+    return_affected_ids: bool
+    """
+    If true, return the IDs of affected rows (deleted, patched, upserted) in the
+    response. For filtered and conditional writes, only IDs for writes that
+    succeeded will be included.
+    """
+
     schema: Dict[str, AttributeSchemaParam]
     """The schema of the attributes attached to the documents."""
 
