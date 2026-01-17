@@ -442,6 +442,7 @@ class TestNamespaces:
                     "vector": [0],
                 }
             ],
+            return_affected_ids=True,
             schema={"foo": "string"},
             upsert_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
@@ -911,6 +912,7 @@ class TestAsyncNamespaces:
                     "vector": [0],
                 }
             ],
+            return_affected_ids=True,
             schema={"foo": "string"},
             upsert_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
