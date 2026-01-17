@@ -1,8 +1,9 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
+from typing import List, Optional
 from typing_extensions import Literal
 
+from .id import ID
 from .._models import BaseModel
 from .write_billing import WriteBilling
 
@@ -24,6 +25,20 @@ class NamespaceWriteResponse(BaseModel):
     status: Literal["OK"]
     """The status of the request."""
 
+    deleted_ids: Optional[List[ID]] = None
+    """The IDs of documents that were deleted.
+
+    Only included when `return_affected_ids` is true and at least one document was
+    deleted.
+    """
+
+    patched_ids: Optional[List[ID]] = None
+    """The IDs of documents that were patched.
+
+    Only included when `return_affected_ids` is true and at least one document was
+    patched.
+    """
+
     rows_deleted: Optional[int] = None
     """The number of rows deleted by the write request."""
 
@@ -35,3 +50,10 @@ class NamespaceWriteResponse(BaseModel):
 
     rows_upserted: Optional[int] = None
     """The number of rows upserted by the write request."""
+
+    upserted_ids: Optional[List[ID]] = None
+    """The IDs of documents that were upserted.
+
+    Only included when `return_affected_ids` is true and at least one document was
+    upserted.
+    """

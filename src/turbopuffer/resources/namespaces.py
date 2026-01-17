@@ -556,6 +556,7 @@ class NamespacesResource(SyncAPIResource):
         patch_columns: ColumnsParam | Omit = omit,
         patch_condition: Filter | Omit = omit,
         patch_rows: Iterable[RowParam] | Omit = omit,
+        return_affected_ids: bool | Omit = omit,
         schema: Dict[str, AttributeSchemaParam] | Omit = omit,
         upsert_columns: ColumnsParam | Omit = omit,
         upsert_condition: Filter | Omit = omit,
@@ -596,6 +597,10 @@ class NamespacesResource(SyncAPIResource):
           patch_condition: A condition evaluated against the current value of each document targeted by a
               patch write. Only documents that pass the condition are patched.
 
+          return_affected_ids: If true, return the IDs of affected rows (deleted, patched, upserted) in the
+              response. For filtered and conditional writes, only IDs for writes that
+              succeeded will be included.
+
           schema: The schema of the attributes attached to the documents.
 
           upsert_columns: A list of documents in columnar format. Each key is a column name, mapped to an
@@ -633,6 +638,7 @@ class NamespacesResource(SyncAPIResource):
                     "patch_columns": patch_columns,
                     "patch_condition": patch_condition,
                     "patch_rows": patch_rows,
+                    "return_affected_ids": return_affected_ids,
                     "schema": schema,
                     "upsert_columns": upsert_columns,
                     "upsert_condition": upsert_condition,
@@ -1152,6 +1158,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         patch_columns: ColumnsParam | Omit = omit,
         patch_condition: object | Omit = omit,
         patch_rows: Iterable[RowParam] | Omit = omit,
+        return_affected_ids: bool | Omit = omit,
         schema: Dict[str, AttributeSchemaParam] | Omit = omit,
         upsert_columns: ColumnsParam | Omit = omit,
         upsert_condition: object | Omit = omit,
@@ -1192,6 +1199,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
           patch_condition: A condition evaluated against the current value of each document targeted by a
               patch write. Only documents that pass the condition are patched.
 
+          return_affected_ids: If true, return the IDs of affected rows (deleted, patched, upserted) in the
+              response. For filtered and conditional writes, only IDs for writes that
+              succeeded will be included.
+
           schema: The schema of the attributes attached to the documents.
 
           upsert_columns: A list of documents in columnar format. Each key is a column name, mapped to an
@@ -1229,6 +1240,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "patch_columns": patch_columns,
                     "patch_condition": patch_condition,
                     "patch_rows": patch_rows,
+                    "return_affected_ids": return_affected_ids,
                     "schema": schema,
                     "upsert_columns": upsert_columns,
                     "upsert_condition": upsert_condition,
