@@ -101,10 +101,10 @@ class CopyFromNamespaceCopyFromNamespaceConfig(TypedDict, total=False):
     """The namespace to copy documents from."""
 
     source_api_key: str
-    """An API key for the organization containing the source namespace"""
+    """(Optional) An API key for the organization containing the source namespace"""
 
     source_region: str
-    """The region of the source namespace."""
+    """(Optional) The region of the source namespace."""
 
 
 CopyFromNamespace: TypeAlias = Union[str, CopyFromNamespaceCopyFromNamespaceConfig]
