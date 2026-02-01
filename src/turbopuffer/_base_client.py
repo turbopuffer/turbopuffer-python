@@ -87,9 +87,9 @@ from ._exceptions import (
     APIConnectionError,
     APIResponseValidationError,
 )
+from ._utils._json import openapi_dumps
 from .lib.transport_httpx import HttpxTransport
 from .lib.transport_aiohttp import AiohttpTransport
-from ._utils._json import openapi_dumps
 
 log: logging.Logger = logging.getLogger(__name__)
 
