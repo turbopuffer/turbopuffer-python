@@ -612,7 +612,6 @@ class TestTurbopuffer:
             assert response.content == file_content
             assert counter.value == 1
 
-    @pytest.mark.skip(reason="not relevant to turbopuffer")
     @pytest.mark.respx(base_url=base_url)
     def test_binary_content_upload_with_body_is_deprecated(self, respx_mock: MockRouter, client: Turbopuffer) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
@@ -1516,7 +1515,6 @@ class TestAsyncTurbopuffer:
             assert response.content == file_content
             assert counter.value == 1
 
-    @pytest.mark.skip(reason="not relevant to turbopuffer")
     @pytest.mark.respx(base_url=base_url)
     async def test_binary_content_upload_with_body_is_deprecated(
         self, respx_mock: MockRouter, async_client: AsyncTurbopuffer

@@ -87,7 +87,6 @@ from ._exceptions import (
     APIConnectionError,
     APIResponseValidationError,
 )
-from ._utils._json import openapi_dumps
 from .lib.transport_httpx import HttpxTransport
 from .lib.transport_aiohttp import AiohttpTransport
 
@@ -524,7 +523,6 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         params = _merge_mappings(self.default_query, options.params)
         content_type = headers.get("Content-Type")
         files = options.files
-        content = None
 
         # If the given Content-Type header is multipart/form-data then it
         # has to be removed so that httpx can generate the header with
@@ -554,10 +552,6 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             # https://github.com/encode/httpx/discussions/2399#discussioncomment-3814186
             if not files:
                 files = cast(HttpxRequestFiles, ForceMultipartDict())
-        elif is_given(json_data) and json_data is not None:
-            # Use our own json library for serialization, which might be faster
-            # than httpx's, and at worst will be the same (stdlib json).
-            content = json.dumps(json_data)
 
         prepared_url = self._prepare_url(options.url)
         if "_" in prepared_url.host:
@@ -578,7 +572,9 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             elif not files:
                 # Don't set content when JSON is sent as multipart/form-data,
                 # since httpx's content param overrides other body arguments
-                kwargs["content"] = openapi_dumps(json_data) if is_given(json_data) and json_data is not None else None
+                # We use our own json library for serialization, which might be faster
+                # than httpx's, and at worst will be the same (stdlib json).
+                kwargs["content"] = json.dumps(json_data) if is_given(json_data) and json_data is not None else None
             kwargs["files"] = files
         else:
             headers.pop("Content-Type", None)
