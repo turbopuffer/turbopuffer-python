@@ -2,8 +2,7 @@ name: PR Target Check
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [main]
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   check-pr-author:
@@ -11,7 +10,7 @@ jobs:
     steps:
       - name: Check if PR target is allowed
         run: |
-          if [ "${{ github.event.pull_request.user.login }}" != "stainless-app[bot]" ]; then
+          if [[ "${{ github.event.pull_request.base.ref }}" = main && "${{ github.event.pull_request.user.login }}" != "stainless-app[bot]" ]]; then
             echo "❌ PR author ${{ github.event.pull_request.user.login }} is not allowed to create PRs against main"
             echo "Only stainless-app[bot] is allowed to create PRs against main"
             echo "Did you mean to create a PR against the next branch?"
