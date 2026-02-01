@@ -34,6 +34,8 @@ Filter = Union[
     Tuple[str, Literal["ContainsAllTokens"], Sequence[str]],
     Tuple[str, Literal["ContainsAllTokens"], str, ContainsAllTokensFilterParams],
     Tuple[str, Literal["ContainsAllTokens"], Sequence[str], ContainsAllTokensFilterParams],
+    Tuple[str, Literal["ContainsAnyToken"], str],
+    Tuple[str, Literal["ContainsAnyToken"], Sequence[str]],
     Tuple[str, Literal["ContainsTokenSequence"], str],
     Tuple[str, Literal["ContainsTokenSequence"], Sequence[str]],
     Tuple[Literal["Not"], "Filter"],
@@ -41,6 +43,7 @@ Filter = Union[
     Tuple[Literal["Or"], Sequence["Filter"]],
 ]
 RankByVector = Tuple[str, Literal["ANN"], Sequence[float]]
+RankByKnn = Tuple[str, Literal["kNN"], Sequence[float]]
 RankByText = Union[
     Tuple[str, Literal["BM25"], str],
     Tuple[str, Literal["BM25"], Sequence[str]],
@@ -50,12 +53,14 @@ RankByText = Union[
     Tuple[Literal["Max"], Sequence["RankByText"]],
     Tuple[Literal["Product"], float, "RankByText"],
     Tuple[Literal["Product"], "RankByText", float],
+    Filter,
 ]
 RankByAttributeOrder = Union[Literal["asc"], Literal["desc"]]
 RankByAttribute = Tuple[str, RankByAttributeOrder]
 RankByAttributes = Sequence[RankByAttribute]
 RankBy = Union[
     RankByVector,
+    RankByKnn,
     RankByText,
     RankByAttribute,
     RankByAttributes,
