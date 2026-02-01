@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.13.0 (2026-02-01)
+
+Full Changelog: [v1.12.1...v1.13.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.12.1...v1.13.0)
+
+### Features
+
+* [TPUF-1097] tpuf: return failed IDs for conditional writes ([075e766](https://github.com/turbopuffer/turbopuffer-python/commit/075e7663c0ca78916c9b3498dd3e166f55d7910e))
+* add ContainsAnyToken and RankByKnn types ([d98cd85](https://github.com/turbopuffer/turbopuffer-python/commit/d98cd853b298a6b16021f86dea314f81aa5c3dc4))
+* Add instructions to MCP server config ([2d6135e](https://github.com/turbopuffer/turbopuffer-python/commit/2d6135e9980f1e2807f9e7700154924c92e3e8b6))
+* **client:** add custom JSON encoder for extended type support ([40a87c6](https://github.com/turbopuffer/turbopuffer-python/commit/40a87c66e68434c92e934a97068d78c1ac7c6930))
+* **client:** add support for binary request streaming ([2bce22c](https://github.com/turbopuffer/turbopuffer-python/commit/2bce22c573bc4aa60e124a92980694dca365c3a6))
+
+
+### Bug Fixes
+
+* **docs:** fix mcp installation instructions for remote servers ([71d4dbd](https://github.com/turbopuffer/turbopuffer-python/commit/71d4dbd199dfe6fa24fe7812640984aa677b94a0))
+* improve custom JSON deserialization ([c500ea0](https://github.com/turbopuffer/turbopuffer-python/commit/c500ea0c3cec26287aaabaa73abfc645d47a969d))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([a967a80](https://github.com/turbopuffer/turbopuffer-python/commit/a967a80d0478d142d35005dade3d117f14837f12))
+* configure new SDK language ([65d7a90](https://github.com/turbopuffer/turbopuffer-python/commit/65d7a90cd5082e3f4e1163fddf3bf68f6e4f1feb))
+* **internal:** update `actions/checkout` version ([d34a3d9](https://github.com/turbopuffer/turbopuffer-python/commit/d34a3d92c5d7e2b0bed47a9e57fec74779034058))
+
 ## 1.12.1 (2026-01-09)
 
 Full Changelog: [v1.12.0...v1.12.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.12.0...v1.12.1)
