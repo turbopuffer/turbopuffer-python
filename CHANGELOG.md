@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.13.1 (2026-02-01)
+
+Full Changelog: [v1.13.0...v1.13.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.13.0...v1.13.1)
+
+### Chores
+
+* fix automatic type regeneration ([14fd747](https://github.com/turbopuffer/turbopuffer-python/commit/14fd74714eb5f51cb36e00439df4adcd4a0e77e9))
+
 ## 1.13.0 (2026-02-01)
 
 Full Changelog: [v1.12.1...v1.13.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.12.1...v1.13.0)
