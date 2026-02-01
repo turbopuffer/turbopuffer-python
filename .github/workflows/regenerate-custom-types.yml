@@ -17,14 +17,6 @@ jobs:
           ref: next
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Bootstrap
-        run: ./scripts/bootstrap
-
       - name: Regenerate custom types
         run: ./scripts/gen
 
@@ -32,7 +24,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add src/resources/custom.ts
+          git add src/turbopuffer/types/custom.py
           if ! git diff --staged --quiet; then
             git commit -m "chore: regenerate custom types"
             git push
