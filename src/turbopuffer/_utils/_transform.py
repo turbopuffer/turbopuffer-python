@@ -91,7 +91,6 @@ def maybe_transform(
 
 # turbopuffer: Simple transform without expensive type introspection.
 def _turbopuffer_transform(obj: object) -> object:
-
     if obj is None or isinstance(obj, (int, float, bool, str)):
         return obj
     if isinstance(obj, dict):
