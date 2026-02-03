@@ -124,6 +124,7 @@ async def test_async_accept_encoding_header_disabled_by_default():
     request = query_route.calls.last.request
     assert request.headers.get("Accept-Encoding") == "identity"
 
+
 def test_compression_enabled_large_request():
     """Test that large requests are compressed when compression is enabled."""
     client = Turbopuffer(region=region, compression=True)
