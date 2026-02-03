@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.14.0 (2026-02-03)
+
+Full Changelog: [v1.13.1...v1.14.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.13.1...v1.14.0)
+
+### Features
+
+* ContainsAnyToken last_as_prefix docs ([a41456d](https://github.com/turbopuffer/turbopuffer-python/commit/a41456d81e5eb464a6868f32dd30faf2c24b4b2d))
+
+
+### Chores
+
+* regenerate custom types ([c2ecba1](https://github.com/turbopuffer/turbopuffer-python/commit/c2ecba1f36edebf92bf1e2c5a562ac8427a5e846))
+
 ## 1.13.1 (2026-02-01)
 
 Full Changelog: [v1.13.0...v1.13.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.13.0...v1.13.1)
