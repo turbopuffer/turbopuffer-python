@@ -24,6 +24,7 @@ from turbopuffer.types import (
     Bm25ClauseParams,
     Columns,
     ContainsAllTokensFilterParams,
+    ContainsAnyTokenFilterParams,
     DistanceMetric,
     FullTextSearch,
     FullTextSearchConfig,
