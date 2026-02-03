@@ -46,19 +46,19 @@ ns = tpuf.namespace("example")
 
 # Query nearest neighbors with a vector.
 vector_result = ns.query(
-      rank_by=("vector", "ANN", [0.1, 0.2]),
-      top_k=10,
-      filters=("And", (("name", "Eq", "foo"), ("public", "Eq", 1))),
-      include_attributes=["name"],
+    rank_by=("vector", "ANN", [0.1, 0.2]),
+    top_k=10,
+    filters=("And", (("name", "Eq", "foo"), ("public", "Eq", 1))),
+    include_attributes=["name"],
 )
 print(vector_result.rows)
 # [Row(id=1, vector=None, $dist=0.009067952632904053, name='foo')]
 
 # Full-text search on an attribute.
 fts_result = ns.query(
-  top_k=10,
-  filters=("name", "Eq", "foo"),
-  rank_by=('text', 'BM25', 'quick walrus'),
+    top_k=10,
+    filters=("name", "Eq", "foo"),
+    rank_by=("text", "BM25", "quick walrus"),
 )
 print(fts_result.rows)
 # [Row(id=1, vector=None, $dist=0.19, name='foo')]
@@ -104,9 +104,9 @@ async def main() -> None:
 
     # Full-text search on an attribute.
     fts_result = await ns.query(
-    top_k=10,
-    filters=("name", "Eq", "foo"),
-    rank_by=('text', 'BM25', 'quick walrus'),
+        top_k=10,
+        filters=("name", "Eq", "foo"),
+        rank_by=("text", "BM25", "quick walrus"),
     )
     print(fts_result.rows)
     # [Row(id=1, vector=None, $dist=0.19, name='foo')]

@@ -16,3 +16,4 @@ apigen() {
 
 echo "==> Generating code"
 apigen python > src/turbopuffer/types/custom.py
+scripts/format

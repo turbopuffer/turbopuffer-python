@@ -18,7 +18,10 @@ from turbopuffer._utils import (
 from turbopuffer._compat import PYDANTIC_V1
 from turbopuffer._models import BaseModel
 
-pytest.skip(reason="turbopuffer uses optimized transform that bypasses Stainless type-based transformations", allow_module_level=True)
+pytest.skip(
+    reason="turbopuffer uses optimized transform that bypasses Stainless type-based transformations",
+    allow_module_level=True,
+)
 
 _T = TypeVar("_T")
 
