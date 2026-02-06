@@ -76,6 +76,7 @@ class TestNamespaces:
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             include_attributes=True,
+            limit=0,
             top_k=0,
             vector_encoding="float",
         )
@@ -196,6 +197,7 @@ class TestNamespaces:
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
                     "include_attributes": True,
+                    "limit": 0,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
                 }
@@ -256,6 +258,7 @@ class TestNamespaces:
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             include_attributes=True,
+            limit=0,
             rank_by=("id", "asc"),
             top_k=0,
             vector_encoding="float",
@@ -539,6 +542,7 @@ class TestAsyncNamespaces:
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             include_attributes=True,
+            limit=0,
             top_k=0,
             vector_encoding="float",
         )
@@ -662,6 +666,7 @@ class TestAsyncNamespaces:
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
                     "include_attributes": True,
+                    "limit": 0,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
                 }
@@ -722,6 +727,7 @@ class TestAsyncNamespaces:
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             include_attributes=True,
+            limit=0,
             rank_by=("id", "asc"),
             top_k=0,
             vector_encoding="float",

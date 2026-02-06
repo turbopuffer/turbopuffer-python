@@ -117,6 +117,7 @@ class NamespacesResource(SyncAPIResource):
         filters: Filter | Omit = omit,
         group_by: SequenceNotStr[str] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
+        limit: namespace_explain_query_params.Limit | Omit = omit,
         rank_by: RankBy | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
@@ -149,6 +150,8 @@ class NamespacesResource(SyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
+          limit: Limit configuration for query results.
+
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
@@ -178,6 +181,7 @@ class NamespacesResource(SyncAPIResource):
                     "filters": filters,
                     "group_by": group_by,
                     "include_attributes": include_attributes,
+                    "limit": limit,
                     "rank_by": rank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
@@ -321,6 +325,7 @@ class NamespacesResource(SyncAPIResource):
         filters: Filter | Omit = omit,
         group_by: SequenceNotStr[str] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
+        limit: namespace_query_params.Limit | Omit = omit,
         rank_by: RankBy | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
@@ -353,6 +358,8 @@ class NamespacesResource(SyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
+          limit: Limit configuration for query results.
+
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
@@ -382,6 +389,7 @@ class NamespacesResource(SyncAPIResource):
                     "filters": filters,
                     "group_by": group_by,
                     "include_attributes": include_attributes,
+                    "limit": limit,
                     "rank_by": rank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
@@ -719,6 +727,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         filters: Filter | Omit = omit,
         group_by: SequenceNotStr[str] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
+        limit: namespace_explain_query_params.Limit | Omit = omit,
         rank_by: RankBy | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
@@ -751,6 +760,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
+          limit: Limit configuration for query results.
+
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
@@ -780,6 +791,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "filters": filters,
                     "group_by": group_by,
                     "include_attributes": include_attributes,
+                    "limit": limit,
                     "rank_by": rank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
@@ -923,6 +935,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         filters: Filter | Omit = omit,
         group_by: SequenceNotStr[str] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
+        limit: namespace_query_params.Limit | Omit = omit,
         rank_by: RankBy | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
@@ -955,6 +968,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
+          limit: Limit configuration for query results.
+
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
@@ -984,6 +999,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "filters": filters,
                     "group_by": group_by,
                     "include_attributes": include_attributes,
+                    "limit": limit,
                     "rank_by": rank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
