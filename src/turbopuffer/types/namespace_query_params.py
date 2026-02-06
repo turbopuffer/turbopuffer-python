@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-from typing import Dict
-from typing_extensions import Literal, TypedDict
+from typing import Dict, Union
+from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
 from .._types import SequenceNotStr
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
 from .include_attributes_param import IncludeAttributesParam
 
-__all__ = ["NamespaceQueryParams", "Consistency"]
+__all__ = ["NamespaceQueryParams", "Consistency", "Limit", "LimitLimit", "LimitLimitPer"]
 
 
 class NamespaceQueryParams(TypedDict, total=False):
@@ -49,6 +49,9 @@ class NamespaceQueryParams(TypedDict, total=False):
     include_attributes: IncludeAttributesParam
     """Whether to include attributes in the response."""
 
+    limit: Limit
+    """Limit configuration for query results."""
+
     rank_by: object
     """How to rank the documents in the namespace."""
 
@@ -70,3 +73,19 @@ class Consistency(TypedDict, total=False):
     - `eventual` - Eventual consistency. Does not require a round-trip to object
       storage, but may not see the latest writes.
     """
+
+
+class LimitLimitPer(TypedDict, total=False):
+    attributes: Required[SequenceNotStr[str]]
+
+    limit: Required[int]
+
+
+class LimitLimit(TypedDict, total=False):
+    total: Required[int]
+    """The total number of results to return."""
+
+    per: LimitLimitPer
+
+
+Limit: TypeAlias = Union[int, LimitLimit]
