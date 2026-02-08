@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.15.0 (2026-02-08)
+
+Full Changelog: [v1.14.0...v1.15.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.14.0...v1.15.0)
+
+### Features
+
+* add support for `limit` query parameter ([cf69e0a](https://github.com/turbopuffer/turbopuffer-python/commit/cf69e0a684b6898eba6c8e73436d9e9745934e00))
+* spec: clean up limit codegen ([fe12d7c](https://github.com/turbopuffer/turbopuffer-python/commit/fe12d7c257d9a947a1878df59989fc79555249f1))
+
 ## 1.14.0 (2026-02-03)
 
 Full Changelog: [v1.13.1...v1.14.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.13.1...v1.14.0)
