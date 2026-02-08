@@ -150,7 +150,7 @@ class NamespacesResource(SyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
-          limit: Limit configuration for query results.
+          limit: Limits the documents returned by a query.
 
           rank_by: How to rank the documents in the namespace.
 
@@ -358,7 +358,7 @@ class NamespacesResource(SyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
-          limit: Limit configuration for query results.
+          limit: Limits the documents returned by a query.
 
           rank_by: How to rank the documents in the namespace.
 
@@ -760,7 +760,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
-          limit: Limit configuration for query results.
+          limit: Limits the documents returned by a query.
 
           rank_by: How to rank the documents in the namespace.
 
@@ -968,7 +968,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           include_attributes: Whether to include attributes in the response.
 
-          limit: Limit configuration for query results.
+          limit: Limits the documents returned by a query.
 
           rank_by: How to rank the documents in the namespace.
 
