@@ -30,6 +30,7 @@ from turbopuffer.types import (
     ID,
     IncludeAttributes,
     Language,
+    Limit,
     NamespaceMetadata,
     Query,
     QueryBilling,
