@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.15.1 (2026-02-16)
+
+Full Changelog: [v1.15.0...v1.15.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.15.0...v1.15.1)
+
+### Chores
+
+* format all `api.md` files ([da7cc1d](https://github.com/turbopuffer/turbopuffer-python/commit/da7cc1dcc7eaaba9140b0a154086c0f190390d23))
+* **internal:** bump dependencies ([fff51f3](https://github.com/turbopuffer/turbopuffer-python/commit/fff51f3051fa1c3a6ffdd5017ea0a1374b615e28))
+* **internal:** fix lint error on Python 3.14 ([c2ff373](https://github.com/turbopuffer/turbopuffer-python/commit/c2ff373936bec8cec05bb4ba91fb3f884565079c))
+
 ## 1.15.0 (2026-02-08)
 
 Full Changelog: [v1.14.0...v1.15.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.14.0...v1.15.0)
