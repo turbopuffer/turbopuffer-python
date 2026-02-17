@@ -2,6 +2,8 @@
 
 from typing import Any, Tuple, Union, Literal, Sequence, TypedDict
 
+from .decay_params import DecayParams
+from .saturate_params import SaturateParams
 from .bm25_clause_params import Bm25ClauseParams
 from .contains_any_token_filter_params import ContainsAnyTokenFilterParams
 from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams
@@ -57,6 +59,10 @@ RankByText = Union[
     Tuple[Literal["Product"], float, "RankByText"],
     Tuple[Literal["Product"], "RankByText", float],
     Filter,
+    Tuple[Literal["Attribute"], str],
+    Tuple[Literal["Saturate"], "RankByText", SaturateParams],
+    Tuple[Literal["Decay"], "RankByText", DecayParams],
+    Tuple[Literal["Dist"], "RankByText", Any],
 ]
 RankByAttributeOrder = Union[Literal["asc"], Literal["desc"]]
 RankByAttribute = Tuple[str, RankByAttributeOrder]
