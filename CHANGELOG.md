@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.16.0 (2026-02-17)
+
+Full Changelog: [v1.15.1...v1.16.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.15.1...v1.16.0)
+
+### Features
+
+* Add ranking-by-attribute to the spec. ([fffc690](https://github.com/turbopuffer/turbopuffer-python/commit/fffc690e67081636eba43f4c24adec6c84185a9e))
+
 ## 1.15.1 (2026-02-16)
 
 Full Changelog: [v1.15.0...v1.15.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.15.0...v1.15.1)
