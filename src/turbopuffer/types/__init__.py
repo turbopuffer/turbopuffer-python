@@ -12,12 +12,14 @@ from .row_param import RowParam as RowParam
 from .tokenizer import Tokenizer as Tokenizer
 from .limit_param import LimitParam as LimitParam
 from .query_param import QueryParam as QueryParam
+from .decay_params import DecayParams as DecayParams
 from .vector_param import VectorParam as VectorParam
 from .columns_param import ColumnsParam as ColumnsParam
 from .query_billing import QueryBilling as QueryBilling
 from .write_billing import WriteBilling as WriteBilling
 from .attribute_type import AttributeType as AttributeType
 from .distance_metric import DistanceMetric as DistanceMetric
+from .saturate_params import SaturateParams as SaturateParams
 from .vector_encoding import VectorEncoding as VectorEncoding
 from .full_text_search import FullTextSearch as FullTextSearch
 from .aggregation_group import AggregationGroup as AggregationGroup
