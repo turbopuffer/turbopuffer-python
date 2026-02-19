@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.16.1 (2026-02-19)
+
+Full Changelog: [v1.16.0...v1.16.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.0...v1.16.1)
+
+### Chores
+
+* **internal:** remove mock server code ([645dc56](https://github.com/turbopuffer/turbopuffer-python/commit/645dc56dabef631cdedde26c942220b6fadf2f35))
+* update mock server docs ([6cd61a5](https://github.com/turbopuffer/turbopuffer-python/commit/6cd61a5707099a758d584048cb53d28bd3c2a06e))
+
 ## 1.16.0 (2026-02-17)
 
 Full Changelog: [v1.15.1...v1.16.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.15.1...v1.16.0)
