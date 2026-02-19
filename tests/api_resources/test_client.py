@@ -18,13 +18,13 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestClient:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_namespaces(self, client: Turbopuffer) -> None:
         client_ = client.namespaces()
         assert_matches_type(SyncNamespacePage[NamespaceSummary], client_, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_namespaces_with_all_params(self, client: Turbopuffer) -> None:
         client_ = client.namespaces(
@@ -34,7 +34,7 @@ class TestClient:
         )
         assert_matches_type(SyncNamespacePage[NamespaceSummary], client_, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_namespaces(self, client: Turbopuffer) -> None:
         response = client.with_raw_response.namespaces()
@@ -44,7 +44,7 @@ class TestClient:
         client_ = response.parse()
         assert_matches_type(SyncNamespacePage[NamespaceSummary], client_, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_namespaces(self, client: Turbopuffer) -> None:
         with client.with_streaming_response.namespaces() as response:
@@ -62,13 +62,13 @@ class TestAsyncClient:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_namespaces(self, async_client: AsyncTurbopuffer) -> None:
         client = await async_client.namespaces()
         assert_matches_type(AsyncNamespacePage[NamespaceSummary], client, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_namespaces_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         client = await async_client.namespaces(
@@ -78,7 +78,7 @@ class TestAsyncClient:
         )
         assert_matches_type(AsyncNamespacePage[NamespaceSummary], client, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_namespaces(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.with_raw_response.namespaces()
@@ -88,7 +88,7 @@ class TestAsyncClient:
         client = await response.parse()
         assert_matches_type(AsyncNamespacePage[NamespaceSummary], client, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_namespaces(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.with_streaming_response.namespaces() as response:
