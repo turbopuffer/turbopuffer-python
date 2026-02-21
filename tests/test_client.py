@@ -421,6 +421,21 @@ class TestTurbopuffer:
 
         client.close()
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    def test_default_namespace_client_params(self, client: Turbopuffer) -> None:
+        # Test with base client (no custom params)
+        with pytest.raises(ValueError, match="Missing default_namespace argument;"):
+            client.namespaces.delete_all()
+
+        client = Turbopuffer(
+            base_url=base_url,
+            api_key=api_key,
+            _strict_response_validation=True,
+            default_namespace="My Default Namespace",
+        )
+        with client as c2:
+            c2.namespaces.delete_all()
+
     def test_request_extra_json(self, client: Turbopuffer) -> None:
         request = client._build_request(
             FinalRequestOptions(
@@ -1294,6 +1309,21 @@ class TestAsyncTurbopuffer:
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
         await client.close()
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    async def test_default_namespace_client_params(self, async_client: AsyncTurbopuffer) -> None:
+        # Test with base client (no custom params)
+        with pytest.raises(ValueError, match="Missing default_namespace argument;"):
+            await async_client.namespaces.delete_all()
+
+        client = AsyncTurbopuffer(
+            base_url=base_url,
+            api_key=api_key,
+            _strict_response_validation=True,
+            default_namespace="My Default Namespace",
+        )
+        async with client as c2:
+            await c2.namespaces.delete_all()
 
     def test_request_extra_json(self, client: Turbopuffer) -> None:
         request = client._build_request(
