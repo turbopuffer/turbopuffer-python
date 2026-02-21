@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.16.2 (2026-02-21)
+
+Full Changelog: [v1.16.1...v1.16.2](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.1...v1.16.2)
+
+### Bug Fixes
+
+* **internal:** skip tests that depend on mock server ([dea05eb](https://github.com/turbopuffer/turbopuffer-python/commit/dea05ebd1b0625c2a6f7571801ee69103deddb0a))
+
 ## 1.16.1 (2026-02-19)
 
 Full Changelog: [v1.16.0...v1.16.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.0...v1.16.1)
