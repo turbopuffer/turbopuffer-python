@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.16.2 (2026-02-24)
+
+Full Changelog: [v1.16.1...v1.16.2](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.1...v1.16.2)
+
+### Chores
+
+* **internal:** add request options to SSE classes ([4a60e1c](https://github.com/turbopuffer/turbopuffer-python/commit/4a60e1c79105e8e87dc2d38b5a3893937d241ec6))
+* **internal:** make `test_proxy_environment_variables` more resilient ([107dda8](https://github.com/turbopuffer/turbopuffer-python/commit/107dda8490f4a2f411cf0ab84926d978f126ca66))
+
 ## 1.16.1 (2026-02-19)
 
 Full Changelog: [v1.16.0...v1.16.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.0...v1.16.1)
