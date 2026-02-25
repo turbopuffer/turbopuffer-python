@@ -361,7 +361,6 @@ class TestNamespaces:
             filters={},
             include_ground_truth=True,
             num=0,
-            queries=[0],
             top_k=0,
         )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
@@ -919,7 +918,6 @@ class TestAsyncNamespaces:
             filters={},
             include_ground_truth=True,
             num=0,
-            queries=[0],
             top_k=0,
         )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])

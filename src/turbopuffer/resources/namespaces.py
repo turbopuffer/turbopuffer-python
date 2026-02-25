@@ -407,7 +407,6 @@ class NamespacesResource(SyncAPIResource):
         filters: object | Omit = omit,
         include_ground_truth: bool | Omit = omit,
         num: int | Omit = omit,
-        queries: Iterable[float] | Omit = omit,
         top_k: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -427,9 +426,6 @@ class NamespacesResource(SyncAPIResource):
               response.
 
           num: The number of searches to run.
-
-          queries: Use specific query vectors for the measurement. If omitted, sampled from the
-              index.
 
           top_k: Search for `top_k` nearest neighbors.
 
@@ -452,7 +448,6 @@ class NamespacesResource(SyncAPIResource):
                     "filters": filters,
                     "include_ground_truth": include_ground_truth,
                     "num": num,
-                    "queries": queries,
                     "top_k": top_k,
                 },
                 namespace_recall_params.NamespaceRecallParams,
@@ -1009,7 +1004,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
         filters: object | Omit = omit,
         include_ground_truth: bool | Omit = omit,
         num: int | Omit = omit,
-        queries: Iterable[float] | Omit = omit,
         top_k: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1029,9 +1023,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
               response.
 
           num: The number of searches to run.
-
-          queries: Use specific query vectors for the measurement. If omitted, sampled from the
-              index.
 
           top_k: Search for `top_k` nearest neighbors.
 
@@ -1054,7 +1045,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "filters": filters,
                     "include_ground_truth": include_ground_truth,
                     "num": num,
-                    "queries": queries,
                     "top_k": top_k,
                 },
                 namespace_recall_params.NamespaceRecallParams,
