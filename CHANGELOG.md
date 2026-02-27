@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.17.0 (2026-02-27)
+
+Full Changelog: [v1.16.2...v1.17.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.2...v1.17.0)
+
+### Features
+
+* Remove `queries` from recall endpoint ([eec92f4](https://github.com/turbopuffer/turbopuffer-python/commit/eec92f465cf9e1d2835008b47cbfbb044107e75d))
+
+
+### Chores
+
+* **internal:** make `test_proxy_environment_variables` more resilient to env ([3de4044](https://github.com/turbopuffer/turbopuffer-python/commit/3de40448b78fcab5fcf901648631efb335f70748))
+
 ## 1.16.2 (2026-02-24)
 
 Full Changelog: [v1.16.1...v1.16.2](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.1...v1.16.2)
