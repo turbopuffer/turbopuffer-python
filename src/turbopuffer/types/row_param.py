@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union
-from typing_extensions import Required, TypeAlias, TypedDict
+from typing_extensions import Required, TypedDict
 
 from .id_param import IDParam
 from .vector_param import VectorParam
@@ -11,7 +10,7 @@ from .vector_param import VectorParam
 __all__ = ["RowParam"]
 
 
-class RowParamTyped(TypedDict, total=False):
+class RowParam(TypedDict, total=False, extra_items=object):  # type: ignore[call-arg]
     """A single document, in a row-based format."""
 
     id: Required[IDParam]
@@ -19,6 +18,3 @@ class RowParamTyped(TypedDict, total=False):
 
     vector: VectorParam
     """A vector embedding associated with a document."""
-
-
-RowParam: TypeAlias = Union[RowParamTyped, Dict[str, object]]
