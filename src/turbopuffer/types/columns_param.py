@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union, Iterable
-from typing_extensions import Required, TypeAlias, TypedDict
+from typing import Union, Iterable
+from typing_extensions import Required, TypedDict
 
 from .._types import SequenceNotStr
 from .id_param import IDParam
@@ -12,7 +12,7 @@ from .vector_param import VectorParam
 __all__ = ["ColumnsParam"]
 
 
-class ColumnsParamTyped(TypedDict, total=False):
+class ColumnsParam(TypedDict, total=False, extra_items=Iterable[object]):  # type: ignore[call-arg]
     """A list of documents in columnar format.
 
     Each key is a column name, mapped to an array of values for that column.
@@ -23,6 +23,3 @@ class ColumnsParamTyped(TypedDict, total=False):
 
     vector: Union[SequenceNotStr[VectorParam], Iterable[float], str]
     """The vector embeddings of the documents."""
-
-
-ColumnsParam: TypeAlias = Union[ColumnsParamTyped, Dict[str, Iterable[object]]]
