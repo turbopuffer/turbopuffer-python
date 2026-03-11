@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.18.0 (2026-03-11)
+
+Full Changelog: [v1.17.0...v1.18.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.17.0...v1.18.0)
+
+### Features
+
+* spec: host MCP on stainless ([e790837](https://github.com/turbopuffer/turbopuffer-python/commit/e790837cdf03c3fd08d7292d5a9788a8b58776f1))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([e625b73](https://github.com/turbopuffer/turbopuffer-python/commit/e625b7308382e24cb05d046930446925d9f20b09))
+
+
+### Refactors
+
+* **types:** use `extra_items` from PEP 728 ([7450d60](https://github.com/turbopuffer/turbopuffer-python/commit/7450d602edcae5e007e84b51eaedd1e36d1bcac5))
+
 ## 1.17.0 (2026-02-27)
 
 Full Changelog: [v1.16.2...v1.17.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.2...v1.17.0)
