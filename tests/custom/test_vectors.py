@@ -114,16 +114,16 @@ def test_delete_vectors(tpuf: Turbopuffer):
 def test_upsert_columns(tpuf: Turbopuffer):
     ns = tpuf.namespace(test_prefix + "client_test")
 
-    ids = [0, 1, 2, 3]
-    vectors = [[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]]
-    attributes = {
-        "key1": ["zero", "one", "two", "three"],
-        "key2": [" ", "a", "b", "c"],
-        "test": ["cols", "cols", "cols", "cols"],
-    }
-
     # Test upsert columns with named args
-    ns.write(upsert_columns={"id": ids, "vector": vectors, **attributes})
+    ns.write(
+        upsert_columns={
+            "id": [0, 1, 2, 3],
+            "vector": [[0.0, 0.0], [0.1, 0.1], [0.2, 0.2], [0.3, 0.3]],
+            "key1": ["zero", "one", "two", "three"],
+            "key2": [" ", "a", "b", "c"],
+            "test": ["cols", "cols", "cols", "cols"],
+        }
+    )
 
     # Test upsert dict columns
     ns.write(
@@ -607,17 +607,12 @@ def test_upsert_base64_vectors(tpuf: Turbopuffer):
     )
 
     # Test upsert columns
-    ids = [4, 5]
-    vectors = [b64encode_vector([0.1, 0.1]), b64encode_vector([0.2, 0.2])]
-    attributes = {
-        "key1": ["zero", "one"],
-        "key2": [" ", "a"],
-    }
     ns.write(
         upsert_columns={
-            "id": ids,
-            "vector": vectors,
-            **attributes,
+            "id": [4, 5],
+            "vector": [b64encode_vector([0.1, 0.1]), b64encode_vector([0.2, 0.2])],
+            "key1": ["zero", "one"],
+            "key2": [" ", "a"],
         }
     )
 
