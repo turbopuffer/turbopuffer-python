@@ -42,6 +42,7 @@ from turbopuffer.types import (
     Vector,
     VectorEncoding,
     WriteBilling,
+    WritePerformance,
     NamespaceDeleteAllResponse,
     NamespaceExplainQueryResponse,
     NamespaceHintCacheWarmResponse,
