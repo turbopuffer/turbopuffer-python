@@ -6,19 +6,25 @@ cd "$(dirname "$0")/.."
 
 echo "==> Checking for outdated supplemental generated code"
 scripts/gen
-if ! git diff --exit-code; then
+if ! git diff --exit-code ':!uv.lock'; then
     echo "error: supplemental generated code is out of date" >&2
     echo " hint: run \`scripts/gen\` to regenerate the code" >&2
     exit 1
 fi
 
 if [ "$1" = "--fix" ]; then
-  echo "==> Running lints with --fix"
-  rye run fix:ruff
+  echo "==> Running ruff with --fix"
+  uv run ruff check . --fix
 else
-  echo "==> Running lints"
-  rye run lint
+  echo "==> Running ruff"
+  uv run ruff check .
 fi
 
+echo "==> Running pyright"
+uv run pyright
+
+echo "==> Running mypy"
+uv run mypy .
+
 echo "==> Making sure it imports"
-rye run python -c 'import turbopuffer'
+uv run python -c 'import turbopuffer'
