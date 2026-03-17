@@ -6,6 +6,7 @@ from typing_extensions import Literal
 from .id import ID
 from .._models import BaseModel
 from .write_billing import WriteBilling
+from .write_performance import WritePerformance
 
 __all__ = ["NamespaceWriteResponse"]
 
@@ -38,6 +39,9 @@ class NamespaceWriteResponse(BaseModel):
     Only included when `return_affected_ids` is true and at least one document was
     patched.
     """
+
+    performance: Optional[WritePerformance] = None
+    """The performance information for a write request."""
 
     rows_deleted: Optional[int] = None
     """The number of rows deleted by the write request."""
