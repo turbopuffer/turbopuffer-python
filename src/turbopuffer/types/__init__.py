@@ -25,6 +25,7 @@ from .full_text_search import FullTextSearch as FullTextSearch
 from .aggregation_group import AggregationGroup as AggregationGroup
 from .namespace_summary import NamespaceSummary as NamespaceSummary
 from .query_performance import QueryPerformance as QueryPerformance
+from .write_performance import WritePerformance as WritePerformance
 from .bm25_clause_params import Bm25ClauseParams as Bm25ClauseParams
 from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
