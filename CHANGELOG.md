@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.19.0 (2026-03-18)
+
+Full Changelog: [v1.18.0...v1.19.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.18.0...v1.19.0)
+
+### Features
+
+* python: swap stainless to the new client edition to pick up uv ([3c5db9a](https://github.com/turbopuffer/turbopuffer-python/commit/3c5db9a7c0da55add98cffeac36bfd155bb0daa7))
+* Response performance object ([ba4ee3a](https://github.com/turbopuffer/turbopuffer-python/commit/ba4ee3a792463466829ac9782dbdde4ea0759c49))
+* tpuf: add branching to openapi spec ([a209dbb](https://github.com/turbopuffer/turbopuffer-python/commit/a209dbb6d97383aba3d83be8a49998c6bcec7e3f))
+
+
+### Bug Fixes
+
+* **client:** use higher retry delay precision ([ee426cd](https://github.com/turbopuffer/turbopuffer-python/commit/ee426cd38978170ed3055c90c01d52834d86f979))
+* **deps:** bump minimum typing-extensions version ([b001b82](https://github.com/turbopuffer/turbopuffer-python/commit/b001b82624c3fa9be54ab0cfbdc590019b560fe9))
+* **pydantic:** do not pass `by_alias` unless set ([779eb20](https://github.com/turbopuffer/turbopuffer-python/commit/779eb20d27a4d8febd8af0718091ba8be03a03eb))
+
+
+### Chores
+
+* **internal:** tweak CI branches ([37b4726](https://github.com/turbopuffer/turbopuffer-python/commit/37b4726ea7264e65a411dff1f46dd21e53ee4b1a))
+
 ## 1.18.0 (2026-03-11)
 
 Full Changelog: [v1.17.0...v1.18.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.17.0...v1.18.0)
