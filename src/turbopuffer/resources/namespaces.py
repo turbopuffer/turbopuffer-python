@@ -536,6 +536,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
+        branch_from_namespace: str | Omit = omit,
         copy_from_namespace: namespace_write_params.CopyFromNamespace | Omit = omit,
         delete_by_filter: object | Omit = omit,
         delete_by_filter_allow_partial: bool | Omit = omit,
@@ -565,6 +566,8 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
+          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+
           copy_from_namespace: The namespace to copy documents from.
 
           delete_by_filter: The filter specifying which documents to delete.
@@ -618,6 +621,7 @@ class NamespacesResource(SyncAPIResource):
             f"/v2/namespaces/{namespace}",
             body=maybe_transform(
                 {
+                    "branch_from_namespace": branch_from_namespace,
                     "copy_from_namespace": copy_from_namespace,
                     "delete_by_filter": delete_by_filter,
                     "delete_by_filter_allow_partial": delete_by_filter_allow_partial,
@@ -1133,6 +1137,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
+        branch_from_namespace: str | Omit = omit,
         copy_from_namespace: namespace_write_params.CopyFromNamespace | Omit = omit,
         delete_by_filter: object | Omit = omit,
         delete_by_filter_allow_partial: bool | Omit = omit,
@@ -1162,6 +1167,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
+          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+
           copy_from_namespace: The namespace to copy documents from.
 
           delete_by_filter: The filter specifying which documents to delete.
@@ -1215,6 +1222,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
             f"/v2/namespaces/{namespace}",
             body=await async_maybe_transform(
                 {
+                    "branch_from_namespace": branch_from_namespace,
                     "copy_from_namespace": copy_from_namespace,
                     "delete_by_filter": delete_by_filter,
                     "delete_by_filter_allow_partial": delete_by_filter_allow_partial,
