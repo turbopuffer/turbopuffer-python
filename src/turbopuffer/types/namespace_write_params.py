@@ -26,6 +26,9 @@ __all__ = [
 class NamespaceWriteParams(TypedDict, total=False):
     namespace: str
 
+    branch_from_namespace: str
+    """The namespace to create an instant, copy-on-write clone of."""
+
     copy_from_namespace: CopyFromNamespace
     """The namespace to copy documents from."""
 
