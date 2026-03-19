@@ -11,6 +11,7 @@ from .row_param import RowParam
 from .columns_param import ColumnsParam
 from .distance_metric import DistanceMetric
 from .attribute_schema_param import AttributeSchemaParam
+from .branch_from_namespace_params import BranchFromNamespaceParams
 
 __all__ = [
     "NamespaceWriteParams",
@@ -25,7 +26,7 @@ __all__ = [
 class NamespaceWriteParams(TypedDict, total=False):
     namespace: str
 
-    branch_from_namespace: str
+    branch_from_namespace: BranchFromNamespaceParams
     """The namespace to create an instant, copy-on-write clone of."""
 
     copy_from_namespace: CopyFromNamespace
