@@ -18,7 +18,7 @@ from ..types import (
     namespace_update_schema_params,
 )
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import maybe_transform, async_maybe_transform
+from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -99,7 +99,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._delete(
-            f"/v2/namespaces/{namespace}",
+            path_template("/v2/namespaces/{namespace}", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -171,7 +171,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
-            f"/v2/namespaces/{namespace}/explain_query",
+            path_template("/v2/namespaces/{namespace}/explain_query", namespace=namespace),
             body=maybe_transform(
                 {
                     "aggregate_by": aggregate_by,
@@ -222,7 +222,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._get(
-            f"/v1/namespaces/{namespace}/hint_cache_warm",
+            path_template("/v1/namespaces/{namespace}/hint_cache_warm", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -257,7 +257,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._get(
-            f"/v1/namespaces/{namespace}/metadata",
+            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -299,7 +299,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
-            f"/v2/namespaces/{namespace}/query?stainless_overload=multiQuery",
+            path_template("/v2/namespaces/{namespace}/query?stainless_overload=multiQuery", namespace=namespace),
             body=maybe_transform(
                 {
                     "queries": queries,
@@ -379,7 +379,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
-            f"/v2/namespaces/{namespace}/query",
+            path_template("/v2/namespaces/{namespace}/query", namespace=namespace),
             body=maybe_transform(
                 {
                     "aggregate_by": aggregate_by,
@@ -444,7 +444,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
-            f"/v1/namespaces/{namespace}/_debug/recall",
+            path_template("/v1/namespaces/{namespace}/_debug/recall", namespace=namespace),
             body=maybe_transform(
                 {
                     "filters": filters,
@@ -488,7 +488,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._get(
-            f"/v1/namespaces/{namespace}/schema",
+            path_template("/v1/namespaces/{namespace}/schema", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -526,7 +526,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
-            f"/v1/namespaces/{namespace}/schema",
+            path_template("/v1/namespaces/{namespace}/schema", namespace=namespace),
             body=maybe_transform(schema, namespace_update_schema_params.NamespaceUpdateSchemaParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -620,7 +620,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
-            f"/v2/namespaces/{namespace}",
+            path_template("/v2/namespaces/{namespace}", namespace=namespace),
             body=maybe_transform(
                 {
                     "branch_from_namespace": branch_from_namespace,
@@ -700,7 +700,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._delete(
-            f"/v2/namespaces/{namespace}",
+            path_template("/v2/namespaces/{namespace}", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -772,7 +772,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
-            f"/v2/namespaces/{namespace}/explain_query",
+            path_template("/v2/namespaces/{namespace}/explain_query", namespace=namespace),
             body=await async_maybe_transform(
                 {
                     "aggregate_by": aggregate_by,
@@ -823,7 +823,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._get(
-            f"/v1/namespaces/{namespace}/hint_cache_warm",
+            path_template("/v1/namespaces/{namespace}/hint_cache_warm", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -858,7 +858,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._get(
-            f"/v1/namespaces/{namespace}/metadata",
+            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -900,7 +900,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
-            f"/v2/namespaces/{namespace}/query?stainless_overload=multiQuery",
+            path_template("/v2/namespaces/{namespace}/query?stainless_overload=multiQuery", namespace=namespace),
             body=await async_maybe_transform(
                 {
                     "queries": queries,
@@ -980,7 +980,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
-            f"/v2/namespaces/{namespace}/query",
+            path_template("/v2/namespaces/{namespace}/query", namespace=namespace),
             body=await async_maybe_transform(
                 {
                     "aggregate_by": aggregate_by,
@@ -1045,7 +1045,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
-            f"/v1/namespaces/{namespace}/_debug/recall",
+            path_template("/v1/namespaces/{namespace}/_debug/recall", namespace=namespace),
             body=await async_maybe_transform(
                 {
                     "filters": filters,
@@ -1089,7 +1089,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._get(
-            f"/v1/namespaces/{namespace}/schema",
+            path_template("/v1/namespaces/{namespace}/schema", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1127,7 +1127,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
-            f"/v1/namespaces/{namespace}/schema",
+            path_template("/v1/namespaces/{namespace}/schema", namespace=namespace),
             body=await async_maybe_transform(schema, namespace_update_schema_params.NamespaceUpdateSchemaParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -1221,7 +1221,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
-            f"/v2/namespaces/{namespace}",
+            path_template("/v2/namespaces/{namespace}", namespace=namespace),
             body=await async_maybe_transform(
                 {
                     "branch_from_namespace": branch_from_namespace,
