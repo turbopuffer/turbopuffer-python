@@ -22,6 +22,7 @@ from turbopuffer.types import (
     AttributeSchemaConfig,
     AttributeType,
     Bm25ClauseParams,
+    BranchFromNamespaceParams,
     Columns,
     ContainsAllTokensFilterParams,
     ContainsAnyTokenFilterParams,
