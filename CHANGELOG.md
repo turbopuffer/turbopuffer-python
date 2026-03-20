@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.20.0 (2026-03-20)
+
+Full Changelog: [v1.19.0...v1.20.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.19.0...v1.20.0)
+
+### Features
+
+* spec: disable CopyFromNamespace syntax sugar in Go ([0c0a73e](https://github.com/turbopuffer/turbopuffer-python/commit/0c0a73ee0d75753c92a855b9e45cfd18a4695b48))
+* tpuf-engine: add verbose form of branch_from_namespace ([75536b4](https://github.com/turbopuffer/turbopuffer-python/commit/75536b42e4143ab01f458cef85998f0a488c2bce))
+
+
+### Bug Fixes
+
+* sanitize endpoint path params ([f8dd883](https://github.com/turbopuffer/turbopuffer-python/commit/f8dd88318deec3b1d2c6a5176071fe03fb3643e2))
+
 ## 1.19.0 (2026-03-18)
 
 Full Changelog: [v1.18.0...v1.19.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.18.0...v1.19.0)
