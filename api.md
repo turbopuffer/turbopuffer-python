@@ -26,6 +26,7 @@ from turbopuffer.types import (
     Columns,
     ContainsAllTokensFilterParams,
     ContainsAnyTokenFilterParams,
+    CopyFromNamespaceParams,
     DecayParams,
     DistanceMetric,
     FullTextSearch,
