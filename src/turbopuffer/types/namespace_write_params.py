@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union, Iterable
-from typing_extensions import Required, TypeAlias, TypedDict
+from typing import Dict, Iterable
+from typing_extensions import Required, TypedDict
 
 from .._types import SequenceNotStr
 from .id_param import IDParam
@@ -11,16 +11,10 @@ from .row_param import RowParam
 from .columns_param import ColumnsParam
 from .distance_metric import DistanceMetric
 from .attribute_schema_param import AttributeSchemaParam
+from .copy_from_namespace_params import CopyFromNamespaceParams
 from .branch_from_namespace_params import BranchFromNamespaceParams
 
-__all__ = [
-    "NamespaceWriteParams",
-    "CopyFromNamespace",
-    "CopyFromNamespaceCopyFromNamespaceConfig",
-    "Encryption",
-    "EncryptionCmek",
-    "PatchByFilter",
-]
+__all__ = ["NamespaceWriteParams", "Encryption", "EncryptionCmek", "PatchByFilter"]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
@@ -29,7 +23,7 @@ class NamespaceWriteParams(TypedDict, total=False):
     branch_from_namespace: BranchFromNamespaceParams
     """The namespace to create an instant, copy-on-write clone of."""
 
-    copy_from_namespace: CopyFromNamespace
+    copy_from_namespace: CopyFromNamespaceParams
     """The namespace to copy documents from."""
 
     delete_by_filter: object
@@ -98,20 +92,6 @@ class NamespaceWriteParams(TypedDict, total=False):
     """
 
     upsert_rows: Iterable[RowParam]
-
-
-class CopyFromNamespaceCopyFromNamespaceConfig(TypedDict, total=False):
-    source_namespace: Required[str]
-    """The namespace to copy documents from."""
-
-    source_api_key: str
-    """(Optional) An API key for the organization containing the source namespace"""
-
-    source_region: str
-    """(Optional) The region of the source namespace."""
-
-
-CopyFromNamespace: TypeAlias = Union[str, CopyFromNamespaceCopyFromNamespaceConfig]
 
 
 class EncryptionCmek(TypedDict, total=False):

@@ -9,6 +9,7 @@ import httpx
 from ..types import (
     DistanceMetric,
     VectorEncoding,
+    CopyFromNamespaceParams,
     BranchFromNamespaceParams,
     namespace_query_params,
     namespace_write_params,
@@ -41,6 +42,7 @@ from ..types.namespace_query_response import NamespaceQueryResponse
 from ..types.namespace_write_response import NamespaceWriteResponse
 from ..types.namespace_recall_response import NamespaceRecallResponse
 from ..types.namespace_schema_response import NamespaceSchemaResponse
+from ..types.copy_from_namespace_params import CopyFromNamespaceParams
 from ..types.branch_from_namespace_params import BranchFromNamespaceParams
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
 from ..types.namespace_multi_query_response import NamespaceMultiQueryResponse
@@ -539,7 +541,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         namespace: str | None = None,
         branch_from_namespace: BranchFromNamespaceParams | Omit = omit,
-        copy_from_namespace: namespace_write_params.CopyFromNamespace | Omit = omit,
+        copy_from_namespace: CopyFromNamespaceParams | Omit = omit,
         delete_by_filter: object | Omit = omit,
         delete_by_filter_allow_partial: bool | Omit = omit,
         delete_condition: object | Omit = omit,
@@ -1140,7 +1142,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         namespace: str | None = None,
         branch_from_namespace: BranchFromNamespaceParams | Omit = omit,
-        copy_from_namespace: namespace_write_params.CopyFromNamespace | Omit = omit,
+        copy_from_namespace: CopyFromNamespaceParams | Omit = omit,
         delete_by_filter: object | Omit = omit,
         delete_by_filter_allow_partial: bool | Omit = omit,
         delete_condition: object | Omit = omit,
