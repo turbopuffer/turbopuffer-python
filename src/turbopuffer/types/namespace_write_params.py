@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable
+from typing import Dict, Union, Iterable
 from typing_extensions import Required, TypedDict
 
 from .._types import Omit, SequenceNotStr
