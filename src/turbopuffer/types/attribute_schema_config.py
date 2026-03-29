@@ -48,5 +48,8 @@ class AttributeSchemaConfig(BaseModel):
     `filterable: true`.
     """
 
+    glob: Optional[bool] = None
+    """Whether to enable Glob filters on this attribute."""
+
     regex: Optional[bool] = None
     """Whether to enable Regex filters on this attribute."""
