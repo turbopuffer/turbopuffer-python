@@ -49,5 +49,8 @@ class AttributeSchemaConfigParam(TypedDict, total=False):
     `filterable: true`.
     """
 
+    glob: bool
+    """Whether to enable Glob filters on this attribute."""
+
     regex: bool
     """Whether to enable Regex filters on this attribute."""
