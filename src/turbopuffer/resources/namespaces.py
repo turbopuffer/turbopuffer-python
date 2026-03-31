@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable
+from typing import Dict, Iterable, Optional
 
 import httpx
 
@@ -17,6 +17,7 @@ from ..types import (
     namespace_multi_query_params,
     namespace_explain_query_params,
     namespace_update_schema_params,
+    namespace_update_metadata_params,
 )
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import path_template, maybe_transform, async_maybe_transform
@@ -495,6 +496,50 @@ class NamespacesResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NamespaceSchemaResponse,
+        )
+
+    def update_metadata(
+        self,
+        *,
+        namespace: str | None = None,
+        pinning: Optional[namespace_update_metadata_params.Pinning] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> NamespaceMetadata:
+        """
+        Update metadata configuration for a namespace.
+
+        Args:
+          pinning: Configuration for namespace pinning.
+
+              - Missing field: no change to pinning configuration
+              - `null` or `false`: explicitly remove pinning
+              - `true`: enable pinning with default configuration
+              - Object: set pinning configuration
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._patch(
+            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
+            body=maybe_transform({"pinning": pinning}, namespace_update_metadata_params.NamespaceUpdateMetadataParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceMetadata,
         )
 
     def update_schema(
@@ -1098,6 +1143,52 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceSchemaResponse,
         )
 
+    async def update_metadata(
+        self,
+        *,
+        namespace: str | None = None,
+        pinning: Optional[namespace_update_metadata_params.Pinning] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> NamespaceMetadata:
+        """
+        Update metadata configuration for a namespace.
+
+        Args:
+          pinning: Configuration for namespace pinning.
+
+              - Missing field: no change to pinning configuration
+              - `null` or `false`: explicitly remove pinning
+              - `true`: enable pinning with default configuration
+              - Object: set pinning configuration
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._patch(
+            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
+            body=await async_maybe_transform(
+                {"pinning": pinning}, namespace_update_metadata_params.NamespaceUpdateMetadataParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceMetadata,
+        )
+
     async def update_schema(
         self,
         *,
@@ -1283,6 +1374,9 @@ class NamespacesResourceWithRawResponse:
         self.schema = to_raw_response_wrapper(
             namespaces.schema,
         )
+        self.update_metadata = to_raw_response_wrapper(
+            namespaces.update_metadata,
+        )
         self.update_schema = to_raw_response_wrapper(
             namespaces.update_schema,
         )
@@ -1318,6 +1412,9 @@ class AsyncNamespacesResourceWithRawResponse:
         )
         self.schema = async_to_raw_response_wrapper(
             namespaces.schema,
+        )
+        self.update_metadata = async_to_raw_response_wrapper(
+            namespaces.update_metadata,
         )
         self.update_schema = async_to_raw_response_wrapper(
             namespaces.update_schema,
@@ -1355,6 +1452,9 @@ class NamespacesResourceWithStreamingResponse:
         self.schema = to_streamed_response_wrapper(
             namespaces.schema,
         )
+        self.update_metadata = to_streamed_response_wrapper(
+            namespaces.update_metadata,
+        )
         self.update_schema = to_streamed_response_wrapper(
             namespaces.update_schema,
         )
@@ -1390,6 +1490,9 @@ class AsyncNamespacesResourceWithStreamingResponse:
         )
         self.schema = async_to_streamed_response_wrapper(
             namespaces.schema,
+        )
+        self.update_metadata = async_to_streamed_response_wrapper(
+            namespaces.update_metadata,
         )
         self.update_schema = async_to_streamed_response_wrapper(
             namespaces.update_schema,

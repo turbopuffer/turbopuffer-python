@@ -17,6 +17,7 @@ from .columns_param import ColumnsParam as ColumnsParam
 from .query_billing import QueryBilling as QueryBilling
 from .write_billing import WriteBilling as WriteBilling
 from .attribute_type import AttributeType as AttributeType
+from .pinning_config import PinningConfig as PinningConfig
 from .distance_metric import DistanceMetric as DistanceMetric
 from .saturate_params import SaturateParams as SaturateParams
 from .vector_encoding import VectorEncoding as VectorEncoding
@@ -27,6 +28,7 @@ from .query_performance import QueryPerformance as QueryPerformance
 from .write_performance import WritePerformance as WritePerformance
 from .bm25_clause_params import Bm25ClauseParams as Bm25ClauseParams
 from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
+from .pinning_config_param import PinningConfigParam as PinningConfigParam
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
@@ -51,6 +53,7 @@ from .namespace_multi_query_response import NamespaceMultiQueryResponse as Names
 from .namespace_update_schema_params import NamespaceUpdateSchemaParams as NamespaceUpdateSchemaParams
 from .contains_any_token_filter_params import ContainsAnyTokenFilterParams as ContainsAnyTokenFilterParams
 from .namespace_explain_query_response import NamespaceExplainQueryResponse as NamespaceExplainQueryResponse
+from .namespace_update_metadata_params import NamespaceUpdateMetadataParams as NamespaceUpdateMetadataParams
 from .namespace_update_schema_response import NamespaceUpdateSchemaResponse as NamespaceUpdateSchemaResponse
 from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams as ContainsAllTokensFilterParams
 from .namespace_hint_cache_warm_response import NamespaceHintCacheWarmResponse as NamespaceHintCacheWarmResponse
