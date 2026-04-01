@@ -22,5 +22,11 @@ class NamespaceRecallParams(TypedDict, total=False):
     num: int
     """The number of searches to run."""
 
+    rank_by: object
+    """The ranking function to evaluate recall for.
+
+    If provided, `num` must be either null or 1.
+    """
+
     top_k: int
     """Search for `top_k` nearest neighbors."""
