@@ -305,6 +305,7 @@ class TestNamespaces:
         namespace = client.namespace("namespace").recall(
             include_ground_truth=True,
             num=0,
+            rank_by={},
             top_k=0,
         )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
@@ -826,6 +827,7 @@ class TestAsyncNamespaces:
             filters={},
             include_ground_truth=True,
             num=0,
+            rank_by={},
             top_k=0,
         )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
