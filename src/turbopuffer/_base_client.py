@@ -1402,7 +1402,17 @@ class _DefaultAsyncHttpxClient(httpx.AsyncClient):
             "transport",
             AiohttpTransport(
                 client=lambda: ClientSession(
-                    connector=aiohttp.TCPConnector(resolver=aiohttp.resolver.ThreadedResolver()),
+                    connector=aiohttp.TCPConnector(
+                        keepalive_timeout=kwargs["limits"].keepalive_expiry,
+                        resolver=aiohttp.resolver.ThreadedResolver(),
+                        **(
+                            {
+                                "limit": kwargs["limits"].max_connections,
+                            }
+                            if kwargs["limits"].max_connections is not None
+                            else {}
+                        ),
+                    ),
                 )
             ),
         )
