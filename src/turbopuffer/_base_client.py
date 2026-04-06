@@ -34,7 +34,9 @@ from typing_extensions import Literal, override, get_origin
 import anyio
 import httpx
 import distro
+import aiohttp
 import pydantic
+import aiohttp.resolver
 from httpx import URL
 from aiohttp import ClientSession
 from pydantic import PrivateAttr
@@ -1393,7 +1395,17 @@ class _DefaultAsyncHttpxClient(httpx.AsyncClient):
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
-        kwargs.setdefault("transport", AiohttpTransport(client=lambda: ClientSession()))
+        # Force use of the ThreadedResolver even if aiodns is installed.
+        # We received a report of the aiodns resolver caching negative
+        # responses too long.
+        kwargs.setdefault(
+            "transport",
+            AiohttpTransport(
+                client=lambda: ClientSession(
+                    connector=aiohttp.TCPConnector(resolver=aiohttp.resolver.ThreadedResolver()),
+                )
+            ),
+        )
         super().__init__(**kwargs)
 
 
