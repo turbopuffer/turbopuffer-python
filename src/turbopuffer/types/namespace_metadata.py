@@ -19,6 +19,8 @@ __all__ = [
     "Index",
     "IndexIndexUpToDate",
     "IndexIndexUpdating",
+    "Pinning",
+    "PinningStatus",
 ]
 
 
@@ -60,6 +62,31 @@ class IndexIndexUpdating(BaseModel):
 Index: TypeAlias = Union[IndexIndexUpToDate, IndexIndexUpdating]
 
 
+class PinningStatus(BaseModel):
+    """Operational status for a pinned namespace."""
+
+    ready_replicas: int
+    """The number of replicas that are warm and serving traffic."""
+
+    updated_at: datetime
+    """The timestamp of the latest pinning status snapshot."""
+
+    utilization: float
+    """
+    Aggregate utilization for the pinned namespace, reported as a value between 0.0
+    and 1.0.
+    """
+
+
+class Pinning(PinningConfig):
+    """
+    Configuration for namespace pinning, along with the current status of the pinned namespace.
+    """
+
+    status: Optional[PinningStatus] = None
+    """Operational status for a pinned namespace."""
+
+
 class NamespaceMetadata(BaseModel):
     """Metadata about a namespace."""
 
@@ -86,5 +113,8 @@ class NamespaceMetadata(BaseModel):
     updated_at: datetime
     """The timestamp when the namespace was last modified by a write operation."""
 
-    pinning: Optional[PinningConfig] = None
-    """Configuration for namespace pinning."""
+    pinning: Optional[Pinning] = None
+    """
+    Configuration for namespace pinning, along with the current status of the pinned
+    namespace.
+    """
