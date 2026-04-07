@@ -1409,11 +1409,13 @@ class _DefaultAsyncHttpxClient(httpx.AsyncClient):
         super().__init__(**kwargs)
 
 
+# NOTE(benesch): unused in favor of _DefaultAsyncHttpxClient, which already
+# uses AiohttpTransport.
 try:
     import httpx_aiohttp
 except ImportError:
 
-    class _DefaultAioHttpClient(httpx.AsyncClient):
+    class _DefaultAioHttpClient(httpx.AsyncClient):  # type: ignore
         def __init__(self, **_kwargs: Any) -> None:
             raise RuntimeError("To use the aiohttp client you must have installed the package with the `aiohttp` extra")
 else:
@@ -1440,7 +1442,7 @@ if TYPE_CHECKING:
     """An alias to `httpx.AsyncClient` that changes the default HTTP transport to `aiohttp`."""
 else:
     DefaultAsyncHttpxClient = _DefaultAsyncHttpxClient
-    DefaultAioHttpClient = _DefaultAioHttpClient
+    DefaultAioHttpClient = _DefaultAsyncHttpxClient  # see note on _DefaultAioHttpClient above
 
 
 class AsyncHttpxClientWrapper(DefaultAsyncHttpxClient):
