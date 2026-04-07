@@ -10,7 +10,7 @@ authors = [
 
 dependencies = [
   "httpx>=0.23.0, <1",
-    "aiohttp>=3.10.11, <4",
+    "aiohttp*",
   "pydantic>=1.9.0, <3",
     "pybase64>=1.4.1, <2",
     "typing-extensions>=4.13, <5",
