@@ -830,6 +830,7 @@ class _DefaultHttpxClient(httpx.Client):
         kwargs.setdefault("follow_redirects", True)
         # Disable Nagle (TCP_NODELAY) for lower latency on small writes. Kept in
         # DEFAULT_HTTP_SOCKET_OPTIONS alongside other connection defaults in _constants.
+        # (socket_options requires httpx>=0.25; see pyproject.toml.)
         kwargs.setdefault(
             "transport",
             HttpxTransport(socket_options=DEFAULT_HTTP_SOCKET_OPTIONS),
@@ -1414,8 +1415,8 @@ class _DefaultAsyncHttpxClient(httpx.AsyncClient):
         # We received a report of the aiodns resolver caching negative
         # responses too long.
         #
-        # TCPConnector has no socket_options; use socket_factory for TCP_NODELAY
-        # (same default behavior as sync HttpxTransport).
+        # TCPConnector has no socket_options; socket_factory needs aiohttp>=3.12.
+        # Sets TCP_NODELAY (same default behavior as sync HttpxTransport).
         kwargs.setdefault(
             "transport",
             AiohttpTransport(
