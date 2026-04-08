@@ -4,6 +4,7 @@ import sys
 import time
 import uuid
 import email
+import socket
 import asyncio
 import inspect
 import logging
@@ -81,6 +82,7 @@ from ._constants import (
     RAW_RESPONSE_HEADER,
     OVERRIDE_CAST_TO_HEADER,
     DEFAULT_CONNECTION_LIMITS,
+    DEFAULT_HTTP_SOCKET_OPTIONS,
 )
 from ._streaming import Stream, SSEDecoder, AsyncStream, SSEBytesDecoder
 from ._exceptions import (
@@ -826,7 +828,12 @@ class _DefaultHttpxClient(httpx.Client):
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
-        kwargs.setdefault("transport", HttpxTransport())
+        # Disable Nagle (TCP_NODELAY) for lower latency on small writes. Kept in
+        # DEFAULT_HTTP_SOCKET_OPTIONS alongside other connection defaults in _constants.
+        kwargs.setdefault(
+            "transport",
+            HttpxTransport(socket_options=DEFAULT_HTTP_SOCKET_OPTIONS),
+        )
         super().__init__(**kwargs)
 
 
@@ -1390,6 +1397,14 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         return self._request_api_list(model, page, opts)
 
 
+# Match sync TCP_NODELAY default; aiohttp has no httpx-style socket_options.
+def _tcp_nodelay_socket_factory(addr_info: tuple[Any, ...]) -> socket.socket:
+    family, type_, proto, _, _ = addr_info
+    sock = socket.socket(family=family, type=type_, proto=proto)
+    sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    return sock
+
+
 class _DefaultAsyncHttpxClient(httpx.AsyncClient):
     def __init__(self, **kwargs: Any) -> None:
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
@@ -1398,6 +1413,9 @@ class _DefaultAsyncHttpxClient(httpx.AsyncClient):
         # Force use of the ThreadedResolver even if aiodns is installed.
         # We received a report of the aiodns resolver caching negative
         # responses too long.
+        #
+        # TCPConnector has no socket_options; use socket_factory for TCP_NODELAY
+        # (same default behavior as sync HttpxTransport).
         kwargs.setdefault(
             "transport",
             AiohttpTransport(
@@ -1405,6 +1423,7 @@ class _DefaultAsyncHttpxClient(httpx.AsyncClient):
                     connector=aiohttp.TCPConnector(
                         keepalive_timeout=kwargs["limits"].keepalive_expiry,
                         resolver=aiohttp.resolver.ThreadedResolver(),
+                        socket_factory=_tcp_nodelay_socket_factory,
                         **(
                             {
                                 "limit": kwargs["limits"].max_connections,

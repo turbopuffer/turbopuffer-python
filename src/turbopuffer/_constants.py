@@ -1,5 +1,7 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+import socket
+
 import httpx
 
 RAW_RESPONSE_HEADER = "X-Stainless-Raw-Response"
@@ -13,6 +15,9 @@ DEFAULT_CONNECTION_LIMITS = httpx.Limits(
     max_keepalive_connections=512,
     keepalive_expiry=60.0,
 )
+
+# httpx sync transport only: tcp nodelay (disables nagle) for lower latency on small writes
+DEFAULT_HTTP_SOCKET_OPTIONS = ((socket.IPPROTO_TCP, socket.TCP_NODELAY, 1),)
 
 INITIAL_RETRY_DELAY = 0.25
 MAX_RETRY_DELAY = 8.0

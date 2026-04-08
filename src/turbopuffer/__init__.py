@@ -19,7 +19,12 @@ from ._client import (
 from ._models import BaseModel
 from ._version import __title__, __version__
 from ._response import APIResponse as APIResponse, AsyncAPIResponse as AsyncAPIResponse
-from ._constants import DEFAULT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_CONNECTION_LIMITS
+from ._constants import (
+    DEFAULT_TIMEOUT,
+    DEFAULT_MAX_RETRIES,
+    DEFAULT_CONNECTION_LIMITS,
+    DEFAULT_HTTP_SOCKET_OPTIONS,
+)
 from ._exceptions import (
     APIError,
     ConflictError,
@@ -78,6 +83,7 @@ __all__ = [
     "DEFAULT_TIMEOUT",
     "DEFAULT_MAX_RETRIES",
     "DEFAULT_CONNECTION_LIMITS",
+    "DEFAULT_HTTP_SOCKET_OPTIONS",
     "DefaultHttpxClient",
     "DefaultAsyncHttpxClient",
     "DefaultAioHttpClient",
