@@ -49,6 +49,9 @@ class AttributeSchemaConfigParam(TypedDict, total=False):
     `filterable: true`.
     """
 
+    fuzzy: bool
+    """Whether to enable Fuzzy filters on this attribute."""
+
     glob: bool
     """Whether to enable Glob filters on this attribute."""
 
