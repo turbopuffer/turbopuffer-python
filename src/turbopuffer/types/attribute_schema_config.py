@@ -48,6 +48,9 @@ class AttributeSchemaConfig(BaseModel):
     `filterable: true`.
     """
 
+    fuzzy: Optional[bool] = None
+    """Whether to enable Fuzzy filters on this attribute."""
+
     glob: Optional[bool] = None
     """Whether to enable Glob filters on this attribute."""
 
