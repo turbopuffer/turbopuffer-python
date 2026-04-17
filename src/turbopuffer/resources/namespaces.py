@@ -14,6 +14,8 @@ from ..types import (
     namespace_query_params,
     namespace_write_params,
     namespace_recall_params,
+    namespace_copy_from_params,
+    namespace_branch_from_params,
     namespace_multi_query_params,
     namespace_explain_query_params,
     namespace_update_schema_params,
@@ -44,7 +46,9 @@ from ..types.namespace_recall_response import NamespaceRecallResponse
 from ..types.namespace_schema_response import NamespaceSchemaResponse
 from ..types.copy_from_namespace_params import CopyFromNamespaceParams
 from ..types.branch_from_namespace_params import BranchFromNamespaceParams
+from ..types.namespace_copy_from_response import NamespaceCopyFromResponse
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
+from ..types.namespace_branch_from_response import NamespaceBranchFromResponse
 from ..types.namespace_multi_query_response import NamespaceMultiQueryResponse
 from ..types.namespace_explain_query_response import NamespaceExplainQueryResponse
 from ..types.namespace_update_schema_response import NamespaceUpdateSchemaResponse
@@ -72,6 +76,88 @@ class NamespacesResource(SyncAPIResource):
         For more information, see https://www.github.com/turbopuffer/turbopuffer-python#with_streaming_response
         """
         return NamespacesResourceWithStreamingResponse(self)
+
+    def branch_from(
+        self,
+        *,
+        namespace: str | None = None,
+        branch_from_namespace: BranchFromNamespaceParams,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> NamespaceBranchFromResponse:
+        """
+        Creates an instant, copy-on-write clone of a namespace.
+
+        Args:
+          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._post(
+            path_template("/v2/namespaces/{namespace}?stainless_overload=branchFrom", namespace=namespace),
+            body=maybe_transform(
+                {"branch_from_namespace": branch_from_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceBranchFromResponse,
+        )
+
+    def copy_from(
+        self,
+        *,
+        namespace: str | None = None,
+        copy_from_namespace: CopyFromNamespaceParams,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> NamespaceCopyFromResponse:
+        """
+        Copy all documents from another namespace into this one.
+
+        Args:
+          copy_from_namespace: The namespace to copy documents from.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._post(
+            path_template("/v2/namespaces/{namespace}?stainless_overload=copyFrom", namespace=namespace),
+            body=maybe_transform(
+                {"copy_from_namespace": copy_from_namespace}, namespace_copy_from_params.NamespaceCopyFromParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceCopyFromResponse,
+        )
 
     def delete_all(
         self,
@@ -723,6 +809,88 @@ class AsyncNamespacesResource(AsyncAPIResource):
         """
         return AsyncNamespacesResourceWithStreamingResponse(self)
 
+    async def branch_from(
+        self,
+        *,
+        namespace: str | None = None,
+        branch_from_namespace: BranchFromNamespaceParams,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> NamespaceBranchFromResponse:
+        """
+        Creates an instant, copy-on-write clone of a namespace.
+
+        Args:
+          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._post(
+            path_template("/v2/namespaces/{namespace}?stainless_overload=branchFrom", namespace=namespace),
+            body=await async_maybe_transform(
+                {"branch_from_namespace": branch_from_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceBranchFromResponse,
+        )
+
+    async def copy_from(
+        self,
+        *,
+        namespace: str | None = None,
+        copy_from_namespace: CopyFromNamespaceParams,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> NamespaceCopyFromResponse:
+        """
+        Copy all documents from another namespace into this one.
+
+        Args:
+          copy_from_namespace: The namespace to copy documents from.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._post(
+            path_template("/v2/namespaces/{namespace}?stainless_overload=copyFrom", namespace=namespace),
+            body=await async_maybe_transform(
+                {"copy_from_namespace": copy_from_namespace}, namespace_copy_from_params.NamespaceCopyFromParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceCopyFromResponse,
+        )
+
     async def delete_all(
         self,
         *,
@@ -1359,6 +1527,12 @@ class NamespacesResourceWithRawResponse:
     def __init__(self, namespaces: NamespacesResource) -> None:
         self._namespaces = namespaces
 
+        self.branch_from = to_raw_response_wrapper(
+            namespaces.branch_from,
+        )
+        self.copy_from = to_raw_response_wrapper(
+            namespaces.copy_from,
+        )
         self.delete_all = to_raw_response_wrapper(
             namespaces.delete_all,
         )
@@ -1398,6 +1572,12 @@ class AsyncNamespacesResourceWithRawResponse:
     def __init__(self, namespaces: AsyncNamespacesResource) -> None:
         self._namespaces = namespaces
 
+        self.branch_from = async_to_raw_response_wrapper(
+            namespaces.branch_from,
+        )
+        self.copy_from = async_to_raw_response_wrapper(
+            namespaces.copy_from,
+        )
         self.delete_all = async_to_raw_response_wrapper(
             namespaces.delete_all,
         )
@@ -1437,6 +1617,12 @@ class NamespacesResourceWithStreamingResponse:
     def __init__(self, namespaces: NamespacesResource) -> None:
         self._namespaces = namespaces
 
+        self.branch_from = to_streamed_response_wrapper(
+            namespaces.branch_from,
+        )
+        self.copy_from = to_streamed_response_wrapper(
+            namespaces.copy_from,
+        )
         self.delete_all = to_streamed_response_wrapper(
             namespaces.delete_all,
         )
@@ -1476,6 +1662,12 @@ class AsyncNamespacesResourceWithStreamingResponse:
     def __init__(self, namespaces: AsyncNamespacesResource) -> None:
         self._namespaces = namespaces
 
+        self.branch_from = async_to_streamed_response_wrapper(
+            namespaces.branch_from,
+        )
+        self.copy_from = async_to_streamed_response_wrapper(
+            namespaces.copy_from,
+        )
         self.delete_all = async_to_streamed_response_wrapper(
             namespaces.delete_all,
         )
