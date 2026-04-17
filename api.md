@@ -47,6 +47,8 @@ from turbopuffer.types import (
     VectorEncoding,
     WriteBilling,
     WritePerformance,
+    NamespaceBranchFromResponse,
+    NamespaceCopyFromResponse,
     NamespaceDeleteAllResponse,
     NamespaceExplainQueryResponse,
     NamespaceHintCacheWarmResponse,
@@ -61,6 +63,8 @@ from turbopuffer.types import (
 
 Methods:
 
+- <code title="post /v2/namespaces/{namespace}?stainless_overload=branchFrom">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">branch_from</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_branch_from_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_branch_from_response.py">NamespaceBranchFromResponse</a></code>
+- <code title="post /v2/namespaces/{namespace}?stainless_overload=copyFrom">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">copy_from</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_copy_from_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_copy_from_response.py">NamespaceCopyFromResponse</a></code>
 - <code title="delete /v2/namespaces/{namespace}">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">delete_all</a>(\*, namespace) -> <a href="./src/turbopuffer/types/namespace_delete_all_response.py">NamespaceDeleteAllResponse</a></code>
 - <code title="post /v2/namespaces/{namespace}/explain_query">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">explain_query</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_explain_query_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_explain_query_response.py">NamespaceExplainQueryResponse</a></code>
 - <code title="get /v1/namespaces/{namespace}/hint_cache_warm">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">hint_cache_warm</a>(\*, namespace) -> <a href="./src/turbopuffer/types/namespace_hint_cache_warm_response.py">NamespaceHintCacheWarmResponse</a></code>
