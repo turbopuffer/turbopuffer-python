@@ -575,7 +575,10 @@ class TestNamespaces:
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
             distance_metric="cosine_distance",
-            encryption={"cmek": {"key_name": "key_name"}},
+            encryption={
+                "key_name": "key_name",
+                "mode": "customer-managed",
+            },
             patch_by_filter={
                 "filters": ("name", "Eq", "foo"),
                 "patch": {"foo": "bar"},
@@ -1184,7 +1187,10 @@ class TestAsyncNamespaces:
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
             distance_metric="cosine_distance",
-            encryption={"cmek": {"key_name": "key_name"}},
+            encryption={
+                "key_name": "key_name",
+                "mode": "customer-managed",
+            },
             patch_by_filter={
                 "filters": ("name", "Eq", "foo"),
                 "patch": {"foo": "bar"},
