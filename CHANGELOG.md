@@ -1,5 +1,36 @@
 # Changelog
 
+## 2.0.0-alpha.1 (2026-04-29)
+
+Full Changelog: [v1.21.0...v2.0.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.21.0...v2.0.0-alpha.1)
+
+### Features
+
+* Add sparse vectors to the spec. ([b9be640](https://github.com/turbopuffer/turbopuffer-python/commit/b9be640cf32568a6edf2815eefc739d2a929d24d))
+* Enable Stainless normalizer v2 while keeping Query inlined ([45eaa3b](https://github.com/turbopuffer/turbopuffer-python/commit/45eaa3b401fb941e9110828b128317f6bc2a58a4))
+* Require `fuzzy: true` in the schema to use the `Fuzzy` filter ([387f49d](https://github.com/turbopuffer/turbopuffer-python/commit/387f49d968523f8b3f6274daf73c5838a433d92c))
+* set up branchFrom and copyFrom sugar in the OpenAPI spec ([6a112be](https://github.com/turbopuffer/turbopuffer-python/commit/6a112be93eca200e88b3bcb6dad124d3f97423a5))
+* spec: flatten branchFrom/copyFrom sugar endpoint params ([983d0f3](https://github.com/turbopuffer/turbopuffer-python/commit/983d0f326f0ffd163a100dd28eea05b2916ae5a4))
+* spec: update OpenAPI spec for v2 encryption API ([f02ec25](https://github.com/turbopuffer/turbopuffer-python/commit/f02ec25191820038af3a16dbf4358628ad12dc98))
+* support setting headers via env ([7efc3a3](https://github.com/turbopuffer/turbopuffer-python/commit/7efc3a3e557e1c0e1ec22928dd26315a41267779))
+
+
+### Bug Fixes
+
+* **client:** preserve hardcoded query params when merging with user params ([4028c53](https://github.com/turbopuffer/turbopuffer-python/commit/4028c5337f511121aabb6cd89a4ec196be4c5d5e))
+* ensure file data are only sent as 1 parameter ([9d934db](https://github.com/turbopuffer/turbopuffer-python/commit/9d934dbd4ee5cb48ebc8279ccb884b5aed3d10ec))
+* use correct field name format for multipart file arrays ([9fd4add](https://github.com/turbopuffer/turbopuffer-python/commit/9fd4add819379e55dba411639a2bfac87915b955))
+
+
+### Performance Improvements
+
+* **client:** optimize file structure copying in multipart requests ([5a52127](https://github.com/turbopuffer/turbopuffer-python/commit/5a521279cfc10bd2b0437693e2bc1eaf830d0228))
+
+
+### Chores
+
+* **internal:** more robust bootstrap script ([42243d0](https://github.com/turbopuffer/turbopuffer-python/commit/42243d00e39ed8aa28ed7b39a2815dda64840886))
+
 ## 1.21.0 (2026-04-07)
 
 Full Changelog: [v1.20.0...v1.21.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.20.0...v1.21.0)
