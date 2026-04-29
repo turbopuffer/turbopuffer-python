@@ -1581,7 +1581,7 @@ wheels = [
 
 [[package]]
 name = "turbopuffer"
-version = "1.21.0"
+version = "2.0.0a1"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
