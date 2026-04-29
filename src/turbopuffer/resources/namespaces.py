@@ -82,7 +82,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        branch_from_namespace: BranchFromNamespaceParams,
+        source_namespace: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -94,7 +94,7 @@ class NamespacesResource(SyncAPIResource):
         Creates an instant, copy-on-write clone of a namespace.
 
         Args:
-          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+          source_namespace: The namespace to create an instant, copy-on-write clone of.
 
           extra_headers: Send extra headers
 
@@ -111,7 +111,7 @@ class NamespacesResource(SyncAPIResource):
         return self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=branchFrom", namespace=namespace),
             body=maybe_transform(
-                {"branch_from_namespace": branch_from_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
+                {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -123,7 +123,9 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        copy_from_namespace: CopyFromNamespaceParams,
+        source_namespace: str,
+        source_api_key: str | Omit = omit,
+        source_region: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -135,7 +137,11 @@ class NamespacesResource(SyncAPIResource):
         Copy all documents from another namespace into this one.
 
         Args:
-          copy_from_namespace: The namespace to copy documents from.
+          source_namespace: The namespace to copy documents from.
+
+          source_api_key: (Optional) An API key for the organization containing the source namespace
+
+          source_region: (Optional) The region of the source namespace.
 
           extra_headers: Send extra headers
 
@@ -152,7 +158,12 @@ class NamespacesResource(SyncAPIResource):
         return self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=copyFrom", namespace=namespace),
             body=maybe_transform(
-                {"copy_from_namespace": copy_from_namespace}, namespace_copy_from_params.NamespaceCopyFromParams
+                {
+                    "source_namespace": source_namespace,
+                    "source_api_key": source_api_key,
+                    "source_region": source_region,
+                },
+                namespace_copy_from_params.NamespaceCopyFromParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -814,7 +825,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        branch_from_namespace: BranchFromNamespaceParams,
+        source_namespace: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -826,7 +837,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Creates an instant, copy-on-write clone of a namespace.
 
         Args:
-          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+          source_namespace: The namespace to create an instant, copy-on-write clone of.
 
           extra_headers: Send extra headers
 
@@ -843,7 +854,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         return await self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=branchFrom", namespace=namespace),
             body=await async_maybe_transform(
-                {"branch_from_namespace": branch_from_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
+                {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -855,7 +866,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        copy_from_namespace: CopyFromNamespaceParams,
+        source_namespace: str,
+        source_api_key: str | Omit = omit,
+        source_region: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -867,7 +880,11 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Copy all documents from another namespace into this one.
 
         Args:
-          copy_from_namespace: The namespace to copy documents from.
+          source_namespace: The namespace to copy documents from.
+
+          source_api_key: (Optional) An API key for the organization containing the source namespace
+
+          source_region: (Optional) The region of the source namespace.
 
           extra_headers: Send extra headers
 
@@ -884,7 +901,12 @@ class AsyncNamespacesResource(AsyncAPIResource):
         return await self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=copyFrom", namespace=namespace),
             body=await async_maybe_transform(
-                {"copy_from_namespace": copy_from_namespace}, namespace_copy_from_params.NamespaceCopyFromParams
+                {
+                    "source_namespace": source_namespace,
+                    "source_api_key": source_api_key,
+                    "source_region": source_region,
+                },
+                namespace_copy_from_params.NamespaceCopyFromParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout

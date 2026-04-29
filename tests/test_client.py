@@ -449,7 +449,7 @@ class TestTurbopuffer:
     def test_default_namespace_client_params(self, client: Turbopuffer) -> None:
         # Test with base client (no custom params)
         with pytest.raises(ValueError, match="Missing default_namespace argument;"):
-            client.namespaces.branch_from(branch_from_namespace="string")
+            client.namespaces.branch_from(source_namespace="source_namespace")
 
         client = Turbopuffer(
             base_url=base_url,
@@ -458,7 +458,7 @@ class TestTurbopuffer:
             default_namespace="My Default Namespace",
         )
         with client as c2:
-            c2.namespaces.branch_from(branch_from_namespace="string")
+            c2.namespaces.branch_from(source_namespace="source_namespace")
 
     def test_request_extra_json(self, client: Turbopuffer) -> None:
         request = client._build_request(
@@ -1370,7 +1370,7 @@ class TestAsyncTurbopuffer:
     async def test_default_namespace_client_params(self, async_client: AsyncTurbopuffer) -> None:
         # Test with base client (no custom params)
         with pytest.raises(ValueError, match="Missing default_namespace argument;"):
-            await async_client.namespaces.branch_from(branch_from_namespace="string")
+            await async_client.namespaces.branch_from(source_namespace="source_namespace")
 
         client = AsyncTurbopuffer(
             base_url=base_url,
@@ -1379,7 +1379,7 @@ class TestAsyncTurbopuffer:
             default_namespace="My Default Namespace",
         )
         async with client as c2:
-            await c2.namespaces.branch_from(branch_from_namespace="string")
+            await c2.namespaces.branch_from(source_namespace="source_namespace")
 
     def test_request_extra_json(self, client: Turbopuffer) -> None:
         request = client._build_request(

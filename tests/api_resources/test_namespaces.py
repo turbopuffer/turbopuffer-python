@@ -35,7 +35,7 @@ class TestNamespaces:
     def test_method_branch_from(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.branch_from(
             namespace="namespace",
-            branch_from_namespace="string",
+            source_namespace="source_namespace",
         )
         assert_matches_type(NamespaceBranchFromResponse, namespace, path=["response"])
 
@@ -44,7 +44,7 @@ class TestNamespaces:
     def test_raw_response_branch_from(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.branch_from(
             namespace="namespace",
-            branch_from_namespace="string",
+            source_namespace="source_namespace",
         )
 
         assert response.is_closed is True
@@ -57,7 +57,7 @@ class TestNamespaces:
     def test_streaming_response_branch_from(self, client: Turbopuffer) -> None:
         with client.namespaces.with_streaming_response.branch_from(
             namespace="namespace",
-            branch_from_namespace="string",
+            source_namespace="source_namespace",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -73,7 +73,7 @@ class TestNamespaces:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespaces.with_raw_response.branch_from(
                 namespace="",
-                branch_from_namespace="string",
+                source_namespace="source_namespace",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -81,7 +81,7 @@ class TestNamespaces:
     def test_method_copy_from(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.copy_from(
             namespace="namespace",
-            copy_from_namespace="string",
+            source_namespace="source_namespace",
         )
         assert_matches_type(NamespaceCopyFromResponse, namespace, path=["response"])
 
@@ -90,7 +90,9 @@ class TestNamespaces:
     def test_method_copy_from_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespaces.copy_from(
             namespace="namespace",
-            copy_from_namespace="string",
+            source_namespace="source_namespace",
+            source_api_key="source_api_key",
+            source_region="source_region",
         )
         assert_matches_type(NamespaceCopyFromResponse, namespace, path=["response"])
 
@@ -99,7 +101,7 @@ class TestNamespaces:
     def test_raw_response_copy_from(self, client: Turbopuffer) -> None:
         response = client.namespaces.with_raw_response.copy_from(
             namespace="namespace",
-            copy_from_namespace="string",
+            source_namespace="source_namespace",
         )
 
         assert response.is_closed is True
@@ -112,7 +114,7 @@ class TestNamespaces:
     def test_streaming_response_copy_from(self, client: Turbopuffer) -> None:
         with client.namespaces.with_streaming_response.copy_from(
             namespace="namespace",
-            copy_from_namespace="string",
+            source_namespace="source_namespace",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -128,7 +130,7 @@ class TestNamespaces:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             client.namespaces.with_raw_response.copy_from(
                 namespace="",
-                copy_from_namespace="string",
+                source_namespace="source_namespace",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -749,7 +751,7 @@ class TestAsyncNamespaces:
     async def test_method_branch_from(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.branch_from(
             namespace="namespace",
-            branch_from_namespace="string",
+            source_namespace="source_namespace",
         )
         assert_matches_type(NamespaceBranchFromResponse, namespace, path=["response"])
 
@@ -758,7 +760,7 @@ class TestAsyncNamespaces:
     async def test_raw_response_branch_from(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.branch_from(
             namespace="namespace",
-            branch_from_namespace="string",
+            source_namespace="source_namespace",
         )
 
         assert response.is_closed is True
@@ -771,7 +773,7 @@ class TestAsyncNamespaces:
     async def test_streaming_response_branch_from(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespaces.with_streaming_response.branch_from(
             namespace="namespace",
-            branch_from_namespace="string",
+            source_namespace="source_namespace",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -787,7 +789,7 @@ class TestAsyncNamespaces:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespaces.with_raw_response.branch_from(
                 namespace="",
-                branch_from_namespace="string",
+                source_namespace="source_namespace",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -795,7 +797,7 @@ class TestAsyncNamespaces:
     async def test_method_copy_from(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.copy_from(
             namespace="namespace",
-            copy_from_namespace="string",
+            source_namespace="source_namespace",
         )
         assert_matches_type(NamespaceCopyFromResponse, namespace, path=["response"])
 
@@ -804,7 +806,9 @@ class TestAsyncNamespaces:
     async def test_method_copy_from_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespaces.copy_from(
             namespace="namespace",
-            copy_from_namespace="string",
+            source_namespace="source_namespace",
+            source_api_key="source_api_key",
+            source_region="source_region",
         )
         assert_matches_type(NamespaceCopyFromResponse, namespace, path=["response"])
 
@@ -813,7 +817,7 @@ class TestAsyncNamespaces:
     async def test_raw_response_copy_from(self, async_client: AsyncTurbopuffer) -> None:
         response = await async_client.namespaces.with_raw_response.copy_from(
             namespace="namespace",
-            copy_from_namespace="string",
+            source_namespace="source_namespace",
         )
 
         assert response.is_closed is True
@@ -826,7 +830,7 @@ class TestAsyncNamespaces:
     async def test_streaming_response_copy_from(self, async_client: AsyncTurbopuffer) -> None:
         async with async_client.namespaces.with_streaming_response.copy_from(
             namespace="namespace",
-            copy_from_namespace="string",
+            source_namespace="source_namespace",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -842,7 +846,7 @@ class TestAsyncNamespaces:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
             await async_client.namespaces.with_raw_response.copy_from(
                 namespace="",
-                copy_from_namespace="string",
+                source_namespace="source_namespace",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")

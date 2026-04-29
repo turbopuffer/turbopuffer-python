@@ -4,13 +4,17 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-from .copy_from_namespace_params import CopyFromNamespaceParams
-
 __all__ = ["NamespaceCopyFromParams"]
 
 
 class NamespaceCopyFromParams(TypedDict, total=False):
     namespace: str
 
-    copy_from_namespace: Required[CopyFromNamespaceParams]
+    source_namespace: Required[str]
     """The namespace to copy documents from."""
+
+    source_api_key: str
+    """(Optional) An API key for the organization containing the source namespace"""
+
+    source_region: str
+    """(Optional) The region of the source namespace."""
