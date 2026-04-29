@@ -112,9 +112,11 @@ class NamespacesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=branchFrom", namespace=namespace),
-            body=maybe_transform(
-                {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
-            ),
+            body={
+                "branch_from_namespace": maybe_transform(
+                    {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
+                )
+            },
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -159,14 +161,16 @@ class NamespacesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=copyFrom", namespace=namespace),
-            body=maybe_transform(
-                {
-                    "source_namespace": source_namespace,
-                    "source_api_key": source_api_key,
-                    "source_region": source_region,
-                },
-                namespace_copy_from_params.NamespaceCopyFromParams,
-            ),
+            body={
+                "copy_from_namespace": maybe_transform(
+                    {
+                        "source_namespace": source_namespace,
+                        "source_api_key": source_api_key,
+                        "source_region": source_region,
+                    },
+                    namespace_copy_from_params.NamespaceCopyFromParams,
+                )
+            },
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -863,9 +867,11 @@ class AsyncNamespacesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=branchFrom", namespace=namespace),
-            body=await async_maybe_transform(
-                {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
-            ),
+            body={
+                "branch_from_namespace": await async_maybe_transform(
+                    {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
+                )
+            },
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -910,14 +916,16 @@ class AsyncNamespacesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=copyFrom", namespace=namespace),
-            body=await async_maybe_transform(
-                {
-                    "source_namespace": source_namespace,
-                    "source_api_key": source_api_key,
-                    "source_region": source_region,
-                },
-                namespace_copy_from_params.NamespaceCopyFromParams,
-            ),
+            body={
+                "copy_from_namespace": await async_maybe_transform(
+                    {
+                        "source_namespace": source_namespace,
+                        "source_api_key": source_api_key,
+                        "source_region": source_region,
+                    },
+                    namespace_copy_from_params.NamespaceCopyFromParams,
+                )
+            },
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
