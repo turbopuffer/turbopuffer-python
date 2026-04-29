@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0-alpha.2 (2026-04-29)
+
+Full Changelog: [v2.0.0-alpha.1...v2.0.0-alpha.2](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.1...v2.0.0-alpha.2)
+
+### Features
+
+* Spec: Add sparse_distance_metric to the list of models. ([c9d7dde](https://github.com/turbopuffer/turbopuffer-python/commit/c9d7dde5a010cd2268f4f9dbaf36dca9d88d2980))
+
 ## 2.0.0-alpha.1 (2026-04-29)
 
 Full Changelog: [v1.21.0...v2.0.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.21.0...v2.0.0-alpha.1)
