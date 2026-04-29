@@ -11,7 +11,6 @@ from .language import Language as Language
 from .row_param import RowParam as RowParam
 from .tokenizer import Tokenizer as Tokenizer
 from .limit_param import LimitParam as LimitParam
-from .query_param import QueryParam as QueryParam
 from .decay_params import DecayParams as DecayParams
 from .vector_param import VectorParam as VectorParam
 from .columns_param import ColumnsParam as ColumnsParam

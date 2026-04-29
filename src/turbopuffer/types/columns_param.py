@@ -21,5 +21,5 @@ class ColumnsParam(TypedDict, total=False, extra_items=Iterable[object]):  # typ
     id: Required[SequenceNotStr[IDParam]]
     """The IDs of the documents."""
 
-    vector: Union[SequenceNotStr[VectorParam], Iterable[float], str]
+    vector: Union[SequenceNotStr[VectorParam], VectorParam]
     """The vector embeddings of the documents."""

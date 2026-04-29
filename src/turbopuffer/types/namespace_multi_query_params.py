@@ -2,25 +2,74 @@
 
 from __future__ import annotations
 
-from typing import Iterable
-from typing_extensions import Literal, Required, TypedDict
+from typing import Dict, Union, Iterable
+from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
-from .query_param import QueryParam
+from .._types import SequenceNotStr
+from .limit_param import LimitParam
+from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
+from .include_attributes_param import IncludeAttributesParam
 
-__all__ = ["NamespaceMultiQueryParams", "Consistency"]
+__all__ = ["NamespaceMultiQueryParams", "Query", "QueryLimit", "Consistency"]
 
 
 class NamespaceMultiQueryParams(TypedDict, total=False):
     namespace: str
 
-    queries: Required[Iterable[QueryParam]]
+    queries: Required[Iterable[Query]]
 
     consistency: Consistency
     """The consistency level for a query."""
 
     vector_encoding: VectorEncoding
     """The encoding to use for vectors in the response."""
+
+
+QueryLimit: TypeAlias = Union[int, LimitParam]
+
+
+class Query(TypedDict, total=False):
+    """Query, filter, full-text search and vector search documents."""
+
+    aggregate_by: Dict[str, object]
+    """
+    Aggregations to compute over all documents in the namespace that match the
+    filters.
+    """
+
+    distance_metric: DistanceMetric
+    """A function used to calculate vector similarity."""
+
+    exclude_attributes: SequenceNotStr[str]
+    """List of attribute names to exclude from the response.
+
+    All other attributes will be included in the response.
+    """
+
+    filters: object
+    """Exact filters for attributes to refine search results for.
+
+    Think of it as a SQL WHERE clause.
+    """
+
+    group_by: SequenceNotStr[str]
+    """
+    Groups documents by the specified attributes (the "group key") before computing
+    aggregates. Aggregates are computed separately for each group.
+    """
+
+    include_attributes: IncludeAttributesParam
+    """Whether to include attributes in the response."""
+
+    limit: QueryLimit
+    """Limits the documents returned by a query."""
+
+    rank_by: object
+    """How to rank the documents in the namespace."""
+
+    top_k: int
+    """The number of results to return."""
 
 
 class Consistency(TypedDict, total=False):
