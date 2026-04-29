@@ -10,6 +10,7 @@ from .id_param import IDParam as IDParam
 from .language import Language as Language
 from .row_param import RowParam as RowParam
 from .tokenizer import Tokenizer as Tokenizer
+from .encryption import Encryption as Encryption
 from .limit_param import LimitParam as LimitParam
 from .decay_params import DecayParams as DecayParams
 from .vector_param import VectorParam as VectorParam
@@ -21,6 +22,7 @@ from .pinning_config import PinningConfig as PinningConfig
 from .distance_metric import DistanceMetric as DistanceMetric
 from .saturate_params import SaturateParams as SaturateParams
 from .vector_encoding import VectorEncoding as VectorEncoding
+from .encryption_param import EncryptionParam as EncryptionParam
 from .full_text_search import FullTextSearch as FullTextSearch
 from .aggregation_group import AggregationGroup as AggregationGroup
 from .namespace_summary import NamespaceSummary as NamespaceSummary
