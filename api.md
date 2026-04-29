@@ -38,7 +38,6 @@ from turbopuffer.types import (
     NamespaceMetadata,
     NamespaceMetadataPatch,
     PinningConfig,
-    Query,
     QueryBilling,
     QueryPerformance,
     Row,
