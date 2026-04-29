@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from typing import Union
-from typing_extensions import Literal, Required, TypeAlias, TypedDict
+from typing_extensions import Required, TypeAlias, TypedDict
 
 from .attribute_type import AttributeType
 from .distance_metric import DistanceMetric
 from .full_text_search_param import FullTextSearchParam
+from .sparse_distance_metric import SparseDistanceMetric
 
 __all__ = ["AttributeSchemaConfigParam", "Ann", "AnnAnnConfig", "SparseKnn"]
 
@@ -28,7 +29,7 @@ class SparseKnn(TypedDict, total=False):
     Requires the `{}f16` type.
     """
 
-    distance_metric: Required[Literal["dot_product"]]
+    distance_metric: Required[SparseDistanceMetric]
     """A function used to calculate sparse vector similarity."""
 
 
