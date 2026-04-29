@@ -13,7 +13,7 @@ def test_no_cmek(tpuf: Turbopuffer):
                 "vector": [[0.1, 0.1], [0.2, 0.2]],
             },
             distance_metric="cosine_distance",
-            encryption={"cmek": {"key_name": "mykey"}},
+            encryption={"key_name": "mykey", "mode": "customer-managed"},
         )
         raise AssertionError("CMEK requires additional setup")
     except turbopuffer.BadRequestError as err:
