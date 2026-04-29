@@ -7,42 +7,11 @@ from typing_extensions import Literal, TypeAlias
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
+from .encryption import Encryption
 from .pinning_config import PinningConfig
 from .attribute_schema_config import AttributeSchemaConfig
 
-__all__ = [
-    "NamespaceMetadata",
-    "Encryption",
-    "EncryptionSse",
-    "EncryptionCmek",
-    "EncryptionCmekCmek",
-    "Index",
-    "IndexIndexUpToDate",
-    "IndexIndexUpdating",
-    "Pinning",
-    "PinningStatus",
-]
-
-
-class EncryptionSse(BaseModel):
-    sse: bool
-    """Always true. Indicates that the namespace is encrypted with SSE."""
-
-
-class EncryptionCmekCmek(BaseModel):
-    key_name: str
-    """The name of the CMEK key in use."""
-
-
-class EncryptionCmek(BaseModel):
-    """
-    Indicates that the namespace is encrypted with a customer-managed encryption key (CMEK).
-    """
-
-    cmek: EncryptionCmekCmek
-
-
-Encryption: TypeAlias = Union[EncryptionSse, EncryptionCmek]
+__all__ = ["NamespaceMetadata", "Index", "IndexIndexUpToDate", "IndexIndexUpdating", "Pinning", "PinningStatus"]
 
 
 class IndexIndexUpToDate(BaseModel):
@@ -100,10 +69,7 @@ class NamespaceMetadata(BaseModel):
     """The timestamp when the namespace was created."""
 
     encryption: Encryption
-    """
-    Indicates that the namespace is encrypted with a customer-managed encryption key
-    (CMEK).
-    """
+    """The encryption configuration for a namespace."""
 
     index: Index
 

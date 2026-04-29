@@ -37,6 +37,7 @@ from ..types.row_param import RowParam
 from ..types.columns_param import ColumnsParam
 from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
+from ..types.encryption_param import EncryptionParam
 from ..types.namespace_metadata import NamespaceMetadata
 from ..types.attribute_schema_param import AttributeSchemaParam
 from ..types.include_attributes_param import IncludeAttributesParam
@@ -345,7 +346,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._get(
-            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
+            path_template("/v2/namespaces/{namespace}/metadata", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -624,7 +625,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._patch(
-            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
+            path_template("/v2/namespaces/{namespace}/metadata", namespace=namespace),
             body=maybe_transform({"pinning": pinning}, namespace_update_metadata_params.NamespaceUpdateMetadataParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -683,7 +684,7 @@ class NamespacesResource(SyncAPIResource):
         deletes: SequenceNotStr[IDParam] | Omit = omit,
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
-        encryption: namespace_write_params.Encryption | Omit = omit,
+        encryption: EncryptionParam | Omit = omit,
         patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
         patch_by_filter_allow_partial: bool | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
@@ -1077,7 +1078,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._get(
-            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
+            path_template("/v2/namespaces/{namespace}/metadata", namespace=namespace),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1356,7 +1357,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._patch(
-            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
+            path_template("/v2/namespaces/{namespace}/metadata", namespace=namespace),
             body=await async_maybe_transform(
                 {"pinning": pinning}, namespace_update_metadata_params.NamespaceUpdateMetadataParams
             ),
@@ -1417,7 +1418,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         deletes: SequenceNotStr[IDParam] | Omit = omit,
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
-        encryption: namespace_write_params.Encryption | Omit = omit,
+        encryption: EncryptionParam | Omit = omit,
         patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
         patch_by_filter_allow_partial: bool | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,

@@ -10,11 +10,12 @@ from .id_param import IDParam
 from .row_param import RowParam
 from .columns_param import ColumnsParam
 from .distance_metric import DistanceMetric
+from .encryption_param import EncryptionParam
 from .attribute_schema_param import AttributeSchemaParam
 from .copy_from_namespace_params import CopyFromNamespaceParams
 from .branch_from_namespace_params import BranchFromNamespaceParams
 
-__all__ = ["NamespaceWriteParams", "Encryption", "EncryptionCmek", "PatchByFilter"]
+__all__ = ["NamespaceWriteParams", "PatchByFilter"]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
@@ -46,7 +47,7 @@ class NamespaceWriteParams(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
-    encryption: Encryption
+    encryption: EncryptionParam
     """The encryption configuration for a namespace."""
 
     patch_by_filter: PatchByFilter
@@ -92,21 +93,6 @@ class NamespaceWriteParams(TypedDict, total=False):
     """
 
     upsert_rows: Iterable[RowParam]
-
-
-class EncryptionCmek(TypedDict, total=False):
-    key_name: Required[str]
-    """The identifier of the CMEK key to use for encryption.
-
-    For GCP, the fully-qualified resource name of the key. For AWS, the ARN of the
-    key.
-    """
-
-
-class Encryption(TypedDict, total=False):
-    """The encryption configuration for a namespace."""
-
-    cmek: EncryptionCmek
 
 
 class PatchByFilter(TypedDict, total=False):
