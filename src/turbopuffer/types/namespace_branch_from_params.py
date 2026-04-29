@@ -4,13 +4,11 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-from .branch_from_namespace_params import BranchFromNamespaceParams
-
 __all__ = ["NamespaceBranchFromParams"]
 
 
 class NamespaceBranchFromParams(TypedDict, total=False):
     namespace: str
 
-    branch_from_namespace: Required[BranchFromNamespaceParams]
+    source_namespace: Required[str]
     """The namespace to create an instant, copy-on-write clone of."""
