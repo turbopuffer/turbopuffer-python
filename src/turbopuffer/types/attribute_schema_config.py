@@ -1,12 +1,13 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Union, Optional
-from typing_extensions import Literal, TypeAlias
+from typing_extensions import TypeAlias
 
 from .._models import BaseModel
 from .attribute_type import AttributeType
 from .distance_metric import DistanceMetric
 from .full_text_search import FullTextSearch
+from .sparse_distance_metric import SparseDistanceMetric
 
 __all__ = ["AttributeSchemaConfig", "Ann", "AnnAnnConfig", "SparseKnn"]
 
@@ -27,7 +28,7 @@ class SparseKnn(BaseModel):
     Requires the `{}f16` type.
     """
 
-    distance_metric: Literal["dot_product"]
+    distance_metric: SparseDistanceMetric
     """A function used to calculate sparse vector similarity."""
 
 

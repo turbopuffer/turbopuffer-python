@@ -42,6 +42,7 @@ from turbopuffer.types import (
     QueryPerformance,
     Row,
     SaturateParams,
+    SparseDistanceMetric,
     Tokenizer,
     Vector,
     VectorEncoding,
