@@ -35,6 +35,7 @@ from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams
+from .sparse_distance_metric import SparseDistanceMetric as SparseDistanceMetric
 from .attribute_schema_config import AttributeSchemaConfig as AttributeSchemaConfig
 from .full_text_search_config import FullTextSearchConfig as FullTextSearchConfig
 from .namespace_recall_params import NamespaceRecallParams as NamespaceRecallParams
