@@ -44,6 +44,29 @@ list of changes.
   tpuf.namespace("ns").branch_from(source_namespace="src")
   ```
 
+- The `encryption` parameter has been restructured. The `cmek` wrapper has been
+  removed in favor of a flat object with a required `mode` discriminator. A new
+  `{"mode": "default"}` variant lets you explicitly opt out of CMEK on writes
+  to a CMEK-enabled namespace.
+
+  Old:
+
+  ```py
+  tpuf.namespace("ns").write(
+      upsert_rows=[...],
+      encryption={"cmek": {"key_name": "..."}},
+  )
+  ```
+
+  New:
+
+  ```py
+  tpuf.namespace("ns").write(
+      upsert_rows=[...],
+      encryption={"mode": "customer-managed", "key_name": "..."},
+  )
+  ```
+
 ## v1.0
 
 No significant changes.
