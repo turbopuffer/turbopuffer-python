@@ -44,9 +44,7 @@ list of changes.
   tpuf.namespace("ns").branch_from(source_namespace="src")
   ```
 
-- The `encryption` parameter has been restructured. A new `{"mode": "default"}`
-  variant lets you explicitly opt out of CMEK on writes to a CMEK-enabled
-  namespace.
+- The `encryption` parameter has been restructured.
 
   Old:
 
@@ -65,6 +63,9 @@ list of changes.
       encryption={"mode": "customer-managed", "key_name": "..."},
   )
   ```
+
+  A new `{"mode": "default"}` variant lets you explicitly opt out of CMEK on
+  writes to a CMEK-enabled namespace.
 
 ## v1.0
 
