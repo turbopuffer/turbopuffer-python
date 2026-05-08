@@ -4,6 +4,50 @@ This document describes the notable breaking changes, if any, in each version of
 the Python client. See [CHANGELOG.md](./CHANGELOG.md) for a comprehensive
 list of changes.
 
+## v2.0
+
+- The `copy_from_namespace` parameter to the `write` method has been replaced
+  with a dedicated `copy_from` method.
+
+  Old:
+
+  ```py
+  tpuf.namespace("ns").write(
+      copy_from_namespace={
+          "source_namespace": "src",
+          "source_region": "gcp-us-central1",
+      },
+  )
+  ```
+
+  New:
+
+  ```py
+  tpuf.namespace("ns").copy_from(
+      source_namespace="src",
+      source_region="gcp-us-central1",
+  )
+  ```
+
+- The `branch_from_namespace` parameter to the `write` method has been replaced
+  with a dedicated `branch_from` method.
+
+  Old:
+
+  ```py
+  tpuf.namespace("ns").write(branch_from_namespace="src")
+  ```
+
+  New:
+
+  ```py
+  tpuf.namespace("ns").branch_from(source_namespace="src")
+  ```
+
+## v1.0
+
+No significant changes.
+
 ## v0.5
 
 v0.5 is a complete rewrite of the Python client. The new client is
