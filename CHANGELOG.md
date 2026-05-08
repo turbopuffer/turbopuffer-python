@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.0.0-alpha.3 (2026-05-08)
+
+Full Changelog: [v2.0.0-alpha.2...v2.0.0-alpha.3](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.2...v2.0.0-alpha.3)
+
+### Features
+
+* spec: move update_metadata to v1 ([200a6fc](https://github.com/turbopuffer/turbopuffer-python/commit/200a6fcbfd00a6208d1b12089441e1f473f4e632))
+
+
+### Chores
+
+* **internal:** reformat pyproject.toml ([a1dca5f](https://github.com/turbopuffer/turbopuffer-python/commit/a1dca5f8fe0abaa481e7fc27cfbbedb589ba4605))
+
 ## 2.0.0-alpha.2 (2026-04-29)
 
 Full Changelog: [v2.0.0-alpha.1...v2.0.0-alpha.2](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.1...v2.0.0-alpha.2)
