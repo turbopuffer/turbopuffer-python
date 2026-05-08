@@ -650,7 +650,7 @@ class NamespacesResource(SyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._patch(
-            path_template("/v2/namespaces/{namespace}/metadata", namespace=namespace),
+            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
             body=maybe_transform({"pinning": pinning}, namespace_update_metadata_params.NamespaceUpdateMetadataParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -1405,7 +1405,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         if not namespace:
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._patch(
-            path_template("/v2/namespaces/{namespace}/metadata", namespace=namespace),
+            path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
             body=await async_maybe_transform(
                 {"pinning": pinning}, namespace_update_metadata_params.NamespaceUpdateMetadataParams
             ),
