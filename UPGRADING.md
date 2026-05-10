@@ -67,10 +67,23 @@ list of changes.
   A new `{"mode": "default"}` variant lets you migrate a namespace from CMEK
   to default encryption.
 
-- The `RankByVector` and `RankBySparseVector` type aliases have been renamed
-  to `RankByAnn` and `RankBySparseKnn`. The wire-format strings (`"ANN"` and
-  `"SparseKNN"`) are unchanged, so any code that passes plain tuples or lists
-  to `rank_by` is unaffected.
+- The `RankByVector` type alias has been renamed to `RankByAnn`.
+
+  Old:
+
+  ```py
+  from turbopuffer.types import RankByVector
+
+  rank_by: RankByVector = ("vector", "ANN", [0.1, 0.2])
+  ```
+
+  New:
+
+  ```py
+  from turbopuffer.types import RankByAnn
+
+  rank_by: RankByAnn = ("vector", "ANN", [0.1, 0.2])
+  ```
 
 ## v1.0
 
