@@ -6,6 +6,47 @@ list of changes.
 
 ## v2.0
 
+- The `RankByVector` type alias has been renamed to `RankByAnn`.
+
+  Old:
+
+  ```py
+  from turbopuffer.types import RankByVector
+
+  rank_by: RankByVector = ("vector", "ANN", [0.1, 0.2])
+  ```
+
+  New:
+
+  ```py
+  from turbopuffer.types import RankByAnn
+
+  rank_by: RankByAnn = ("vector", "ANN", [0.1, 0.2])
+  ```
+
+- The `encryption` parameter has been restructured.
+
+  Old:
+
+  ```py
+  tpuf.namespace("ns").write(
+      upsert_rows=[...],
+      encryption={"cmek": {"key_name": "..."}},
+  )
+  ```
+
+  New:
+
+  ```py
+  tpuf.namespace("ns").write(
+      upsert_rows=[...],
+      encryption={"mode": "customer-managed", "key_name": "..."},
+  )
+  ```
+
+  A new `{"mode": "default"}` variant lets you migrate a namespace from CMEK
+  to default encryption.
+
 - The `copy_from_namespace` parameter to the `write` method has been replaced
   with a dedicated `copy_from` method.
 
@@ -42,47 +83,6 @@ list of changes.
 
   ```py
   tpuf.namespace("ns").branch_from(source_namespace="src")
-  ```
-
-- The `encryption` parameter has been restructured.
-
-  Old:
-
-  ```py
-  tpuf.namespace("ns").write(
-      upsert_rows=[...],
-      encryption={"cmek": {"key_name": "..."}},
-  )
-  ```
-
-  New:
-
-  ```py
-  tpuf.namespace("ns").write(
-      upsert_rows=[...],
-      encryption={"mode": "customer-managed", "key_name": "..."},
-  )
-  ```
-
-  A new `{"mode": "default"}` variant lets you migrate a namespace from CMEK
-  to default encryption.
-
-- The `RankByVector` type alias has been renamed to `RankByAnn`.
-
-  Old:
-
-  ```py
-  from turbopuffer.types import RankByVector
-
-  rank_by: RankByVector = ("vector", "ANN", [0.1, 0.2])
-  ```
-
-  New:
-
-  ```py
-  from turbopuffer.types import RankByAnn
-
-  rank_by: RankByAnn = ("vector", "ANN", [0.1, 0.2])
   ```
 
 ## v1.0
