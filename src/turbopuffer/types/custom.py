@@ -47,9 +47,11 @@ Filter = Union[
     Tuple[Literal["And"], Sequence["Filter"]],
     Tuple[Literal["Or"], Sequence["Filter"]],
 ]
-RankByVector = Tuple[str, Literal["ANN"], Sequence[float]]
+GroupByFunction = Tuple[Literal["ForEachUnique"], str]
+GroupBy = Union[str, Mapping[str, GroupByFunction]]
+RankByAnn = Tuple[str, Literal["ANN"], Sequence[float]]
 RankByKnn = Tuple[str, Literal["kNN"], Sequence[float]]
-RankBySparseVector = Tuple[str, Literal["SparseKNN"], Mapping[str, float]]
+RankBySparseKnn = Tuple[str, Literal["SparseKNN"], Mapping[str, float]]
 RankByText = Union[
     Tuple[str, Literal["BM25"], str],
     Tuple[str, Literal["BM25"], Sequence[str]],
@@ -69,9 +71,9 @@ RankByAttributeOrder = Union[Literal["asc"], Literal["desc"]]
 RankByAttribute = Tuple[str, RankByAttributeOrder]
 RankByAttributes = Sequence[RankByAttribute]
 RankBy = Union[
-    RankByVector,
+    RankByAnn,
     RankByKnn,
-    RankBySparseVector,
+    RankBySparseKnn,
     RankByText,
     RankByAttribute,
     RankByAttributes,
