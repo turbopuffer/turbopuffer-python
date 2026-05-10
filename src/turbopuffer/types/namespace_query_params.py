@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union
+from typing import Dict, Union, Iterable
 from typing_extensions import Literal, TypeAlias, TypedDict
 
 from .custom import Filter, AggregateBy
@@ -42,7 +42,7 @@ class NamespaceQueryParams(TypedDict, total=False):
     Think of it as a SQL WHERE clause.
     """
 
-    group_by: SequenceNotStr[str]
+    group_by: Iterable[object]
     """
     Groups documents by the specified attributes (the "group key") before computing
     aggregates. Aggregates are computed separately for each group.
