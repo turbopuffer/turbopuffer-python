@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Dict, Union, Iterable
 from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
+from .custom import GroupBy
 from .._types import SequenceNotStr
 from .limit_param import LimitParam
 from .distance_metric import DistanceMetric
@@ -53,7 +54,7 @@ class Query(TypedDict, total=False):
     Think of it as a SQL WHERE clause.
     """
 
-    group_by: Iterable[object]
+    group_by: Iterable[GroupBy]
     """
     Groups documents by the specified attributes (the "group key") before computing
     aggregates. Aggregates are computed separately for each group.

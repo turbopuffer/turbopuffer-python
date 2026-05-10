@@ -33,7 +33,7 @@ from .._response import (
 )
 from .._exceptions import NotFoundError
 from .._base_client import make_request_options
-from ..types.custom import Filter, RankBy, AggregateBy
+from ..types.custom import Filter, RankBy, GroupBy, AggregateBy
 from ..types.id_param import IDParam
 from ..types.row_param import RowParam
 from ..types.columns_param import ColumnsParam
@@ -221,7 +221,7 @@ class NamespacesResource(SyncAPIResource):
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
         filters: Filter | Omit = omit,
-        group_by: Iterable[object] | Omit = omit,
+        group_by: Iterable[GroupBy] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
         limit: namespace_explain_query_params.Limit | Omit = omit,
         rank_by: RankBy | Omit = omit,
@@ -429,7 +429,7 @@ class NamespacesResource(SyncAPIResource):
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
         filters: Filter | Omit = omit,
-        group_by: Iterable[object] | Omit = omit,
+        group_by: Iterable[GroupBy] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
         limit: namespace_query_params.Limit | Omit = omit,
         rank_by: RankBy | Omit = omit,
@@ -976,7 +976,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
         filters: Filter | Omit = omit,
-        group_by: Iterable[object] | Omit = omit,
+        group_by: Iterable[GroupBy] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
         limit: namespace_explain_query_params.Limit | Omit = omit,
         rank_by: RankBy | Omit = omit,
@@ -1184,7 +1184,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
         filters: Filter | Omit = omit,
-        group_by: Iterable[object] | Omit = omit,
+        group_by: Iterable[GroupBy] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
         limit: namespace_query_params.Limit | Omit = omit,
         rank_by: RankBy | Omit = omit,
