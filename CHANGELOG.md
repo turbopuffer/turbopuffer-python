@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.0.0-alpha.4 (2026-05-10)
+
+Full Changelog: [v2.0.0-alpha.3...v2.0.0-alpha.4](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.3...v2.0.0-alpha.4)
+
+### Features
+
+* spec: rename RankByVector/RankBySparseVector to RankByAnn/RankBySparseKnn ([65257bc](https://github.com/turbopuffer/turbopuffer-python/commit/65257bcfdb45f117532e544f8d78cc6367ea5138))
+* spec: rename RankByVector/RankBySparseVector to RankByAnn/RankBySparseKnn ([6b944ec](https://github.com/turbopuffer/turbopuffer-python/commit/6b944ecdde33a848ddf2bc8d78de72abae8d0c6e))
+* type group_by as Iterable[GroupBy] ([0919d51](https://github.com/turbopuffer/turbopuffer-python/commit/0919d5116952442ceb731e0a392dfa078bbab637))
+
+
+### Bug Fixes
+
+* **client:** add missing f-string prefix in file type error message ([56c7f92](https://github.com/turbopuffer/turbopuffer-python/commit/56c7f924f08a4685936a12216bf84d77edbc2024))
+
+
+### Chores
+
+* regenerate custom types ([f2c7dc8](https://github.com/turbopuffer/turbopuffer-python/commit/f2c7dc8cccbaeb1d3037de89c6db59951b00f0f7))
+
 ## 2.0.0-alpha.3 (2026-05-08)
 
 Full Changelog: [v2.0.0-alpha.2...v2.0.0-alpha.3](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.2...v2.0.0-alpha.3)
