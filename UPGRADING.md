@@ -67,6 +67,11 @@ list of changes.
   A new `{"mode": "default"}` variant lets you migrate a namespace from CMEK
   to default encryption.
 
+- The `RankByVector` and `RankBySparseVector` type aliases have been renamed
+  to `RankByAnn` and `RankBySparseKnn`. The wire-format strings (`"ANN"` and
+  `"SparseKNN"`) are unchanged, so any code that passes plain tuples or lists
+  to `rank_by` is unaffected.
+
 ## v1.0
 
 No significant changes.
