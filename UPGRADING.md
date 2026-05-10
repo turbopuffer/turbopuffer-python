@@ -4,6 +4,91 @@ This document describes the notable breaking changes, if any, in each version of
 the Python client. See [CHANGELOG.md](./CHANGELOG.md) for a comprehensive
 list of changes.
 
+## v2.0
+
+- The `RankByVector` type alias has been renamed to `RankByAnn`.
+
+  Old:
+
+  ```py
+  from turbopuffer.types import RankByVector
+
+  rank_by: RankByVector = ("vector", "ANN", [0.1, 0.2])
+  ```
+
+  New:
+
+  ```py
+  from turbopuffer.types import RankByAnn
+
+  rank_by: RankByAnn = ("vector", "ANN", [0.1, 0.2])
+  ```
+
+- The `encryption` parameter has been restructured.
+
+  Old:
+
+  ```py
+  tpuf.namespace("ns").write(
+      upsert_rows=[...],
+      encryption={"cmek": {"key_name": "..."}},
+  )
+  ```
+
+  New:
+
+  ```py
+  tpuf.namespace("ns").write(
+      upsert_rows=[...],
+      encryption={"mode": "customer-managed", "key_name": "..."},
+  )
+  ```
+
+  A new `{"mode": "default"}` variant lets you migrate a namespace from CMEK
+  to default encryption.
+
+- The `copy_from_namespace` parameter to the `write` method has been replaced
+  with a dedicated `copy_from` method.
+
+  Old:
+
+  ```py
+  tpuf.namespace("ns").write(
+      copy_from_namespace={
+          "source_namespace": "src",
+          "source_region": "gcp-us-central1",
+      },
+  )
+  ```
+
+  New:
+
+  ```py
+  tpuf.namespace("ns").copy_from(
+      source_namespace="src",
+      source_region="gcp-us-central1",
+  )
+  ```
+
+- The `branch_from_namespace` parameter to the `write` method has been replaced
+  with a dedicated `branch_from` method.
+
+  Old:
+
+  ```py
+  tpuf.namespace("ns").write(branch_from_namespace="src")
+  ```
+
+  New:
+
+  ```py
+  tpuf.namespace("ns").branch_from(source_namespace="src")
+  ```
+
+## v1.0
+
+No significant changes.
+
 ## v0.5
 
 v0.5 is a complete rewrite of the Python client. The new client is
