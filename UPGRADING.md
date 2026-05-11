@@ -6,24 +6,6 @@ list of changes.
 
 ## v2.0
 
-- The `RankByVector` type alias has been renamed to `RankByAnn`.
-
-  Old:
-
-  ```py
-  from turbopuffer.types import RankByVector
-
-  rank_by: RankByVector = ("vector", "ANN", [0.1, 0.2])
-  ```
-
-  New:
-
-  ```py
-  from turbopuffer.types import RankByAnn
-
-  rank_by: RankByAnn = ("vector", "ANN", [0.1, 0.2])
-  ```
-
 - The `encryption` parameter has been restructured.
 
   Old:
