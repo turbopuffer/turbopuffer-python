@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.0 (2026-05-11)
+
+Full Changelog: [v2.0.0-alpha.5...v2.0.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.5...v2.0.0)
+
+### Documentation
+
+* document v2.0 breaking changes in UPGRADING.md ([3302006](https://github.com/turbopuffer/turbopuffer-python/commit/33020064857687cac986fc61c56b9e29e38bcbfb))
+* drop RankByVector entry ([4f00d6c](https://github.com/turbopuffer/turbopuffer-python/commit/4f00d6c9daba4422b4d0209b3974615736f88b36))
+
 ## 2.0.0-alpha.5 (2026-05-10)
 
 Full Changelog: [v2.0.0-alpha.4...v2.0.0-alpha.5](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.4...v2.0.0-alpha.5)
