@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0 (2026-05-12)
+
+Full Changelog: [v2.0.0...v2.1.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0...v2.1.0)
+
+### Features
+
+* **internal/types:** support eagerly validating pydantic iterators ([75af483](https://github.com/turbopuffer/turbopuffer-python/commit/75af4834c7bb3173c3449e4c78c504d8d96724f4))
+
 ## 2.0.0 (2026-05-11)
 
 Full Changelog: [v2.0.0-alpha.5...v2.0.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.5...v2.0.0)
