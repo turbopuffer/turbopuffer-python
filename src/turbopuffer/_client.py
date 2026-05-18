@@ -360,7 +360,7 @@ class Turbopuffer(SyncAPIClient):
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         retries_taken: int = 0,
     ) -> ResponseT:
-        response = respond_async.process_response(response=response, client=self)
+        response = respond_async.process_response(response=response, client=self, options=options)
         if response.is_error:
             raise self._make_status_error_from_response(response)
 
@@ -662,7 +662,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         retries_taken: int = 0,
     ) -> ResponseT:
-        response = await respond_async.process_response_aio(response=response, client=self)
+        response = await respond_async.process_response_aio(response=response, client=self, options=options)
         if response.is_error:
             raise self._make_status_error_from_response(response)
 
