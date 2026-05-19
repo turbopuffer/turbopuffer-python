@@ -3,6 +3,7 @@
 from typing import Any, Tuple, Union, Literal, Mapping, Sequence, TypedDict
 
 from .decay_params import DecayParams
+from .fuzzy_params import FuzzyParams
 from .saturate_params import SaturateParams
 from .bm25_clause_params import Bm25ClauseParams
 from .contains_any_token_filter_params import ContainsAnyTokenFilterParams
@@ -33,6 +34,7 @@ Filter = Union[
     Tuple[str, Literal["IGlob"], str],
     Tuple[str, Literal["NotIGlob"], str],
     Tuple[str, Literal["Regex"], str],
+    Tuple[str, Literal["Fuzzy"], str, FuzzyParams],
     Tuple[str, Literal["ContainsAllTokens"], str],
     Tuple[str, Literal["ContainsAllTokens"], Sequence[str]],
     Tuple[str, Literal["ContainsAllTokens"], str, ContainsAllTokensFilterParams],
