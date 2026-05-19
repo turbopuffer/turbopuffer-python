@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Mapping
+from typing import Any, Type, Mapping
 from typing_extensions import Self, override
 
 import httpx
 
 from . import _exceptions
 from ._qs import Querystring
+from .lib import respond_async
 from .types import client_namespaces_params
 from ._types import (
     Body,
@@ -18,6 +19,7 @@ from ._types import (
     Headers,
     Timeout,
     NotGiven,
+    ResponseT,
     Transport,
     ProxiesTypes,
     RequestOptions,
@@ -30,6 +32,7 @@ from ._utils import (
     maybe_transform,
     get_async_library,
 )
+from ._models import FinalRequestOptions
 from ._version import __version__
 from ._response import (
     to_raw_response_wrapper,
@@ -341,6 +344,35 @@ class Turbopuffer(SyncAPIClient):
             return _exceptions.InternalServerError(err_msg, response=response, body=body)
         return APIStatusError(err_msg, response=response, body=body)
 
+    @override
+    def _prepare_options(self, options: FinalRequestOptions) -> FinalRequestOptions:
+        respond_async.prepare_options(options)
+        return options
+
+    @override
+    def _process_response(
+        self,
+        *,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        response: httpx.Response,
+        stream: bool,
+        stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
+        retries_taken: int = 0,
+    ) -> ResponseT:
+        response = respond_async.process_response(response=response, client=self, options=options)
+        if response.is_error:
+            raise self._make_status_error_from_response(response)
+
+        return super()._process_response(
+            cast_to=cast_to,
+            options=options,
+            response=response,
+            stream=stream,
+            stream_cls=stream_cls,
+            retries_taken=retries_taken,
+        )
+
 
 class AsyncTurbopuffer(AsyncAPIClient):
     with_raw_response: AsyncTurbopufferWithRawResponse
@@ -613,6 +645,35 @@ class AsyncTurbopuffer(AsyncAPIClient):
         if response.status_code >= 500:
             return _exceptions.InternalServerError(err_msg, response=response, body=body)
         return APIStatusError(err_msg, response=response, body=body)
+
+    @override
+    async def _prepare_options(self, options: FinalRequestOptions) -> FinalRequestOptions:
+        respond_async.prepare_options(options)
+        return options
+
+    @override
+    async def _process_response(
+        self,
+        *,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        response: httpx.Response,
+        stream: bool,
+        stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
+        retries_taken: int = 0,
+    ) -> ResponseT:
+        response = await respond_async.process_response_aio(response=response, client=self, options=options)
+        if response.is_error:
+            raise self._make_status_error_from_response(response)
+
+        return await super()._process_response(
+            cast_to=cast_to,
+            options=options,
+            response=response,
+            stream=stream,
+            stream_cls=stream_cls,
+            retries_taken=retries_taken,
+        )
 
 
 class TurbopufferWithRawResponse:
