@@ -32,6 +32,8 @@ from turbopuffer.types import (
     Encryption,
     FullTextSearch,
     FullTextSearchConfig,
+    FuzzyMaxEditDistance,
+    FuzzyParams,
     ID,
     IncludeAttributes,
     Language,

@@ -13,6 +13,7 @@ from .tokenizer import Tokenizer as Tokenizer
 from .encryption import Encryption as Encryption
 from .limit_param import LimitParam as LimitParam
 from .decay_params import DecayParams as DecayParams
+from .fuzzy_params import FuzzyParams as FuzzyParams
 from .vector_param import VectorParam as VectorParam
 from .columns_param import ColumnsParam as ColumnsParam
 from .query_billing import QueryBilling as QueryBilling
@@ -53,6 +54,7 @@ from .namespace_copy_from_response import NamespaceCopyFromResponse as Namespace
 from .namespace_multi_query_params import NamespaceMultiQueryParams as NamespaceMultiQueryParams
 from .attribute_schema_config_param import AttributeSchemaConfigParam as AttributeSchemaConfigParam
 from .full_text_search_config_param import FullTextSearchConfigParam as FullTextSearchConfigParam
+from .fuzzy_max_edit_distance_param import FuzzyMaxEditDistanceParam as FuzzyMaxEditDistanceParam
 from .namespace_delete_all_response import NamespaceDeleteAllResponse as NamespaceDeleteAllResponse
 from .namespace_branch_from_response import NamespaceBranchFromResponse as NamespaceBranchFromResponse
 from .namespace_explain_query_params import NamespaceExplainQueryParams as NamespaceExplainQueryParams
