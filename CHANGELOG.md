@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.2.0 (2026-05-28)
+
+Full Changelog: [v2.1.0...v2.2.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.1.0...v2.2.0)
+
+### Features
+
+* spec: force generation of FuzzyParams stainless models ([3613951](https://github.com/turbopuffer/turbopuffer-python/commit/3613951bca15c51bb6aa000b83a9e0f66709aa75))
+* transparent async polling ([953cdba](https://github.com/turbopuffer/turbopuffer-python/commit/953cdba54bcdd61c19f52cacdb25a6ea23553f7a))
+
+
+### Bug Fixes
+
+* exception type on missing respond-async Location header ([#233](https://github.com/turbopuffer/turbopuffer-python/issues/233)) ([affecc5](https://github.com/turbopuffer/turbopuffer-python/commit/affecc5aebdc4cb85c9cc5c1dfa8c5928d13c5e5))
+
 ## 2.1.0 (2026-05-12)
 
 Full Changelog: [v2.0.0...v2.1.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0...v2.1.0)
