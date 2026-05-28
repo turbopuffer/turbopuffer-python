@@ -56,7 +56,7 @@ def process_response(
         return response
 
     orig_request = response.request
-    location = response.headers[HEADER_LOCATION]
+    location = _extract_location(response)
     timeout = _Timeout(options, client.timeout)
 
     while True:
@@ -88,7 +88,7 @@ async def process_response_aio(
         return response
 
     orig_request = response.request
-    location = response.headers[HEADER_LOCATION]
+    location = _extract_location(response)
     timeout = _Timeout(options, client.timeout)
 
     while True:
@@ -115,6 +115,17 @@ def _respond_async_applied(response: httpx.Response) -> bool:
         return False
     applied = response.headers.get(HEADER_PREFERENCE_APPLIED, "")
     return bool(applied.strip().lower() == RESPOND_ASYNC)
+
+
+def _extract_location(response: httpx.Response) -> str:
+    location: str = response.headers.get(HEADER_LOCATION, "").strip()
+    if not location:
+        raise APIResponseValidationError(
+            response=response,
+            body=response.text,
+            message="missing 'Location' header on respond-async response",
+        )
+    return location
 
 
 class _PollError(BaseModel):

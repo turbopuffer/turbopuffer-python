@@ -335,6 +335,32 @@ async def test_async_poll_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @respx.mock
+def test_sync_async_applied_missing_location_header() -> None:
+    respx.post(f"{base_url}/v2/namespaces/test").mock(
+        return_value=httpx.Response(202, headers={"preference-applied": "respond-async"})
+    )
+
+    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
+
+    with pytest.raises(turbopuffer.APIResponseValidationError):
+        client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_async_applied_missing_location_header() -> None:
+    respx.post(f"{base_url}/v2/namespaces/test").mock(
+        return_value=httpx.Response(202, headers={"preference-applied": "respond-async"})
+    )
+
+    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
+        with pytest.raises(turbopuffer.APIResponseValidationError):
+            await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
+
+
+@respx.mock
 def test_sync_poll_too_many_failures() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-dead"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
