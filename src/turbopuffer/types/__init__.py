@@ -12,6 +12,7 @@ from .tokenizer import Tokenizer as Tokenizer
 from .encryption import Encryption as Encryption
 from .limit_param import LimitParam as LimitParam
 from .decay_params import DecayParams as DecayParams
+from .embed_params import EmbedParams as EmbedParams
 from .fuzzy_params import FuzzyParams as FuzzyParams
 from .vector_param import VectorParam as VectorParam
 from .columns_param import ColumnsParam as ColumnsParam
@@ -19,6 +20,7 @@ from .query_billing import QueryBilling as QueryBilling
 from .write_billing import WriteBilling as WriteBilling
 from .attribute_type import AttributeType as AttributeType
 from .pinning_config import PinningConfig as PinningConfig
+from .attribute_embed import AttributeEmbed as AttributeEmbed
 from .distance_metric import DistanceMetric as DistanceMetric
 from .saturate_params import SaturateParams as SaturateParams
 from .vector_encoding import VectorEncoding as VectorEncoding
@@ -31,6 +33,8 @@ from .write_performance import WritePerformance as WritePerformance
 from .bm25_clause_params import Bm25ClauseParams as Bm25ClauseParams
 from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
 from .pinning_config_param import PinningConfigParam as PinningConfigParam
+from .attribute_embed_param import AttributeEmbedParam as AttributeEmbedParam
+from .attribute_embed_config import AttributeEmbedConfig as AttributeEmbedConfig
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
@@ -47,6 +51,7 @@ from .namespace_recall_response import NamespaceRecallResponse as NamespaceRecal
 from .namespace_schema_response import NamespaceSchemaResponse as NamespaceSchemaResponse
 from .copy_from_namespace_params import CopyFromNamespaceParams as CopyFromNamespaceParams
 from .namespace_copy_from_params import NamespaceCopyFromParams as NamespaceCopyFromParams
+from .attribute_embed_config_param import AttributeEmbedConfigParam as AttributeEmbedConfigParam
 from .branch_from_namespace_params import BranchFromNamespaceParams as BranchFromNamespaceParams
 from .namespace_branch_from_params import NamespaceBranchFromParams as NamespaceBranchFromParams
 from .namespace_copy_from_response import NamespaceCopyFromResponse as NamespaceCopyFromResponse

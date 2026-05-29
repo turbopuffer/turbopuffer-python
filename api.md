@@ -17,6 +17,8 @@ Types:
 ```python
 from turbopuffer.types import (
     AggregationGroup,
+    AttributeEmbed,
+    AttributeEmbedConfig,
     AttributeSchema,
     AttributeSchemaConfig,
     AttributeType,
@@ -28,6 +30,7 @@ from turbopuffer.types import (
     CopyFromNamespaceParams,
     DecayParams,
     DistanceMetric,
+    EmbedParams,
     Encryption,
     FullTextSearch,
     FullTextSearchConfig,
