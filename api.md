@@ -18,6 +18,8 @@ Types:
 from turbopuffer.types import (
     AggregateBy,
     AggregationGroup,
+    AttributeEmbed,
+    AttributeEmbedConfig,
     AttributeSchema,
     AttributeSchemaConfig,
     AttributeType,
@@ -29,6 +31,7 @@ from turbopuffer.types import (
     CopyFromNamespaceParams,
     DecayParams,
     DistanceMetric,
+    EmbedParams,
     Encryption,
     FullTextSearch,
     FullTextSearchConfig,

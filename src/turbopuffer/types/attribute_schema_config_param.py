@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Union
+from typing import Union, Optional
 from typing_extensions import Required, TypeAlias, TypedDict
 
 from .attribute_type import AttributeType
 from .distance_metric import DistanceMetric
+from .attribute_embed_param import AttributeEmbedParam
 from .full_text_search_param import FullTextSearchParam
 from .sparse_distance_metric import SparseDistanceMetric
 
@@ -47,6 +48,13 @@ class AttributeSchemaConfigParam(TypedDict, total=False):
     """Whether to create an approximate nearest neighbor index for the attribute.
 
     Can be a boolean or a detailed configuration object.
+    """
+
+    embed: Optional[AttributeEmbedParam]
+    """Whether to automatically embed this string attribute into a vector attribute.
+
+    Can be a model name, a detailed configuration object, or `null` to remove an
+    existing embedding configuration.
     """
 
     filterable: bool

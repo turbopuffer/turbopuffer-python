@@ -5,6 +5,7 @@ from typing_extensions import TypeAlias
 
 from .._models import BaseModel
 from .attribute_type import AttributeType
+from .attribute_embed import AttributeEmbed
 from .distance_metric import DistanceMetric
 from .full_text_search import FullTextSearch
 from .sparse_distance_metric import SparseDistanceMetric
@@ -46,6 +47,13 @@ class AttributeSchemaConfig(BaseModel):
     """Whether to create an approximate nearest neighbor index for the attribute.
 
     Can be a boolean or a detailed configuration object.
+    """
+
+    embed: Optional[AttributeEmbed] = None
+    """Whether to automatically embed this string attribute into a vector attribute.
+
+    Can be a model name, a detailed configuration object, or `null` to remove an
+    existing embedding configuration.
     """
 
     filterable: Optional[bool] = None
