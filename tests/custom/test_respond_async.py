@@ -360,6 +360,45 @@ async def test_async_async_applied_missing_location_header() -> None:
             await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
 
+BAD_LOCATIONS = [
+    "https://evil.example.com/v1/ops/op-x",
+    "//evil.example.com/v1/ops/op-x",
+    "http://api.turbopuffer.com/v1/ops/op-x",
+    "http://host:notaport/x",
+]
+
+
+@respx.mock
+@pytest.mark.parametrize("bad_location", BAD_LOCATIONS)
+def test_sync_async_applied_bad_location(bad_location: str) -> None:
+    respx.post(f"{base_url}/v2/namespaces/test").mock(
+        return_value=httpx.Response(
+            202,
+            headers={"preference-applied": "respond-async", "location": bad_location},
+        )
+    )
+    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
+    with pytest.raises(turbopuffer.APIResponseValidationError):
+        client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
+
+
+@respx.mock
+@pytest.mark.asyncio
+@pytest.mark.parametrize("bad_location", BAD_LOCATIONS)
+async def test_async_async_applied_bad_location(bad_location: str) -> None:
+    respx.post(f"{base_url}/v2/namespaces/test").mock(
+        return_value=httpx.Response(
+            202,
+            headers={"preference-applied": "respond-async", "location": bad_location},
+        )
+    )
+    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
+        with pytest.raises(turbopuffer.APIResponseValidationError):
+            await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
+
+
 @respx.mock
 def test_sync_poll_too_many_failures() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-dead"
