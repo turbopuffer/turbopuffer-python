@@ -4,7 +4,7 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-apigen_image=ghcr.io/turbopuffer/turbopuffer-apigen:864b25e7f396607f5fee302f6aed713afab55020
+apigen_image=ghcr.io/turbopuffer/turbopuffer-apigen:a7178a0790f2e0b70edf85b9520ee514b2edc2e9
 
 apigen() {
     if [[ "$TURBOPUFFER_DEV_APIGEN" ]]; then
