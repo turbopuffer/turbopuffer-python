@@ -118,14 +118,33 @@ def _respond_async_applied(response: httpx.Response) -> bool:
 
 
 def _extract_location(response: httpx.Response) -> str:
-    location: str = response.headers.get(HEADER_LOCATION, "").strip()
-    if not location:
+    raw_location: str = response.headers.get(HEADER_LOCATION, "").strip()
+    if not raw_location:
         raise APIResponseValidationError(
             response=response,
             body=response.text,
             message="missing 'Location' header on respond-async response",
         )
-    return location
+
+    orig = response.request.url
+    try:
+        # Resolve the Location against the original request URL.
+        location = orig.join(raw_location)
+    except httpx.InvalidURL as err:
+        raise APIResponseValidationError(
+            response=response,
+            body=response.text,
+            message=f"malformed 'Location' header: {raw_location!r}",
+        ) from err
+
+    # Reject a Location pointing at a different origin, to prevent API key exfiltration.
+    if (location.scheme, location.host, location.port) != (orig.scheme, orig.host, orig.port):
+        raise APIResponseValidationError(
+            response=response,
+            body=response.text,
+            message=f"'Location' origin does not match request origin: {raw_location!r}",
+        )
+    return str(location)
 
 
 class _PollError(BaseModel):
