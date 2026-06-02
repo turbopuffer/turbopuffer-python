@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.3.0-alpha.1 (2026-06-02)
+
+Full Changelog: [v2.2.0...v2.3.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.2.0...v2.3.0-alpha.1)
+
+### Features
+
+* openapi: spec for `rerank_by: ["RRF"]` ([80ab218](https://github.com/turbopuffer/turbopuffer-python/commit/80ab218582e9b4e78dd9fca42cdce6f2a76761cf))
+* rename /docs/auth to /docs/overview ([1340eb1](https://github.com/turbopuffer/turbopuffer-python/commit/1340eb172500c78d9ce73bfe8ce557bcdb40c4d7))
+* spec: add SDK support for native embedding ([ca71729](https://github.com/turbopuffer/turbopuffer-python/commit/ca71729755294ed2eb073453e33baa8c89548063))
+
+
+### Bug Fixes
+
+* reject malicious poll locations ([#236](https://github.com/turbopuffer/turbopuffer-python/issues/236)) ([3f6123a](https://github.com/turbopuffer/turbopuffer-python/commit/3f6123a88c2c3795f9eb4da31ef66eaa9081db18))
+* type rerank_by parameter as RerankBy ([#239](https://github.com/turbopuffer/turbopuffer-python/issues/239)) ([6f07a95](https://github.com/turbopuffer/turbopuffer-python/commit/6f07a95860f5dff9b699776d7916606b5c6f7cab))
+
+
+### Chores
+
+* fix API docs links ([#235](https://github.com/turbopuffer/turbopuffer-python/issues/235)) ([204b46b](https://github.com/turbopuffer/turbopuffer-python/commit/204b46bf15c5694bdd38339b8471c46e16e697a0))
+
 ## 2.2.0 (2026-05-28)
 
 Full Changelog: [v2.1.0...v2.2.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.1.0...v2.2.0)
