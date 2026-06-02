@@ -10,6 +10,7 @@ from .language import Language as Language
 from .row_param import RowParam as RowParam
 from .tokenizer import Tokenizer as Tokenizer
 from .encryption import Encryption as Encryption
+from .rrf_params import RrfParams as RrfParams
 from .limit_param import LimitParam as LimitParam
 from .decay_params import DecayParams as DecayParams
 from .embed_params import EmbedParams as EmbedParams

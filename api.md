@@ -46,6 +46,7 @@ from turbopuffer.types import (
     QueryBilling,
     QueryPerformance,
     Row,
+    RrfParams,
     SaturateParams,
     SparseDistanceMetric,
     Tokenizer,

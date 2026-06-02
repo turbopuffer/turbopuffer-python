@@ -370,6 +370,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         queries: Iterable[namespace_multi_query_params.Query],
         consistency: namespace_multi_query_params.Consistency | Omit = omit,
+        rerank_by: object | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -383,6 +384,8 @@ class NamespacesResource(SyncAPIResource):
 
         Args:
           consistency: The consistency level for a query.
+
+          rerank_by: How to combine the rows returned by each sub-query into a single ranked list.
 
           vector_encoding: The encoding to use for vectors in the response.
 
@@ -404,6 +407,7 @@ class NamespacesResource(SyncAPIResource):
                 {
                     "queries": queries,
                     "consistency": consistency,
+                    "rerank_by": rerank_by,
                     "vector_encoding": vector_encoding,
                 },
                 namespace_multi_query_params.NamespaceMultiQueryParams,
@@ -1113,6 +1117,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         queries: Iterable[namespace_multi_query_params.Query],
         consistency: namespace_multi_query_params.Consistency | Omit = omit,
+        rerank_by: object | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1126,6 +1131,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
         Args:
           consistency: The consistency level for a query.
+
+          rerank_by: How to combine the rows returned by each sub-query into a single ranked list.
 
           vector_encoding: The encoding to use for vectors in the response.
 
@@ -1147,6 +1154,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 {
                     "queries": queries,
                     "consistency": consistency,
+                    "rerank_by": rerank_by,
                     "vector_encoding": vector_encoding,
                 },
                 namespace_multi_query_params.NamespaceMultiQueryParams,
