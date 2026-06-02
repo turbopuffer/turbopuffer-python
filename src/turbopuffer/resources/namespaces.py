@@ -33,7 +33,7 @@ from .._response import (
 )
 from .._exceptions import NotFoundError
 from .._base_client import make_request_options
-from ..types.custom import Filter, RankBy, GroupBy, AggregateBy
+from ..types.custom import Filter, RankBy, GroupBy, RerankBy, AggregateBy
 from ..types.id_param import IDParam
 from ..types.row_param import RowParam
 from ..types.columns_param import ColumnsParam
@@ -376,7 +376,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         queries: Iterable[namespace_multi_query_params.Query],
         consistency: namespace_multi_query_params.Consistency | Omit = omit,
-        rerank_by: object | Omit = omit,
+        rerank_by: RerankBy | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1135,7 +1135,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         queries: Iterable[namespace_multi_query_params.Query],
         consistency: namespace_multi_query_params.Consistency | Omit = omit,
-        rerank_by: object | Omit = omit,
+        rerank_by: RerankBy | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
