@@ -2,6 +2,7 @@
 
 from typing import Any, Tuple, Union, Literal, Mapping, Sequence, TypedDict
 
+from .rrf_params import RrfParams
 from .decay_params import DecayParams
 from .embed_params import EmbedParams
 from .fuzzy_params import FuzzyParams
@@ -85,3 +86,4 @@ RankBy = Union[
     RankByAttribute,
     RankByAttributes,
 ]
+RerankBy = Union[Tuple[Literal["RRF"]], Tuple[Literal["RRF"], RrfParams]]
