@@ -23,6 +23,9 @@ class NamespaceMultiQueryParams(TypedDict, total=False):
     consistency: Consistency
     """The consistency level for a query."""
 
+    rerank_by: object
+    """How to combine the rows returned by each sub-query into a single ranked list."""
+
     vector_encoding: VectorEncoding
     """The encoding to use for vectors in the response."""
 
