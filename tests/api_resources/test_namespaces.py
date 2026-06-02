@@ -299,7 +299,7 @@ class TestNamespaces:
                 }
             ],
             consistency={"level": "strong"},
-            rerank_by={},
+            rerank_by=("RRF",),
             vector_encoding="float",
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
@@ -918,7 +918,7 @@ class TestAsyncNamespaces:
                 }
             ],
             consistency={"level": "strong"},
-            rerank_by={},
+            rerank_by=("RRF",),
             vector_encoding="float",
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
