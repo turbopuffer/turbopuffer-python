@@ -56,5 +56,5 @@ class FullTextSearchConfigParam(TypedDict, total=False):
     tokenizer: Tokenizer
     """The tokenizer to use for full-text search on an attribute.
 
-    Defaults to `word_v3`.
+    Defaults to `word_v4`.
     """
