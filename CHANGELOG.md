@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.0 (2026-06-03)
+
+Full Changelog: [v2.3.0-alpha.1...v2.3.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.3.0-alpha.1...v2.3.0)
+
+### Features
+
+* spec: add support for word_v4 tokenizer ([5298db0](https://github.com/turbopuffer/turbopuffer-python/commit/5298db02c0c7f5b62c2229419e8deb6d44cb7041))
+
 ## 2.3.0-alpha.1 (2026-06-02)
 
 Full Changelog: [v2.2.0...v2.3.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.2.0...v2.3.0-alpha.1)
