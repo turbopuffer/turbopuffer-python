@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.4.0 (2026-06-08)
+
+Full Changelog: [v2.3.0...v2.4.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.3.0...v2.4.0)
+
+### Features
+
+* stainless: update sdks to support case-insensitive fuzzy filter ([d25e35a](https://github.com/turbopuffer/turbopuffer-python/commit/d25e35a0a067a5fce5ea922f5b83aeeb3449515a))
+
 ## 2.3.0 (2026-06-03)
 
 Full Changelog: [v2.3.0-alpha.1...v2.3.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.3.0-alpha.1...v2.3.0)
