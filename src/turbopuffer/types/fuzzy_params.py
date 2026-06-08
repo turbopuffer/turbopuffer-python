@@ -18,3 +18,9 @@ class FuzzyParams(TypedDict, total=False):
 
     Queries shorter than the first threshold return no matches.
     """
+
+    case_sensitive: bool
+    """Whether searching with Fuzzy filter is case-sensitive.
+
+    Defaults to `true` (i.e. case-sensitive).
+    """
