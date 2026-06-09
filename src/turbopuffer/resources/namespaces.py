@@ -128,6 +128,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         namespace: str | None = None,
         source_namespace: str,
+        dest_encryption: EncryptionParam | Omit = omit,
         source_api_key: str | Omit = omit,
         source_region: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -142,6 +143,8 @@ class NamespacesResource(SyncAPIResource):
 
         Args:
           source_namespace: The namespace to copy documents from.
+
+          dest_encryption: (Optional) The encryption configuration for the destination namespace.
 
           source_api_key: (Optional) An API key for the organization containing the source namespace
 
@@ -165,6 +168,7 @@ class NamespacesResource(SyncAPIResource):
                 "copy_from_namespace": maybe_transform(
                     {
                         "source_namespace": source_namespace,
+                        "dest_encryption": dest_encryption,
                         "source_api_key": source_api_key,
                         "source_region": source_region,
                     },
@@ -887,6 +891,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         namespace: str | None = None,
         source_namespace: str,
+        dest_encryption: EncryptionParam | Omit = omit,
         source_api_key: str | Omit = omit,
         source_region: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -901,6 +906,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
         Args:
           source_namespace: The namespace to copy documents from.
+
+          dest_encryption: (Optional) The encryption configuration for the destination namespace.
 
           source_api_key: (Optional) An API key for the organization containing the source namespace
 
@@ -924,6 +931,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 "copy_from_namespace": await async_maybe_transform(
                     {
                         "source_namespace": source_namespace,
+                        "dest_encryption": dest_encryption,
                         "source_api_key": source_api_key,
                         "source_region": source_region,
                     },
