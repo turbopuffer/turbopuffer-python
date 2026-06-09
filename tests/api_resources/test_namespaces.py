@@ -91,6 +91,10 @@ class TestNamespaces:
         namespace = client.namespaces.copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
+            dest_encryption={
+                "key_name": "key_name",
+                "mode": "customer-managed",
+            },
             source_api_key="source_api_key",
             source_region="source_region",
         )
@@ -808,6 +812,10 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespaces.copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
+            dest_encryption={
+                "key_name": "key_name",
+                "mode": "customer-managed",
+            },
             source_api_key="source_api_key",
             source_region="source_region",
         )

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
+from .encryption_param import EncryptionParam
+
 __all__ = ["NamespaceCopyFromParams"]
 
 
@@ -12,6 +14,9 @@ class NamespaceCopyFromParams(TypedDict, total=False):
 
     source_namespace: Required[str]
     """The namespace to copy documents from."""
+
+    dest_encryption: EncryptionParam
+    """(Optional) The encryption configuration for the destination namespace."""
 
     source_api_key: str
     """(Optional) An API key for the organization containing the source namespace"""
