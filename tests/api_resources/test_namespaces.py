@@ -85,6 +85,10 @@ class TestNamespaces:
     def test_method_copy_from_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").copy_from(
             source_namespace="source_namespace",
+            dest_encryption={
+                "key_name": "key_name",
+                "mode": "customer-managed",
+            },
             source_api_key="source_api_key",
             source_region="source_region",
         )
@@ -701,6 +705,10 @@ class TestAsyncNamespaces:
     async def test_method_copy_from_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").copy_from(
             source_namespace="source_namespace",
+            dest_encryption={
+                "key_name": "key_name",
+                "mode": "customer-managed",
+            },
             source_api_key="source_api_key",
             source_region="source_region",
         )
