@@ -20,7 +20,7 @@ Use the turbopuffer MCP Server to enable AI assistants to interact with this API
 
 ## Documentation
 
-The HTTP API documentation can be found at [turbopuffer.com/docs/overview](https://turbopuffer.com/docs/overview).
+The HTTP API documentation can be found at [turbopuffer.com/docs/api-overview](https://turbopuffer.com/docs/api-overview).
 
 ## Installation
 
