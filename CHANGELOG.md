@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.5.0 (2026-06-25)
+
+Full Changelog: [v2.4.0...v2.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.4.0...v2.5.0)
+
+### Features
+
+* tpuf-engine: support dest_encryption in copy_from_namespace ([3421ea0](https://github.com/turbopuffer/turbopuffer-python/commit/3421ea0ba6b98a2500e72dadd4e61aa4b0410f60))
+
+
+### Chores
+
+* remove unused MCP package ([e779eca](https://github.com/turbopuffer/turbopuffer-python/commit/e779eca3645e79cb84b065f2ca8de4eb0e755103))
+
+
+### Documentation
+
+* rename /docs/overview to /docs/api-overview ([68e7cd6](https://github.com/turbopuffer/turbopuffer-python/commit/68e7cd6fb1b073b5112def1ee4083f62ab994610))
+
 ## 2.4.0 (2026-06-08)
 
 Full Changelog: [v2.3.0...v2.4.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.3.0...v2.4.0)
