@@ -54,6 +54,7 @@ Filter = Union[
 GroupByFunction = Tuple[Literal["ForEachUnique"], str]
 GroupBy = Union[str, Mapping[str, GroupByFunction]]
 RankByAnn = Tuple[str, Literal["ANN"], Sequence[float]]
+RankByAnnMulti = Tuple[str, Literal["ANN"], Sequence[Sequence[float]]]
 RankByAnnExpr = Tuple[str, Literal["ANN"], Expr]
 RankByKnn = Tuple[str, Literal["kNN"], Sequence[float]]
 RankByKnnExpr = Tuple[str, Literal["kNN"], Expr]
@@ -78,6 +79,7 @@ RankByAttribute = Tuple[str, RankByAttributeOrder]
 RankByAttributes = Sequence[RankByAttribute]
 RankBy = Union[
     RankByAnn,
+    RankByAnnMulti,
     RankByAnnExpr,
     RankByKnn,
     RankByKnnExpr,
