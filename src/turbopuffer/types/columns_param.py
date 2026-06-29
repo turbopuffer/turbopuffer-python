@@ -12,7 +12,11 @@ from .vector_param import VectorParam
 __all__ = ["ColumnsParam"]
 
 
-class ColumnsParam(TypedDict, total=False, extra_items=Iterable[object]):  # type: ignore[call-arg]
+class ColumnsParam(  # type: ignore[call-arg]
+    TypedDict,
+    total=False,
+    extra_items=Iterable[object],  # pyright: ignore[reportGeneralTypeIssues]
+):
     """A list of documents in columnar format.
 
     Each key is a column name, mapped to an array of values for that column.
