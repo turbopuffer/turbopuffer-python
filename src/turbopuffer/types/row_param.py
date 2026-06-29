@@ -10,7 +10,11 @@ from .vector_param import VectorParam
 __all__ = ["RowParam"]
 
 
-class RowParam(TypedDict, total=False, extra_items=object):  # type: ignore[call-arg]
+class RowParam(  # type: ignore[call-arg]
+    TypedDict,
+    total=False,
+    extra_items=object,  # pyright: ignore[reportGeneralTypeIssues]
+):
     """A single document, in a row-based format."""
 
     id: Required[IDParam]
