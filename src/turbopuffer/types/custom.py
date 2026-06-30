@@ -57,6 +57,7 @@ RankByAnn = Tuple[str, Literal["ANN"], Sequence[float]]
 RankByAnnMulti = Tuple[str, Literal["ANN"], Sequence[Sequence[float]]]
 RankByAnnExpr = Tuple[str, Literal["ANN"], Expr]
 RankByKnn = Tuple[str, Literal["kNN"], Sequence[float]]
+RankByKnnMulti = Tuple[str, Literal["kNN"], Sequence[Sequence[float]]]
 RankByKnnExpr = Tuple[str, Literal["kNN"], Expr]
 RankBySparseKnn = Tuple[str, Literal["SparseKNN"], Mapping[str, float]]
 RankByText = Union[
@@ -82,6 +83,7 @@ RankBy = Union[
     RankByAnnMulti,
     RankByAnnExpr,
     RankByKnn,
+    RankByKnnMulti,
     RankByKnnExpr,
     RankBySparseKnn,
     RankByText,
