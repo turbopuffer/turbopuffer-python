@@ -11,6 +11,7 @@ from .row_param import RowParam
 from .columns_param import ColumnsParam
 from .distance_metric import DistanceMetric
 from .encryption_param import EncryptionParam
+from .sharding_config_param import ShardingConfigParam
 from .attribute_schema_param import AttributeSchemaParam
 from .copy_from_namespace_params import CopyFromNamespaceParams
 from .branch_from_namespace_params import BranchFromNamespaceParams
@@ -79,6 +80,14 @@ class NamespaceWriteParams(TypedDict, total=False):
 
     schema: Dict[str, AttributeSchemaParam]
     """The schema of the attributes attached to the documents."""
+
+    sharding: ShardingConfigParam
+    """
+    Configuration for namespace sharding, which partitions a namespace's documents
+    across multiple internal shards to scale indexing and query throughput beyond a
+    single machine. Sharding can only be configured on a namespace's inaugural
+    write, and cannot be added to or changed on an existing namespace.
+    """
 
     upsert_columns: ColumnsParam
     """A list of documents in columnar format.

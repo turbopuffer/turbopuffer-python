@@ -48,6 +48,7 @@ from turbopuffer.types import (
     Row,
     RrfParams,
     SaturateParams,
+    ShardingConfig,
     SparseDistanceMetric,
     Tokenizer,
     Vector,

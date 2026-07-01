@@ -697,6 +697,7 @@ class TestNamespaces:
             ],
             return_affected_ids=True,
             schema={"foo": "string"},
+            sharding={"num_shards": 1},
             upsert_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
@@ -1418,6 +1419,7 @@ class TestAsyncNamespaces:
             ],
             return_affected_ids=True,
             schema={"foo": "string"},
+            sharding={"num_shards": 1},
             upsert_columns={
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
