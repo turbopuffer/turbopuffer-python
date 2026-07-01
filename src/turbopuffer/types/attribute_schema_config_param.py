@@ -20,6 +20,13 @@ class AnnAnnConfig(TypedDict, total=False):
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 
+    late_interaction: bool
+    """Opt in to late-interaction (MUVERA) indexing.
+
+    Only valid on fixed-dim `[][N]f32` vector array attributes, and is required to
+    enable an ANN index on such attributes. Defaults to `false`.
+    """
+
 
 Ann: TypeAlias = Union[bool, AnnAnnConfig]
 
