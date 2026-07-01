@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.6.0 (2026-07-01)
+
+Full Changelog: [v2.5.0...v2.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.5.0...v2.6.0)
+
+### Features
+
+* spec: add sharding config to the openapi spec ([4169c37](https://github.com/turbopuffer/turbopuffer-python/commit/4169c37e08d7ab83c0dcd212fa22182dd0a117aa))
+* support late_interaction parameter in sdks ([93d0a4f](https://github.com/turbopuffer/turbopuffer-python/commit/93d0a4f43ec31a8fd304041b95d1f65deab5c83c))
+
+
+### Bug Fixes
+
+* **types:** avoid type-checker errors on params with additional properties ([9810813](https://github.com/turbopuffer/turbopuffer-python/commit/9810813c8ddcd0f365436da3c956e3d936bcb782))
+
 ## 2.5.0 (2026-06-25)
 
 Full Changelog: [v2.4.0...v2.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.4.0...v2.5.0)
