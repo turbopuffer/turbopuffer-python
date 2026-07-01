@@ -41,6 +41,7 @@ from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
 from ..types.encryption_param import EncryptionParam
 from ..types.namespace_metadata import NamespaceMetadata
+from ..types.sharding_config_param import ShardingConfigParam
 from ..types.attribute_schema_param import AttributeSchemaParam
 from ..types.include_attributes_param import IncludeAttributesParam
 from ..types.namespace_query_response import NamespaceQueryResponse
@@ -725,6 +726,7 @@ class NamespacesResource(SyncAPIResource):
         patch_rows: Iterable[RowParam] | Omit = omit,
         return_affected_ids: bool | Omit = omit,
         schema: Dict[str, AttributeSchemaParam] | Omit = omit,
+        sharding: ShardingConfigParam | Omit = omit,
         upsert_columns: ColumnsParam | Omit = omit,
         upsert_condition: Filter | Omit = omit,
         upsert_rows: Iterable[RowParam] | Omit = omit,
@@ -772,6 +774,11 @@ class NamespacesResource(SyncAPIResource):
 
           schema: The schema of the attributes attached to the documents.
 
+          sharding: Configuration for namespace sharding, which partitions a namespace's documents
+              across multiple internal shards to scale indexing and query throughput beyond a
+              single machine. Sharding can only be configured on a namespace's inaugural
+              write, and cannot be added to or changed on an existing namespace.
+
           upsert_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
 
@@ -810,6 +817,7 @@ class NamespacesResource(SyncAPIResource):
                     "patch_rows": patch_rows,
                     "return_affected_ids": return_affected_ids,
                     "schema": schema,
+                    "sharding": sharding,
                     "upsert_columns": upsert_columns,
                     "upsert_condition": upsert_condition,
                     "upsert_rows": upsert_rows,
@@ -1490,6 +1498,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         patch_rows: Iterable[RowParam] | Omit = omit,
         return_affected_ids: bool | Omit = omit,
         schema: Dict[str, AttributeSchemaParam] | Omit = omit,
+        sharding: ShardingConfigParam | Omit = omit,
         upsert_columns: ColumnsParam | Omit = omit,
         upsert_condition: object | Omit = omit,
         upsert_rows: Iterable[RowParam] | Omit = omit,
@@ -1537,6 +1546,11 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           schema: The schema of the attributes attached to the documents.
 
+          sharding: Configuration for namespace sharding, which partitions a namespace's documents
+              across multiple internal shards to scale indexing and query throughput beyond a
+              single machine. Sharding can only be configured on a namespace's inaugural
+              write, and cannot be added to or changed on an existing namespace.
+
           upsert_columns: A list of documents in columnar format. Each key is a column name, mapped to an
               array of values for that column.
 
@@ -1575,6 +1589,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "patch_rows": patch_rows,
                     "return_affected_ids": return_affected_ids,
                     "schema": schema,
+                    "sharding": sharding,
                     "upsert_columns": upsert_columns,
                     "upsert_condition": upsert_condition,
                     "upsert_rows": upsert_rows,
