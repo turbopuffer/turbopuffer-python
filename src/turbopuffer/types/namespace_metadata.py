@@ -9,6 +9,7 @@ from pydantic import Field as FieldInfo
 from .._models import BaseModel
 from .encryption import Encryption
 from .pinning_config import PinningConfig
+from .sharding_config import ShardingConfig
 from .attribute_schema_config import AttributeSchemaConfig
 
 __all__ = ["NamespaceMetadata", "Index", "IndexIndexUpToDate", "IndexIndexUpdating", "Pinning", "PinningStatus"]
@@ -83,4 +84,12 @@ class NamespaceMetadata(BaseModel):
     """
     Configuration for namespace pinning, along with the current status of the pinned
     namespace.
+    """
+
+    sharding: Optional[ShardingConfig] = None
+    """
+    Configuration for namespace sharding, which partitions a namespace's documents
+    across multiple internal shards to scale indexing and query throughput beyond a
+    single machine. Sharding can only be configured on a namespace's inaugural
+    write, and cannot be added to or changed on an existing namespace.
     """

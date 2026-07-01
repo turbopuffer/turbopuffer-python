@@ -25,6 +25,7 @@ from .pinning_config import PinningConfig as PinningConfig
 from .attribute_embed import AttributeEmbed as AttributeEmbed
 from .distance_metric import DistanceMetric as DistanceMetric
 from .saturate_params import SaturateParams as SaturateParams
+from .sharding_config import ShardingConfig as ShardingConfig
 from .vector_encoding import VectorEncoding as VectorEncoding
 from .encryption_param import EncryptionParam as EncryptionParam
 from .full_text_search import FullTextSearch as FullTextSearch
@@ -36,6 +37,7 @@ from .bm25_clause_params import Bm25ClauseParams as Bm25ClauseParams
 from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
 from .pinning_config_param import PinningConfigParam as PinningConfigParam
 from .attribute_embed_param import AttributeEmbedParam as AttributeEmbedParam
+from .sharding_config_param import ShardingConfigParam as ShardingConfigParam
 from .attribute_embed_config import AttributeEmbedConfig as AttributeEmbedConfig
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
