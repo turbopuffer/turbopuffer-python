@@ -193,6 +193,7 @@ class TestNamespaces:
         namespace = client.namespaces.explain_query(
             namespace="namespace",
             aggregate_by={"foo": "bar"},
+            compute_attributes={"foo": [{}]},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
@@ -341,6 +342,7 @@ class TestNamespaces:
             queries=[
                 {
                     "aggregate_by": {"foo": "bar"},
+                    "compute_attributes": {"foo": [{}]},
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
                     "filters": {},
@@ -408,6 +410,7 @@ class TestNamespaces:
         namespace = client.namespaces.query(
             namespace="namespace",
             aggregate_by={"foo": "bar"},
+            compute_attributes={"foo": [{}]},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
@@ -915,6 +918,7 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespaces.explain_query(
             namespace="namespace",
             aggregate_by={"foo": "bar"},
+            compute_attributes={"foo": [{}]},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
@@ -1063,6 +1067,7 @@ class TestAsyncNamespaces:
             queries=[
                 {
                     "aggregate_by": {"foo": "bar"},
+                    "compute_attributes": {"foo": [{}]},
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
                     "filters": {},
@@ -1130,6 +1135,7 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespaces.query(
             namespace="namespace",
             aggregate_by={"foo": "bar"},
+            compute_attributes={"foo": [{}]},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
