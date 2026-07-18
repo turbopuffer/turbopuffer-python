@@ -294,6 +294,7 @@ class TestNamespaces:
             namespace="namespace",
             queries=[
                 {
+
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
                     "include_attributes": True,
@@ -354,7 +355,10 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_query_with_all_params(self, client: Turbopuffer) -> None:
+    @parametrize
+    def test_method_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").query(
+            compute_attributes={"foo": [{}]},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
@@ -918,6 +922,7 @@ class TestAsyncNamespaces:
             namespace="namespace",
             queries=[
                 {
+
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
                     "include_attributes": True,
@@ -978,7 +983,10 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
+    @parametrize
+    async def test_method_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").query(
+            compute_attributes={"foo": [{}]},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],

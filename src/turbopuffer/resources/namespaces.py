@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable, Optional
+from typing import Dict, Union, Iterable, Optional
 
 import httpx
 
@@ -246,6 +246,10 @@ class NamespacesResource(SyncAPIResource):
           aggregate_by: Aggregations to compute over all documents in the namespace that match the
               filters.
 
+          compute_attributes: Computes additional values on documents returned by a query. Each key is the
+              name of the computed attribute; each value is an expression describing how to
+              compute it.
+
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
@@ -286,6 +290,7 @@ class NamespacesResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "aggregate_by": aggregate_by,
+                    "compute_attributes": compute_attributes,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "exclude_attributes": exclude_attributes,
@@ -433,7 +438,9 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
+        namespace: str | None = None,
         aggregate_by: Dict[str, AggregateBy] | Omit = omit,
+        compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]] | Omit = omit,
         consistency: namespace_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
@@ -457,6 +464,10 @@ class NamespacesResource(SyncAPIResource):
         Args:
           aggregate_by: Aggregations to compute over all documents in the namespace that match the
               filters.
+
+          compute_attributes: Computes additional values on documents returned by a query. Each key is the
+              name of the computed attribute; each value is an expression describing how to
+              compute it.
 
           consistency: The consistency level for a query.
 
@@ -498,6 +509,7 @@ class NamespacesResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "aggregate_by": aggregate_by,
+                    "compute_attributes": compute_attributes,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "exclude_attributes": exclude_attributes,
@@ -1016,6 +1028,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
           aggregate_by: Aggregations to compute over all documents in the namespace that match the
               filters.
 
+          compute_attributes: Computes additional values on documents returned by a query. Each key is the
+              name of the computed attribute; each value is an expression describing how to
+              compute it.
+
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
@@ -1056,6 +1072,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "aggregate_by": aggregate_by,
+                    "compute_attributes": compute_attributes,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "exclude_attributes": exclude_attributes,
@@ -1203,7 +1220,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
+        namespace: str | None = None,
         aggregate_by: Dict[str, AggregateBy] | Omit = omit,
+        compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]] | Omit = omit,
         consistency: namespace_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
@@ -1227,6 +1246,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Args:
           aggregate_by: Aggregations to compute over all documents in the namespace that match the
               filters.
+
+          compute_attributes: Computes additional values on documents returned by a query. Each key is the
+              name of the computed attribute; each value is an expression describing how to
+              compute it.
 
           consistency: The consistency level for a query.
 
@@ -1268,6 +1291,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "aggregate_by": aggregate_by,
+                    "compute_attributes": compute_attributes,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
                     "exclude_attributes": exclude_attributes,

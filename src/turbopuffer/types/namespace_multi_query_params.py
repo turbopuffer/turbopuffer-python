@@ -42,6 +42,13 @@ class Query(TypedDict, total=False):
     filters.
     """
 
+    compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]]
+    """Computes additional values on documents returned by a query.
+
+    Each key is the name of the computed attribute; each value is an expression
+    describing how to compute it.
+    """
+
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
 

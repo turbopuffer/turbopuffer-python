@@ -24,6 +24,13 @@ class NamespaceExplainQueryParams(TypedDict, total=False):
     filters.
     """
 
+    compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]]
+    """Computes additional values on documents returned by a query.
+
+    Each key is the name of the computed attribute; each value is an expression
+    describing how to compute it.
+    """
+
     consistency: Consistency
     """The consistency level for a query."""
 
