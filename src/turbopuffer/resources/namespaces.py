@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union, Iterable, Optional
+from typing import Dict, Iterable, Optional
 
 import httpx
 
@@ -216,7 +216,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         namespace: str | None = None,
         aggregate_by: Dict[str, object] | Omit = omit,
-        compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]] | Omit = omit,
+        compute_attributes: Dict[str, object] | Omit = omit,
         consistency: namespace_explain_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
@@ -434,7 +434,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         namespace: str | None = None,
         aggregate_by: Dict[str, object] | Omit = omit,
-        compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]] | Omit = omit,
+        compute_attributes: Dict[str, object] | Omit = omit,
         consistency: namespace_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
@@ -986,7 +986,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         namespace: str | None = None,
         aggregate_by: Dict[str, object] | Omit = omit,
-        compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]] | Omit = omit,
+        compute_attributes: Dict[str, object] | Omit = omit,
         consistency: namespace_explain_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
@@ -1204,7 +1204,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         namespace: str | None = None,
         aggregate_by: Dict[str, object] | Omit = omit,
-        compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]] | Omit = omit,
+        compute_attributes: Dict[str, object] | Omit = omit,
         consistency: namespace_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
