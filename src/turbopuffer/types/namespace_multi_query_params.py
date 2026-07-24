@@ -42,7 +42,7 @@ class Query(TypedDict, total=False):
     filters.
     """
 
-    compute_attributes: Dict[str, Union[Iterable[object], Iterable[Iterable[object]]]]
+    compute_attributes: Dict[str, object]
     """Computes additional values on documents returned by a query.
 
     Each key is the name of the computed attribute; each value is an expression
