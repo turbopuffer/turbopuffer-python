@@ -7,10 +7,10 @@ from typing_extensions import TypedDict
 from .highlight_fragment_by import HighlightFragmentBy
 from .highlight_offset_units import HighlightOffsetUnits
 
-__all__ = ["HighlightConfigParam"]
+__all__ = ["HighlightConfigParams"]
 
 
-class HighlightConfigParam(TypedDict, total=False):
+class HighlightConfigParams(TypedDict, total=False):
     """Additional (optional) parameters for the Highlight compute expression."""
 
     fragment_by: HighlightFragmentBy
