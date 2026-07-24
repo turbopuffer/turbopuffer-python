@@ -36,7 +36,7 @@ from turbopuffer.types import (
     FullTextSearchConfig,
     FuzzyMaxEditDistance,
     FuzzyParams,
-    HighlightConfig,
+    HighlightConfigParams,
     HighlightFragmentBy,
     HighlightOffsetUnits,
     ID,

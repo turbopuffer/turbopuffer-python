@@ -41,13 +41,13 @@ from .sharding_config_param import ShardingConfigParam as ShardingConfigParam
 from .attribute_embed_config import AttributeEmbedConfig as AttributeEmbedConfig
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
-from .highlight_config_param import HighlightConfigParam as HighlightConfigParam
 from .highlight_offset_units import HighlightOffsetUnits as HighlightOffsetUnits
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams
 from .sparse_distance_metric import SparseDistanceMetric as SparseDistanceMetric
 from .attribute_schema_config import AttributeSchemaConfig as AttributeSchemaConfig
 from .full_text_search_config import FullTextSearchConfig as FullTextSearchConfig
+from .highlight_config_params import HighlightConfigParams as HighlightConfigParams
 from .namespace_recall_params import NamespaceRecallParams as NamespaceRecallParams
 from .client_namespaces_params import ClientNamespacesParams as ClientNamespacesParams
 from .include_attributes_param import IncludeAttributesParam as IncludeAttributesParam
