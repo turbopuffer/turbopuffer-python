@@ -36,10 +36,13 @@ from .bm25_clause_params import Bm25ClauseParams as Bm25ClauseParams
 from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
 from .pinning_config_param import PinningConfigParam as PinningConfigParam
 from .attribute_embed_param import AttributeEmbedParam as AttributeEmbedParam
+from .highlight_fragment_by import HighlightFragmentBy as HighlightFragmentBy
 from .sharding_config_param import ShardingConfigParam as ShardingConfigParam
 from .attribute_embed_config import AttributeEmbedConfig as AttributeEmbedConfig
 from .attribute_schema_param import AttributeSchemaParam as AttributeSchemaParam
 from .full_text_search_param import FullTextSearchParam as FullTextSearchParam
+from .highlight_config_param import HighlightConfigParam as HighlightConfigParam
+from .highlight_offset_units import HighlightOffsetUnits as HighlightOffsetUnits
 from .namespace_query_params import NamespaceQueryParams as NamespaceQueryParams
 from .namespace_write_params import NamespaceWriteParams as NamespaceWriteParams
 from .sparse_distance_metric import SparseDistanceMetric as SparseDistanceMetric
