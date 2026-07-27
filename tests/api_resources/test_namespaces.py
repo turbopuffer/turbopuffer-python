@@ -172,7 +172,7 @@ class TestNamespaces:
     @parametrize
     def test_method_explain_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").explain_query(
-            aggregate_by={"foo": "bar"},
+            aggregate_by={"foo": ("Sum", "bar")},
             compute_attributes={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
@@ -359,7 +359,7 @@ class TestNamespaces:
     @parametrize
     def test_method_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").query(
-            aggregate_by={"foo": "bar"},
+            aggregate_by={"foo": ("Sum", "bar")},
             compute_attributes={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
@@ -799,7 +799,7 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_method_explain_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").explain_query(
-            aggregate_by={"foo": "bar"},
+            aggregate_by={"foo": ("Sum", "bar")},
             compute_attributes={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
@@ -989,7 +989,7 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_method_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").query(
-            aggregate_by={"foo": "bar"},
+            aggregate_by={"foo": ("Sum", "bar")},
             compute_attributes={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
