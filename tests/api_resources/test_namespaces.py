@@ -173,7 +173,7 @@ class TestNamespaces:
     def test_method_explain_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").explain_query(
             aggregate_by={"foo": ("Sum", "bar")},
-            compute_attributes={"foo": "bar"},
+            compute_attributes={"foo": ("Highlight", "bar")},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
@@ -297,7 +297,7 @@ class TestNamespaces:
             queries=[
                 {
                     "aggregate_by": {"foo": "bar"},
-                    "compute_attributes": {"foo": "bar"},
+                    "compute_attributes": {"foo": ("Highlight", "bar")},
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
                     "include_attributes": True,
@@ -360,7 +360,7 @@ class TestNamespaces:
     def test_method_query_with_all_params(self, client: Turbopuffer) -> None:
         namespace = client.namespace("namespace").query(
             aggregate_by={"foo": ("Sum", "bar")},
-            compute_attributes={"foo": "bar"},
+            compute_attributes={"foo": ("Highlight", "bar")},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
@@ -800,7 +800,7 @@ class TestAsyncNamespaces:
     async def test_method_explain_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").explain_query(
             aggregate_by={"foo": ("Sum", "bar")},
-            compute_attributes={"foo": "bar"},
+            compute_attributes={"foo": ("Highlight", "bar")},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
@@ -927,7 +927,7 @@ class TestAsyncNamespaces:
             queries=[
                 {
                     "aggregate_by": {"foo": "bar"},
-                    "compute_attributes": {"foo": "bar"},
+                    "compute_attributes": {"foo": ("Highlight", "bar")},
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
                     "include_attributes": True,
@@ -990,7 +990,7 @@ class TestAsyncNamespaces:
     async def test_method_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").query(
             aggregate_by={"foo": ("Sum", "bar")},
-            compute_attributes={"foo": "bar"},
+            compute_attributes={"foo": ("Highlight", "bar")},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
