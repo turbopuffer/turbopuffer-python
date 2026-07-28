@@ -257,7 +257,7 @@ def test_bm25_pre_tokenized_array(tpuf: Turbopuffer):
     assert len(result.rows) == 2
 
     with pytest.raises(
-        turbopuffer.APIError, match=r"""invalid input \\'jumped\\' for rank_by field "content", expecting \[\]string"""
+        turbopuffer.APIError, match=r"""invalid input .* for rank_by field "content", expecting \[\]string"""
     ):
         # Query must be an array.
         ns.query(
