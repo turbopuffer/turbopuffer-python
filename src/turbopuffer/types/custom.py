@@ -2,7 +2,6 @@
 
 from typing import Any, Tuple, Union, Literal, Mapping, Sequence, TypedDict
 
-from .vector import Vector
 from .rrf_params import RrfParams
 from .decay_params import DecayParams
 from .embed_params import EmbedParams
@@ -14,7 +13,7 @@ from .contains_any_token_filter_params import ContainsAnyTokenFilterParams
 from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams
 
 AggregateBy = Union[Tuple[Literal["Count"]], Tuple[Literal["Sum"], str], Tuple[Literal["Count"], str]]
-ComputeAttributesVectorDist = Tuple[str, Literal["VectorDist"], Vector]
+ComputeAttributesVectorDist = Tuple[str, Literal["VectorDist"], Sequence[float]]
 ComputeAttributesHighlight = Tuple[Literal["Highlight"], str]
 ComputeAttributesHighlightWithConfig = Tuple[Literal["Highlight"], str, HighlightConfigParams]
 RankByAnn = Tuple[str, Literal["ANN"], Sequence[float]]
