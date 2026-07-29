@@ -205,7 +205,7 @@ def test_query_vectors(tpuf: Turbopuffer):
     )
     check_results(vector_set, expected)
     assert vector_set.billing == QueryBilling(
-        billable_logical_bytes_queried=256000000,
+        billable_logical_bytes_queried=1280000000,
         billable_logical_bytes_returned=105,
     )
 
