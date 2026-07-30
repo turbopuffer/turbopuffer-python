@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Dict, Union, Iterable
 from typing_extensions import Literal, TypeAlias, TypedDict
 
-from .custom import GroupBy, ComputeAttributes
+from .custom import Expr, GroupBy
 from .._types import SequenceNotStr
 from .limit_param import LimitParam
 from .distance_metric import DistanceMetric
@@ -24,7 +24,7 @@ class NamespaceExplainQueryParams(TypedDict, total=False):
     filters.
     """
 
-    compute_attributes: Dict[str, ComputeAttributes]
+    compute_attributes: Dict[str, Expr]
     """Computes additional values on documents returned by a query.
 
     Each key is the name of the computed attribute; each value is an expression
