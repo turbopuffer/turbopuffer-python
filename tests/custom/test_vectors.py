@@ -12,7 +12,6 @@ from turbopuffer.types import (
     Vector,
     RowParam,
     ColumnsParam,
-    QueryBilling,
     VectorEncoding,
     NamespaceQueryResponse,
     namespace_query_params,
@@ -204,10 +203,12 @@ def test_query_vectors(tpuf: Turbopuffer):
         include_attributes=["hello", "vector"],
     )
     check_results(vector_set, expected)
-    assert vector_set.billing == QueryBilling(
-        billable_logical_bytes_queried=256000000,
-        billable_logical_bytes_returned=105,
-    )
+    assert vector_set.billing is not None
+    # Production returns 256 MB until turbopuffer#10448 is deployed, then 1.28 GB.
+    # Accept exactly those two values so this client transition can land first.
+    # TODO: Remove the 256 MB case after the server rollout is complete.
+    assert vector_set.billing.billable_logical_bytes_queried in (256_000_000, 1_280_000_000)
+    assert vector_set.billing.billable_logical_bytes_returned == 105
 
     # Test query with dict
     vector_set = ns.query(
