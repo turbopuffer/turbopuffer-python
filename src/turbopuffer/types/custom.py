@@ -13,17 +13,16 @@ from .contains_any_token_filter_params import ContainsAnyTokenFilterParams
 from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams
 
 AggregateBy = Union[Tuple[Literal["Count"]], Tuple[Literal["Sum"], str], Tuple[Literal["Count"], str]]
-ComputeAttributesVectorDist = Tuple[str, Literal["VectorDist"], Sequence[float]]
-ComputeAttributesHighlight = Tuple[Literal["Highlight"], str]
-ComputeAttributesHighlightWithConfig = Tuple[Literal["Highlight"], str, HighlightConfigParams]
+ExprRefNew = TypedDict("ExprRefNew", {"$ref_new": str})
+ExprVectorDist = Tuple[str, Literal["VectorDist"], Sequence[float]]
+ExprHighlight = Tuple[Literal["Highlight"], str]
+ExprHighlightWithConfig = Tuple[Literal["Highlight"], str, HighlightConfigParams]
 RankByAnn = Tuple[str, Literal["ANN"], Sequence[float]]
 RankByAnnMulti = Tuple[str, Literal["ANN"], Sequence[Sequence[float]]]
-ExprRefNew = TypedDict("ExprRefNew", {"$ref_new": str})
-Expr = Union[ExprRefNew, Tuple[Literal["Embed"], str], Tuple[Literal["Embed"], str, EmbedParams]]
-RankByAnnExpr = Tuple[str, Literal["ANN"], Expr]
+RankByAnnExpr = Tuple[str, Literal["ANN"], "Expr"]
 RankByKnn = Tuple[str, Literal["kNN"], Sequence[float]]
 RankByKnnMulti = Tuple[str, Literal["kNN"], Sequence[Sequence[float]]]
-RankByKnnExpr = Tuple[str, Literal["kNN"], Expr]
+RankByKnnExpr = Tuple[str, Literal["kNN"], "Expr"]
 RankBySparseKnn = Tuple[str, Literal["SparseKNN"], Mapping[str, float]]
 Filter = Union[
     Tuple[str, Literal["Eq"], Any],
@@ -92,10 +91,13 @@ RankBy = Union[
     RankByAttribute,
     RankByAttributes,
 ]
-ComputeAttributes = Union[
-    ComputeAttributesVectorDist,
-    ComputeAttributesHighlight,
-    ComputeAttributesHighlightWithConfig,
+Expr = Union[
+    ExprRefNew,
+    Tuple[Literal["Embed"], str],
+    Tuple[Literal["Embed"], str, EmbedParams],
+    ExprVectorDist,
+    ExprHighlight,
+    ExprHighlightWithConfig,
     RankBy,
 ]
 GroupByFunction = Tuple[Literal["ForEachUnique"], str]
