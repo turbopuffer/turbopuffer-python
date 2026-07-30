@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Dict, Union, Iterable
 from typing_extensions import Literal, TypeAlias, TypedDict
 
-from .custom import Filter, GroupBy, AggregateBy
+from .custom import Expr, Filter, GroupBy, AggregateBy
 from .._types import SequenceNotStr
 from .limit_param import LimitParam
 from .distance_metric import DistanceMetric
@@ -22,6 +22,13 @@ class NamespaceQueryParams(TypedDict, total=False):
     """
     Aggregations to compute over all documents in the namespace that match the
     filters.
+    """
+
+    compute_attributes: Dict[str, Expr]
+    """Computes additional values on documents returned by a query.
+
+    Each key is the name of the computed attribute; each value is an expression
+    describing how to compute it.
     """
 
     consistency: Consistency

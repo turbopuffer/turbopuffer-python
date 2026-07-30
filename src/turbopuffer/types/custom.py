@@ -8,12 +8,22 @@ from .embed_params import EmbedParams
 from .fuzzy_params import FuzzyParams
 from .saturate_params import SaturateParams
 from .bm25_clause_params import Bm25ClauseParams
+from .highlight_config_params import HighlightConfigParams
 from .contains_any_token_filter_params import ContainsAnyTokenFilterParams
 from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams
 
 AggregateBy = Union[Tuple[Literal["Count"]], Tuple[Literal["Sum"], str], Tuple[Literal["Count"], str]]
 ExprRefNew = TypedDict("ExprRefNew", {"$ref_new": str})
-Expr = Union[ExprRefNew, Tuple[Literal["Embed"], str], Tuple[Literal["Embed"], str, EmbedParams]]
+ExprVectorDist = Tuple[str, Literal["VectorDist"], Sequence[float]]
+ExprHighlight = Tuple[Literal["Highlight"], str]
+ExprHighlightWithConfig = Tuple[Literal["Highlight"], str, HighlightConfigParams]
+RankByAnn = Tuple[str, Literal["ANN"], Sequence[float]]
+RankByAnnMulti = Tuple[str, Literal["ANN"], Sequence[Sequence[float]]]
+RankByAnnExpr = Tuple[str, Literal["ANN"], "Expr"]
+RankByKnn = Tuple[str, Literal["kNN"], Sequence[float]]
+RankByKnnMulti = Tuple[str, Literal["kNN"], Sequence[Sequence[float]]]
+RankByKnnExpr = Tuple[str, Literal["kNN"], "Expr"]
+RankBySparseKnn = Tuple[str, Literal["SparseKNN"], Mapping[str, float]]
 Filter = Union[
     Tuple[str, Literal["Eq"], Any],
     Tuple[str, Literal["NotEq"], Any],
@@ -51,15 +61,6 @@ Filter = Union[
     Tuple[Literal["And"], Sequence["Filter"]],
     Tuple[Literal["Or"], Sequence["Filter"]],
 ]
-GroupByFunction = Tuple[Literal["ForEachUnique"], str]
-GroupBy = Union[str, Mapping[str, GroupByFunction]]
-RankByAnn = Tuple[str, Literal["ANN"], Sequence[float]]
-RankByAnnMulti = Tuple[str, Literal["ANN"], Sequence[Sequence[float]]]
-RankByAnnExpr = Tuple[str, Literal["ANN"], Expr]
-RankByKnn = Tuple[str, Literal["kNN"], Sequence[float]]
-RankByKnnMulti = Tuple[str, Literal["kNN"], Sequence[Sequence[float]]]
-RankByKnnExpr = Tuple[str, Literal["kNN"], Expr]
-RankBySparseKnn = Tuple[str, Literal["SparseKNN"], Mapping[str, float]]
 RankByText = Union[
     Tuple[str, Literal["BM25"], str],
     Tuple[str, Literal["BM25"], Sequence[str]],
@@ -90,4 +91,15 @@ RankBy = Union[
     RankByAttribute,
     RankByAttributes,
 ]
+Expr = Union[
+    ExprRefNew,
+    Tuple[Literal["Embed"], str],
+    Tuple[Literal["Embed"], str, EmbedParams],
+    ExprVectorDist,
+    ExprHighlight,
+    ExprHighlightWithConfig,
+    RankBy,
+]
+GroupByFunction = Tuple[Literal["ForEachUnique"], str]
+GroupBy = Union[str, Mapping[str, GroupByFunction]]
 RerankBy = Union[Tuple[Literal["RRF"]], Tuple[Literal["RRF"], RrfParams]]

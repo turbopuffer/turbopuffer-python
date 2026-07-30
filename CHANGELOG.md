@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.7.0 (2026-07-30)
+
+Full Changelog: [v2.6.0...v2.7.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.6.0...v2.7.0)
+
+### Features
+
+* openapi: add RRF `weights` parameter ([6e7a690](https://github.com/turbopuffer/turbopuffer-python/commit/6e7a6901a25bbd1799a098a2fdca3b714b3f6aca))
+* spec: expose computed attributes ([8f30d04](https://github.com/turbopuffer/turbopuffer-python/commit/8f30d04b16666eaaab62e687616ad89941e2af8c))
+* spec: hide HighlightConfig.rank_fragments_by's RankBy ref from Stainless ([4499367](https://github.com/turbopuffer/turbopuffer-python/commit/4499367be3939095a589adedea9216e14d40b909))
+* spec: make compute_attributes value x-stainless-any ([bfbe79f](https://github.com/turbopuffer/turbopuffer-python/commit/bfbe79f29822e2476aede59daf6d45da50f68bec))
+* spec: rename HighlightConfig -&gt; HighlightConfigParams ([df57c87](https://github.com/turbopuffer/turbopuffer-python/commit/df57c87315e76ec65a3ef9c72b1a050f98d8c634))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([6db1360](https://github.com/turbopuffer/turbopuffer-python/commit/6db13603ee86578d58a52bc599547ac4f75fee2f))
+* type compute_attributes as the Expr union (turbopuffer[#10694](https://github.com/turbopuffer/turbopuffer-python/issues/10694)) ([#251](https://github.com/turbopuffer/turbopuffer-python/issues/251)) ([b90b3f1](https://github.com/turbopuffer/turbopuffer-python/commit/b90b3f12b6fc31c05746ac242e6618f827ec2f80))
+
+
+### Bug Fixes
+
+* **internal:** resolve build failures ([53ce6dd](https://github.com/turbopuffer/turbopuffer-python/commit/53ce6ddf14884821a1d3d760badef1ec558f4e09))
+
+
+### Chores
+
+* regenerate custom types for compute attributes ([#246](https://github.com/turbopuffer/turbopuffer-python/issues/246)) ([98a9d11](https://github.com/turbopuffer/turbopuffer-python/commit/98a9d1158c7a2f9e713a31197e293f65e69aee94))
+
 ## 2.6.0 (2026-07-01)
 
 Full Changelog: [v2.5.0...v2.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.5.0...v2.6.0)
