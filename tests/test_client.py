@@ -1035,7 +1035,7 @@ class TestTurbopuffer:
     def test_default_client_honors_connection_limits(self) -> None:
         limits = DEFAULT_CONNECTION_LIMITS
         pool = DefaultHttpxClient()._transport._pool  # type: ignore[attr-defined]
-        assert (pool._max_connections, pool._max_keepalive_connections, pool._keepalive_expiry) == (
+        assert (pool._max_connections, pool._max_keepalive_connections, pool._keepalive_expiry) == (  # pyright: ignore[reportUnknownMemberType]
             limits.max_connections,
             limits.max_keepalive_connections,
             limits.keepalive_expiry,
@@ -1044,7 +1044,7 @@ class TestTurbopuffer:
     def test_default_client_honors_custom_connection_limits(self) -> None:
         limits = httpx.Limits(max_connections=7, max_keepalive_connections=3, keepalive_expiry=1.0)
         pool = DefaultHttpxClient(limits=limits)._transport._pool  # type: ignore[attr-defined]
-        assert (pool._max_connections, pool._max_keepalive_connections, pool._keepalive_expiry) == (7, 3, 1.0)
+        assert (pool._max_connections, pool._max_keepalive_connections, pool._keepalive_expiry) == (7, 3, 1.0)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.respx(base_url=base_url)
     def test_follow_redirects(self, respx_mock: MockRouter, client: Turbopuffer) -> None:
