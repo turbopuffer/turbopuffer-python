@@ -830,7 +830,19 @@ class _DefaultHttpxClient(httpx.Client):
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
-        kwargs.setdefault("transport", HttpxTransport(limits=kwargs["limits"]))
+        # Mirrors httpx.Client._init_transport:
+        # https://github.com/encode/httpx/blob/0.28.1/httpx/_client.py#L718
+        kwargs.setdefault(
+            "transport",
+            HttpxTransport(
+                verify=kwargs.get("verify", True),
+                cert=kwargs.get("cert"),
+                trust_env=kwargs.get("trust_env", True),
+                http1=kwargs.get("http1", True),
+                http2=kwargs.get("http2", False),
+                limits=kwargs["limits"],
+            ),
+        )
         super().__init__(**kwargs)
 
 
