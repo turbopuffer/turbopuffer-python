@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.7.1 (2026-08-04)
+
+Full Changelog: [v2.7.0...v2.7.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.7.0...v2.7.1)
+
+### Bug Fixes
+
+* **client:** thread connection limits into the sync transport ([#252](https://github.com/turbopuffer/turbopuffer-python/issues/252)) ([05dd0a2](https://github.com/turbopuffer/turbopuffer-python/commit/05dd0a2ce3bc5c474fc5c33bdf5125f36443a608))
+
 ## 2.7.0 (2026-07-30)
 
 Full Changelog: [v2.6.0...v2.7.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.6.0...v2.7.0)
