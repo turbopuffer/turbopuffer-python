@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import gc
 import os
+import ssl
 import sys
 import json
 import asyncio
@@ -1045,6 +1046,18 @@ class TestTurbopuffer:
         limits = httpx.Limits(max_connections=7, max_keepalive_connections=3, keepalive_expiry=1.0)
         pool = DefaultHttpxClient(limits=limits)._transport._pool  # type: ignore[attr-defined]
         assert (pool._max_connections, pool._max_keepalive_connections, pool._keepalive_expiry) == (7, 3, 1.0)  # pyright: ignore[reportUnknownMemberType]
+
+    def test_default_client_honors_transport_kwargs(self) -> None:
+        # A custom transport causes httpx to ignore transport-construction
+        # kwargs (verify, cert, http1/http2, limits), so the default client
+        # must thread them into the transport itself. verify=False must reach
+        # the connection pool, otherwise TLS verification stays on despite the
+        # caller opting out.
+        pool = DefaultHttpxClient(verify=False)._transport._pool  # type: ignore[attr-defined]
+        assert pool._ssl_context.verify_mode == ssl.CERT_NONE  # pyright: ignore[reportUnknownMemberType]
+
+        pool = DefaultHttpxClient()._transport._pool  # type: ignore[attr-defined]
+        assert pool._ssl_context.verify_mode == ssl.CERT_REQUIRED  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.respx(base_url=base_url)
     def test_follow_redirects(self, respx_mock: MockRouter, client: Turbopuffer) -> None:
