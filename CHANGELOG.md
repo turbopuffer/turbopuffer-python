@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.8.0 (2026-08-04)
+
+Full Changelog: [v2.7.1...v2.8.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.7.1...v2.8.0)
+
+### Features
+
+* spec: no-op change to Stainless spec ([00d0294](https://github.com/turbopuffer/turbopuffer-python/commit/00d02945a32f401c74c36fc8f3ac5a49eb487c76))
+
+
+### Bug Fixes
+
+* **client:** thread all transport kwargs into the sync transport ([#255](https://github.com/turbopuffer/turbopuffer-python/issues/255)) ([e49d583](https://github.com/turbopuffer/turbopuffer-python/commit/e49d583b87fa6282d9947b6d04a35c2f9eb2d85e))
+
 ## 2.7.1 (2026-08-04)
 
 Full Changelog: [v2.7.0...v2.7.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.7.0...v2.7.1)
