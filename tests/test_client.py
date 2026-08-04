@@ -32,6 +32,7 @@ from turbopuffer._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     RETRY_AFTER_LIMIT_SECS,
+    DEFAULT_CONNECTION_LIMITS,
     BaseClient,
     OtherPlatform,
     DefaultHttpxClient,
@@ -1030,6 +1031,20 @@ class TestTurbopuffer:
             http2=False,
             limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
         )
+
+    def test_default_client_honors_connection_limits(self) -> None:
+        limits = DEFAULT_CONNECTION_LIMITS
+        pool = DefaultHttpxClient()._transport._pool  # type: ignore[attr-defined]
+        assert (pool._max_connections, pool._max_keepalive_connections, pool._keepalive_expiry) == (  # pyright: ignore[reportUnknownMemberType]
+            limits.max_connections,
+            limits.max_keepalive_connections,
+            limits.keepalive_expiry,
+        )
+
+    def test_default_client_honors_custom_connection_limits(self) -> None:
+        limits = httpx.Limits(max_connections=7, max_keepalive_connections=3, keepalive_expiry=1.0)
+        pool = DefaultHttpxClient(limits=limits)._transport._pool  # type: ignore[attr-defined]
+        assert (pool._max_connections, pool._max_keepalive_connections, pool._keepalive_expiry) == (7, 3, 1.0)  # pyright: ignore[reportUnknownMemberType]
 
     @pytest.mark.respx(base_url=base_url)
     def test_follow_redirects(self, respx_mock: MockRouter, client: Turbopuffer) -> None:
