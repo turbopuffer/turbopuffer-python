@@ -830,7 +830,7 @@ class _DefaultHttpxClient(httpx.Client):
         kwargs.setdefault("timeout", DEFAULT_TIMEOUT)
         kwargs.setdefault("limits", DEFAULT_CONNECTION_LIMITS)
         kwargs.setdefault("follow_redirects", True)
-        kwargs.setdefault("transport", HttpxTransport())
+        kwargs.setdefault("transport", HttpxTransport(limits=kwargs["limits"]))
         super().__init__(**kwargs)
 
 
