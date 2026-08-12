@@ -387,6 +387,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         queries: Iterable[namespace_multi_query_params.Query],
         consistency: namespace_multi_query_params.Consistency | Omit = omit,
+        limit: namespace_multi_query_params.Limit | Omit = omit,
         rerank_by: RerankBy | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -401,6 +402,8 @@ class NamespacesResource(SyncAPIResource):
 
         Args:
           consistency: The consistency level for a query.
+
+          limit: Limits the total number of reranked documents returned.
 
           rerank_by: How to combine the rows returned by each sub-query into a single ranked list.
 
@@ -424,6 +427,7 @@ class NamespacesResource(SyncAPIResource):
                 {
                     "queries": queries,
                     "consistency": consistency,
+                    "limit": limit,
                     "rerank_by": rerank_by,
                     "vector_encoding": vector_encoding,
                 },
@@ -1169,6 +1173,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         queries: Iterable[namespace_multi_query_params.Query],
         consistency: namespace_multi_query_params.Consistency | Omit = omit,
+        limit: namespace_multi_query_params.Limit | Omit = omit,
         rerank_by: RerankBy | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1183,6 +1188,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
         Args:
           consistency: The consistency level for a query.
+
+          limit: Limits the total number of reranked documents returned.
 
           rerank_by: How to combine the rows returned by each sub-query into a single ranked list.
 
@@ -1206,6 +1213,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 {
                     "queries": queries,
                     "consistency": consistency,
+                    "limit": limit,
                     "rerank_by": rerank_by,
                     "vector_encoding": vector_encoding,
                 },
