@@ -354,6 +354,7 @@ class TestNamespaces:
                 }
             ],
             consistency={"level": "strong"},
+            limit=0,
             rerank_by={},
             vector_encoding="float",
         )
@@ -1079,6 +1080,7 @@ class TestAsyncNamespaces:
                 }
             ],
             consistency={"level": "strong"},
+            limit=0,
             rerank_by={},
             vector_encoding="float",
         )
