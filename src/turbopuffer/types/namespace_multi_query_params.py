@@ -12,7 +12,7 @@ from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
 from .include_attributes_param import IncludeAttributesParam
 
-__all__ = ["NamespaceMultiQueryParams", "Query", "QueryLimit", "Consistency"]
+__all__ = ["NamespaceMultiQueryParams", "Query", "QueryLimit", "Consistency", "Limit", "LimitTotal"]
 
 
 class NamespaceMultiQueryParams(TypedDict, total=False):
@@ -22,6 +22,9 @@ class NamespaceMultiQueryParams(TypedDict, total=False):
 
     consistency: Consistency
     """The consistency level for a query."""
+
+    limit: Limit
+    """Limits the total number of reranked documents returned."""
 
     rerank_by: object
     """How to combine the rows returned by each sub-query into a single ranked list."""
@@ -94,3 +97,10 @@ class Consistency(TypedDict, total=False):
     - `eventual` - Eventual consistency. Does not require a round-trip to object
       storage, but may not see the latest writes.
     """
+
+
+class LimitTotal(TypedDict, total=False):
+    total: Required[int]
+
+
+Limit: TypeAlias = Union[int, LimitTotal]
