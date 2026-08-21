@@ -572,6 +572,48 @@ def test_transparent_vector_encoding():
     transformed = transform({"id": [1, 2], "vector": [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]]}, ColumnsParam)
     assert transformed == {"id": [1, 2], "vector": ["zczMPc3MTD6amZk+", "zczMPgAAAD+amRk/"]}
 
+    # Named vector columns are encoded when schema sets ann.
+    body = {
+        "upsert_rows": [
+            {
+                "id": 1,
+                "title_embedding": [0.1, 0.2, 0.3],
+                "image_embedding": [0.4, 0.5],
+                "title": "hello",
+            }
+        ],
+        "schema": {
+            "title_embedding": {"type": "[3]f32", "ann": True},
+            "image_embedding": {"type": "[2]f16", "ann": True},
+        },
+    }
+    transformed = transform(body, object)
+    assert transformed == {
+        "upsert_rows": [
+            {
+                "id": 1,
+                "title_embedding": "zczMPc3MTD6amZk+",
+                "image_embedding": b64encode_vector([0.4, 0.5]),
+                "title": "hello",
+            }
+        ],
+        "schema": {
+            "title_embedding": {"type": "[3]f32", "ann": True},
+            "image_embedding": {"type": "[2]f16", "ann": True},
+        },
+    }
+
+    # ann:{} is accepted server-side as enabled; empty dict must still encode.
+    body_empty_ann: dict[str, object] = {
+        "upsert_rows": [{"id": 1, "title_embedding": [0.1, 0.2, 0.3]}],
+        "schema": {"title_embedding": {"type": "[3]f32", "ann": dict[str, object]()}},
+    }
+    transformed = transform(body_empty_ann, object)
+    assert transformed == {
+        "upsert_rows": [{"id": 1, "title_embedding": "zczMPc3MTD6amZk+"}],
+        "schema": {"title_embedding": {"type": "[3]f32", "ann": {}}},
+    }
+
 
 @pytest.mark.asyncio
 async def test_transparent_vector_encoding_async():
@@ -584,6 +626,36 @@ async def test_transparent_vector_encoding_async():
 
     transformed = await async_transform({"id": [1, 2], "vector": [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]]}, ColumnsParam)
     assert transformed == {"id": [1, 2], "vector": ["zczMPc3MTD6amZk+", "zczMPgAAAD+amRk/"]}
+
+    body = {
+        "upsert_rows": [
+            {
+                "id": 1,
+                "title_embedding": [0.1, 0.2, 0.3],
+                "image_embedding": [0.4, 0.5],
+                "title": "hello",
+            }
+        ],
+        "schema": {
+            "title_embedding": {"type": "[3]f32", "ann": True},
+            "image_embedding": {"type": "[2]f16", "ann": True},
+        },
+    }
+    transformed = await async_transform(body, object)
+    assert transformed == {
+        "upsert_rows": [
+            {
+                "id": 1,
+                "title_embedding": "zczMPc3MTD6amZk+",
+                "image_embedding": b64encode_vector([0.4, 0.5]),
+                "title": "hello",
+            }
+        ],
+        "schema": {
+            "title_embedding": {"type": "[3]f32", "ann": True},
+            "image_embedding": {"type": "[2]f16", "ann": True},
+        },
+    }
 
 
 def test_upsert_base64_vectors(tpuf: Turbopuffer):
