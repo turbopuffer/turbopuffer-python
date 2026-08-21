@@ -89,8 +89,33 @@ def maybe_transform(
     return transform(data, expected_type)
 
 
+def _is_vector_attribute_schema(attr_schema: object) -> bool:
+    """Return True if a schema entry opts into an ANN vector index via ``ann``."""
+    if isinstance(attr_schema, dict):
+        ann = cast(dict[str, object], attr_schema).get("ann")
+        return ann is not None and ann is not False
+    return False
+
+
+def _vector_keys_from_write_body(data: object) -> frozenset[str]:
+    """Attribute names that should be base64-encoded as vectors.
+
+    Always includes ``vector`` (auto-inferred by the API). When a write body
+    includes ``schema``, also includes attributes with ``ann``.
+    """
+    keys: set[str] = {"vector"}
+    if not isinstance(data, dict):
+        return frozenset(keys)
+    schema = cast(dict[str, object], data).get("schema")
+    if isinstance(schema, dict):
+        for name, attr_schema in cast(dict[str, object], schema).items():
+            if _is_vector_attribute_schema(attr_schema):
+                keys.add(name)
+    return frozenset(keys)
+
+
 # turbopuffer: Simple transform without expensive type introspection.
-def _turbopuffer_transform(obj: object) -> object:
+def _turbopuffer_transform(obj: object, *, vector_keys: frozenset[str]) -> object:
     if obj is None or isinstance(obj, (int, float, bool, str)):
         return obj
     if isinstance(obj, dict):
@@ -99,15 +124,15 @@ def _turbopuffer_transform(obj: object) -> object:
             # Strip Omit and NotGiven values
             if isinstance(v, (Omit, NotGiven)):
                 continue
-            if k == "vector":
+            if k in vector_keys:
                 result[k] = _encode_vector(v)
             else:
-                result[k] = _turbopuffer_transform(v)
+                result[k] = _turbopuffer_transform(v, vector_keys=vector_keys)
         return result
     if isinstance(obj, list):
-        return [_turbopuffer_transform(i) for i in cast(List[object], obj)]
+        return [_turbopuffer_transform(i, vector_keys=vector_keys) for i in cast(List[object], obj)]
     if isinstance(obj, tuple):
-        return tuple(_turbopuffer_transform(i) for i in cast(tuple[object, ...], obj))
+        return tuple(_turbopuffer_transform(i, vector_keys=vector_keys) for i in cast(tuple[object, ...], obj))
     return obj
 
 
@@ -132,7 +157,7 @@ def transform(
     It should be noted that the transformations that this function does are not represented in the type system.
     """
     # turbopuffer: Use simple vector encoding instead of generic type-based transform.
-    return cast(_T, _turbopuffer_transform(data))
+    return cast(_T, _turbopuffer_transform(data, vector_keys=_vector_keys_from_write_body(data)))
 
 
 @lru_cache(maxsize=8096)
@@ -351,7 +376,7 @@ async def async_transform(
     It should be noted that the transformations that this function does are not represented in the type system.
     """
     # turbopuffer: Use simple vector encoding instead of generic type-based transform.
-    return cast(_T, _turbopuffer_transform(data))
+    return cast(_T, _turbopuffer_transform(data, vector_keys=_vector_keys_from_write_body(data)))
 
 
 async def _async_transform_recursive(
