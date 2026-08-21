@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.9.0 (2026-08-21)
+
+Full Changelog: [v2.8.0...v2.9.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.8.0...v2.9.0)
+
+### Features
+
+* Apply limit on rerank_by when provided ([87ffb55](https://github.com/turbopuffer/turbopuffer-python/commit/87ffb554f68378ea8fac55d4dd9914bb1ab43c9b))
+* encode multi-vector attrs ([#258](https://github.com/turbopuffer/turbopuffer-python/issues/258)) ([712b379](https://github.com/turbopuffer/turbopuffer-python/commit/712b37961e35e15036fba2d16cd2f79be07a86c0))
+
 ## 2.8.0 (2026-08-04)
 
 Full Changelog: [v2.7.1...v2.8.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.7.1...v2.8.0)
