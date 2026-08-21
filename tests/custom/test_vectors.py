@@ -637,12 +637,14 @@ async def test_transparent_vector_encoding_async():
                 "id": 1,
                 "title_embedding": [0.1, 0.2, 0.3],
                 "image_embedding": [0.4, 0.5],
+                "other_embedding": [0.6, 0.7, 0.8],
                 "title": "hello",
             }
         ],
         "schema": {
             "title_embedding": {"type": "[3]f32", "ann": True},
             "image_embedding": {"type": "[2]f16", "ann": True},
+            "other_embedding": {"type": "[3]f32", "ann": False},
         },
     }
     transformed = await async_transform(body, object)
@@ -652,12 +654,14 @@ async def test_transparent_vector_encoding_async():
                 "id": 1,
                 "title_embedding": "zczMPc3MTD6amZk+",
                 "image_embedding": b64encode_vector([0.4, 0.5]),
+                "other_embedding": [0.6, 0.7, 0.8],
                 "title": "hello",
             }
         ],
         "schema": {
             "title_embedding": {"type": "[3]f32", "ann": True},
             "image_embedding": {"type": "[2]f16", "ann": True},
+            "other_embedding": {"type": "[3]f32", "ann": False},
         },
     }
 
