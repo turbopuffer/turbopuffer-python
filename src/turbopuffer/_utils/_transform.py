@@ -148,8 +148,7 @@ def _encode_write_vectors(data: object) -> object:
     rows = result.get("upsert_rows")
     if is_iterable(rows) and not isinstance(rows, (str, bytes, dict)):
         result["upsert_rows"] = [
-            encode_attrs(cast(dict[str, object], row)) if isinstance(row, dict) else row
-            for row in cast(Any, rows)
+            encode_attrs(cast(dict[str, object], row)) if isinstance(row, dict) else row for row in cast(Any, rows)
         ]
     columns = result.get("upsert_columns")
     if isinstance(columns, dict):

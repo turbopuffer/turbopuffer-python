@@ -626,9 +626,7 @@ async def test_transparent_vector_encoding_async():
     # Due to the nature of the hack, there's a high risk of a future refactoring
     # to the Stainless specification breaking the fast path.
 
-    transformed = await async_transform(
-        {"upsert_rows": [{"id": 1, "vector": [0.1, 0.2, 0.3]}]}, NamespaceWriteParams
-    )
+    transformed = await async_transform({"upsert_rows": [{"id": 1, "vector": [0.1, 0.2, 0.3]}]}, NamespaceWriteParams)
     assert transformed == {"upsert_rows": [{"id": 1, "vector": "zczMPc3MTD6amZk+"}]}
 
     transformed = await async_transform(
