@@ -92,10 +92,6 @@ def maybe_transform(
 def _is_vector_attribute_schema(attr_schema: object) -> bool:
     """Return True if a schema entry opts into an ANN vector index via ``ann``."""
     if isinstance(attr_schema, dict):
-        # Dense vector attrs require ann (true or a config object, including {});
-        # type-only declarations are rejected server-side. The auto-inferred
-        # "vector" column is handled separately and does not need to appear in schema.
-        # Server treats ann:{} as enabled.
         ann = cast(dict[str, object], attr_schema).get("ann")
         return ann is not None and ann is not False
     return False

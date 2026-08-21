@@ -572,19 +572,21 @@ def test_transparent_vector_encoding():
     transformed = transform({"id": [1, 2], "vector": [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]]}, ColumnsParam)
     assert transformed == {"id": [1, 2], "vector": ["zczMPc3MTD6amZk+", "zczMPgAAAD+amRk/"]}
 
-    # Named vector columns are encoded when schema sets ann.
+    # Named vector columns are encoded when schema sets ann; ann: False does not encode.
     body = {
         "upsert_rows": [
             {
                 "id": 1,
                 "title_embedding": [0.1, 0.2, 0.3],
                 "image_embedding": [0.4, 0.5],
+                "other_embedding": [0.6, 0.7, 0.8],
                 "title": "hello",
             }
         ],
         "schema": {
             "title_embedding": {"type": "[3]f32", "ann": True},
             "image_embedding": {"type": "[2]f16", "ann": True},
+            "other_embedding": {"type": "[3]f32", "ann": False},
         },
     }
     transformed = transform(body, object)
@@ -594,12 +596,14 @@ def test_transparent_vector_encoding():
                 "id": 1,
                 "title_embedding": "zczMPc3MTD6amZk+",
                 "image_embedding": b64encode_vector([0.4, 0.5]),
+                "other_embedding": [0.6, 0.7, 0.8],
                 "title": "hello",
             }
         ],
         "schema": {
             "title_embedding": {"type": "[3]f32", "ann": True},
             "image_embedding": {"type": "[2]f16", "ann": True},
+            "other_embedding": {"type": "[3]f32", "ann": False},
         },
     }
 
