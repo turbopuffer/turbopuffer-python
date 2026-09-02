@@ -10,7 +10,6 @@ from tests.custom import test_prefix
 from turbopuffer.types import (
     Row,
     Vector,
-    QueryBilling,
     VectorEncoding,
     NamespaceWriteParams,
     NamespaceQueryResponse,
@@ -203,10 +202,9 @@ def test_query_vectors(tpuf: Turbopuffer):
         include_attributes=["hello", "vector"],
     )
     check_results(vector_set, expected)
-    assert vector_set.billing == QueryBilling(
-        billable_logical_bytes_queried=256000000,
-        billable_logical_bytes_returned=105,
-    )
+    assert vector_set.billing.billable_logical_bytes_returned == 105
+    # 256MB was the old query floor; 1.28GB is current pricing.
+    assert vector_set.billing.billable_logical_bytes_queried in (256000000, 1280000000)
 
     # Test query with dict
     vector_set = ns.query(
