@@ -570,6 +570,7 @@ class TestNamespaces:
         namespace = client.namespaces.update_metadata(
             namespace="namespace",
             pinning=True,
+            read_only=True,
         )
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
@@ -1296,6 +1297,7 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespaces.update_metadata(
             namespace="namespace",
             pinning=True,
+            read_only=True,
         )
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
