@@ -38,6 +38,14 @@ class PinningStatus(BaseModel):
     ready_replicas: int
     """The number of replicas that are warm and serving traffic."""
 
+    replicas: int
+    """The number of running replicas for the namespace.
+
+    Replicas are billed once running, even before they finish warming their caches
+    and become ready to serve traffic. This count is updated independently and may
+    briefly disagree with the other status fields.
+    """
+
     updated_at: datetime
     """The timestamp of the latest pinning status snapshot."""
 
@@ -85,6 +93,9 @@ class NamespaceMetadata(BaseModel):
     Configuration for namespace pinning, along with the current status of the pinned
     namespace.
     """
+
+    read_only: Optional[bool] = None
+    """Whether document and schema writes are rejected. Omitted when `false`."""
 
     sharding: Optional[ShardingConfig] = None
     """
