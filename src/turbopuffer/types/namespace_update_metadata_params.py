@@ -22,5 +22,11 @@ class NamespaceUpdateMetadataParams(TypedDict, total=False):
     - Object: set pinning configuration
     """
 
+    read_only: bool
+    """Set to `true` to reject document and schema writes, or `false` to allow them.
+
+    Writes already in progress may still commit. Metadata updates remain available.
+    """
+
 
 Pinning: TypeAlias = Union[bool, PinningConfigParam]

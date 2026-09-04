@@ -494,6 +494,7 @@ class TestNamespaces:
         namespace = client.namespace("namespace").update_metadata(
             namespace="namespace",
             pinning=True,
+            read_only=True,
         )
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
@@ -1123,6 +1124,7 @@ class TestAsyncNamespaces:
     async def test_method_update_metadata_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
         namespace = await async_client.namespace("namespace").update_metadata(
             pinning=True,
+            read_only=True,
         )
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
