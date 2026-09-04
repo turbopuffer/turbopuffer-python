@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.10.0 (2026-09-04)
+
+Full Changelog: [v2.9.0...v2.10.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.9.0...v2.10.0)
+
+### Features
+
+* Add `read_only` namespace field ([691d1ee](https://github.com/turbopuffer/turbopuffer-python/commit/691d1ee1399f85e11cf37eff912f4f0b6fd5e83d))
+* tpuf-engine: expose billed_replicas in pinning metadata ([0fd8f32](https://github.com/turbopuffer/turbopuffer-python/commit/0fd8f323217273d9a22e0f6765621b6dc237ce7b))
+
 ## 2.9.0 (2026-08-21)
 
 Full Changelog: [v2.8.0...v2.9.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.8.0...v2.9.0)
