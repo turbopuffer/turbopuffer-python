@@ -94,6 +94,9 @@ class NamespaceMetadata(BaseModel):
     namespace.
     """
 
+    read_only: Optional[bool] = None
+    """Whether document and schema writes are rejected. Omitted when `false`."""
+
     sharding: Optional[ShardingConfig] = None
     """
     Configuration for namespace sharding, which partitions a namespace's documents

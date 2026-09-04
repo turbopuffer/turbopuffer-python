@@ -644,6 +644,7 @@ class NamespacesResource(SyncAPIResource):
         *,
         namespace: str | None = None,
         pinning: Optional[namespace_update_metadata_params.Pinning] | Omit = omit,
+        read_only: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -662,6 +663,9 @@ class NamespacesResource(SyncAPIResource):
               - `true`: enable pinning with default configuration
               - Object: set pinning configuration
 
+          read_only: Set to `true` to reject document and schema writes, or `false` to allow them.
+              Writes already in progress may still commit. Metadata updates remain available.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -676,7 +680,13 @@ class NamespacesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._patch(
             path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
-            body=maybe_transform({"pinning": pinning}, namespace_update_metadata_params.NamespaceUpdateMetadataParams),
+            body=maybe_transform(
+                {
+                    "pinning": pinning,
+                    "read_only": read_only,
+                },
+                namespace_update_metadata_params.NamespaceUpdateMetadataParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1430,6 +1440,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         *,
         namespace: str | None = None,
         pinning: Optional[namespace_update_metadata_params.Pinning] | Omit = omit,
+        read_only: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1448,6 +1459,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
               - `true`: enable pinning with default configuration
               - Object: set pinning configuration
 
+          read_only: Set to `true` to reject document and schema writes, or `false` to allow them.
+              Writes already in progress may still commit. Metadata updates remain available.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -1463,7 +1477,11 @@ class AsyncNamespacesResource(AsyncAPIResource):
         return await self._patch(
             path_template("/v1/namespaces/{namespace}/metadata", namespace=namespace),
             body=await async_maybe_transform(
-                {"pinning": pinning}, namespace_update_metadata_params.NamespaceUpdateMetadataParams
+                {
+                    "pinning": pinning,
+                    "read_only": read_only,
+                },
+                namespace_update_metadata_params.NamespaceUpdateMetadataParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
