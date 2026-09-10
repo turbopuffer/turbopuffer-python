@@ -224,6 +224,7 @@ class NamespacesResource(SyncAPIResource):
         group_by: Iterable[object] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
         limit: namespace_explain_query_params.Limit | Omit = omit,
+        offset: int | Omit = omit,
         rank_by: object | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
@@ -262,6 +263,9 @@ class NamespacesResource(SyncAPIResource):
 
           limit: Limits the documents returned by a query.
 
+          offset: Number of documents to skip before returning results. Supported only in v2
+              queries with an explicit `rank_by` and `top_k` or `limit`.
+
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
@@ -293,6 +297,7 @@ class NamespacesResource(SyncAPIResource):
                     "group_by": group_by,
                     "include_attributes": include_attributes,
                     "limit": limit,
+                    "offset": offset,
                     "rank_by": rank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
@@ -382,6 +387,7 @@ class NamespacesResource(SyncAPIResource):
         queries: Iterable[namespace_multi_query_params.Query],
         consistency: namespace_multi_query_params.Consistency | Omit = omit,
         limit: namespace_multi_query_params.Limit | Omit = omit,
+        offset: int | Omit = omit,
         rerank_by: object | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -398,6 +404,9 @@ class NamespacesResource(SyncAPIResource):
           consistency: The consistency level for a query.
 
           limit: Limits the total number of reranked documents returned.
+
+          offset: Number of reranked documents to skip before returning results. Requires
+              `rerank_by` and `limit`.
 
           rerank_by: How to combine the rows returned by each sub-query into a single ranked list.
 
@@ -422,6 +431,7 @@ class NamespacesResource(SyncAPIResource):
                     "queries": queries,
                     "consistency": consistency,
                     "limit": limit,
+                    "offset": offset,
                     "rerank_by": rerank_by,
                     "vector_encoding": vector_encoding,
                 },
@@ -446,6 +456,7 @@ class NamespacesResource(SyncAPIResource):
         group_by: Iterable[object] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
         limit: namespace_query_params.Limit | Omit = omit,
+        offset: int | Omit = omit,
         rank_by: object | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
@@ -484,6 +495,9 @@ class NamespacesResource(SyncAPIResource):
 
           limit: Limits the documents returned by a query.
 
+          offset: Number of documents to skip before returning results. Supported only in v2
+              queries with an explicit `rank_by` and `top_k` or `limit`.
+
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
@@ -515,6 +529,7 @@ class NamespacesResource(SyncAPIResource):
                     "group_by": group_by,
                     "include_attributes": include_attributes,
                     "limit": limit,
+                    "offset": offset,
                     "rank_by": rank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
@@ -1008,6 +1023,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         group_by: Iterable[object] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
         limit: namespace_explain_query_params.Limit | Omit = omit,
+        offset: int | Omit = omit,
         rank_by: object | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
@@ -1046,6 +1062,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           limit: Limits the documents returned by a query.
 
+          offset: Number of documents to skip before returning results. Supported only in v2
+              queries with an explicit `rank_by` and `top_k` or `limit`.
+
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
@@ -1077,6 +1096,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "group_by": group_by,
                     "include_attributes": include_attributes,
                     "limit": limit,
+                    "offset": offset,
                     "rank_by": rank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
@@ -1166,6 +1186,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         queries: Iterable[namespace_multi_query_params.Query],
         consistency: namespace_multi_query_params.Consistency | Omit = omit,
         limit: namespace_multi_query_params.Limit | Omit = omit,
+        offset: int | Omit = omit,
         rerank_by: object | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1182,6 +1203,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
           consistency: The consistency level for a query.
 
           limit: Limits the total number of reranked documents returned.
+
+          offset: Number of reranked documents to skip before returning results. Requires
+              `rerank_by` and `limit`.
 
           rerank_by: How to combine the rows returned by each sub-query into a single ranked list.
 
@@ -1206,6 +1230,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "queries": queries,
                     "consistency": consistency,
                     "limit": limit,
+                    "offset": offset,
                     "rerank_by": rerank_by,
                     "vector_encoding": vector_encoding,
                 },
@@ -1230,6 +1255,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         group_by: Iterable[object] | Omit = omit,
         include_attributes: IncludeAttributesParam | Omit = omit,
         limit: namespace_query_params.Limit | Omit = omit,
+        offset: int | Omit = omit,
         rank_by: object | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
@@ -1268,6 +1294,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           limit: Limits the documents returned by a query.
 
+          offset: Number of documents to skip before returning results. Supported only in v2
+              queries with an explicit `rank_by` and `top_k` or `limit`.
+
           rank_by: How to rank the documents in the namespace.
 
           top_k: The number of results to return.
@@ -1299,6 +1328,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "group_by": group_by,
                     "include_attributes": include_attributes,
                     "limit": limit,
+                    "offset": offset,
                     "rank_by": rank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
