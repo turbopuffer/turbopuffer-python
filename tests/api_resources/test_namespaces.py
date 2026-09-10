@@ -179,6 +179,7 @@ class TestNamespaces:
             exclude_attributes=["string"],
             include_attributes=True,
             limit=0,
+            offset=0,
             top_k=0,
             vector_encoding="float",
         )
@@ -302,12 +303,14 @@ class TestNamespaces:
                     "exclude_attributes": ["string"],
                     "include_attributes": True,
                     "limit": 0,
+                    "offset": 0,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
                 }
             ],
             consistency={"level": "strong"},
             limit=0,
+            offset=0,
             rerank_by=("RRF",),
             vector_encoding="float",
         )
@@ -367,6 +370,7 @@ class TestNamespaces:
             exclude_attributes=["string"],
             include_attributes=True,
             limit=0,
+            offset=0,
             rank_by=("id", "asc"),
             top_k=0,
             vector_encoding="float",
@@ -808,6 +812,7 @@ class TestAsyncNamespaces:
             exclude_attributes=["string"],
             include_attributes=True,
             limit=0,
+            offset=0,
             top_k=0,
             vector_encoding="float",
         )
@@ -934,12 +939,14 @@ class TestAsyncNamespaces:
                     "exclude_attributes": ["string"],
                     "include_attributes": True,
                     "limit": 0,
+                    "offset": 0,
                     "rank_by": ("id", "asc"),
                     "top_k": 0,
                 }
             ],
             consistency={"level": "strong"},
             limit=0,
+            offset=0,
             rerank_by=("RRF",),
             vector_encoding="float",
         )
@@ -999,6 +1006,7 @@ class TestAsyncNamespaces:
             exclude_attributes=["string"],
             include_attributes=True,
             limit=0,
+            offset=0,
             rank_by=("id", "asc"),
             top_k=0,
             vector_encoding="float",
