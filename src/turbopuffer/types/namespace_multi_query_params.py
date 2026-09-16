@@ -10,9 +10,10 @@ from .._types import SequenceNotStr
 from .limit_param import LimitParam
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
+from .rerank_limit_param import RerankLimitParam
 from .include_attributes_param import IncludeAttributesParam
 
-__all__ = ["NamespaceMultiQueryParams", "Query", "QueryLimit", "Consistency", "Limit", "LimitTotal"]
+__all__ = ["NamespaceMultiQueryParams", "Query", "QueryLimit", "Consistency", "Limit"]
 
 
 class NamespaceMultiQueryParams(TypedDict, total=False):
@@ -111,8 +112,4 @@ class Consistency(TypedDict, total=False):
     """
 
 
-class LimitTotal(TypedDict, total=False):
-    total: Required[int]
-
-
-Limit: TypeAlias = Union[int, LimitTotal]
+Limit: TypeAlias = Union[int, RerankLimitParam]
