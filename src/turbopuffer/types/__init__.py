@@ -34,6 +34,7 @@ from .query_performance import QueryPerformance as QueryPerformance
 from .write_performance import WritePerformance as WritePerformance
 from .bm25_clause_params import Bm25ClauseParams as Bm25ClauseParams
 from .namespace_metadata import NamespaceMetadata as NamespaceMetadata
+from .rerank_limit_param import RerankLimitParam as RerankLimitParam
 from .pinning_config_param import PinningConfigParam as PinningConfigParam
 from .attribute_embed_param import AttributeEmbedParam as AttributeEmbedParam
 from .highlight_fragment_by import HighlightFragmentBy as HighlightFragmentBy
