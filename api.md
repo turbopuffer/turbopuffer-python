@@ -49,6 +49,7 @@ from turbopuffer.types import (
     PinningConfig,
     QueryBilling,
     QueryPerformance,
+    RerankLimit,
     Row,
     RrfParams,
     SaturateParams,
