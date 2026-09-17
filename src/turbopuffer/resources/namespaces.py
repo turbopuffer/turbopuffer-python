@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable, Optional
+from typing import Any, Dict, Iterable, Optional, cast
 
 import httpx
 
@@ -19,6 +19,7 @@ from ..types import (
     namespace_multi_query_params,
     namespace_explain_query_params,
     namespace_update_schema_params,
+    namespace_start_copy_from_params,
     namespace_update_metadata_params,
 )
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
@@ -49,12 +50,14 @@ from ..types.namespace_schema_response import NamespaceSchemaResponse
 from ..types.copy_from_namespace_params import CopyFromNamespaceParams
 from ..types.branch_from_namespace_params import BranchFromNamespaceParams
 from ..types.namespace_copy_from_response import NamespaceCopyFromResponse
+from ..types.copy_from_namespace_operation import CopyFromNamespaceOperation
 from ..types.namespace_delete_all_response import NamespaceDeleteAllResponse
 from ..types.namespace_branch_from_response import NamespaceBranchFromResponse
 from ..types.namespace_multi_query_response import NamespaceMultiQueryResponse
 from ..types.namespace_explain_query_response import NamespaceExplainQueryResponse
 from ..types.namespace_update_schema_response import NamespaceUpdateSchemaResponse
 from ..types.namespace_hint_cache_warm_response import NamespaceHintCacheWarmResponse
+from ..types.namespace_start_copy_from_response import NamespaceStartCopyFromResponse
 
 __all__ = ["NamespacesResource", "AsyncNamespacesResource"]
 
@@ -443,6 +446,53 @@ class NamespacesResource(SyncAPIResource):
             cast_to=NamespaceMultiQueryResponse,
         )
 
+    def poll_copy_from(
+        self,
+        token: str,
+        *,
+        namespace: str | None = None,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CopyFromNamespaceOperation:
+        """
+        Retrieve the current status of a copy operation.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        if not token:
+            raise ValueError(f"Expected a non-empty value for `token` but received {token!r}")
+        return cast(
+            CopyFromNamespaceOperation,
+            self._get(
+                path_template(
+                    "/v1/namespaces/{namespace}/operations/{token}?stainless_overload=pollCopyFrom",
+                    namespace=namespace,
+                    token=token,
+                ),
+                options=make_request_options(
+                    extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                ),
+                cast_to=cast(
+                    Any, CopyFromNamespaceOperation
+                ),  # Union types cannot be passed in as arguments in the type system
+            ),
+        )
+
     def query(
         self,
         *,
@@ -638,6 +688,65 @@ class NamespacesResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NamespaceSchemaResponse,
+        )
+
+    def start_copy_from(
+        self,
+        *,
+        namespace: str | None = None,
+        source_namespace: str,
+        dest_encryption: EncryptionParam | Omit = omit,
+        source_api_key: str | Omit = omit,
+        source_region: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> NamespaceStartCopyFromResponse:
+        """Start copying all documents from another namespace into this one.
+
+        Returns an
+        operation token without waiting for the copy to finish. Use the token to poll
+        for progress and the result.
+
+        Args:
+          source_namespace: The namespace to copy documents from.
+
+          dest_encryption: (Optional) The encryption configuration for the destination namespace.
+
+          source_api_key: (Optional) An API key for the organization containing the source namespace
+
+          source_region: (Optional) The region of the source namespace.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._post(
+            path_template("/v2/namespaces/{namespace}/async?stainless_overload=startCopyFrom", namespace=namespace),
+            body=maybe_transform(
+                {
+                    "source_namespace": source_namespace,
+                    "dest_encryption": dest_encryption,
+                    "source_api_key": source_api_key,
+                    "source_region": source_region,
+                },
+                namespace_start_copy_from_params.NamespaceStartCopyFromParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceStartCopyFromResponse,
         )
 
     def update_metadata(
@@ -1242,6 +1351,53 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceMultiQueryResponse,
         )
 
+    async def poll_copy_from(
+        self,
+        token: str,
+        *,
+        namespace: str | None = None,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CopyFromNamespaceOperation:
+        """
+        Retrieve the current status of a copy operation.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        if not token:
+            raise ValueError(f"Expected a non-empty value for `token` but received {token!r}")
+        return cast(
+            CopyFromNamespaceOperation,
+            await self._get(
+                path_template(
+                    "/v1/namespaces/{namespace}/operations/{token}?stainless_overload=pollCopyFrom",
+                    namespace=namespace,
+                    token=token,
+                ),
+                options=make_request_options(
+                    extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                ),
+                cast_to=cast(
+                    Any, CopyFromNamespaceOperation
+                ),  # Union types cannot be passed in as arguments in the type system
+            ),
+        )
+
     async def query(
         self,
         *,
@@ -1437,6 +1593,65 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NamespaceSchemaResponse,
+        )
+
+    async def start_copy_from(
+        self,
+        *,
+        namespace: str | None = None,
+        source_namespace: str,
+        dest_encryption: EncryptionParam | Omit = omit,
+        source_api_key: str | Omit = omit,
+        source_region: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> NamespaceStartCopyFromResponse:
+        """Start copying all documents from another namespace into this one.
+
+        Returns an
+        operation token without waiting for the copy to finish. Use the token to poll
+        for progress and the result.
+
+        Args:
+          source_namespace: The namespace to copy documents from.
+
+          dest_encryption: (Optional) The encryption configuration for the destination namespace.
+
+          source_api_key: (Optional) An API key for the organization containing the source namespace
+
+          source_region: (Optional) The region of the source namespace.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._post(
+            path_template("/v2/namespaces/{namespace}/async?stainless_overload=startCopyFrom", namespace=namespace),
+            body=await async_maybe_transform(
+                {
+                    "source_namespace": source_namespace,
+                    "dest_encryption": dest_encryption,
+                    "source_api_key": source_api_key,
+                    "source_region": source_region,
+                },
+                namespace_start_copy_from_params.NamespaceStartCopyFromParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=NamespaceStartCopyFromResponse,
         )
 
     async def update_metadata(
@@ -1682,6 +1897,9 @@ class NamespacesResourceWithRawResponse:
         self.multi_query = to_raw_response_wrapper(
             namespaces.multi_query,
         )
+        self.poll_copy_from = to_raw_response_wrapper(
+            namespaces.poll_copy_from,
+        )
         self.query = to_raw_response_wrapper(
             namespaces.query,
         )
@@ -1690,6 +1908,9 @@ class NamespacesResourceWithRawResponse:
         )
         self.schema = to_raw_response_wrapper(
             namespaces.schema,
+        )
+        self.start_copy_from = to_raw_response_wrapper(
+            namespaces.start_copy_from,
         )
         self.update_metadata = to_raw_response_wrapper(
             namespaces.update_metadata,
@@ -1727,6 +1948,9 @@ class AsyncNamespacesResourceWithRawResponse:
         self.multi_query = async_to_raw_response_wrapper(
             namespaces.multi_query,
         )
+        self.poll_copy_from = async_to_raw_response_wrapper(
+            namespaces.poll_copy_from,
+        )
         self.query = async_to_raw_response_wrapper(
             namespaces.query,
         )
@@ -1735,6 +1959,9 @@ class AsyncNamespacesResourceWithRawResponse:
         )
         self.schema = async_to_raw_response_wrapper(
             namespaces.schema,
+        )
+        self.start_copy_from = async_to_raw_response_wrapper(
+            namespaces.start_copy_from,
         )
         self.update_metadata = async_to_raw_response_wrapper(
             namespaces.update_metadata,
@@ -1772,6 +1999,9 @@ class NamespacesResourceWithStreamingResponse:
         self.multi_query = to_streamed_response_wrapper(
             namespaces.multi_query,
         )
+        self.poll_copy_from = to_streamed_response_wrapper(
+            namespaces.poll_copy_from,
+        )
         self.query = to_streamed_response_wrapper(
             namespaces.query,
         )
@@ -1780,6 +2010,9 @@ class NamespacesResourceWithStreamingResponse:
         )
         self.schema = to_streamed_response_wrapper(
             namespaces.schema,
+        )
+        self.start_copy_from = to_streamed_response_wrapper(
+            namespaces.start_copy_from,
         )
         self.update_metadata = to_streamed_response_wrapper(
             namespaces.update_metadata,
@@ -1817,6 +2050,9 @@ class AsyncNamespacesResourceWithStreamingResponse:
         self.multi_query = async_to_streamed_response_wrapper(
             namespaces.multi_query,
         )
+        self.poll_copy_from = async_to_streamed_response_wrapper(
+            namespaces.poll_copy_from,
+        )
         self.query = async_to_streamed_response_wrapper(
             namespaces.query,
         )
@@ -1825,6 +2061,9 @@ class AsyncNamespacesResourceWithStreamingResponse:
         )
         self.schema = async_to_streamed_response_wrapper(
             namespaces.schema,
+        )
+        self.start_copy_from = async_to_streamed_response_wrapper(
+            namespaces.start_copy_from,
         )
         self.update_metadata = async_to_streamed_response_wrapper(
             namespaces.update_metadata,
