@@ -17,6 +17,7 @@ from .decay_params import DecayParams as DecayParams
 from .embed_params import EmbedParams as EmbedParams
 from .fuzzy_params import FuzzyParams as FuzzyParams
 from .vector_param import VectorParam as VectorParam
+from .write_result import WriteResult as WriteResult
 from .columns_param import ColumnsParam as ColumnsParam
 from .query_billing import QueryBilling as QueryBilling
 from .write_billing import WriteBilling as WriteBilling
@@ -24,6 +25,7 @@ from .attribute_type import AttributeType as AttributeType
 from .pinning_config import PinningConfig as PinningConfig
 from .attribute_embed import AttributeEmbed as AttributeEmbed
 from .distance_metric import DistanceMetric as DistanceMetric
+from .operation_error import OperationError as OperationError
 from .saturate_params import SaturateParams as SaturateParams
 from .sharding_config import ShardingConfig as ShardingConfig
 from .vector_encoding import VectorEncoding as VectorEncoding
@@ -65,6 +67,7 @@ from .namespace_branch_from_params import NamespaceBranchFromParams as Namespace
 from .namespace_copy_from_response import NamespaceCopyFromResponse as NamespaceCopyFromResponse
 from .namespace_multi_query_params import NamespaceMultiQueryParams as NamespaceMultiQueryParams
 from .attribute_schema_config_param import AttributeSchemaConfigParam as AttributeSchemaConfigParam
+from .copy_from_namespace_operation import CopyFromNamespaceOperation as CopyFromNamespaceOperation
 from .full_text_search_config_param import FullTextSearchConfigParam as FullTextSearchConfigParam
 from .fuzzy_max_edit_distance_param import FuzzyMaxEditDistanceParam as FuzzyMaxEditDistanceParam
 from .namespace_delete_all_response import NamespaceDeleteAllResponse as NamespaceDeleteAllResponse
@@ -74,7 +77,10 @@ from .namespace_multi_query_response import NamespaceMultiQueryResponse as Names
 from .namespace_update_schema_params import NamespaceUpdateSchemaParams as NamespaceUpdateSchemaParams
 from .contains_any_token_filter_params import ContainsAnyTokenFilterParams as ContainsAnyTokenFilterParams
 from .namespace_explain_query_response import NamespaceExplainQueryResponse as NamespaceExplainQueryResponse
+from .namespace_start_copy_from_params import NamespaceStartCopyFromParams as NamespaceStartCopyFromParams
 from .namespace_update_metadata_params import NamespaceUpdateMetadataParams as NamespaceUpdateMetadataParams
 from .namespace_update_schema_response import NamespaceUpdateSchemaResponse as NamespaceUpdateSchemaResponse
 from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams as ContainsAllTokensFilterParams
 from .namespace_hint_cache_warm_response import NamespaceHintCacheWarmResponse as NamespaceHintCacheWarmResponse
+from .namespace_start_copy_from_response import NamespaceStartCopyFromResponse as NamespaceStartCopyFromResponse
+from .copy_from_namespace_operation_result import CopyFromNamespaceOperationResult as CopyFromNamespaceOperationResult
