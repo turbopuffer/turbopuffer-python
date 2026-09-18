@@ -748,15 +748,17 @@ class NamespacesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             path_template("/v2/namespaces/{namespace}/async?stainless_overload=startCopyFrom", namespace=namespace),
-            body=maybe_transform(
-                {
-                    "source_namespace": source_namespace,
-                    "dest_encryption": dest_encryption,
-                    "source_api_key": source_api_key,
-                    "source_region": source_region,
-                },
-                namespace_start_copy_from_params.NamespaceStartCopyFromParams,
-            ),
+            body={
+                "copy_from_namespace": maybe_transform(
+                    {
+                        "source_namespace": source_namespace,
+                        "dest_encryption": dest_encryption,
+                        "source_api_key": source_api_key,
+                        "source_region": source_region,
+                    },
+                    namespace_start_copy_from_params.NamespaceStartCopyFromParams,
+                )
+            },
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1665,15 +1667,17 @@ class AsyncNamespacesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             path_template("/v2/namespaces/{namespace}/async?stainless_overload=startCopyFrom", namespace=namespace),
-            body=await async_maybe_transform(
-                {
-                    "source_namespace": source_namespace,
-                    "dest_encryption": dest_encryption,
-                    "source_api_key": source_api_key,
-                    "source_region": source_region,
-                },
-                namespace_start_copy_from_params.NamespaceStartCopyFromParams,
-            ),
+            body={
+                "copy_from_namespace": await async_maybe_transform(
+                    {
+                        "source_namespace": source_namespace,
+                        "dest_encryption": dest_encryption,
+                        "source_api_key": source_api_key,
+                        "source_region": source_region,
+                    },
+                    namespace_start_copy_from_params.NamespaceStartCopyFromParams,
+                )
+            },
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
