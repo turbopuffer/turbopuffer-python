@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.10.0 (2026-09-18)
+
+Full Changelog: [v2.9.0...v2.10.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.9.0...v2.10.0)
+
+### Features
+
+* Add `read_only` namespace field ([691d1ee](https://github.com/turbopuffer/turbopuffer-python/commit/691d1ee1399f85e11cf37eff912f4f0b6fd5e83d))
+* **api:** Merge remote-tracking branch 'origin/preview/benesch/named-rerank-limit-schema' ([0d8c758](https://github.com/turbopuffer/turbopuffer-python/commit/0d8c75863fb8c6867579394e54ca6cd127edb595))
+* engine,openapi: async copy_from_namespace endpoints ([06504b3](https://github.com/turbopuffer/turbopuffer-python/commit/06504b3efd1dcb19ac082e8060a3646326a52422))
+* tpuf-engine: Adding pagination through `offset` ([c9335d1](https://github.com/turbopuffer/turbopuffer-python/commit/c9335d187283d42864ebe7c52dfa3e93905ca482))
+* tpuf-engine: expose billed_replicas in pinning metadata ([0fd8f32](https://github.com/turbopuffer/turbopuffer-python/commit/0fd8f323217273d9a22e0f6765621b6dc237ce7b))
+
+
+### Bug Fixes
+
+* correct namespace tests and async copy requests ([#262](https://github.com/turbopuffer/turbopuffer-python/issues/262)) ([0bacaaa](https://github.com/turbopuffer/turbopuffer-python/commit/0bacaaa3a74354a1b93d7a23808970082ed6788d))
+
 ## 2.9.0 (2026-08-21)
 
 Full Changelog: [v2.8.0...v2.9.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.8.0...v2.9.0)
