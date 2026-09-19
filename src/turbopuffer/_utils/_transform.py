@@ -102,7 +102,8 @@ def _vector_keys_from_write_body(data: object) -> frozenset[str]:
     """Attribute names that should be base64-encoded as vectors.
 
     Always includes ``vector`` (auto-inferred by the API). When a write body
-    includes ``schema``, also includes attributes with ``ann``.
+    includes ``schema``, also includes attributes with ``ann``, except vector
+    arrays.
     """
     keys: set[str] = {"vector"}
     if not isinstance(data, dict):
@@ -111,6 +112,10 @@ def _vector_keys_from_write_body(data: object) -> frozenset[str]:
     if isinstance(schema, dict):
         for name, attr_schema in cast(dict[str, object], schema).items():
             if _is_vector_attribute_schema(attr_schema):
+                # Exclude vector arrays, they don't support base64 encoding yet.
+                attr_type = cast(dict[str, object], attr_schema).get("type")
+                if isinstance(attr_type, str) and attr_type.startswith("[]"):
+                    continue
                 keys.add(name)
     return frozenset(keys)
 
