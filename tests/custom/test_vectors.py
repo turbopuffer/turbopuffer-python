@@ -579,6 +579,8 @@ def test_transparent_vector_encoding():
                 "title_embedding": [0.1, 0.2, 0.3],
                 "image_embedding": [0.4, 0.5],
                 "other_embedding": [0.6, 0.7, 0.8],
+                "tokens_f32": [[0.1, 1.0], [-1.0, 0.2]],
+                "tokens_f16": [[0.1, 1.0], [-1.0, 0.2]],
                 "title": "hello",
             }
         ],
@@ -586,6 +588,8 @@ def test_transparent_vector_encoding():
             "title_embedding": {"type": "[3]f32", "ann": True},
             "image_embedding": {"type": "[2]f16", "ann": True},
             "other_embedding": {"type": "[3]f32", "ann": False},
+            "tokens_f32": {"type": "[][2]f32", "ann": {"late_interaction": True}},
+            "tokens_f16": {"type": "[][2]f16", "ann": {"late_interaction": True}},
         },
     }
     transformed = transform(body, NamespaceWriteParams)
@@ -596,6 +600,8 @@ def test_transparent_vector_encoding():
                 "title_embedding": "zczMPc3MTD6amZk+",
                 "image_embedding": b64encode_vector([0.4, 0.5]),
                 "other_embedding": [0.6, 0.7, 0.8],
+                "tokens_f32": [[0.1, 1.0], [-1.0, 0.2]],
+                "tokens_f16": [[0.1, 1.0], [-1.0, 0.2]],
                 "title": "hello",
             }
         ],
@@ -603,6 +609,8 @@ def test_transparent_vector_encoding():
             "title_embedding": {"type": "[3]f32", "ann": True},
             "image_embedding": {"type": "[2]f16", "ann": True},
             "other_embedding": {"type": "[3]f32", "ann": False},
+            "tokens_f32": {"type": "[][2]f32", "ann": {"late_interaction": True}},
+            "tokens_f16": {"type": "[][2]f16", "ann": {"late_interaction": True}},
         },
     }
 
@@ -639,6 +647,8 @@ async def test_transparent_vector_encoding_async():
                 "title_embedding": [0.1, 0.2, 0.3],
                 "image_embedding": [0.4, 0.5],
                 "other_embedding": [0.6, 0.7, 0.8],
+                "tokens_f32": [[0.1, 1.0], [-1.0, 0.2]],
+                "tokens_f16": [[0.1, 1.0], [-1.0, 0.2]],
                 "title": "hello",
             }
         ],
@@ -646,6 +656,8 @@ async def test_transparent_vector_encoding_async():
             "title_embedding": {"type": "[3]f32", "ann": True},
             "image_embedding": {"type": "[2]f16", "ann": True},
             "other_embedding": {"type": "[3]f32", "ann": False},
+            "tokens_f32": {"type": "[][2]f32", "ann": {"late_interaction": True}},
+            "tokens_f16": {"type": "[][2]f16", "ann": {"late_interaction": True}},
         },
     }
     transformed = await async_transform(body, NamespaceWriteParams)
@@ -656,6 +668,8 @@ async def test_transparent_vector_encoding_async():
                 "title_embedding": "zczMPc3MTD6amZk+",
                 "image_embedding": b64encode_vector([0.4, 0.5]),
                 "other_embedding": [0.6, 0.7, 0.8],
+                "tokens_f32": [[0.1, 1.0], [-1.0, 0.2]],
+                "tokens_f16": [[0.1, 1.0], [-1.0, 0.2]],
                 "title": "hello",
             }
         ],
@@ -663,6 +677,8 @@ async def test_transparent_vector_encoding_async():
             "title_embedding": {"type": "[3]f32", "ann": True},
             "image_embedding": {"type": "[2]f16", "ann": True},
             "other_embedding": {"type": "[3]f32", "ann": False},
+            "tokens_f32": {"type": "[][2]f32", "ann": {"late_interaction": True}},
+            "tokens_f16": {"type": "[][2]f16", "ann": {"late_interaction": True}},
         },
     }
 
