@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.10.1 (2026-09-19)
+
+Full Changelog: [v2.10.0...v2.10.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.10.0...v2.10.1)
+
+### Bug Fixes
+
+* don't base64-encode vector arrays ([#263](https://github.com/turbopuffer/turbopuffer-python/issues/263)) ([fc1525d](https://github.com/turbopuffer/turbopuffer-python/commit/fc1525d27465e9ca47d64639b0802023c68a1abb))
+
 ## 2.10.0 (2026-09-18)
 
 Full Changelog: [v2.9.0...v2.10.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.9.0...v2.10.0)
