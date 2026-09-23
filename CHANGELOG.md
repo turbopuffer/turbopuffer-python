@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.10.2 (2026-09-23)
+
+Full Changelog: [v2.10.1...v2.10.2](https://github.com/turbopuffer/turbopuffer-python/compare/v2.10.1...v2.10.2)
+
+### Bug Fixes
+
+* restore write encoding perf by encoding vectors before transform walk ([#266](https://github.com/turbopuffer/turbopuffer-python/issues/266)) ([0ad433e](https://github.com/turbopuffer/turbopuffer-python/commit/0ad433e82a6d2b89e068b9b56c3ed7c1e36ccaf8))
+
 ## 2.10.1 (2026-09-19)
 
 Full Changelog: [v2.10.0...v2.10.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.10.0...v2.10.1)
