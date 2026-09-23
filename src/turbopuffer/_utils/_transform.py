@@ -182,10 +182,11 @@ def transform(
     It should be noted that the transformations that this function does are not represented in the type system.
     """
     # turbopuffer: Use simple vector encoding instead of generic type-based transform.
-    data = cast(_T, _turbopuffer_transform(data))
+    # Encode vectors before walking the body so the walk sees one base64 string
+    # per vector instead of recursing into every float.
     if expected_type is NamespaceWriteParams:
-        return cast(_T, _encode_write_vectors(data))
-    return data
+        data = cast(_T, _encode_write_vectors(data))
+    return cast(_T, _turbopuffer_transform(data))
 
 
 @lru_cache(maxsize=8096)
@@ -404,10 +405,11 @@ async def async_transform(
     It should be noted that the transformations that this function does are not represented in the type system.
     """
     # turbopuffer: Use simple vector encoding instead of generic type-based transform.
-    data = cast(_T, _turbopuffer_transform(data))
+    # Encode vectors before walking the body so the walk sees one base64 string
+    # per vector instead of recursing into every float.
     if expected_type is NamespaceWriteParams:
-        return cast(_T, _encode_write_vectors(data))
-    return data
+        data = cast(_T, _encode_write_vectors(data))
+    return cast(_T, _turbopuffer_transform(data))
 
 
 async def _async_transform_recursive(
