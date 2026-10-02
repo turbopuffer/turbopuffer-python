@@ -24,10 +24,8 @@ class NamespaceWriteParams(TypedDict, total=False):
     namespace: str
 
     branch_from_namespace: BranchFromNamespaceParams
-    """The namespace to create an instant, copy-on-write clone of."""
 
     copy_from_namespace: CopyFromNamespaceParams
-    """The namespace to copy documents from."""
 
     delete_by_filter: Union[Filter, Omit]
     """The filter specifying which documents to delete."""
