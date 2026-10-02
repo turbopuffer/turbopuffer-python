@@ -893,6 +893,10 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
+          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+
+          copy_from_namespace: The namespace to copy documents from.
+
           delete_by_filter: The filter specifying which documents to delete.
 
           delete_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
@@ -1808,6 +1812,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
+          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+
+          copy_from_namespace: The namespace to copy documents from.
+
           delete_by_filter: The filter specifying which documents to delete.
 
           delete_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
