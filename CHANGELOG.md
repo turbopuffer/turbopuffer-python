@@ -1,0 +1,1441 @@
+# Changelog
+
+## 2.10.2 (2026-09-23)
+
+Full Changelog: [v2.10.1...v2.10.2](https://github.com/turbopuffer/turbopuffer-python/compare/v2.10.1...v2.10.2)
+
+### Bug Fixes
+
+* restore write encoding perf by encoding vectors before transform walk ([#266](https://github.com/turbopuffer/turbopuffer-python/issues/266)) ([0ad433e](https://github.com/turbopuffer/turbopuffer-python/commit/0ad433e82a6d2b89e068b9b56c3ed7c1e36ccaf8))
+
+## 2.10.1 (2026-09-19)
+
+Full Changelog: [v2.10.0...v2.10.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.10.0...v2.10.1)
+
+### Bug Fixes
+
+* don't base64-encode vector arrays ([#263](https://github.com/turbopuffer/turbopuffer-python/issues/263)) ([fc1525d](https://github.com/turbopuffer/turbopuffer-python/commit/fc1525d27465e9ca47d64639b0802023c68a1abb))
+
+## 2.10.0 (2026-09-18)
+
+Full Changelog: [v2.9.0...v2.10.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.9.0...v2.10.0)
+
+### Features
+
+* Add `read_only` namespace field ([691d1ee](https://github.com/turbopuffer/turbopuffer-python/commit/691d1ee1399f85e11cf37eff912f4f0b6fd5e83d))
+* **api:** Merge remote-tracking branch 'origin/preview/benesch/named-rerank-limit-schema' ([0d8c758](https://github.com/turbopuffer/turbopuffer-python/commit/0d8c75863fb8c6867579394e54ca6cd127edb595))
+* engine,openapi: async copy_from_namespace endpoints ([06504b3](https://github.com/turbopuffer/turbopuffer-python/commit/06504b3efd1dcb19ac082e8060a3646326a52422))
+* tpuf-engine: Adding pagination through `offset` ([c9335d1](https://github.com/turbopuffer/turbopuffer-python/commit/c9335d187283d42864ebe7c52dfa3e93905ca482))
+* tpuf-engine: expose billed_replicas in pinning metadata ([0fd8f32](https://github.com/turbopuffer/turbopuffer-python/commit/0fd8f323217273d9a22e0f6765621b6dc237ce7b))
+
+
+### Bug Fixes
+
+* correct namespace tests and async copy requests ([#262](https://github.com/turbopuffer/turbopuffer-python/issues/262)) ([0bacaaa](https://github.com/turbopuffer/turbopuffer-python/commit/0bacaaa3a74354a1b93d7a23808970082ed6788d))
+
+## 2.9.0 (2026-08-21)
+
+Full Changelog: [v2.8.0...v2.9.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.8.0...v2.9.0)
+
+### Features
+
+* Apply limit on rerank_by when provided ([87ffb55](https://github.com/turbopuffer/turbopuffer-python/commit/87ffb554f68378ea8fac55d4dd9914bb1ab43c9b))
+* encode multi-vector attrs ([#258](https://github.com/turbopuffer/turbopuffer-python/issues/258)) ([712b379](https://github.com/turbopuffer/turbopuffer-python/commit/712b37961e35e15036fba2d16cd2f79be07a86c0))
+
+## 2.8.0 (2026-08-04)
+
+Full Changelog: [v2.7.1...v2.8.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.7.1...v2.8.0)
+
+### Features
+
+* spec: no-op change to Stainless spec ([00d0294](https://github.com/turbopuffer/turbopuffer-python/commit/00d02945a32f401c74c36fc8f3ac5a49eb487c76))
+
+
+### Bug Fixes
+
+* **client:** thread all transport kwargs into the sync transport ([#255](https://github.com/turbopuffer/turbopuffer-python/issues/255)) ([e49d583](https://github.com/turbopuffer/turbopuffer-python/commit/e49d583b87fa6282d9947b6d04a35c2f9eb2d85e))
+
+## 2.7.1 (2026-08-04)
+
+Full Changelog: [v2.7.0...v2.7.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.7.0...v2.7.1)
+
+### Bug Fixes
+
+* **client:** thread connection limits into the sync transport ([#252](https://github.com/turbopuffer/turbopuffer-python/issues/252)) ([05dd0a2](https://github.com/turbopuffer/turbopuffer-python/commit/05dd0a2ce3bc5c474fc5c33bdf5125f36443a608))
+
+## 2.7.0 (2026-07-30)
+
+Full Changelog: [v2.6.0...v2.7.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.6.0...v2.7.0)
+
+### Features
+
+* openapi: add RRF `weights` parameter ([6e7a690](https://github.com/turbopuffer/turbopuffer-python/commit/6e7a6901a25bbd1799a098a2fdca3b714b3f6aca))
+* spec: expose computed attributes ([8f30d04](https://github.com/turbopuffer/turbopuffer-python/commit/8f30d04b16666eaaab62e687616ad89941e2af8c))
+* spec: hide HighlightConfig.rank_fragments_by's RankBy ref from Stainless ([4499367](https://github.com/turbopuffer/turbopuffer-python/commit/4499367be3939095a589adedea9216e14d40b909))
+* spec: make compute_attributes value x-stainless-any ([bfbe79f](https://github.com/turbopuffer/turbopuffer-python/commit/bfbe79f29822e2476aede59daf6d45da50f68bec))
+* spec: rename HighlightConfig -&gt; HighlightConfigParams ([df57c87](https://github.com/turbopuffer/turbopuffer-python/commit/df57c87315e76ec65a3ef9c72b1a050f98d8c634))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([6db1360](https://github.com/turbopuffer/turbopuffer-python/commit/6db13603ee86578d58a52bc599547ac4f75fee2f))
+* type compute_attributes as the Expr union (turbopuffer[#10694](https://github.com/turbopuffer/turbopuffer-python/issues/10694)) ([#251](https://github.com/turbopuffer/turbopuffer-python/issues/251)) ([b90b3f1](https://github.com/turbopuffer/turbopuffer-python/commit/b90b3f12b6fc31c05746ac242e6618f827ec2f80))
+
+
+### Bug Fixes
+
+* **internal:** resolve build failures ([53ce6dd](https://github.com/turbopuffer/turbopuffer-python/commit/53ce6ddf14884821a1d3d760badef1ec558f4e09))
+
+
+### Chores
+
+* regenerate custom types for compute attributes ([#246](https://github.com/turbopuffer/turbopuffer-python/issues/246)) ([98a9d11](https://github.com/turbopuffer/turbopuffer-python/commit/98a9d1158c7a2f9e713a31197e293f65e69aee94))
+
+## 2.6.0 (2026-07-01)
+
+Full Changelog: [v2.5.0...v2.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.5.0...v2.6.0)
+
+### Features
+
+* spec: add sharding config to the openapi spec ([4169c37](https://github.com/turbopuffer/turbopuffer-python/commit/4169c37e08d7ab83c0dcd212fa22182dd0a117aa))
+* support late_interaction parameter in sdks ([93d0a4f](https://github.com/turbopuffer/turbopuffer-python/commit/93d0a4f43ec31a8fd304041b95d1f65deab5c83c))
+
+
+### Bug Fixes
+
+* **types:** avoid type-checker errors on params with additional properties ([9810813](https://github.com/turbopuffer/turbopuffer-python/commit/9810813c8ddcd0f365436da3c956e3d936bcb782))
+
+## 2.5.0 (2026-06-25)
+
+Full Changelog: [v2.4.0...v2.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.4.0...v2.5.0)
+
+### Features
+
+* tpuf-engine: support dest_encryption in copy_from_namespace ([3421ea0](https://github.com/turbopuffer/turbopuffer-python/commit/3421ea0ba6b98a2500e72dadd4e61aa4b0410f60))
+
+
+### Chores
+
+* remove unused MCP package ([e779eca](https://github.com/turbopuffer/turbopuffer-python/commit/e779eca3645e79cb84b065f2ca8de4eb0e755103))
+
+
+### Documentation
+
+* rename /docs/overview to /docs/api-overview ([68e7cd6](https://github.com/turbopuffer/turbopuffer-python/commit/68e7cd6fb1b073b5112def1ee4083f62ab994610))
+
+## 2.4.0 (2026-06-08)
+
+Full Changelog: [v2.3.0...v2.4.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.3.0...v2.4.0)
+
+### Features
+
+* stainless: update sdks to support case-insensitive fuzzy filter ([d25e35a](https://github.com/turbopuffer/turbopuffer-python/commit/d25e35a0a067a5fce5ea922f5b83aeeb3449515a))
+
+## 2.3.0 (2026-06-03)
+
+Full Changelog: [v2.3.0-alpha.1...v2.3.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.3.0-alpha.1...v2.3.0)
+
+### Features
+
+* spec: add support for word_v4 tokenizer ([5298db0](https://github.com/turbopuffer/turbopuffer-python/commit/5298db02c0c7f5b62c2229419e8deb6d44cb7041))
+
+## 2.3.0-alpha.1 (2026-06-02)
+
+Full Changelog: [v2.2.0...v2.3.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v2.2.0...v2.3.0-alpha.1)
+
+### Features
+
+* openapi: spec for `rerank_by: ["RRF"]` ([80ab218](https://github.com/turbopuffer/turbopuffer-python/commit/80ab218582e9b4e78dd9fca42cdce6f2a76761cf))
+* rename /docs/auth to /docs/overview ([1340eb1](https://github.com/turbopuffer/turbopuffer-python/commit/1340eb172500c78d9ce73bfe8ce557bcdb40c4d7))
+* spec: add SDK support for native embedding ([ca71729](https://github.com/turbopuffer/turbopuffer-python/commit/ca71729755294ed2eb073453e33baa8c89548063))
+
+
+### Bug Fixes
+
+* reject malicious poll locations ([#236](https://github.com/turbopuffer/turbopuffer-python/issues/236)) ([3f6123a](https://github.com/turbopuffer/turbopuffer-python/commit/3f6123a88c2c3795f9eb4da31ef66eaa9081db18))
+* type rerank_by parameter as RerankBy ([#239](https://github.com/turbopuffer/turbopuffer-python/issues/239)) ([6f07a95](https://github.com/turbopuffer/turbopuffer-python/commit/6f07a95860f5dff9b699776d7916606b5c6f7cab))
+
+
+### Chores
+
+* fix API docs links ([#235](https://github.com/turbopuffer/turbopuffer-python/issues/235)) ([204b46b](https://github.com/turbopuffer/turbopuffer-python/commit/204b46bf15c5694bdd38339b8471c46e16e697a0))
+
+## 2.2.0 (2026-05-28)
+
+Full Changelog: [v2.1.0...v2.2.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.1.0...v2.2.0)
+
+### Features
+
+* spec: force generation of FuzzyParams stainless models ([3613951](https://github.com/turbopuffer/turbopuffer-python/commit/3613951bca15c51bb6aa000b83a9e0f66709aa75))
+* transparent async polling ([953cdba](https://github.com/turbopuffer/turbopuffer-python/commit/953cdba54bcdd61c19f52cacdb25a6ea23553f7a))
+
+
+### Bug Fixes
+
+* exception type on missing respond-async Location header ([#233](https://github.com/turbopuffer/turbopuffer-python/issues/233)) ([affecc5](https://github.com/turbopuffer/turbopuffer-python/commit/affecc5aebdc4cb85c9cc5c1dfa8c5928d13c5e5))
+
+## 2.1.0 (2026-05-12)
+
+Full Changelog: [v2.0.0...v2.1.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0...v2.1.0)
+
+### Features
+
+* **internal/types:** support eagerly validating pydantic iterators ([75af483](https://github.com/turbopuffer/turbopuffer-python/commit/75af4834c7bb3173c3449e4c78c504d8d96724f4))
+
+## 2.0.0 (2026-05-11)
+
+Full Changelog: [v2.0.0-alpha.5...v2.0.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.5...v2.0.0)
+
+### Documentation
+
+* document v2.0 breaking changes in UPGRADING.md ([3302006](https://github.com/turbopuffer/turbopuffer-python/commit/33020064857687cac986fc61c56b9e29e38bcbfb))
+* drop RankByVector entry ([4f00d6c](https://github.com/turbopuffer/turbopuffer-python/commit/4f00d6c9daba4422b4d0209b3974615736f88b36))
+
+## 2.0.0-alpha.5 (2026-05-10)
+
+Full Changelog: [v2.0.0-alpha.4...v2.0.0-alpha.5](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.4...v2.0.0-alpha.5)
+
+## 2.0.0-alpha.4 (2026-05-10)
+
+Full Changelog: [v2.0.0-alpha.3...v2.0.0-alpha.4](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.3...v2.0.0-alpha.4)
+
+### Features
+
+* spec: rename RankByVector/RankBySparseVector to RankByAnn/RankBySparseKnn ([65257bc](https://github.com/turbopuffer/turbopuffer-python/commit/65257bcfdb45f117532e544f8d78cc6367ea5138))
+* spec: rename RankByVector/RankBySparseVector to RankByAnn/RankBySparseKnn ([6b944ec](https://github.com/turbopuffer/turbopuffer-python/commit/6b944ecdde33a848ddf2bc8d78de72abae8d0c6e))
+* type group_by as Iterable[GroupBy] ([0919d51](https://github.com/turbopuffer/turbopuffer-python/commit/0919d5116952442ceb731e0a392dfa078bbab637))
+
+
+### Bug Fixes
+
+* **client:** add missing f-string prefix in file type error message ([56c7f92](https://github.com/turbopuffer/turbopuffer-python/commit/56c7f924f08a4685936a12216bf84d77edbc2024))
+
+
+### Chores
+
+* regenerate custom types ([f2c7dc8](https://github.com/turbopuffer/turbopuffer-python/commit/f2c7dc8cccbaeb1d3037de89c6db59951b00f0f7))
+
+## 2.0.0-alpha.3 (2026-05-08)
+
+Full Changelog: [v2.0.0-alpha.2...v2.0.0-alpha.3](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.2...v2.0.0-alpha.3)
+
+### Features
+
+* spec: move update_metadata to v1 ([200a6fc](https://github.com/turbopuffer/turbopuffer-python/commit/200a6fcbfd00a6208d1b12089441e1f473f4e632))
+
+
+### Chores
+
+* **internal:** reformat pyproject.toml ([a1dca5f](https://github.com/turbopuffer/turbopuffer-python/commit/a1dca5f8fe0abaa481e7fc27cfbbedb589ba4605))
+
+## 2.0.0-alpha.2 (2026-04-29)
+
+Full Changelog: [v2.0.0-alpha.1...v2.0.0-alpha.2](https://github.com/turbopuffer/turbopuffer-python/compare/v2.0.0-alpha.1...v2.0.0-alpha.2)
+
+### Features
+
+* Spec: Add sparse_distance_metric to the list of models. ([c9d7dde](https://github.com/turbopuffer/turbopuffer-python/commit/c9d7dde5a010cd2268f4f9dbaf36dca9d88d2980))
+
+## 2.0.0-alpha.1 (2026-04-29)
+
+Full Changelog: [v1.21.0...v2.0.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.21.0...v2.0.0-alpha.1)
+
+### Features
+
+* Add sparse vectors to the spec. ([b9be640](https://github.com/turbopuffer/turbopuffer-python/commit/b9be640cf32568a6edf2815eefc739d2a929d24d))
+* Enable Stainless normalizer v2 while keeping Query inlined ([45eaa3b](https://github.com/turbopuffer/turbopuffer-python/commit/45eaa3b401fb941e9110828b128317f6bc2a58a4))
+* Require `fuzzy: true` in the schema to use the `Fuzzy` filter ([387f49d](https://github.com/turbopuffer/turbopuffer-python/commit/387f49d968523f8b3f6274daf73c5838a433d92c))
+* set up branchFrom and copyFrom sugar in the OpenAPI spec ([6a112be](https://github.com/turbopuffer/turbopuffer-python/commit/6a112be93eca200e88b3bcb6dad124d3f97423a5))
+* spec: flatten branchFrom/copyFrom sugar endpoint params ([983d0f3](https://github.com/turbopuffer/turbopuffer-python/commit/983d0f326f0ffd163a100dd28eea05b2916ae5a4))
+* spec: update OpenAPI spec for v2 encryption API ([f02ec25](https://github.com/turbopuffer/turbopuffer-python/commit/f02ec25191820038af3a16dbf4358628ad12dc98))
+* support setting headers via env ([7efc3a3](https://github.com/turbopuffer/turbopuffer-python/commit/7efc3a3e557e1c0e1ec22928dd26315a41267779))
+
+
+### Bug Fixes
+
+* **client:** preserve hardcoded query params when merging with user params ([4028c53](https://github.com/turbopuffer/turbopuffer-python/commit/4028c5337f511121aabb6cd89a4ec196be4c5d5e))
+* ensure file data are only sent as 1 parameter ([9d934db](https://github.com/turbopuffer/turbopuffer-python/commit/9d934dbd4ee5cb48ebc8279ccb884b5aed3d10ec))
+* use correct field name format for multipart file arrays ([9fd4add](https://github.com/turbopuffer/turbopuffer-python/commit/9fd4add819379e55dba411639a2bfac87915b955))
+
+
+### Performance Improvements
+
+* **client:** optimize file structure copying in multipart requests ([5a52127](https://github.com/turbopuffer/turbopuffer-python/commit/5a521279cfc10bd2b0437693e2bc1eaf830d0228))
+
+
+### Chores
+
+* **internal:** more robust bootstrap script ([42243d0](https://github.com/turbopuffer/turbopuffer-python/commit/42243d00e39ed8aa28ed7b39a2815dda64840886))
+
+## 1.21.0 (2026-04-07)
+
+Full Changelog: [v1.20.0...v1.21.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.20.0...v1.21.0)
+
+### Features
+
+* [TPUF-1097] tpuf: return failed IDs for conditional writes ([274882a](https://github.com/turbopuffer/turbopuffer-python/commit/274882a726a9183290ddb3798e91be6a873eff61))
+* add ContainsAnyToken and RankByKnn types ([d099bc4](https://github.com/turbopuffer/turbopuffer-python/commit/d099bc48d874179db31194975fcffdf509cdbfc9))
+* Add float, []float and []bool to the list of valid types in the OpenAPI spec. ([bb2e629](https://github.com/turbopuffer/turbopuffer-python/commit/bb2e629195771f66e97e0b54bd500bedb716abe6))
+* Add instructions to MCP server config ([efe05c6](https://github.com/turbopuffer/turbopuffer-python/commit/efe05c6a7e4a1a04851180eda7a106a51636766e))
+* Add ranking-by-attribute to the spec. ([72e62a7](https://github.com/turbopuffer/turbopuffer-python/commit/72e62a765590f0c229fc17e93154bc333a6b6511))
+* add support for `limit` query parameter ([b1aa74f](https://github.com/turbopuffer/turbopuffer-python/commit/b1aa74f0c17bf919e596f6018b74878adbf1ab81))
+* add update_metadata method to configure pinning ([68c6ea9](https://github.com/turbopuffer/turbopuffer-python/commit/68c6ea9b89cd6ae25aca9391f5d02df8ef4da7e5))
+* Add vector attribute schema to metadata endpoint ([c87e6f1](https://github.com/turbopuffer/turbopuffer-python/commit/c87e6f14bffbe3008d0f8077f89e7c40c50624df))
+* add WithParams variant to BM25 and ContainsAllTokens ([f3776a5](https://github.com/turbopuffer/turbopuffer-python/commit/f3776a546d6b91cc99677bd48cb269f4a6764eef))
+* Allow for a CMEK key to be specified in copy_from_namespace ([ff2c7e1](https://github.com/turbopuffer/turbopuffer-python/commit/ff2c7e1566bf8e6fae8711086bbe7343c236e5ef))
+* always install orjson, even without the [fast] extra ([#192](https://github.com/turbopuffer/turbopuffer-python/issues/192)) ([ae08f53](https://github.com/turbopuffer/turbopuffer-python/commit/ae08f53829d94453118da63b0801432129bc012a))
+* **api:** api update ([67dbc25](https://github.com/turbopuffer/turbopuffer-python/commit/67dbc25d7e90746773f570c5695df957966e24a9))
+* **api:** introduce dedicated Query model ([bc09dc2](https://github.com/turbopuffer/turbopuffer-python/commit/bc09dc28b8a548ae9a06b2cb54e3698e37e563df))
+* clean up environment call outs ([df0cf2f](https://github.com/turbopuffer/turbopuffer-python/commit/df0cf2f39dac18da8be4542fda21c42ed3d04009))
+* **client:** add custom JSON encoder for extended type support ([97e07e3](https://github.com/turbopuffer/turbopuffer-python/commit/97e07e38c9403ae3a31adb6bf625bd50d08c9e80))
+* **client:** add support for aiohttp ([a0a7b69](https://github.com/turbopuffer/turbopuffer-python/commit/a0a7b6918b309b7dccff4fda0ddbfaa7d082f1de))
+* **client:** add support for binary request streaming ([263636f](https://github.com/turbopuffer/turbopuffer-python/commit/263636fa5a337fabc6ef14770933f2a73efb6a1f))
+* **client:** support file upload requests ([656ce2a](https://github.com/turbopuffer/turbopuffer-python/commit/656ce2aa2046de0513d418bff1a246f2153b63e2))
+* ContainsAnyToken last_as_prefix docs ([1b567a9](https://github.com/turbopuffer/turbopuffer-python/commit/1b567a905769aa6ab80dec5b1edf9ecdc4b02838))
+* disable compression by default ([#190](https://github.com/turbopuffer/turbopuffer-python/issues/190)) ([64a459c](https://github.com/turbopuffer/turbopuffer-python/commit/64a459c5c419127fa0407627b04fb138136335ce))
+* docs for glob/regex acceleration ([2ff7bd7](https://github.com/turbopuffer/turbopuffer-python/commit/2ff7bd71f6bf2f63ae2e31b3856e859ee343bbdf))
+* improve future compat with pydantic v3 ([e55b78b](https://github.com/turbopuffer/turbopuffer-python/commit/e55b78b4d6be2221e5f9ef136be6e221ec828646))
+* **internal:** implement indices array format for query and form serialization ([d7ba617](https://github.com/turbopuffer/turbopuffer-python/commit/d7ba6176ff07f2d34b31eb9fa5e8ab69c04528cf))
+* Make `type` required on `AttributeSchemaConfig` ([9596ee0](https://github.com/turbopuffer/turbopuffer-python/commit/9596ee0c53ca251b303df999ce537f631621c731))
+* Make word_v2 the default FTS tokenizer ([36844eb](https://github.com/turbopuffer/turbopuffer-python/commit/36844ebd1bfc440b0f79b7ee1f7ea8b41521835b))
+* Metadata endpoint updates (e.g. to track indexing progress) ([160cf02](https://github.com/turbopuffer/turbopuffer-python/commit/160cf023717a8a726b6be561f849f086a0844f2e))
+* Multiple Vector Columns Docs ([f9c378c](https://github.com/turbopuffer/turbopuffer-python/commit/f9c378c6eb0a206f70d2b4150a104a711f17f16d))
+* openapi: Fix stainless warnings ([d7f205b](https://github.com/turbopuffer/turbopuffer-python/commit/d7f205b4fb344f0e614c41df173d9d7240e0abf3))
+* openapi: name variants of `NamespaceMetadata.index` ([a1cb762](https://github.com/turbopuffer/turbopuffer-python/commit/a1cb762e298630cdf58ca734221886bb98ffb1eb))
+* Promote disable_backpressure to first-class Write property ([649dd65](https://github.com/turbopuffer/turbopuffer-python/commit/649dd653f70bc2a35976e45a2778d02eeac81cad))
+* python: swap stainless to the new client edition to pick up uv ([382415b](https://github.com/turbopuffer/turbopuffer-python/commit/382415b1d5ea2c39e22e5a46bf39924d226a03c3))
+* Remove `queries` from recall endpoint ([dfac196](https://github.com/turbopuffer/turbopuffer-python/commit/dfac1961dba44a71057f20a1c66419bf27d1d156))
+* remove compatibility shims ([#196](https://github.com/turbopuffer/turbopuffer-python/issues/196)) ([b614dc4](https://github.com/turbopuffer/turbopuffer-python/commit/b614dc45bc46d636ed3865bb4744c8d49694ab82))
+* required for patch_by_filter :facepalm: ([5edaf73](https://github.com/turbopuffer/turbopuffer-python/commit/5edaf73e61502d7d7835771ed4093973fa8801a5))
+* Response performance object ([30bf271](https://github.com/turbopuffer/turbopuffer-python/commit/30bf271b08d309802ac0161fdd82076e08546290))
+* sdks: add &lt;patch|delete&gt;_by_filter_allow_partial options ([2fbc4a2](https://github.com/turbopuffer/turbopuffer-python/commit/2fbc4a206088298b76a2b8f9ded1607479aad9af))
+* site: add ascii_folding to docs and SDKs ([16535c4](https://github.com/turbopuffer/turbopuffer-python/commit/16535c49f7e5eef96385ed74af8ed8da03149ded))
+* spec: add dedicated type for AggregationGroup response ([53459e4](https://github.com/turbopuffer/turbopuffer-python/commit/53459e4b0a27222ac26e71f9b134412f6efb80ca))
+* spec: add support for cross-org CFN to SDKs ([8ecd204](https://github.com/turbopuffer/turbopuffer-python/commit/8ecd204c40650ac4950b22900850cb7ae58b7aac))
+* spec: clean up limit codegen ([8046c93](https://github.com/turbopuffer/turbopuffer-python/commit/8046c935ed7eed3e113549b83d45f121e0431915))
+* spec: disable CopyFromNamespace syntax sugar in Go ([08d1660](https://github.com/turbopuffer/turbopuffer-python/commit/08d166084536bd516b55d9ee91a19f938bd5fa3b))
+* spec: host MCP on stainless ([e4ce55d](https://github.com/turbopuffer/turbopuffer-python/commit/e4ce55d7a48948f1e711b6b2c1de2ee449154ebb))
+* spec: include pinning status in /metadata response ([2bc9b76](https://github.com/turbopuffer/turbopuffer-python/commit/2bc9b7668ff2c8a463afe5e6c1a7b04a25c75c35))
+* stainless: add patch_by_filter ([f277aa1](https://github.com/turbopuffer/turbopuffer-python/commit/f277aa1c4de13be147ac79d3bff0f1e36c6e3e97))
+* tpuf-engine: add verbose form of branch_from_namespace ([ca4b577](https://github.com/turbopuffer/turbopuffer-python/commit/ca4b577a2e0228a74ce04dc997bbb80245c42157))
+* tpuf: add branching to openapi spec ([c21cd2c](https://github.com/turbopuffer/turbopuffer-python/commit/c21cd2c166f2011b30191883fb888d9ddedf47c5))
+* tpuf: add include_ground_truth option to recall endpoint ([6cec9b7](https://github.com/turbopuffer/turbopuffer-python/commit/6cec9b7a382176e342f16d5cbd54f8783b98770e))
+* **types:** replace List[str] with SequenceNotStr in params ([0283310](https://github.com/turbopuffer/turbopuffer-python/commit/028331035b42905e00b7419345c533da891ab67f))
+
+
+### Bug Fixes
+
+* add support for `$ref_new` expressions ([#132](https://github.com/turbopuffer/turbopuffer-python/issues/132)) ([089686b](https://github.com/turbopuffer/turbopuffer-python/commit/089686b0473d7283c9fe7b0658abeb9af15bddae))
+* add support for regex filter ([98940c6](https://github.com/turbopuffer/turbopuffer-python/commit/98940c60c1aab445ec4cb97672653139510ff845))
+* **api:** add support for [Not]Contains[Any] operators ([#135](https://github.com/turbopuffer/turbopuffer-python/issues/135)) ([c317be2](https://github.com/turbopuffer/turbopuffer-python/commit/c317be2fd35ea662d59daa201cff1cce24a31f04))
+* **api:** add support for `group_by` query parameter ([d6dcfd3](https://github.com/turbopuffer/turbopuffer-python/commit/d6dcfd310910889e20808170cee9fb9cc535db97))
+* **api:** api update ([4442b97](https://github.com/turbopuffer/turbopuffer-python/commit/4442b979e33a0cb4ed6ba5ee78e1a1e9c417f881))
+* **api:** api update ([4248358](https://github.com/turbopuffer/turbopuffer-python/commit/4248358d388c1220e2bef679256d7ac7ff57211f))
+* **api:** api update ([21ff62c](https://github.com/turbopuffer/turbopuffer-python/commit/21ff62ceb6440aee50907351eb0eddef26ef265a))
+* **api:** api update ([eca0afb](https://github.com/turbopuffer/turbopuffer-python/commit/eca0afb6a48d22f3b3253628ddc168d78824f563))
+* **api:** api update ([6ec2e1c](https://github.com/turbopuffer/turbopuffer-python/commit/6ec2e1c9203f27e899790334e7e220f65c939b97))
+* **api:** api update ([93b4a37](https://github.com/turbopuffer/turbopuffer-python/commit/93b4a376eb1a4dd802d41a2be997fd5ce0eeff78))
+* **api:** api update ([42fc34d](https://github.com/turbopuffer/turbopuffer-python/commit/42fc34dea5780b26675c0227e33cfa5f67acf3e9))
+* **api:** api update ([b5b879f](https://github.com/turbopuffer/turbopuffer-python/commit/b5b879fbb654607887d1a8a4cc82117238379554))
+* **api:** api update ([eb80dcd](https://github.com/turbopuffer/turbopuffer-python/commit/eb80dcd94e6d1f7212583983d9e0acbf9d2a3539))
+* **api:** api update ([59859d0](https://github.com/turbopuffer/turbopuffer-python/commit/59859d07be14fa7e680c5b65b94850404ca604ef))
+* **api:** api update ([c5dd8d1](https://github.com/turbopuffer/turbopuffer-python/commit/c5dd8d1019d6f084e964740876489775e5e5cb68))
+* **api:** api update ([bdb172e](https://github.com/turbopuffer/turbopuffer-python/commit/bdb172e48d35330d5b84ca68d8d972e436561e25))
+* **api:** api update ([2d71653](https://github.com/turbopuffer/turbopuffer-python/commit/2d71653dda3b4babbb6f16994e973358dbbf0412))
+* **api:** api update ([3fd547b](https://github.com/turbopuffer/turbopuffer-python/commit/3fd547b2b90649b3f1ae72334383a903ee2cffa7))
+* **api:** api update ([f83ded0](https://github.com/turbopuffer/turbopuffer-python/commit/f83ded0a9f939abec155eb18586716938298a681))
+* avoid newer type syntax ([c048387](https://github.com/turbopuffer/turbopuffer-python/commit/c0483877ed8dd5a3b88e5cb32b2dddd937bf3d94))
+* **ci:** correct conditional ([1226da3](https://github.com/turbopuffer/turbopuffer-python/commit/1226da35fb7f43777c33d6def1697993a3f7c1d5))
+* **ci:** release-doctor — report correct token name ([7761744](https://github.com/turbopuffer/turbopuffer-python/commit/7761744664cada29904f12ae05c9a30de60ae8fa))
+* **client:** close streams without requiring full consumption ([ec66734](https://github.com/turbopuffer/turbopuffer-python/commit/ec667342ec3c5bf0b51349911fb659af534864b8))
+* **client:** don't send Content-Type header on GET requests ([022b258](https://github.com/turbopuffer/turbopuffer-python/commit/022b25813f2ca8eb97518920ae1676d2af6d836a))
+* **client:** use higher retry delay precision ([9ae54bd](https://github.com/turbopuffer/turbopuffer-python/commit/9ae54bd9304540de338d6e8cfeccce836eca2f33))
+* compat with Python 3.14 ([acdd36d](https://github.com/turbopuffer/turbopuffer-python/commit/acdd36d537ba25707b1c491cfbcaaf11f9431779))
+* **compat:** compat with `pydantic&lt;2.8.0` when using additional fields ([09b2a6a](https://github.com/turbopuffer/turbopuffer-python/commit/09b2a6abd97930e8825fa234ef92f7099664bf06))
+* **compat:** update signatures of `model_dump` and `model_dump_json` for Pydantic v1 ([5d70dcf](https://github.com/turbopuffer/turbopuffer-python/commit/5d70dcffbbf7eeec1b18c7529a97f00e886eaf69))
+* correct name of stainless bot ([#133](https://github.com/turbopuffer/turbopuffer-python/issues/133)) ([27bf031](https://github.com/turbopuffer/turbopuffer-python/commit/27bf031ab4628fae192e3f84c05e9d9325a578ac))
+* **deps:** bump minimum typing-extensions version ([8c87152](https://github.com/turbopuffer/turbopuffer-python/commit/8c8715234a17695d7d493e5d9680aff3bcf99f26))
+* **docs:** add note about attribute flattening to upgrade guide ([#115](https://github.com/turbopuffer/turbopuffer-python/issues/115)) ([568348d](https://github.com/turbopuffer/turbopuffer-python/commit/568348dc7e3a06dcdcd59aa488c346f2c717ffa3))
+* **docs:** fix mcp installation instructions for remote servers ([f9021c6](https://github.com/turbopuffer/turbopuffer-python/commit/f9021c6189f67449c26e87277a64ec3a2032ad43))
+* don't require region unless baseUrl contains {region} placeholder ([#137](https://github.com/turbopuffer/turbopuffer-python/issues/137)) ([f27bf12](https://github.com/turbopuffer/turbopuffer-python/commit/f27bf121f20bd5184d86658660f74bb2807f20d4))
+* don't run grouped tests in parallel ([#125](https://github.com/turbopuffer/turbopuffer-python/issues/125)) ([9024587](https://github.com/turbopuffer/turbopuffer-python/commit/902458767faf238a7fd9bb012bf7026dc2a83a3b))
+* don't set region in tests if base URL doesn't support it ([b7e8297](https://github.com/turbopuffer/turbopuffer-python/commit/b7e8297f705be97edee77f41487c51ae7bc975cb))
+* ensure streams are always closed ([d3a57f9](https://github.com/turbopuffer/turbopuffer-python/commit/d3a57f959921d702c2dcbb1d78f9f6629becd57b))
+* explicitly omit TURBOPUFFER_BASE_URL from env when necessary ([9075015](https://github.com/turbopuffer/turbopuffer-python/commit/9075015991d9afa886d31a327a55959699aaeda7))
+* formatting ([5c5fbfa](https://github.com/turbopuffer/turbopuffer-python/commit/5c5fbfaf93507fe5032a08d2af4c757521b55fc7))
+* **guide:** add an upgrade guide ([5a9e1b0](https://github.com/turbopuffer/turbopuffer-python/commit/5a9e1b09d2fd1fd095b0aad602eccfcafb5990d6))
+* **guide:** update UPGRADING.md ([c124d29](https://github.com/turbopuffer/turbopuffer-python/commit/c124d29ff94340c301e6e90ca294dda73bef9e7a))
+* improve custom JSON deserialization ([a874f8f](https://github.com/turbopuffer/turbopuffer-python/commit/a874f8f7de8f4b6ac07d8b539163c8f008b75a10))
+* more precise types for filters that take arrays ([dc6a2d2](https://github.com/turbopuffer/turbopuffer-python/commit/dc6a2d27471bc13a88db8e6241e403cabd7a9a62))
+* **parsing:** correctly handle nested discriminated unions ([ab05d54](https://github.com/turbopuffer/turbopuffer-python/commit/ab05d54ab25490c980b893fe8cc46259d44c0ac4))
+* **parsing:** ignore empty metadata ([60f16d4](https://github.com/turbopuffer/turbopuffer-python/commit/60f16d45596e2866403762f32f9685fdc49efa17))
+* **parsing:** parse extra field types ([ce30a1f](https://github.com/turbopuffer/turbopuffer-python/commit/ce30a1fc955caabf0cdf31b97cea982929f78a4d))
+* **pydantic:** do not pass `by_alias` unless set ([de9ede8](https://github.com/turbopuffer/turbopuffer-python/commit/de9ede868188602ae95cc08982dacec2a8a2b349))
+* **README:** add alpha notice ([14aac9d](https://github.com/turbopuffer/turbopuffer-python/commit/14aac9d3f1177316a90be10063248b2db70c38c3))
+* **README:** improve headline example ([#131](https://github.com/turbopuffer/turbopuffer-python/issues/131)) ([7314e3a](https://github.com/turbopuffer/turbopuffer-python/commit/7314e3afdba4b33d1ab0db11ed58a44009acf64b))
+* **README:** update code examples ([12e9cca](https://github.com/turbopuffer/turbopuffer-python/commit/12e9ccada045c2a00c0bc8a5f4ab275c71bf9783))
+* remove 200 error code for hint_cache_warm API call (always 202 now) ([05c43a7](https://github.com/turbopuffer/turbopuffer-python/commit/05c43a7a24981e94113168610229883fbaaf1fe8))
+* sanitize endpoint path params ([cde1c36](https://github.com/turbopuffer/turbopuffer-python/commit/cde1c364243e32625ad818602eb34fe16ee89a54))
+* serialize datetime objects when orjson isn't installed ([#143](https://github.com/turbopuffer/turbopuffer-python/issues/143)) ([c3c83eb](https://github.com/turbopuffer/turbopuffer-python/commit/c3c83ebf88da16c5782408cf8c4cddbe1fef8213))
+* strict types for new QueryParam type ([fae8c4d](https://github.com/turbopuffer/turbopuffer-python/commit/fae8c4d7f79d52f7996c1638492b28b9b72874aa))
+* strict types for write conditions ([#130](https://github.com/turbopuffer/turbopuffer-python/issues/130)) ([0d8f6a1](https://github.com/turbopuffer/turbopuffer-python/commit/0d8f6a121fcf340960e55f6c2f9728d04fb15395))
+* **tests:** mock delete when testing namespace default params ([#116](https://github.com/turbopuffer/turbopuffer-python/issues/116)) ([db587e8](https://github.com/turbopuffer/turbopuffer-python/commit/db587e860af7951d8549a70cff86c93e9f6259ca))
+* **tests:** mock delete whne testing namespace default params ([072f33a](https://github.com/turbopuffer/turbopuffer-python/commit/072f33a9758fcfc20cad675971f6efb91aba7b00))
+* **tests:** use BM25 query with distinct scores ([#179](https://github.com/turbopuffer/turbopuffer-python/issues/179)) ([8ebe6ff](https://github.com/turbopuffer/turbopuffer-python/commit/8ebe6ff0ce03491daae0976876f272421c455147))
+* typing of upsert_columns tests ([e08eb71](https://github.com/turbopuffer/turbopuffer-python/commit/e08eb713cd14cde9f6100294cdf48a1f2752e282))
+* update tests for new metadata endpoint ([8de7300](https://github.com/turbopuffer/turbopuffer-python/commit/8de7300b35273ed32407b6ede6fb70ff4e9b287a))
+* use async_to_httpx_files in patch method ([dd4e2d4](https://github.com/turbopuffer/turbopuffer-python/commit/dd4e2d469a3960f2f4c4d07c2010fd64fb95dbb4))
+* use strict types for explain_query ([#148](https://github.com/turbopuffer/turbopuffer-python/issues/148)) ([13b9b70](https://github.com/turbopuffer/turbopuffer-python/commit/13b9b7053bd37cf3744f1d8a04db79f4d68b85c3))
+* use ThreadedResolver for default async client ([#218](https://github.com/turbopuffer/turbopuffer-python/issues/218)) ([a8c6084](https://github.com/turbopuffer/turbopuffer-python/commit/a8c6084720a2076b330f4ac5b11886d6630fcce4))
+
+
+### Performance Improvements
+
+* increase default connection idle timeout to 60s ([#219](https://github.com/turbopuffer/turbopuffer-python/issues/219)) ([747d094](https://github.com/turbopuffer/turbopuffer-python/commit/747d0945dfa889acbb5c77742546b03a59d0fd0c))
+* skip unneeded transformations for primitive types and tuples ([#178](https://github.com/turbopuffer/turbopuffer-python/issues/178)) ([946ad60](https://github.com/turbopuffer/turbopuffer-python/commit/946ad6083cb02dc8c9178c3da3b6683353fc3635))
+
+
+### Chores
+
+* add missing Union import in namespace_write_params.py ([f16933a](https://github.com/turbopuffer/turbopuffer-python/commit/f16933a12334ed111c39b6447a5320eb891ed3d0))
+* bump `httpx-aiohttp` version to 0.1.9 ([e637dca](https://github.com/turbopuffer/turbopuffer-python/commit/e637dca253664b641045cd15fac8ea1f9cd4091e))
+* **ci:** change upload type ([9170d90](https://github.com/turbopuffer/turbopuffer-python/commit/9170d90389e550623648e8042b078f2eb386b993))
+* **ci:** only run for pushes and fork pull requests ([55fd498](https://github.com/turbopuffer/turbopuffer-python/commit/55fd498ac43755c8796fbebe3255bc0f75e20a80))
+* **ci:** skip lint on metadata-only changes ([0bfdb23](https://github.com/turbopuffer/turbopuffer-python/commit/0bfdb23282aa80ed05206a5dc3bbe312219a4e66))
+* **ci:** skip uploading artifacts on stainless-internal branches ([ab588f5](https://github.com/turbopuffer/turbopuffer-python/commit/ab588f5e965db464f95d58ead38069874c04125f))
+* **ci:** upgrade `actions/github-script` ([6579e7c](https://github.com/turbopuffer/turbopuffer-python/commit/6579e7c0769607d34322a29483629302091cc273))
+* codegen updates ([c7b662d](https://github.com/turbopuffer/turbopuffer-python/commit/c7b662d0ef16f64e0cf6cce5526eba74a13555e2))
+* configure new SDK language ([621f6a2](https://github.com/turbopuffer/turbopuffer-python/commit/621f6a2b4dd2c6744964169a2249e9f873383521))
+* Correct python types for patch by filter (and conditional writes) ([#172](https://github.com/turbopuffer/turbopuffer-python/issues/172)) ([caa9cf6](https://github.com/turbopuffer/turbopuffer-python/commit/caa9cf68093d190ca19c2c0bc9acdbfb96c70b9e))
+* **deps:** mypy 1.18.1 has a regression, pin to 1.17 ([093835d](https://github.com/turbopuffer/turbopuffer-python/commit/093835dca5729017792414af191e4f0582470efe))
+* do not install brew dependencies in ./scripts/bootstrap by default ([642ecd0](https://github.com/turbopuffer/turbopuffer-python/commit/642ecd0713f024035a7356d0f4a9a89eb3d0113a))
+* **docs:** use environment variables for authentication in code snippets ([7d8f0e0](https://github.com/turbopuffer/turbopuffer-python/commit/7d8f0e0aea477ec9143eac0a1e07a0b4c37bc131))
+* fix automatic type regeneration ([8fbf95c](https://github.com/turbopuffer/turbopuffer-python/commit/8fbf95cc679b29b981e85451679e2d4e2f4efdc5))
+* format all `api.md` files ([b6fdecc](https://github.com/turbopuffer/turbopuffer-python/commit/b6fdeccb03c5f355aae13410d9c8c7ed29500d18))
+* **internal/tests:** avoid race condition with implicit client cleanup ([c6e0010](https://github.com/turbopuffer/turbopuffer-python/commit/c6e00102d06df7a599a5000169c18882a4a4f3b2))
+* **internal/tests:** avoid race condition with implicit client cleanup ([b041c1f](https://github.com/turbopuffer/turbopuffer-python/commit/b041c1fb7b658631d680327d94a2349525442ff1))
+* **internal:** add request options to SSE classes ([a7a73b1](https://github.com/turbopuffer/turbopuffer-python/commit/a7a73b13be39497a6a90d508251cbb7361c73194))
+* **internal:** add Sequence related utils ([a54d6e3](https://github.com/turbopuffer/turbopuffer-python/commit/a54d6e35fe2f164d51d60e25f747496f13088235))
+* **internal:** bump dependencies ([1e1cfd9](https://github.com/turbopuffer/turbopuffer-python/commit/1e1cfd977ac4e9d8eb2789ac85a8531f195070d3))
+* **internal:** bump pinned h11 dep ([e3e8ffb](https://github.com/turbopuffer/turbopuffer-python/commit/e3e8ffbd44490dcfda2455b0a5320715d547afd7))
+* **internal:** change ci workflow machines ([80fafa9](https://github.com/turbopuffer/turbopuffer-python/commit/80fafa9d09ad81349477ec80eebf378e3da6035f))
+* **internal:** codegen related update ([985c78f](https://github.com/turbopuffer/turbopuffer-python/commit/985c78fa9c906f97b06d0ad0e9f57b87f46edbb4))
+* **internal:** codegen related update ([539dd89](https://github.com/turbopuffer/turbopuffer-python/commit/539dd89198ec76cab6153428b60fc5d1b02115b8))
+* **internal:** codegen related update ([4db3df2](https://github.com/turbopuffer/turbopuffer-python/commit/4db3df23feb0e47effe194ccc59f34c5f5263755))
+* **internal:** codegen related update ([11319f2](https://github.com/turbopuffer/turbopuffer-python/commit/11319f2739212a5f3e803ca1feb3e09ddba6e6ca))
+* **internal:** codegen related update ([1fcdb49](https://github.com/turbopuffer/turbopuffer-python/commit/1fcdb49e326ac8588a6e3f2f401d2f0d10987d81))
+* **internal:** detect missing future annotations with ruff ([6a7d4c3](https://github.com/turbopuffer/turbopuffer-python/commit/6a7d4c37ca6de6484e470e1bdcda205997101e77))
+* **internal:** fix lint error on Python 3.14 ([52c1081](https://github.com/turbopuffer/turbopuffer-python/commit/52c10812671a3bddd84ca1618243040c8c347e11))
+* **internal:** fix ruff target version ([46f2aae](https://github.com/turbopuffer/turbopuffer-python/commit/46f2aae354c9a81ec6635549e23e8352a72c7954))
+* **internal:** grammar fix (it's -&gt; its) ([0231191](https://github.com/turbopuffer/turbopuffer-python/commit/0231191a0a832412248b78c4fad6de1cbd42ec10))
+* **internal:** make `test_proxy_environment_variables` more resilient ([bd36cd0](https://github.com/turbopuffer/turbopuffer-python/commit/bd36cd015308c8344ba54f4b7a41c374e713fb95))
+* **internal:** make `test_proxy_environment_variables` more resilient to env ([d870a2d](https://github.com/turbopuffer/turbopuffer-python/commit/d870a2d8986f57ef7d7f12456cd48fbc44e1643c))
+* **internal:** move mypy configurations to `pyproject.toml` file ([05aecc3](https://github.com/turbopuffer/turbopuffer-python/commit/05aecc33135f31c69dc27dc835759fc7f33d0d04))
+* **internal:** remove mock server code ([557357f](https://github.com/turbopuffer/turbopuffer-python/commit/557357fb208918871b0228ab715f7c07218d918e))
+* **internal:** tweak CI branches ([c9f5d89](https://github.com/turbopuffer/turbopuffer-python/commit/c9f5d896017605db98b28894b2c1787cd5655599))
+* **internal:** update `actions/checkout` version ([3b408b0](https://github.com/turbopuffer/turbopuffer-python/commit/3b408b02e90f8bdc84606348243be26d4b3c6ca1))
+* **internal:** update comment in script ([228c590](https://github.com/turbopuffer/turbopuffer-python/commit/228c590ec9e8a8b81a1967d30d7cd4c08089b710))
+* **internal:** update gitignore ([a9d2891](https://github.com/turbopuffer/turbopuffer-python/commit/a9d2891e426dbcb0bbb1ce4aeaa7b44fe7d2b59a))
+* **internal:** update pydantic dependency ([13ecfe2](https://github.com/turbopuffer/turbopuffer-python/commit/13ecfe250bb90929d20e5f40db0d55c3833ecac1))
+* **internal:** update pyright exclude list ([c9f9475](https://github.com/turbopuffer/turbopuffer-python/commit/c9f94750f8e36a3074156ee5f341b21e3f3ae36b))
+* **package:** drop Python 3.8 support ([a20280f](https://github.com/turbopuffer/turbopuffer-python/commit/a20280f00eb13e625c58e539d961270a38f81655))
+* **package:** mark python 3.13 as supported ([2c2d349](https://github.com/turbopuffer/turbopuffer-python/commit/2c2d349f72e9b6897cb180a8081ad95ddfb39405))
+* **project:** add settings file for vscode ([df8c3fa](https://github.com/turbopuffer/turbopuffer-python/commit/df8c3fa703e1f3113a63942603bc0b64ba8d21aa))
+* **readme:** fix version rendering on pypi ([8468a19](https://github.com/turbopuffer/turbopuffer-python/commit/8468a19f06922128af655f978825225a7ec7eca1))
+* **readme:** update badges ([d03eb1a](https://github.com/turbopuffer/turbopuffer-python/commit/d03eb1a5e6be5f24219f40e1274dba253c15c327))
+* regenerate custom types ([6345281](https://github.com/turbopuffer/turbopuffer-python/commit/6345281f671065a594657ee1e2a0e71c05ab1c14))
+* speedup initial import ([3686da0](https://github.com/turbopuffer/turbopuffer-python/commit/3686da02d700514764d27225d891ffe249f6b8dd))
+* **tests:** skip some failing tests on the latest python versions ([18e64f5](https://github.com/turbopuffer/turbopuffer-python/commit/18e64f55159a837d6042d1bb62ede4335e4aeb50))
+* **types:** change optional parameter type from NotGiven to Omit ([2f0ae47](https://github.com/turbopuffer/turbopuffer-python/commit/2f0ae47d7023a4ee5e3529f108d47118ae706ad0))
+* update @stainless-api/prism-cli to v5.15.0 ([1389727](https://github.com/turbopuffer/turbopuffer-python/commit/1389727186e47ffd3ecd1fc3ceb7bcbafd4ed38a))
+* update github action ([d22c67d](https://github.com/turbopuffer/turbopuffer-python/commit/d22c67df6936c1716475dd07d1973b30a31625c9))
+* update lockfile ([9fc74d5](https://github.com/turbopuffer/turbopuffer-python/commit/9fc74d5d8797cf2839d7a4d68e66df5125340b8d))
+* update mock server docs ([d29d55b](https://github.com/turbopuffer/turbopuffer-python/commit/d29d55b6b333066b2cb3e79e2f1b2111f30810d2))
+
+
+### Documentation
+
+* add cross-region copy_from_namespace to write API docs ([58433b5](https://github.com/turbopuffer/turbopuffer-python/commit/58433b59f1970efcefe3f07f9272e455891de3da))
+* **client:** fix httpx.Timeout documentation reference ([320cee5](https://github.com/turbopuffer/turbopuffer-python/commit/320cee594b3984151dd589d38d872bf287f240ad))
+* hint_cache_warm also update header and openapi ([fda1d58](https://github.com/turbopuffer/turbopuffer-python/commit/fda1d58fef5d9119cca1e7cf46fffacbcb6cd8cc))
+
+
+### Refactors
+
+* **types:** use `extra_items` from PEP 728 ([9b36d34](https://github.com/turbopuffer/turbopuffer-python/commit/9b36d3464fe5ea3004e7c2ed545b7151fbf07a25))
+
+## 1.20.0 (2026-03-20)
+
+Full Changelog: [v1.19.0...v1.20.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.19.0...v1.20.0)
+
+### Features
+
+* spec: disable CopyFromNamespace syntax sugar in Go ([0c0a73e](https://github.com/turbopuffer/turbopuffer-python/commit/0c0a73ee0d75753c92a855b9e45cfd18a4695b48))
+* tpuf-engine: add verbose form of branch_from_namespace ([75536b4](https://github.com/turbopuffer/turbopuffer-python/commit/75536b42e4143ab01f458cef85998f0a488c2bce))
+
+
+### Bug Fixes
+
+* sanitize endpoint path params ([f8dd883](https://github.com/turbopuffer/turbopuffer-python/commit/f8dd88318deec3b1d2c6a5176071fe03fb3643e2))
+
+## 1.19.0 (2026-03-18)
+
+Full Changelog: [v1.18.0...v1.19.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.18.0...v1.19.0)
+
+### Features
+
+* python: swap stainless to the new client edition to pick up uv ([3c5db9a](https://github.com/turbopuffer/turbopuffer-python/commit/3c5db9a7c0da55add98cffeac36bfd155bb0daa7))
+* Response performance object ([ba4ee3a](https://github.com/turbopuffer/turbopuffer-python/commit/ba4ee3a792463466829ac9782dbdde4ea0759c49))
+* tpuf: add branching to openapi spec ([a209dbb](https://github.com/turbopuffer/turbopuffer-python/commit/a209dbb6d97383aba3d83be8a49998c6bcec7e3f))
+
+
+### Bug Fixes
+
+* **client:** use higher retry delay precision ([ee426cd](https://github.com/turbopuffer/turbopuffer-python/commit/ee426cd38978170ed3055c90c01d52834d86f979))
+* **deps:** bump minimum typing-extensions version ([b001b82](https://github.com/turbopuffer/turbopuffer-python/commit/b001b82624c3fa9be54ab0cfbdc590019b560fe9))
+* **pydantic:** do not pass `by_alias` unless set ([779eb20](https://github.com/turbopuffer/turbopuffer-python/commit/779eb20d27a4d8febd8af0718091ba8be03a03eb))
+
+
+### Chores
+
+* **internal:** tweak CI branches ([37b4726](https://github.com/turbopuffer/turbopuffer-python/commit/37b4726ea7264e65a411dff1f46dd21e53ee4b1a))
+
+## 1.18.0 (2026-03-11)
+
+Full Changelog: [v1.17.0...v1.18.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.17.0...v1.18.0)
+
+### Features
+
+* spec: host MCP on stainless ([e790837](https://github.com/turbopuffer/turbopuffer-python/commit/e790837cdf03c3fd08d7292d5a9788a8b58776f1))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([e625b73](https://github.com/turbopuffer/turbopuffer-python/commit/e625b7308382e24cb05d046930446925d9f20b09))
+
+
+### Refactors
+
+* **types:** use `extra_items` from PEP 728 ([7450d60](https://github.com/turbopuffer/turbopuffer-python/commit/7450d602edcae5e007e84b51eaedd1e36d1bcac5))
+
+## 1.17.0 (2026-02-27)
+
+Full Changelog: [v1.16.2...v1.17.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.2...v1.17.0)
+
+### Features
+
+* Remove `queries` from recall endpoint ([eec92f4](https://github.com/turbopuffer/turbopuffer-python/commit/eec92f465cf9e1d2835008b47cbfbb044107e75d))
+
+
+### Chores
+
+* **internal:** make `test_proxy_environment_variables` more resilient to env ([3de4044](https://github.com/turbopuffer/turbopuffer-python/commit/3de40448b78fcab5fcf901648631efb335f70748))
+
+## 1.16.2 (2026-02-24)
+
+Full Changelog: [v1.16.1...v1.16.2](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.1...v1.16.2)
+
+### Chores
+
+* **internal:** add request options to SSE classes ([4a60e1c](https://github.com/turbopuffer/turbopuffer-python/commit/4a60e1c79105e8e87dc2d38b5a3893937d241ec6))
+* **internal:** make `test_proxy_environment_variables` more resilient ([107dda8](https://github.com/turbopuffer/turbopuffer-python/commit/107dda8490f4a2f411cf0ab84926d978f126ca66))
+
+## 1.16.1 (2026-02-19)
+
+Full Changelog: [v1.16.0...v1.16.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.16.0...v1.16.1)
+
+### Chores
+
+* **internal:** remove mock server code ([645dc56](https://github.com/turbopuffer/turbopuffer-python/commit/645dc56dabef631cdedde26c942220b6fadf2f35))
+* update mock server docs ([6cd61a5](https://github.com/turbopuffer/turbopuffer-python/commit/6cd61a5707099a758d584048cb53d28bd3c2a06e))
+
+## 1.16.0 (2026-02-17)
+
+Full Changelog: [v1.15.1...v1.16.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.15.1...v1.16.0)
+
+### Features
+
+* Add ranking-by-attribute to the spec. ([fffc690](https://github.com/turbopuffer/turbopuffer-python/commit/fffc690e67081636eba43f4c24adec6c84185a9e))
+
+## 1.15.1 (2026-02-16)
+
+Full Changelog: [v1.15.0...v1.15.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.15.0...v1.15.1)
+
+### Chores
+
+* format all `api.md` files ([da7cc1d](https://github.com/turbopuffer/turbopuffer-python/commit/da7cc1dcc7eaaba9140b0a154086c0f190390d23))
+* **internal:** bump dependencies ([fff51f3](https://github.com/turbopuffer/turbopuffer-python/commit/fff51f3051fa1c3a6ffdd5017ea0a1374b615e28))
+* **internal:** fix lint error on Python 3.14 ([c2ff373](https://github.com/turbopuffer/turbopuffer-python/commit/c2ff373936bec8cec05bb4ba91fb3f884565079c))
+
+## 1.15.0 (2026-02-08)
+
+Full Changelog: [v1.14.0...v1.15.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.14.0...v1.15.0)
+
+### Features
+
+* add support for `limit` query parameter ([cf69e0a](https://github.com/turbopuffer/turbopuffer-python/commit/cf69e0a684b6898eba6c8e73436d9e9745934e00))
+* spec: clean up limit codegen ([fe12d7c](https://github.com/turbopuffer/turbopuffer-python/commit/fe12d7c257d9a947a1878df59989fc79555249f1))
+
+## 1.14.0 (2026-02-03)
+
+Full Changelog: [v1.13.1...v1.14.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.13.1...v1.14.0)
+
+### Features
+
+* ContainsAnyToken last_as_prefix docs ([a41456d](https://github.com/turbopuffer/turbopuffer-python/commit/a41456d81e5eb464a6868f32dd30faf2c24b4b2d))
+
+
+### Chores
+
+* regenerate custom types ([c2ecba1](https://github.com/turbopuffer/turbopuffer-python/commit/c2ecba1f36edebf92bf1e2c5a562ac8427a5e846))
+
+## 1.13.1 (2026-02-01)
+
+Full Changelog: [v1.13.0...v1.13.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.13.0...v1.13.1)
+
+### Chores
+
+* fix automatic type regeneration ([14fd747](https://github.com/turbopuffer/turbopuffer-python/commit/14fd74714eb5f51cb36e00439df4adcd4a0e77e9))
+
+## 1.13.0 (2026-02-01)
+
+Full Changelog: [v1.12.1...v1.13.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.12.1...v1.13.0)
+
+### Features
+
+* [TPUF-1097] tpuf: return failed IDs for conditional writes ([075e766](https://github.com/turbopuffer/turbopuffer-python/commit/075e7663c0ca78916c9b3498dd3e166f55d7910e))
+* add ContainsAnyToken and RankByKnn types ([d98cd85](https://github.com/turbopuffer/turbopuffer-python/commit/d98cd853b298a6b16021f86dea314f81aa5c3dc4))
+* Add instructions to MCP server config ([2d6135e](https://github.com/turbopuffer/turbopuffer-python/commit/2d6135e9980f1e2807f9e7700154924c92e3e8b6))
+* **client:** add custom JSON encoder for extended type support ([40a87c6](https://github.com/turbopuffer/turbopuffer-python/commit/40a87c66e68434c92e934a97068d78c1ac7c6930))
+* **client:** add support for binary request streaming ([2bce22c](https://github.com/turbopuffer/turbopuffer-python/commit/2bce22c573bc4aa60e124a92980694dca365c3a6))
+
+
+### Bug Fixes
+
+* **docs:** fix mcp installation instructions for remote servers ([71d4dbd](https://github.com/turbopuffer/turbopuffer-python/commit/71d4dbd199dfe6fa24fe7812640984aa677b94a0))
+* improve custom JSON deserialization ([c500ea0](https://github.com/turbopuffer/turbopuffer-python/commit/c500ea0c3cec26287aaabaa73abfc645d47a969d))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([a967a80](https://github.com/turbopuffer/turbopuffer-python/commit/a967a80d0478d142d35005dade3d117f14837f12))
+* configure new SDK language ([65d7a90](https://github.com/turbopuffer/turbopuffer-python/commit/65d7a90cd5082e3f4e1163fddf3bf68f6e4f1feb))
+* **internal:** update `actions/checkout` version ([d34a3d9](https://github.com/turbopuffer/turbopuffer-python/commit/d34a3d92c5d7e2b0bed47a9e57fec74779034058))
+
+## 1.12.1 (2026-01-09)
+
+Full Changelog: [v1.12.0...v1.12.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.12.0...v1.12.1)
+
+### Chores
+
+* **internal:** codegen related update ([726e66a](https://github.com/turbopuffer/turbopuffer-python/commit/726e66a2923f99a0a143312d2aa699c12c2f547f))
+
+## 1.12.0 (2025-12-20)
+
+Full Changelog: [v1.11.0...v1.12.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.11.0...v1.12.0)
+
+### Features
+
+* remove compatibility shims ([#196](https://github.com/turbopuffer/turbopuffer-python/issues/196)) ([fde7344](https://github.com/turbopuffer/turbopuffer-python/commit/fde7344ad9962cdb7c77d444e01c0ebbcd193915))
+
+
+### Bug Fixes
+
+* use async_to_httpx_files in patch method ([19d2b70](https://github.com/turbopuffer/turbopuffer-python/commit/19d2b70db29f232da9f489b5b83b1d43dae62f94))
+
+
+### Chores
+
+* **internal:** codegen related update ([76f6c01](https://github.com/turbopuffer/turbopuffer-python/commit/76f6c012dc2e11e6d6c85b1b7fdd2133fb79a34c))
+* speedup initial import ([f98097d](https://github.com/turbopuffer/turbopuffer-python/commit/f98097de4d399b4c7e19b1234820eae12e880ba8))
+
+## 1.11.0 (2025-12-15)
+
+Full Changelog: [v1.10.0...v1.11.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.10.0...v1.11.0)
+
+### Features
+
+* add word_v3 to the spec ([634b7f2](https://github.com/turbopuffer/turbopuffer-python/commit/634b7f272e71bfabda310649d136f613bae83ed1))
+
+
+### Bug Fixes
+
+* **types:** allow pyright to infer TypedDict types within SequenceNotStr ([2c2a4bc](https://github.com/turbopuffer/turbopuffer-python/commit/2c2a4bc039d797b11981d1da388fd2cc5e31f78b))
+
+
+### Chores
+
+* add missing docstrings ([1f04083](https://github.com/turbopuffer/turbopuffer-python/commit/1f04083d328be8f1f1805bfc55bd044ee2e56324))
+* **internal:** add missing files argument to base client ([7afed9a](https://github.com/turbopuffer/turbopuffer-python/commit/7afed9a2bbc1184ce28430316035383cf248ee8f))
+
+## 1.10.0 (2025-12-06)
+
+Full Changelog: [v1.9.1...v1.10.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.1...v1.10.0)
+
+### Features
+
+* always install orjson, even without the [fast] extra ([#192](https://github.com/turbopuffer/turbopuffer-python/issues/192)) ([06a1420](https://github.com/turbopuffer/turbopuffer-python/commit/06a1420645f551ec9e22a931d0ff69dff2dd6814))
+* disable compression by default ([#190](https://github.com/turbopuffer/turbopuffer-python/issues/190)) ([34c1e32](https://github.com/turbopuffer/turbopuffer-python/commit/34c1e32989df97fa9baf25b079a8c3d7a8d1ddae))
+
+## 1.9.1 (2025-12-05)
+
+Full Changelog: [v1.9.0...v1.9.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0...v1.9.1)
+
+## 1.9.0 (2025-12-05)
+
+Full Changelog: [v1.9.0-beta.4...v1.9.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.4...v1.9.0)
+
+### Chores
+
+* codegen updates ([df997d6](https://github.com/turbopuffer/turbopuffer-python/commit/df997d67516e1193239247f3794dc4fcf6812df4))
+
+## 1.9.0-beta.4 (2025-12-04)
+
+Full Changelog: [v1.9.0-beta.3...v1.9.0-beta.4](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.3...v1.9.0-beta.4)
+
+## 1.9.0-beta.3 (2025-12-02)
+
+Full Changelog: [v1.9.0-beta.2...v1.9.0-beta.3](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.2...v1.9.0-beta.3)
+
+### Features
+
+* sdks: add &lt;patch|delete&gt;_by_filter_allow_partial options ([ffac88a](https://github.com/turbopuffer/turbopuffer-python/commit/ffac88af0fb787776ed96076c892e4d70b8fd85d))
+
+
+### Chores
+
+* **docs:** use environment variables for authentication in code snippets ([26df7ea](https://github.com/turbopuffer/turbopuffer-python/commit/26df7ea743c81e4e66ef1ebe72d32ef91ac29f79))
+* update lockfile ([679604c](https://github.com/turbopuffer/turbopuffer-python/commit/679604c9a2fafe668fdebbf482514dd9d7362955))
+
+
+### Documentation
+
+* add cross-region copy_from_namespace to write API docs ([749b349](https://github.com/turbopuffer/turbopuffer-python/commit/749b349674e317d0af41461b5c55d17e70265248))
+
+## 1.9.0-beta.2 (2025-12-02)
+
+Full Changelog: [v1.9.0-beta.1...v1.9.0-beta.2](https://github.com/turbopuffer/turbopuffer-python/compare/v1.9.0-beta.1...v1.9.0-beta.2)
+
+## 1.9.0-beta.1 (2025-12-02)
+
+Full Changelog: [v1.8.1...v1.9.0-beta.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.8.1...v1.9.0-beta.1)
+
+### Performance Improvements
+
+* skip unneeded transformations for primitive types and tuples ([#178](https://github.com/turbopuffer/turbopuffer-python/issues/178)) ([8dbed44](https://github.com/turbopuffer/turbopuffer-python/commit/8dbed446745e90dc010e56cc6e47ffcb719fd094))
+
+## 1.8.1 (2025-12-01)
+
+Full Changelog: [v1.8.0...v1.8.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.8.0...v1.8.1)
+
+### Bug Fixes
+
+* ensure streams are always closed ([91cb8d5](https://github.com/turbopuffer/turbopuffer-python/commit/91cb8d54dd7804c88c5b9c1c659a806c0d664fd0))
+* **tests:** use BM25 query with distinct scores ([#179](https://github.com/turbopuffer/turbopuffer-python/issues/179)) ([508994e](https://github.com/turbopuffer/turbopuffer-python/commit/508994e52f0e5ef3ddf347a3f4fd22dc0f855531))
+
+
+### Chores
+
+* **deps:** mypy 1.18.1 has a regression, pin to 1.17 ([8cebf8f](https://github.com/turbopuffer/turbopuffer-python/commit/8cebf8f09dea0252da7570c08bb924fb5fcb3587))
+
+## 1.8.0 (2025-11-25)
+
+Full Changelog: [v1.7.0...v1.8.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.7.0...v1.8.0)
+
+### Features
+
+* site: add ascii_folding to docs and SDKs ([7be788c](https://github.com/turbopuffer/turbopuffer-python/commit/7be788cb25ccac18a21ef05dec58c3e9556c3adb))
+
+
+### Chores
+
+* **internal:** codegen related update ([93ebd24](https://github.com/turbopuffer/turbopuffer-python/commit/93ebd246fd667d3393733b0e531c297b3ba80b01))
+
+## 1.7.0 (2025-11-17)
+
+Full Changelog: [v1.6.0...v1.7.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.6.0...v1.7.0)
+
+### Features
+
+* spec: add support for cross-org CFN to SDKs ([8d4cb17](https://github.com/turbopuffer/turbopuffer-python/commit/8d4cb17108cf5f14af4aee321b656ad5a0fbfece))
+
+## 1.6.0 (2025-11-17)
+
+Full Changelog: [v1.5.0...v1.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.5.0...v1.6.0)
+
+### Features
+
+* Add vector attribute schema to metadata endpoint ([0d4d216](https://github.com/turbopuffer/turbopuffer-python/commit/0d4d2169a7048f20308490b17fa4cbc184f85112))
+* Allow for a CMEK key to be specified in copy_from_namespace ([2e85faa](https://github.com/turbopuffer/turbopuffer-python/commit/2e85faa4b5cacfbd3b840ed80c3d8c528e2aeff9))
+* Make `type` required on `AttributeSchemaConfig` ([677d239](https://github.com/turbopuffer/turbopuffer-python/commit/677d2390c9640bbf80eb74ad258e9b9ea7a5e9dd))
+* openapi: Fix stainless warnings ([b12a54b](https://github.com/turbopuffer/turbopuffer-python/commit/b12a54b9b9062be3efca3618c2a9cbbbfc3e7ef2))
+* openapi: name variants of `NamespaceMetadata.index` ([ddc8d26](https://github.com/turbopuffer/turbopuffer-python/commit/ddc8d268b08466967e3134c1cd2995e52d4efb46))
+
+
+### Bug Fixes
+
+* **client:** close streams without requiring full consumption ([b8d32f3](https://github.com/turbopuffer/turbopuffer-python/commit/b8d32f3d1af9fd7052bc0ea52c8446ae4ea3a61b))
+* compat with Python 3.14 ([67195f2](https://github.com/turbopuffer/turbopuffer-python/commit/67195f2f74449cc4e50d494d46bdbb736e3f8375))
+* **compat:** update signatures of `model_dump` and `model_dump_json` for Pydantic v1 ([595f416](https://github.com/turbopuffer/turbopuffer-python/commit/595f416c6d8d1362fb2108444af9d41fae8eb6e5))
+
+
+### Chores
+
+* **internal/tests:** avoid race condition with implicit client cleanup ([4230de9](https://github.com/turbopuffer/turbopuffer-python/commit/4230de956fb48b58753bef7dccfc271d6f9111c2))
+* **internal/tests:** avoid race condition with implicit client cleanup ([1386b25](https://github.com/turbopuffer/turbopuffer-python/commit/1386b251b944769f4023e2c2cf6f589e05fa1db7))
+* **internal:** grammar fix (it's -&gt; its) ([7620a5a](https://github.com/turbopuffer/turbopuffer-python/commit/7620a5a61739540fe0fa528a643e6921cf415148))
+* **package:** drop Python 3.8 support ([b0a801e](https://github.com/turbopuffer/turbopuffer-python/commit/b0a801e514f06a672dd575aaf00d8ea0935582a4))
+
+## 1.5.0 (2025-10-21)
+
+Full Changelog: [v1.4.1...v1.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.4.1...v1.5.0)
+
+### Features
+
+* Metadata endpoint updates (e.g. to track indexing progress) ([03baa87](https://github.com/turbopuffer/turbopuffer-python/commit/03baa8777f150cae9f8f4f0342d50b57d67dc96f))
+* required for patch_by_filter :facepalm: ([fd6692f](https://github.com/turbopuffer/turbopuffer-python/commit/fd6692fe39ebc331c096df48dfb2f8def6dc991b))
+* stainless: add patch_by_filter ([e097f85](https://github.com/turbopuffer/turbopuffer-python/commit/e097f856064715c1010e26a1b8969596bb1870ae))
+
+
+### Chores
+
+* bump `httpx-aiohttp` version to 0.1.9 ([eba6dd4](https://github.com/turbopuffer/turbopuffer-python/commit/eba6dd41e90bc0994248e260bc3052d876a7438f))
+* Correct python types for patch by filter (and conditional writes) ([#172](https://github.com/turbopuffer/turbopuffer-python/issues/172)) ([fb3257e](https://github.com/turbopuffer/turbopuffer-python/commit/fb3257e98d0fed3fe64385acbafd0c19ba191600))
+
+## 1.4.1 (2025-10-15)
+
+Full Changelog: [v1.4.0...v1.4.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.4.0...v1.4.1)
+
+## 1.4.0 (2025-10-15)
+
+Full Changelog: [v1.3.1...v1.4.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.3.1...v1.4.0)
+
+### Features
+
+* Add float, []float and []bool to the list of valid types in the OpenAPI spec. ([11b13d8](https://github.com/turbopuffer/turbopuffer-python/commit/11b13d8b27d5af4bc01c52bbf53cbf6e313a110b))
+* Promote disable_backpressure to first-class Write property ([adf659a](https://github.com/turbopuffer/turbopuffer-python/commit/adf659ad1c9a45180d6c18531ded370fa433bed4))
+
+
+### Chores
+
+* **internal:** detect missing future annotations with ruff ([6e631de](https://github.com/turbopuffer/turbopuffer-python/commit/6e631de8f0af1da81f15b9890cb49b1adcedfcde))
+
+## 1.3.1 (2025-10-06)
+
+Full Changelog: [v1.3.0...v1.3.1](https://github.com/turbopuffer/turbopuffer-python/compare/v1.3.0...v1.3.1)
+
+### Documentation
+
+* hint_cache_warm also update header and openapi ([2088d85](https://github.com/turbopuffer/turbopuffer-python/commit/2088d8564c13541a52887bb872194527dfc2eede))
+
+## 1.3.0 (2025-09-24)
+
+Full Changelog: [v1.2.0...v1.3.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.2.0...v1.3.0)
+
+### Features
+
+* add WithParams variant to BM25 and ContainsAllTokens ([cef6f72](https://github.com/turbopuffer/turbopuffer-python/commit/cef6f72c519212528135565fcea2ac1fe169c519))
+
+
+### Bug Fixes
+
+* **compat:** compat with `pydantic&lt;2.8.0` when using additional fields ([1268479](https://github.com/turbopuffer/turbopuffer-python/commit/126847904b5739e5c6ef4803846fd0e7567a485d))
+
+
+### Chores
+
+* do not install brew dependencies in ./scripts/bootstrap by default ([024c0a4](https://github.com/turbopuffer/turbopuffer-python/commit/024c0a4d72851696b058df1d5f76fb7798cf9288))
+* **internal:** update pydantic dependency ([067d75e](https://github.com/turbopuffer/turbopuffer-python/commit/067d75ec42a305be9f9d5b03424c0486825289b4))
+* **types:** change optional parameter type from NotGiven to Omit ([8d6c3cb](https://github.com/turbopuffer/turbopuffer-python/commit/8d6c3cb1ad8e34e3f01e93b31e569536ee8d49e6))
+
+## 1.2.0 (2025-09-11)
+
+Full Changelog: [v1.1.0...v1.2.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.1.0...v1.2.0)
+
+### Features
+
+* improve future compat with pydantic v3 ([819a5d1](https://github.com/turbopuffer/turbopuffer-python/commit/819a5d154c7352ea4e85b99775529d074aad73f7))
+* spec: add dedicated type for AggregationGroup response ([c8bc23f](https://github.com/turbopuffer/turbopuffer-python/commit/c8bc23f80212ce8d4923af09160c542d5e0b609d))
+* tpuf: add include_ground_truth option to recall endpoint ([2128270](https://github.com/turbopuffer/turbopuffer-python/commit/21282704752e68f67fa784d8c89edc0a4e8b6056))
+
+
+### Chores
+
+* **internal:** codegen related update ([5c8f96b](https://github.com/turbopuffer/turbopuffer-python/commit/5c8f96bcab380f3cc6c10b6faced0b30bcf3fdd1))
+* **internal:** move mypy configurations to `pyproject.toml` file ([f72115d](https://github.com/turbopuffer/turbopuffer-python/commit/f72115da5c839670e24798693998afef60f3a038))
+
+## 1.1.0 (2025-09-02)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/turbopuffer/turbopuffer-python/compare/v1.0.0...v1.1.0)
+
+### Features
+
+* **types:** replace List[str] with SequenceNotStr in params ([212f234](https://github.com/turbopuffer/turbopuffer-python/commit/212f234b09822f7fd315cff43c6f7676ab2202c0))
+
+
+### Chores
+
+* **internal:** add Sequence related utils ([f5b1d00](https://github.com/turbopuffer/turbopuffer-python/commit/f5b1d001ed91192de5082feb7058d2150e73a1d8))
+
+## 1.0.0 (2025-08-28)
+
+Full Changelog: [v0.6.5...v1.0.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.5...v1.0.0)
+
+### Features
+
+* Make word_v2 the default FTS tokenizer ([4b566d7](https://github.com/turbopuffer/turbopuffer-python/commit/4b566d752773bd7216dd5183fda8f4284be9e36e))
+
+
+### Bug Fixes
+
+* avoid newer type syntax ([a5fb4a6](https://github.com/turbopuffer/turbopuffer-python/commit/a5fb4a6c546d712aafe395ff281c67d5f9a2591c))
+
+
+### Chores
+
+* **internal:** change ci workflow machines ([eaed93c](https://github.com/turbopuffer/turbopuffer-python/commit/eaed93c8b03d03ace9c417551141ddc6ef45bca7))
+* **internal:** update pyright exclude list ([b7ad4ef](https://github.com/turbopuffer/turbopuffer-python/commit/b7ad4ef6b40eab65f7a66fb6bee8f9e935808369))
+* update github action ([9fe3df7](https://github.com/turbopuffer/turbopuffer-python/commit/9fe3df78346c03091da5c793980f40a68c9e8c8c))
+
+## 0.6.5 (2025-08-18)
+
+Full Changelog: [v0.6.4...v0.6.5](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.4...v0.6.5)
+
+### Bug Fixes
+
+* **api:** add support for `group_by` query parameter ([c809351](https://github.com/turbopuffer/turbopuffer-python/commit/c8093514e1bd5ce169ab594f4e532b7e4deae7b6))
+
+## 0.6.4 (2025-08-13)
+
+Full Changelog: [v0.6.3...v0.6.4](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.3...v0.6.4)
+
+## 0.6.3 (2025-08-12)
+
+Full Changelog: [v0.6.2...v0.6.3](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.2...v0.6.3)
+
+### Bug Fixes
+
+* remove 200 error code for hint_cache_warm API call (always 202 now) ([77df5be](https://github.com/turbopuffer/turbopuffer-python/commit/77df5be5bddbff03429ccff6cd316145a0a5e90e))
+
+
+### Chores
+
+* **internal:** codegen related update ([b4c305d](https://github.com/turbopuffer/turbopuffer-python/commit/b4c305d444cd4958a85774ecb2a7d07b583b670c))
+
+## 0.6.2 (2025-08-11)
+
+Full Changelog: [v0.6.1...v0.6.2](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.1...v0.6.2)
+
+### Chores
+
+* **internal:** update comment in script ([368d5dd](https://github.com/turbopuffer/turbopuffer-python/commit/368d5dd1e766e7890aee6b89d52560291911571f))
+* update @stainless-api/prism-cli to v5.15.0 ([38948fa](https://github.com/turbopuffer/turbopuffer-python/commit/38948fabee3a13a5008957fe92499d767949d249))
+
+## 0.6.1 (2025-08-08)
+
+Full Changelog: [v0.6.0...v0.6.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.6.0...v0.6.1)
+
+### Bug Fixes
+
+* use strict types for explain_query ([#148](https://github.com/turbopuffer/turbopuffer-python/issues/148)) ([7c3bff1](https://github.com/turbopuffer/turbopuffer-python/commit/7c3bff1fd7ac3dd1bb60ba0dd983314d61eef95e))
+
+
+### Chores
+
+* **internal:** fix ruff target version ([3e5ec06](https://github.com/turbopuffer/turbopuffer-python/commit/3e5ec067bb06d0f4e6c9b72aeb483362a4f050d9))
+
+## 0.6.0 (2025-07-31)
+
+Full Changelog: [v0.5.17...v0.6.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.17...v0.6.0)
+
+### Features
+
+* **client:** support file upload requests ([ffdbc5d](https://github.com/turbopuffer/turbopuffer-python/commit/ffdbc5d585b348a39551c016ba1d8afc77687fa4))
+
+
+### Bug Fixes
+
+* **api:** api update ([18eee10](https://github.com/turbopuffer/turbopuffer-python/commit/18eee10603b4113034623568f927d9ab5295f6b2))
+* **api:** api update ([dcf8fd1](https://github.com/turbopuffer/turbopuffer-python/commit/dcf8fd16ab08f2d238ec578015e25a48b8852ded))
+
+## 0.5.17 (2025-07-29)
+
+Full Changelog: [v0.5.16...v0.5.17](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.16...v0.5.17)
+
+### Bug Fixes
+
+* **api:** api update ([47fbda1](https://github.com/turbopuffer/turbopuffer-python/commit/47fbda100c87aacb8962ce3b0a589ca787d48ecf))
+* **api:** api update ([c8a3a2f](https://github.com/turbopuffer/turbopuffer-python/commit/c8a3a2f5b028ff92e8c17ca52b86a35d3ae1e6eb))
+* **api:** api update ([882c8b4](https://github.com/turbopuffer/turbopuffer-python/commit/882c8b4a992a78c2057db3021ea84e1a85e465b6))
+
+## 0.5.16 (2025-07-29)
+
+Full Changelog: [v0.5.15...v0.5.16](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.15...v0.5.16)
+
+### Bug Fixes
+
+* add support for regex filter ([6fb42f9](https://github.com/turbopuffer/turbopuffer-python/commit/6fb42f9cc98ada3def222c9ca1b639ffe10f1434))
+* **api:** api update ([12a8eb6](https://github.com/turbopuffer/turbopuffer-python/commit/12a8eb6e068bf23a3df3553df2d20c9f87caffb0))
+* **api:** api update ([c84043a](https://github.com/turbopuffer/turbopuffer-python/commit/c84043a92c31555a0d1f7c7f320d0a1ad7147261))
+* **api:** api update ([8eeaf90](https://github.com/turbopuffer/turbopuffer-python/commit/8eeaf90624de0d7aafca55cb139ba2651838cfc2))
+
+## 0.5.15 (2025-07-28)
+
+Full Changelog: [v0.5.14...v0.5.15](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.14...v0.5.15)
+
+### Bug Fixes
+
+* **api:** api update ([ed06b6f](https://github.com/turbopuffer/turbopuffer-python/commit/ed06b6f1aa3d72dd3e6b3a4317dbe326b0b8ee7c))
+* more precise types for filters that take arrays ([3f8a227](https://github.com/turbopuffer/turbopuffer-python/commit/3f8a2272b3ea062468dd8454f157c2295fc32e37))
+* serialize datetime objects when orjson isn't installed ([#143](https://github.com/turbopuffer/turbopuffer-python/issues/143)) ([c194fc6](https://github.com/turbopuffer/turbopuffer-python/commit/c194fc6bae0cf1ab0696fa98736de78ef99a536a))
+
+
+### Chores
+
+* **project:** add settings file for vscode ([c843ee0](https://github.com/turbopuffer/turbopuffer-python/commit/c843ee0a0e91b50b97222fef804aa464de841903))
+
+## 0.5.14 (2025-07-22)
+
+Full Changelog: [v0.5.13...v0.5.14](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.13...v0.5.14)
+
+### Bug Fixes
+
+* **parsing:** ignore empty metadata ([1c750c2](https://github.com/turbopuffer/turbopuffer-python/commit/1c750c228f2b028355d402a5085c3ddadc9bb749))
+* **parsing:** parse extra field types ([fc021b2](https://github.com/turbopuffer/turbopuffer-python/commit/fc021b2c8f046e00055ea8b7ac302c2708a47cf3))
+
+## 0.5.13 (2025-07-18)
+
+Full Changelog: [v0.5.12...v0.5.13](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.12...v0.5.13)
+
+### Features
+
+* clean up environment call outs ([f0c7314](https://github.com/turbopuffer/turbopuffer-python/commit/f0c73145365f897255517af9f4d417bb064886e2))
+
+
+### Bug Fixes
+
+* **client:** don't send Content-Type header on GET requests ([534cd40](https://github.com/turbopuffer/turbopuffer-python/commit/534cd40ef0af133f854f5336dcf16922fa08332a))
+
+
+### Chores
+
+* **readme:** fix version rendering on pypi ([341d3a3](https://github.com/turbopuffer/turbopuffer-python/commit/341d3a332a8b18886c7de9ac606d63258142ecc4))
+
+## 0.5.12 (2025-07-10)
+
+Full Changelog: [v0.5.11...v0.5.12](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.11...v0.5.12)
+
+### Bug Fixes
+
+* **api:** api update ([b49220a](https://github.com/turbopuffer/turbopuffer-python/commit/b49220a2fa8b88a107ea8f0fbb20671bd29266fe))
+* **api:** api update ([1a49cae](https://github.com/turbopuffer/turbopuffer-python/commit/1a49caec78bbc71c1678bbc4b89b8d3017269c6b))
+* don't set region in tests if base URL doesn't support it ([b7e8297](https://github.com/turbopuffer/turbopuffer-python/commit/b7e8297f705be97edee77f41487c51ae7bc975cb))
+* explicitly omit TURBOPUFFER_BASE_URL from env when necessary ([9075015](https://github.com/turbopuffer/turbopuffer-python/commit/9075015991d9afa886d31a327a55959699aaeda7))
+* **parsing:** correctly handle nested discriminated unions ([7c63c5e](https://github.com/turbopuffer/turbopuffer-python/commit/7c63c5e93af2e7615ea0eb10f40e28926ac319f3))
+* update tests for new metadata endpoint ([a6799d3](https://github.com/turbopuffer/turbopuffer-python/commit/a6799d30683595281cfd14dfff014cc1725407d0))
+
+## 0.5.11 (2025-07-09)
+
+Full Changelog: [v0.5.10...v0.5.11](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.10...v0.5.11)
+
+### Bug Fixes
+
+* **api:** api update ([4ea9eda](https://github.com/turbopuffer/turbopuffer-python/commit/4ea9eda6acd86390dc223c0224d76c594776cacc))
+* don't require region unless baseUrl contains {region} placeholder ([#137](https://github.com/turbopuffer/turbopuffer-python/issues/137)) ([b63b7c8](https://github.com/turbopuffer/turbopuffer-python/commit/b63b7c81854479a7644e66a843fa7794b67d41c2))
+
+
+### Chores
+
+* **internal:** bump pinned h11 dep ([4f70ea2](https://github.com/turbopuffer/turbopuffer-python/commit/4f70ea23a2ae016006e6a90e625de6b9b8884453))
+* **package:** mark python 3.13 as supported ([7e91954](https://github.com/turbopuffer/turbopuffer-python/commit/7e919541aa45a494a021fd5728b792b7f048eb19))
+
+## 0.5.10 (2025-07-07)
+
+Full Changelog: [v0.5.9...v0.5.10](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.9...v0.5.10)
+
+### Bug Fixes
+
+* **api:** add support for [Not]Contains[Any] operators ([#135](https://github.com/turbopuffer/turbopuffer-python/issues/135)) ([286db87](https://github.com/turbopuffer/turbopuffer-python/commit/286db871a4c558d74fd34103fefd7b915b9bb1c7))
+* **api:** api update ([afecdd0](https://github.com/turbopuffer/turbopuffer-python/commit/afecdd0bbcbf0a8b40f1d6802a55fc4ecb24128e))
+
+
+### Chores
+
+* **ci:** change upload type ([99ba1aa](https://github.com/turbopuffer/turbopuffer-python/commit/99ba1aa8c8f208de772e8bd5f9ef955726a89280))
+
+## 0.5.9 (2025-07-01)
+
+Full Changelog: [v0.5.8...v0.5.9](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.8...v0.5.9)
+
+### Features
+
+* **client:** add support for aiohttp ([4d58a72](https://github.com/turbopuffer/turbopuffer-python/commit/4d58a72dcc7a4209911c8bc69c1aa8abec38486b))
+
+
+### Bug Fixes
+
+* add support for `$ref_new` expressions ([#132](https://github.com/turbopuffer/turbopuffer-python/issues/132)) ([943228e](https://github.com/turbopuffer/turbopuffer-python/commit/943228e59158468f13a2002cc4446211cf03a639))
+* **api:** api update ([303f8bb](https://github.com/turbopuffer/turbopuffer-python/commit/303f8bb649c66fad8f1331d0cd32016403b091d5))
+* **api:** api update ([e8fee42](https://github.com/turbopuffer/turbopuffer-python/commit/e8fee42be99526a9015ae7cebd3b78d78dfe1ff6))
+* **ci:** correct conditional ([13b08d9](https://github.com/turbopuffer/turbopuffer-python/commit/13b08d964844351835d1d256524675544002653e))
+* **ci:** release-doctor — report correct token name ([9ca4a70](https://github.com/turbopuffer/turbopuffer-python/commit/9ca4a70480d6536d37815ca96f790a60cc37f97d))
+* correct name of stainless bot ([#133](https://github.com/turbopuffer/turbopuffer-python/issues/133)) ([acab273](https://github.com/turbopuffer/turbopuffer-python/commit/acab273999c22ec0719b7f8d8e25eeaf219279f0))
+* **README:** improve headline example ([#131](https://github.com/turbopuffer/turbopuffer-python/issues/131)) ([7db0fb2](https://github.com/turbopuffer/turbopuffer-python/commit/7db0fb229944b040de5b8da0dc6389358d70804d))
+* strict types for write conditions ([#130](https://github.com/turbopuffer/turbopuffer-python/issues/130)) ([75c4515](https://github.com/turbopuffer/turbopuffer-python/commit/75c45150da8f183bdcddb70ab142d4eeed17a218))
+
+
+### Chores
+
+* **ci:** only run for pushes and fork pull requests ([4e928d3](https://github.com/turbopuffer/turbopuffer-python/commit/4e928d310d7ba1022850ced923625c9d869ee73d))
+* **tests:** skip some failing tests on the latest python versions ([d2c4814](https://github.com/turbopuffer/turbopuffer-python/commit/d2c4814ee0c3f9dcccd97b64d3c186242c18a9d7))
+
+## 0.5.8 (2025-06-20)
+
+Full Changelog: [v0.5.7...v0.5.8](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.7...v0.5.8)
+
+### Features
+
+* **api:** introduce dedicated Query model ([bc09dc2](https://github.com/turbopuffer/turbopuffer-python/commit/bc09dc28b8a548ae9a06b2cb54e3698e37e563df))
+
+
+### Bug Fixes
+
+* strict types for new QueryParam type ([fae8c4d](https://github.com/turbopuffer/turbopuffer-python/commit/fae8c4d7f79d52f7996c1638492b28b9b72874aa))
+
+
+### Chores
+
+* **readme:** update badges ([d03eb1a](https://github.com/turbopuffer/turbopuffer-python/commit/d03eb1a5e6be5f24219f40e1274dba253c15c327))
+
+
+### Documentation
+
+* **client:** fix httpx.Timeout documentation reference ([320cee5](https://github.com/turbopuffer/turbopuffer-python/commit/320cee594b3984151dd589d38d872bf287f240ad))
+
+## 0.5.7 (2025-06-19)
+
+Full Changelog: [v0.5.6...v0.5.7](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.6...v0.5.7)
+
+### Bug Fixes
+
+* strict types for async query and multi_query APIs ([#127](https://github.com/turbopuffer/turbopuffer-python/issues/127)) ([a5d2982](https://github.com/turbopuffer/turbopuffer-python/commit/a5d2982bd4fcc5cdd3e585a3ebc1f19158082cb6))
+
+
+### Chores
+
+* **ci:** enable for pull requests ([d975004](https://github.com/turbopuffer/turbopuffer-python/commit/d975004fda35132fd9b580e06c8bf0ab9a27a4ae))
+* **internal:** update conftest.py ([50476ac](https://github.com/turbopuffer/turbopuffer-python/commit/50476ac2de7ea6b0b7443d23f24ad1ab2b4529c1))
+* **tests:** add tests for httpx client instantiation & proxies ([a44fc4f](https://github.com/turbopuffer/turbopuffer-python/commit/a44fc4f90fa597dc86fa2222d84183996adce109))
+
+## 0.5.6 (2025-06-16)
+
+Full Changelog: [v0.5.5...v0.5.6](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.5...v0.5.6)
+
+### Bug Fixes
+
+* don't run grouped tests in parallel ([#125](https://github.com/turbopuffer/turbopuffer-python/issues/125)) ([9024587](https://github.com/turbopuffer/turbopuffer-python/commit/902458767faf238a7fd9bb012bf7026dc2a83a3b))
+
+## 0.5.5 (2025-06-15)
+
+Full Changelog: [v0.5.4...v0.5.5](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.4...v0.5.5)
+
+### Bug Fixes
+
+* remove type annotation that's invalid in Python 3.8 ([#123](https://github.com/turbopuffer/turbopuffer-python/issues/123)) ([8dddad5](https://github.com/turbopuffer/turbopuffer-python/commit/8dddad5cbb0b76ec64f07ef92795f6c1a8b60423))
+
+## 0.5.4 (2025-06-15)
+
+Full Changelog: [v0.5.3...v0.5.4](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.3...v0.5.4)
+
+### Bug Fixes
+
+* **client:** correctly parse binary response | stream ([aa37450](https://github.com/turbopuffer/turbopuffer-python/commit/aa37450a59f799ad9ce2b7eabe6f540faad1ecbd))
+* restore support for Python 3.8 ([#121](https://github.com/turbopuffer/turbopuffer-python/issues/121)) ([d751354](https://github.com/turbopuffer/turbopuffer-python/commit/d751354ae32b7331e822cddeda1584105196930f))
+
+
+### Chores
+
+* **tests:** run tests in parallel ([687c922](https://github.com/turbopuffer/turbopuffer-python/commit/687c9228f2d38be8a5c231753fd998938b1bb86f))
+
+## 0.5.3 (2025-06-12)
+
+Full Changelog: [v0.5.2...v0.5.3](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.2...v0.5.3)
+
+### Bug Fixes
+
+* mark urllib3 optional ([#118](https://github.com/turbopuffer/turbopuffer-python/issues/118)) ([85ab0de](https://github.com/turbopuffer/turbopuffer-python/commit/85ab0deef64843b47bc33bce267a098a11006355))
+
+## 0.5.2 (2025-06-11)
+
+Full Changelog: [v0.5.1...v0.5.2](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.1...v0.5.2)
+
+### Bug Fixes
+
+* **docs:** add note about attribute flattening to upgrade guide ([#115](https://github.com/turbopuffer/turbopuffer-python/issues/115)) ([568348d](https://github.com/turbopuffer/turbopuffer-python/commit/568348dc7e3a06dcdcd59aa488c346f2c717ffa3))
+* **tests:** mock delete when testing namespace default params ([#116](https://github.com/turbopuffer/turbopuffer-python/issues/116)) ([db587e8](https://github.com/turbopuffer/turbopuffer-python/commit/db587e860af7951d8549a70cff86c93e9f6259ca))
+
+
+### Chores
+
+* prepare for release ([89006af](https://github.com/turbopuffer/turbopuffer-python/commit/89006afdb329c74cd7d91e857c86aaed9a065696))
+
+## 0.5.1 (2025-06-11)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0...v0.5.1)
+
+### Bug Fixes
+
+* **api:** add support for new multi-query api
+* **tests:** mock delete whne testing namespace default params ([072f33a](https://github.com/turbopuffer/turbopuffer-python/commit/072f33a9758fcfc20cad675971f6efb91aba7b00))
+
+
+### Chores
+
+* **internal:** codegen related update ([5fa49e7](https://github.com/turbopuffer/turbopuffer-python/commit/5fa49e77a0167caea75dd9abc22c63b5779d8bc1))
+* sync repo ([3f7d6f7](https://github.com/turbopuffer/turbopuffer-python/commit/3f7d6f72db281f013bbe3fc4ff1e56392d61fd05))
+
+## 0.5.0 (2025-06-10)
+
+Full Changelog: [v0.5.0-alpha.15...v0.5.0](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.15...v0.5.0)
+
+### Features
+
+* improve performance with custom transports ([#111](https://github.com/turbopuffer/turbopuffer-python/issues/111)) ([7def3c6](https://github.com/turbopuffer/turbopuffer-python/commit/7def3c64a5664b616a53b560252839ef36fbd010))
+
+
+### Bug Fixes
+
+* **README:** align docs link with other SDKs ([91b8b69](https://github.com/turbopuffer/turbopuffer-python/commit/91b8b698a3ac76a40b94646cf49ece9e94f79b8d))
+
+## 0.5.0-alpha.15 (2025-06-09)
+
+Full Changelog: [v0.5.0-alpha.14...v0.5.0-alpha.15](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.14...v0.5.0-alpha.15)
+
+### Features
+
+* improve deprecation warnings ([b38de2e](https://github.com/turbopuffer/turbopuffer-python/commit/b38de2eb4e063b0d9534862cfc517764ca1f56b1))
+
+
+### Bug Fixes
+
+* typings of deprecation warnings ([e0c7e8a](https://github.com/turbopuffer/turbopuffer-python/commit/e0c7e8a5688540d5ffecbc0fdcc1295530a8e19d))
+
+## 0.5.0-alpha.14 (2025-06-09)
+
+Full Changelog: [v0.5.0-alpha.13...v0.5.0-alpha.14](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.13...v0.5.0-alpha.14)
+
+### Features
+
+* add deprecation shims ([cfd1438](https://github.com/turbopuffer/turbopuffer-python/commit/cfd14380cf584c5c96b5d414cc8e417f89b20643))
+* add Namespace.exists() async method ([117c3f0](https://github.com/turbopuffer/turbopuffer-python/commit/117c3f0be2d016a11c94844cacae25faca67f566))
+* restore Namespace.exists() method ([c6f2f9c](https://github.com/turbopuffer/turbopuffer-python/commit/c6f2f9cd4c3340eb6208260ac69c6cbe0642d206))
+
+
+### Bug Fixes
+
+* specify distance_metric in exists tests ([f52ac9b](https://github.com/turbopuffer/turbopuffer-python/commit/f52ac9ba6079b3a43952f9e5779d2b8089af9f63))
+
+## 0.5.0-alpha.13 (2025-06-06)
+
+Full Changelog: [v0.5.0-alpha.12...v0.5.0-alpha.13](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.12...v0.5.0-alpha.13)
+
+### Features
+
+* **api:** api update ([a016ffc](https://github.com/turbopuffer/turbopuffer-python/commit/a016ffc01f043eb8bd1b7061531966385e871461))
+* **types:** add __setitem__ support to Row ([c2a4554](https://github.com/turbopuffer/turbopuffer-python/commit/c2a4554c7cd00e546ebd7a1447a42d6d863ec425))
+
+
+### Bug Fixes
+
+* **guide:** update UPGRADING.md ([c124d29](https://github.com/turbopuffer/turbopuffer-python/commit/c124d29ff94340c301e6e90ca294dda73bef9e7a))
+* restore TYPE_CHECKING conditional in Row ([7d070a3](https://github.com/turbopuffer/turbopuffer-python/commit/7d070a38599511770269b82a3ce63ad9ce4dfb49))
+* update supplemental codegen version ([1c68e54](https://github.com/turbopuffer/turbopuffer-python/commit/1c68e5414807fd5f0970b197e434c47ef8db123b))
+
+## 0.5.0-alpha.12 (2025-06-03)
+
+Full Changelog: [v0.5.0-alpha.11...v0.5.0-alpha.12](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.11...v0.5.0-alpha.12)
+
+### Bug Fixes
+
+* **types:** add missing fallback overloads for Row ([ca9c91f](https://github.com/turbopuffer/turbopuffer-python/commit/ca9c91fe2fe0d761f71a32d81d7a1b70ae2ad855))
+
+## 0.5.0-alpha.11 (2025-06-03)
+
+Full Changelog: [v0.5.0-alpha.10...v0.5.0-alpha.11](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.10...v0.5.0-alpha.11)
+
+### Features
+
+* **api:** api update ([14c2546](https://github.com/turbopuffer/turbopuffer-python/commit/14c25463edb34bd098eddc12f9f9cf49670b0845))
+* **types:** add __setitem__ support to Row ([90a2a9a](https://github.com/turbopuffer/turbopuffer-python/commit/90a2a9a93ac921467ea3e175716361c346653643))
+
+## 0.5.0-alpha.10 (2025-06-03)
+
+Full Changelog: [v0.5.0-alpha.9...v0.5.0-alpha.10](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.9...v0.5.0-alpha.10)
+
+### Features
+
+* **api:** api update ([fe4083b](https://github.com/turbopuffer/turbopuffer-python/commit/fe4083b40d9bcfac42d5bb11017241d109d0f061))
+* **client:** add follow_redirects request option ([051cc38](https://github.com/turbopuffer/turbopuffer-python/commit/051cc38792626bee8f9b69af013dc2fad25cb213))
+
+
+### Bug Fixes
+
+* **gen:** update to lastest API gen ([db879a2](https://github.com/turbopuffer/turbopuffer-python/commit/db879a261ce0778bde4cc4f29c4b3eb4020860c9))
+* **guide:** add an upgrade guide ([5a9e1b0](https://github.com/turbopuffer/turbopuffer-python/commit/5a9e1b09d2fd1fd095b0aad602eccfcafb5990d6))
+* **guide:** correct syntax in upgrade guide ([b7fec22](https://github.com/turbopuffer/turbopuffer-python/commit/b7fec22470472c7eaaf7d721b9632359e5c49eae))
+* **tests:** update tests for new Row/Columns type names ([725c912](https://github.com/turbopuffer/turbopuffer-python/commit/725c9126d1f2d616852f42da5c18a2d30e26d52b))
+
+
+### Chores
+
+* **docs:** remove reference to rye shell ([038b2fd](https://github.com/turbopuffer/turbopuffer-python/commit/038b2fdae766bb3d6e230e232017516bf0970fe0))
+* **docs:** remove unnecessary param examples ([c04f310](https://github.com/turbopuffer/turbopuffer-python/commit/c04f310879729b1f33a0be5c9daabc536a85daa7))
+
+## 0.5.0-alpha.9 (2025-05-30)
+
+Full Changelog: [v0.5.0-alpha.8...v0.5.0-alpha.9](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.8...v0.5.0-alpha.9)
+
+### Bug Fixes
+
+* **lib:** migrate utilities from turbopuffer_api into turbopuffer ([#103](https://github.com/turbopuffer/turbopuffer-python/issues/103)) ([a935a9f](https://github.com/turbopuffer/turbopuffer-python/commit/a935a9f361e4a23f566ecd0715fb522570c73727))
+
+## 0.5.0-alpha.8 (2025-05-30)
+
+Full Changelog: [v0.5.0-alpha.7...v0.5.0-alpha.8](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.7...v0.5.0-alpha.8)
+
+### Features
+
+* **api:** api update ([cea6680](https://github.com/turbopuffer/turbopuffer-python/commit/cea6680385db0d05f3b6a2d79177b237cc358092))
+
+## 0.5.0-alpha.7 (2025-05-29)
+
+Full Changelog: [v0.5.0-alpha.6...v0.5.0-alpha.7](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.6...v0.5.0-alpha.7)
+
+### Features
+
+* **api:** api update ([d9baa92](https://github.com/turbopuffer/turbopuffer-python/commit/d9baa92a98ed14ea11e27dbe087e4b38b5dbbaa4))
+* **api:** api update ([c11242e](https://github.com/turbopuffer/turbopuffer-python/commit/c11242ec8b91de1c845bf08c5de7bb9d5e6d7248))
+* **api:** api update ([f4eec91](https://github.com/turbopuffer/turbopuffer-python/commit/f4eec91b4af2d90bd270fab66854371e1e2c740b))
+* **api:** api update ([99377d9](https://github.com/turbopuffer/turbopuffer-python/commit/99377d93e2583abe7342a0664b142dc49768fbea))
+* **api:** api update ([aba8064](https://github.com/turbopuffer/turbopuffer-python/commit/aba8064540b05e5e4a870737a72ca568969fd733))
+
+## 0.5.0-alpha.6 (2025-05-29)
+
+Full Changelog: [v0.5.0-alpha.5...v0.5.0-alpha.6](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.5...v0.5.0-alpha.6)
+
+### Features
+
+* **api:** api update ([e0f19d6](https://github.com/turbopuffer/turbopuffer-python/commit/e0f19d62b77d44f0da244e837823993181e5288a))
+
+## 0.5.0-alpha.5 (2025-05-29)
+
+Full Changelog: [v0.5.0-alpha.4...v0.5.0-alpha.5](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.4...v0.5.0-alpha.5)
+
+### Features
+
+* **api:** api update ([f2f139e](https://github.com/turbopuffer/turbopuffer-python/commit/f2f139eea05eb309b23ba6a5c1c5a7ea0bffb1ac))
+* **api:** api update ([a740c85](https://github.com/turbopuffer/turbopuffer-python/commit/a740c85537e1b5a00d605703cc2d71d220bc932f))
+
+## 0.5.0-alpha.4 (2025-05-29)
+
+Full Changelog: [v0.5.0-alpha.3...v0.5.0-alpha.4](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.3...v0.5.0-alpha.4)
+
+### Features
+
+* **api:** api update ([1a8824f](https://github.com/turbopuffer/turbopuffer-python/commit/1a8824fb229cb9a590ccdb9086ca3d4cc7436ee2))
+
+## 0.5.0-alpha.3 (2025-05-29)
+
+Full Changelog: [v0.5.0-alpha.2...v0.5.0-alpha.3](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.2...v0.5.0-alpha.3)
+
+### Features
+
+* **api:** api update ([f14461d](https://github.com/turbopuffer/turbopuffer-python/commit/f14461d883a929a979361677aa7f2f68bcf27ee2))
+* **api:** api update ([77ebab5](https://github.com/turbopuffer/turbopuffer-python/commit/77ebab5faebc767fb9fa99e07536a2a7ad5a6552))
+* **api:** api update ([0a13a70](https://github.com/turbopuffer/turbopuffer-python/commit/0a13a705a8a6715f03e4a716f869e78b359128d2))
+* **api:** api update ([d486f26](https://github.com/turbopuffer/turbopuffer-python/commit/d486f26e59a7536d8fdeb98ddf150c2f5f9b1519))
+* **api:** api update ([e3f1a7c](https://github.com/turbopuffer/turbopuffer-python/commit/e3f1a7cf8005e1d45621de41fc13314de53f285f))
+
+## 0.5.0-alpha.2 (2025-05-29)
+
+Full Changelog: [v0.5.0-alpha.1...v0.5.0-alpha.2](https://github.com/turbopuffer/turbopuffer-python/compare/v0.5.0-alpha.1...v0.5.0-alpha.2)
+
+### Features
+
+* **api:** api update ([c021d8b](https://github.com/turbopuffer/turbopuffer-python/commit/c021d8b89f5049e48c7b62c4543a887706b141fa))
+
+
+### Bug Fixes
+
+* **README:** add alpha notice ([14aac9d](https://github.com/turbopuffer/turbopuffer-python/commit/14aac9d3f1177316a90be10063248b2db70c38c3))
+* **README:** update code examples ([12e9cca](https://github.com/turbopuffer/turbopuffer-python/commit/12e9ccada045c2a00c0bc8a5f4ab275c71bf9783))
+
+
+### Chores
+
+* remove custom code ([51c0514](https://github.com/turbopuffer/turbopuffer-python/commit/51c051481a85e719bfd97279bc2b8129e2c88d46))
+
+## 0.5.0-alpha.1 (2025-05-28)
+
+Full Changelog: [v0.4.0-alpha.1...v0.5.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.4.0-alpha.1...v0.5.0-alpha.1)
+
+### Features
+
+* **api:** api update ([a788c14](https://github.com/turbopuffer/turbopuffer-python/commit/a788c1422b699bd5c3e8179fa283e435d3bad099))
+* **api:** api update ([6145878](https://github.com/turbopuffer/turbopuffer-python/commit/6145878ddb125fad92b686820824499aa194d569))
+* **api:** api update ([ad14cdc](https://github.com/turbopuffer/turbopuffer-python/commit/ad14cdc0c77b47fde0b968364d83c856855c2976))
+* **api:** api update ([dcbf9d6](https://github.com/turbopuffer/turbopuffer-python/commit/dcbf9d6002784d1050f76f80fe9005cfd2094117))
+* **api:** api update ([d8352cf](https://github.com/turbopuffer/turbopuffer-python/commit/d8352cf2f0b597c8b1740f7227f484e8f3836e57))
+* **api:** api update ([515404a](https://github.com/turbopuffer/turbopuffer-python/commit/515404abe1964666ffeeef986ef5faad3ebdb2c9))
+* **api:** api update ([5e6045a](https://github.com/turbopuffer/turbopuffer-python/commit/5e6045a6eb1549da4f0d854ef3ed5c5077209057))
+* **api:** api update ([a4869be](https://github.com/turbopuffer/turbopuffer-python/commit/a4869be8ead7fc0a1b155f7fac260c2a2add292a))
+* **api:** api update ([cf67ed6](https://github.com/turbopuffer/turbopuffer-python/commit/cf67ed6bf343013f4d0aae4979dfb11fb87cd854))
+* **api:** api update ([e3254ba](https://github.com/turbopuffer/turbopuffer-python/commit/e3254baf7458ac436d9c1b07336ff2a71de1538a))
+* **api:** api update ([9c3feb5](https://github.com/turbopuffer/turbopuffer-python/commit/9c3feb5fa14cd0b2d0645f47789a36c966f6b357))
+* **api:** api update ([419127d](https://github.com/turbopuffer/turbopuffer-python/commit/419127d3e2c75a899f4a021e03426f65b4c7a405))
+* **api:** api update ([9849905](https://github.com/turbopuffer/turbopuffer-python/commit/98499056fcc525cbc3c3cef8b2c3a9154f325f24))
+* **api:** api update ([594f35e](https://github.com/turbopuffer/turbopuffer-python/commit/594f35e7820c07144bebc83137d67501c133742c))
+* **api:** api update ([74e8df3](https://github.com/turbopuffer/turbopuffer-python/commit/74e8df3f418919e4a6dcf25930cc44432cdceac1))
+* **api:** api update ([a3a8330](https://github.com/turbopuffer/turbopuffer-python/commit/a3a833074a81d2dd09f30ae58bf2ed81de89d560))
+* **api:** api update ([4bb390b](https://github.com/turbopuffer/turbopuffer-python/commit/4bb390b96bd6c243efc8d3c028349a14d7c210de))
+* **api:** api update ([2b2412d](https://github.com/turbopuffer/turbopuffer-python/commit/2b2412dc78ed1e41c552ab1683b35ac7c19f0f07))
+* **api:** api update ([73a5486](https://github.com/turbopuffer/turbopuffer-python/commit/73a5486f9c2752bf4310b3eefaec74ca40209142))
+* **api:** api update ([f3ad602](https://github.com/turbopuffer/turbopuffer-python/commit/f3ad602c7b0fbc3164958db6693ccc036479a9c9))
+* **api:** api update ([222504d](https://github.com/turbopuffer/turbopuffer-python/commit/222504d3c5d4654b4323aec6a26d49bb8e47923f))
+* **api:** api update ([dd9d6c2](https://github.com/turbopuffer/turbopuffer-python/commit/dd9d6c2784d6490b9ac14e2999da3458f32b101a))
+* **api:** api update ([20115c2](https://github.com/turbopuffer/turbopuffer-python/commit/20115c223f8c80c5735a354d6231e635d5bd6fb5))
+* **api:** api update ([aa7bad5](https://github.com/turbopuffer/turbopuffer-python/commit/aa7bad5258a9a885a9105c4c59f48362de48ad8d))
+* **api:** api update ([5a55074](https://github.com/turbopuffer/turbopuffer-python/commit/5a550741c22186dce371a24b9db8770c7ba774f3))
+* **api:** api update ([eb5afb2](https://github.com/turbopuffer/turbopuffer-python/commit/eb5afb2d63afb4e7db4a7cd22506aa2f953e9c6e))
+* **api:** api update ([1a4ce60](https://github.com/turbopuffer/turbopuffer-python/commit/1a4ce60b7ed12aea579e9dbfcec07b866c82d405))
+* **api:** api update ([27c0374](https://github.com/turbopuffer/turbopuffer-python/commit/27c0374a230a1437c6b6cda9c218e661575ddc23))
+* **api:** api update ([49acdc2](https://github.com/turbopuffer/turbopuffer-python/commit/49acdc26db850f8a86c376e0f19b793ef801088a))
+* **api:** api update ([9d26749](https://github.com/turbopuffer/turbopuffer-python/commit/9d26749c2424e1a880825095505b8e17e04037f9))
+* **api:** api update ([5b5e258](https://github.com/turbopuffer/turbopuffer-python/commit/5b5e258cb1fb4b54e1d3498c4672fdf9a27e681a))
+* **api:** api update ([f119560](https://github.com/turbopuffer/turbopuffer-python/commit/f119560317d9858b7b5ed7274298464861c29cbb))
+* **api:** api update ([b40a258](https://github.com/turbopuffer/turbopuffer-python/commit/b40a2580b2d481f5837f8aeb2cb03d749249873c))
+* **api:** api update ([de09eb6](https://github.com/turbopuffer/turbopuffer-python/commit/de09eb6c87117a2d8927e5f53b4655c8be00c6e2))
+* **api:** api update ([e5b907b](https://github.com/turbopuffer/turbopuffer-python/commit/e5b907be45c71cf42a5ef4f6304522fc665abe90))
+* **api:** api update ([82c07a0](https://github.com/turbopuffer/turbopuffer-python/commit/82c07a0ea9e122d3636e39f80ef56ada5ba25d32))
+* **api:** api update ([4aff84f](https://github.com/turbopuffer/turbopuffer-python/commit/4aff84ff7fff1ace200c2b30556b5545a6c58a06))
+* **api:** manual updates ([01965c9](https://github.com/turbopuffer/turbopuffer-python/commit/01965c91651b1281351c081931febe8a08366aa6))
+
+
+### Chores
+
+* **ci:** fix installation instructions ([b2dbc95](https://github.com/turbopuffer/turbopuffer-python/commit/b2dbc95e8673f2bae76415146d44b9f6c5e3c618))
+* **ci:** upload sdks to package manager ([75e82da](https://github.com/turbopuffer/turbopuffer-python/commit/75e82da8841da9bc4b1a95ed217d36c01c7c0aeb))
+* **docs:** grammar improvements ([7ccc03b](https://github.com/turbopuffer/turbopuffer-python/commit/7ccc03b63bd7e8b7ae6f8bf9ce9e763ca417129d))
+* **internal:** codegen related update ([69a757e](https://github.com/turbopuffer/turbopuffer-python/commit/69a757e26d67c9a4ccdbb404139322305e21884b))
+* **internal:** version bump ([00aa607](https://github.com/turbopuffer/turbopuffer-python/commit/00aa607c35dd4084db6cd10da399d73010280367))
+
+## 0.4.0-alpha.1 (2025-05-13)
+
+Full Changelog: [v0.3.0...v0.4.0-alpha.1](https://github.com/turbopuffer/turbopuffer-python/compare/v0.3.0...v0.4.0-alpha.1)
+
+### Features
+
+* **api:** api update ([bdfdccc](https://github.com/turbopuffer/turbopuffer-python/commit/bdfdcccf5df28cd5104999e14eddb5d175c644b7))
+
+
+### Chores
+
+* sync repo ([2fcc00d](https://github.com/turbopuffer/turbopuffer-python/commit/2fcc00d3785df736721933c43cf2cf5693027ca5))
+* update SDK settings ([1f814f3](https://github.com/turbopuffer/turbopuffer-python/commit/1f814f39dcd7dfe4838fc0e9aa42a966ad44f28f))
+* update SDK settings ([513b09d](https://github.com/turbopuffer/turbopuffer-python/commit/513b09dc2ae33fe633690ca2f92b1a972dbf5560))
