@@ -21,6 +21,7 @@ from turbopuffer.types import (
     AttributeEmbedConfig,
     AttributeSchema,
     AttributeSchemaConfig,
+    AttributeSchemaDrop,
     AttributeType,
     Bm25ClauseParams,
     BranchFromNamespaceParams,

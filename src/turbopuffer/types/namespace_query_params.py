@@ -80,13 +80,7 @@ class Consistency(TypedDict, total=False):
     """The consistency level for a query."""
 
     level: Literal["strong", "eventual"]
-    """The query's consistency level.
-
-    - `strong` - Strong consistency. Requires a round-trip to object storage to
-      fetch the latest writes.
-    - `eventual` - Eventual consistency. Does not require a round-trip to object
-      storage, but may not see the latest writes.
-    """
+    """The query's consistency level."""
 
 
 Limit: TypeAlias = Union[int, LimitParam]
