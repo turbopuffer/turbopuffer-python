@@ -6,8 +6,9 @@ from typing import Union
 from typing_extensions import TypeAlias
 
 from .attribute_type import AttributeType
+from .attribute_schema_drop_param import AttributeSchemaDropParam
 from .attribute_schema_config_param import AttributeSchemaConfigParam
 
 __all__ = ["AttributeSchemaParam"]
 
-AttributeSchemaParam: TypeAlias = Union[AttributeType, AttributeSchemaConfigParam]
+AttributeSchemaParam: TypeAlias = Union[AttributeType, AttributeSchemaConfigParam, AttributeSchemaDropParam]
