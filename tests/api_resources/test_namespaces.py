@@ -705,6 +705,7 @@ class TestNamespaces:
         namespace = client.namespace("namespace").write(
             branch_from_namespace="string",
             copy_from_namespace="string",
+            create_namespace=True,
             delete_by_filter_allow_partial=True,
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
@@ -1448,6 +1449,7 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespace("namespace").write(
             branch_from_namespace="string",
             copy_from_namespace="string",
+            create_namespace=True,
             delete_by_filter={},
             delete_by_filter_allow_partial=True,
             delete_condition={},

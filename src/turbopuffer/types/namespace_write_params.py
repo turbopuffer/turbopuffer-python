@@ -29,6 +29,15 @@ class NamespaceWriteParams(TypedDict, total=False):
     copy_from_namespace: CopyFromNamespaceParams
     """The namespace to copy documents from."""
 
+    create_namespace: bool
+    """
+    If `true`, ensures the namespace is created, even if the request writes no
+    documents. Creating an empty namespace requires the `id` type to be declared in
+    `schema`. If `false`, a namespace is never created, and a 404 is returned if it
+    does not exist. If omitted, a namespace is created by the first request that
+    writes documents.
+    """
+
     delete_by_filter: Union[Filter, Omit]
     """The filter specifying which documents to delete."""
 
