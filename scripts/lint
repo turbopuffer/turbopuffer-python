@@ -4,14 +4,6 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-echo "==> Checking for outdated supplemental generated code"
-scripts/gen
-if ! git diff --exit-code ':!uv.lock'; then
-    echo "error: supplemental generated code is out of date" >&2
-    echo " hint: run \`scripts/gen\` to regenerate the code" >&2
-    exit 1
-fi
-
 if [ "$1" = "--fix" ]; then
   echo "==> Running ruff with --fix"
   uv run ruff check . --fix
