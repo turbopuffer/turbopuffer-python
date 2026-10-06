@@ -864,6 +864,7 @@ class NamespacesResource(SyncAPIResource):
         namespace: str | None = None,
         branch_from_namespace: BranchFromNamespaceParams | Omit = omit,
         copy_from_namespace: CopyFromNamespaceParams | Omit = omit,
+        create_namespace: bool | Omit = omit,
         delete_by_filter: Filter | Omit = omit,
         delete_by_filter_allow_partial: bool | Omit = omit,
         delete_condition: Filter | Omit = omit,
@@ -896,6 +897,12 @@ class NamespacesResource(SyncAPIResource):
           branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
 
           copy_from_namespace: The namespace to copy documents from.
+
+          create_namespace: If `true`, ensures the namespace is created, even if the request writes no
+              documents. Creating an empty namespace requires the `id` type to be declared in
+              `schema`. If `false`, a namespace is never created, and a 404 is returned if it
+              does not exist. If omitted, a namespace is created by the first request that
+              writes documents.
 
           delete_by_filter: The filter specifying which documents to delete.
 
@@ -955,6 +962,7 @@ class NamespacesResource(SyncAPIResource):
                 {
                     "branch_from_namespace": branch_from_namespace,
                     "copy_from_namespace": copy_from_namespace,
+                    "create_namespace": create_namespace,
                     "delete_by_filter": delete_by_filter,
                     "delete_by_filter_allow_partial": delete_by_filter_allow_partial,
                     "delete_condition": delete_condition,
@@ -1783,6 +1791,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         namespace: str | None = None,
         branch_from_namespace: BranchFromNamespaceParams | Omit = omit,
         copy_from_namespace: CopyFromNamespaceParams | Omit = omit,
+        create_namespace: bool | Omit = omit,
         delete_by_filter: object | Omit = omit,
         delete_by_filter_allow_partial: bool | Omit = omit,
         delete_condition: object | Omit = omit,
@@ -1815,6 +1824,12 @@ class AsyncNamespacesResource(AsyncAPIResource):
           branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
 
           copy_from_namespace: The namespace to copy documents from.
+
+          create_namespace: If `true`, ensures the namespace is created, even if the request writes no
+              documents. Creating an empty namespace requires the `id` type to be declared in
+              `schema`. If `false`, a namespace is never created, and a 404 is returned if it
+              does not exist. If omitted, a namespace is created by the first request that
+              writes documents.
 
           delete_by_filter: The filter specifying which documents to delete.
 
@@ -1874,6 +1889,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                 {
                     "branch_from_namespace": branch_from_namespace,
                     "copy_from_namespace": copy_from_namespace,
+                    "create_namespace": create_namespace,
                     "delete_by_filter": delete_by_filter,
                     "delete_by_filter_allow_partial": delete_by_filter_allow_partial,
                     "delete_condition": delete_condition,
