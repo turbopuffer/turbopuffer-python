@@ -1,5 +1,8 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from typing import Optional
+from datetime import datetime
+
 from ..lib.performance import ClientPerformance
 
 __all__ = ["QueryPerformance"]
@@ -31,3 +34,15 @@ class QueryPerformance(ClientPerformance):
     Request time measured on the server, including time spent waiting for other
     queries to complete if the namespace was at its concurrency limit.
     """
+
+    embedding_ms: Optional[int] = None
+    """Time spent embedding text, in milliseconds.
+
+    Only set when using a native embedding model.
+    """
+
+    embedding_tokens: Optional[int] = None
+    """The number of tokens embedded. Only set when using a native embedding model."""
+
+    last_included_write_at: Optional[datetime] = None
+    """The timestamp of the last write operation that the query observed."""
