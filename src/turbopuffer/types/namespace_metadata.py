@@ -29,10 +29,7 @@ class IndexIndexUpdating(BaseModel):
     """
 
     unindexed_rows: int
-    """The number of rows in the write-ahead log that have not yet been indexed.
-
-    Write backpressure is applied when this exceeds the unindexed row limit.
-    """
+    """The number of rows in the write-ahead log that have not yet been indexed."""
 
 
 Index: TypeAlias = Union[IndexIndexUpToDate, IndexIndexUpdating]
