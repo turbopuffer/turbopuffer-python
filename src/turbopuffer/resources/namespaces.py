@@ -894,6 +894,10 @@ class NamespacesResource(SyncAPIResource):
         Create, update, or delete documents.
 
         Args:
+          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+
+          copy_from_namespace: The namespace to copy documents from.
+
           create_namespace: If `true`, ensures the namespace is created, even if the request writes no
               documents. Creating an empty namespace requires the `id` type to be declared in
               `schema`. If `false`, a namespace is never created, and a 404 is returned if it
@@ -1817,6 +1821,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
         Create, update, or delete documents.
 
         Args:
+          branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
+
+          copy_from_namespace: The namespace to copy documents from.
+
           create_namespace: If `true`, ensures the namespace is created, even if the request writes no
               documents. Creating an empty namespace requires the `id` type to be declared in
               `schema`. If `false`, a namespace is never created, and a 404 is returned if it
