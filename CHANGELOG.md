@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.11.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.10.2...v2.11.0) (2026-10-07)
+
+
+### Features
+
+* stainless to stlc migration ([4da2461](https://github.com/turbopuffer/turbopuffer-python/commit/4da246178137759ed9c844f8d6f6fdb38cfcca9a))
+* stlc: qol fixes ([e0f779c](https://github.com/turbopuffer/turbopuffer-python/commit/e0f779cf01f437646f91fb44a848581c30bac1fd))
+
 ## 2.10.2 (2026-09-23)
 
 Full Changelog: [v2.10.1...v2.10.2](https://github.com/turbopuffer/turbopuffer-python/compare/v2.10.1...v2.10.2)
