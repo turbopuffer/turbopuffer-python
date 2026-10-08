@@ -1,7 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Optional
-from datetime import datetime
 
 from ..lib.performance import ClientPerformance
 
@@ -43,6 +42,3 @@ class QueryPerformance(ClientPerformance):
 
     embedding_tokens: Optional[int] = None
     """The number of tokens embedded. Only set when using a native embedding model."""
-
-    last_included_write_at: Optional[datetime] = None
-    """The timestamp of the last write operation that the query observed."""
