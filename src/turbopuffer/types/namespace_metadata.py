@@ -28,6 +28,9 @@ class IndexIndexUpdating(BaseModel):
     not yet been indexed.
     """
 
+    unindexed_rows: int
+    """The number of rows in the write-ahead log that have not yet been indexed."""
+
 
 Index: TypeAlias = Union[IndexIndexUpToDate, IndexIndexUpdating]
 
