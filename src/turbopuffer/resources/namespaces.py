@@ -50,6 +50,7 @@ from ..types.namespace_write_response import NamespaceWriteResponse
 from ..types.namespace_recall_response import NamespaceRecallResponse
 from ..types.namespace_schema_response import NamespaceSchemaResponse
 from ..types.copy_from_namespace_params import CopyFromNamespaceParams
+from ..types.read_only_optimize_response import ReadOnlyOptimizeResponse
 from ..types.branch_from_namespace_params import BranchFromNamespaceParams
 from ..types.namespace_copy_from_response import NamespaceCopyFromResponse
 from ..types.copy_from_namespace_operation import CopyFromNamespaceOperation
@@ -596,6 +597,41 @@ class NamespacesResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NamespaceQueryResponse,
+        )
+
+    def read_only_optimize(
+        self,
+        *,
+        namespace: str | None = None,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ReadOnlyOptimizeResponse:
+        """
+        Optimize a namespace for a read-only workload.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return self._post(
+            path_template("/v2/namespaces/{namespace}/read_only_optimize", namespace=namespace),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ReadOnlyOptimizeResponse,
         )
 
     def recall(
@@ -1525,6 +1561,41 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceQueryResponse,
         )
 
+    async def read_only_optimize(
+        self,
+        *,
+        namespace: str | None = None,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ReadOnlyOptimizeResponse:
+        """
+        Optimize a namespace for a read-only workload.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if namespace is None:
+            namespace = self._client._get_default_namespace_path_param()
+        if not namespace:
+            raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
+        return await self._post(
+            path_template("/v2/namespaces/{namespace}/read_only_optimize", namespace=namespace),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ReadOnlyOptimizeResponse,
+        )
+
     async def recall(
         self,
         *,
@@ -1949,6 +2020,9 @@ class NamespacesResourceWithRawResponse:
         self.query = to_raw_response_wrapper(
             namespaces.query,
         )
+        self.read_only_optimize = to_raw_response_wrapper(
+            namespaces.read_only_optimize,
+        )
         self.recall = to_raw_response_wrapper(
             namespaces.recall,
         )
@@ -1999,6 +2073,9 @@ class AsyncNamespacesResourceWithRawResponse:
         )
         self.query = async_to_raw_response_wrapper(
             namespaces.query,
+        )
+        self.read_only_optimize = async_to_raw_response_wrapper(
+            namespaces.read_only_optimize,
         )
         self.recall = async_to_raw_response_wrapper(
             namespaces.recall,
@@ -2051,6 +2128,9 @@ class NamespacesResourceWithStreamingResponse:
         self.query = to_streamed_response_wrapper(
             namespaces.query,
         )
+        self.read_only_optimize = to_streamed_response_wrapper(
+            namespaces.read_only_optimize,
+        )
         self.recall = to_streamed_response_wrapper(
             namespaces.recall,
         )
@@ -2101,6 +2181,9 @@ class AsyncNamespacesResourceWithStreamingResponse:
         )
         self.query = async_to_streamed_response_wrapper(
             namespaces.query,
+        )
+        self.read_only_optimize = async_to_streamed_response_wrapper(
+            namespaces.read_only_optimize,
         )
         self.recall = async_to_streamed_response_wrapper(
             namespaces.recall,

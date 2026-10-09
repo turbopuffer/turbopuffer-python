@@ -53,6 +53,7 @@ from turbopuffer.types import (
     PinningConfig,
     QueryBilling,
     QueryPerformance,
+    ReadOnlyOptimizeResponse,
     RerankLimit,
     Row,
     RrfParams,
@@ -91,6 +92,7 @@ Methods:
 - <code title="post /v2/namespaces/{namespace}/query?stainless_overload=multiQuery">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">multi_query</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_multi_query_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_multi_query_response.py">NamespaceMultiQueryResponse</a></code>
 - <code title="get /v1/namespaces/{namespace}/operations/{token}?stainless_overload=pollCopyFrom">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">poll_copy_from</a>(token, \*, namespace) -> <a href="./src/turbopuffer/types/copy_from_namespace_operation.py">CopyFromNamespaceOperation</a></code>
 - <code title="post /v2/namespaces/{namespace}/query">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">query</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_query_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_query_response.py">NamespaceQueryResponse</a></code>
+- <code title="post /v2/namespaces/{namespace}/read_only_optimize">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">read_only_optimize</a>(\*, namespace) -> <a href="./src/turbopuffer/types/read_only_optimize_response.py">ReadOnlyOptimizeResponse</a></code>
 - <code title="post /v1/namespaces/{namespace}/_debug/recall">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">recall</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_recall_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_recall_response.py">NamespaceRecallResponse</a></code>
 - <code title="get /v1/namespaces/{namespace}/schema">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">schema</a>(\*, namespace) -> <a href="./src/turbopuffer/types/namespace_schema_response.py">NamespaceSchemaResponse</a></code>
 - <code title="post /v2/namespaces/{namespace}/async?stainless_overload=startCopyFrom">client.namespaces.<a href="./src/turbopuffer/resources/namespaces.py">start_copy_from</a>(\*, namespace, \*\*<a href="src/turbopuffer/types/namespace_start_copy_from_params.py">params</a>) -> <a href="./src/turbopuffer/types/namespace_start_copy_from_response.py">NamespaceStartCopyFromResponse</a></code>
