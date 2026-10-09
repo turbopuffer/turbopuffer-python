@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.12.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.11.0...v2.12.0) (2026-10-09)
+
+
+### Features
+
+* embedding: openapi embedding stats ([fcb7d85](https://github.com/turbopuffer/turbopuffer-python/commit/fcb7d854e14958c1510a0119d0eda82594fe6d92))
+* embedding: openapi embedding stats ([2ade25f](https://github.com/turbopuffer/turbopuffer-python/commit/2ade25f158c6de52be2766012867d2b90ad19345))
+* metadata: expose unindexed_rows in index status ([6ed4bb7](https://github.com/turbopuffer/turbopuffer-python/commit/6ed4bb7be1c1f19aadf7d3201576259b01e20448))
+
 ## [2.11.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.10.2...v2.11.0) (2026-10-07)
 
 
