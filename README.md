@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 <a href="https://pypi.org/project/turbopuffer/"><img src="https://img.shields.io/pypi/v/turbopuffer.svg?label=pypi%20(stable)" alt="PyPI version" align="right"></a>
 
-The turbopuffer Python library provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs/overview) from any Python 3.9+
+The turbopuffer Python library provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs/overview) from any Python 3.10+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -524,7 +524,7 @@ print(turbopuffer.__version__)
 
 ## Requirements
 
-Python 3.9 or higher.
+Python 3.10 or higher.
 
 ## Contributing
 

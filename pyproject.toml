@@ -21,16 +21,16 @@ dependencies = [
   "orjson>=3.10.15, <4",
 ]
 
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 classifiers = [
   "Typing :: Typed",
   "Intended Audience :: Developers",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
   "Operating System :: OS Independent",
   "Operating System :: POSIX",
   "Operating System :: MacOS",
@@ -51,7 +51,7 @@ Repository = "https://github.com/turbopuffer/turbopuffer-python"
 
 [tool.uv]
 managed = true
-required-version = ">=0.9"
+required-version = ">=0.13"
 conflicts = [
     [
       { group = "pydantic-v1" },
@@ -80,8 +80,7 @@ pydantic-v1 = [
     "pydantic>=1.9.0,<2",
 ]
 pydantic-v2 = [
-    "pydantic~=2.0 ; python_full_version < '3.14'",
-    "pydantic~=2.12 ; python_full_version >= '3.14'",
+    "pydantic~=2.14",
 ]
 
 [build-system]
@@ -137,7 +136,7 @@ filterwarnings = [
 # there are a couple of flags that are still disabled by
 # default in strict mode as they are experimental and niche.
 typeCheckingMode = "strict"
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 
 exclude = [
     "_dev", 
@@ -209,7 +208,7 @@ ignore_missing_imports = true
 [tool.ruff]
 line-length = 120
 output-format = "grouped"
-target-version = "py38"
+target-version = "py310"
 
 [tool.ruff.format]
 docstring-code-format = true
