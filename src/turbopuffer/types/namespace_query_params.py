@@ -10,6 +10,7 @@ from .._types import SequenceNotStr
 from .limit_param import LimitParam
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
+from .rerank_model_params import RerankModelParams
 from .include_attributes_param import IncludeAttributesParam
 
 __all__ = ["NamespaceQueryParams", "Consistency", "Limit"]
@@ -70,6 +71,9 @@ class NamespaceQueryParams(TypedDict, total=False):
     rank_by: object
     """How to rank the documents in the namespace."""
 
+    rerank_by: RerankModelParams
+    """Rerank retrieved candidates with a model."""
+
     top_k: int
     """The number of results to return."""
 
@@ -81,7 +85,13 @@ class Consistency(TypedDict, total=False):
     """The consistency level for a query."""
 
     level: Literal["strong", "eventual"]
-    """The query's consistency level."""
+    """The query's consistency level.
+
+    - `strong` - Strong consistency. Requires a round-trip to object storage to
+      fetch the latest writes.
+    - `eventual` - Eventual consistency. Does not require a round-trip to object
+      storage, but may not see the latest writes.
+    """
 
 
 Limit: TypeAlias = Union[int, LimitParam]

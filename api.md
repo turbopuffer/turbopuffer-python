@@ -54,6 +54,7 @@ from turbopuffer.types import (
     QueryBilling,
     QueryPerformance,
     RerankLimit,
+    RerankModelParams,
     Row,
     RrfParams,
     SaturateParams,
