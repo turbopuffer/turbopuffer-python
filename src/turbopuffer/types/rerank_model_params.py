@@ -17,10 +17,7 @@ class RerankModelParams(TypedDict, total=False):
     """
 
     model: Required[str]
-    """The reranking model to use, for example `voyage/rerank-3`.
-
-    See https://turbopuffer.com/docs/reranking#models for the available models.
-    """
+    """Which reranking model to use."""
 
     query: Required[str]
     """The query text to score each document against."""
