@@ -9,6 +9,7 @@ import httpx
 from ..types import (
     DistanceMetric,
     VectorEncoding,
+    RerankModelParams,
     CopyFromNamespaceParams,
     BranchFromNamespaceParams,
     namespace_query_params,
@@ -40,6 +41,7 @@ from ..types.distance_metric import DistanceMetric
 from ..types.vector_encoding import VectorEncoding
 from ..types.encryption_param import EncryptionParam
 from ..types.namespace_metadata import NamespaceMetadata
+from ..types.rerank_model_params import RerankModelParams
 from ..types.sharding_config_param import ShardingConfigParam
 from ..types.attribute_schema_param import AttributeSchemaParam
 from ..types.include_attributes_param import IncludeAttributesParam
@@ -508,6 +510,7 @@ class NamespacesResource(SyncAPIResource):
         limit: namespace_query_params.Limit | Omit = omit,
         offset: int | Omit = omit,
         rank_by: object | Omit = omit,
+        rerank_by: RerankModelParams | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -550,6 +553,8 @@ class NamespacesResource(SyncAPIResource):
 
           rank_by: How to rank the documents in the namespace.
 
+          rerank_by: Rerank retrieved candidates with a model.
+
           top_k: The number of results to return.
 
           vector_encoding: The encoding to use for vectors in the response.
@@ -581,6 +586,7 @@ class NamespacesResource(SyncAPIResource):
                     "limit": limit,
                     "offset": offset,
                     "rank_by": rank_by,
+                    "rerank_by": rerank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
                 },
@@ -1421,6 +1427,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         limit: namespace_query_params.Limit | Omit = omit,
         offset: int | Omit = omit,
         rank_by: object | Omit = omit,
+        rerank_by: RerankModelParams | Omit = omit,
         top_k: int | Omit = omit,
         vector_encoding: VectorEncoding | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1463,6 +1470,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           rank_by: How to rank the documents in the namespace.
 
+          rerank_by: Rerank retrieved candidates with a model.
+
           top_k: The number of results to return.
 
           vector_encoding: The encoding to use for vectors in the response.
@@ -1494,6 +1503,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "limit": limit,
                     "offset": offset,
                     "rank_by": rank_by,
+                    "rerank_by": rerank_by,
                     "top_k": top_k,
                     "vector_encoding": vector_encoding,
                 },

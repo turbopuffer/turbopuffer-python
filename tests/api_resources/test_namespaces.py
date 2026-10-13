@@ -478,6 +478,11 @@ class TestNamespaces:
             limit=0,
             offset=0,
             rank_by={},
+            rerank_by={
+                "attribute": "attribute",
+                "model": "model",
+                "query": "query",
+            },
             top_k=0,
             vector_encoding="float",
         )
@@ -1323,6 +1328,11 @@ class TestAsyncNamespaces:
             limit=0,
             offset=0,
             rank_by={},
+            rerank_by={
+                "attribute": "attribute",
+                "model": "model",
+                "query": "query",
+            },
             top_k=0,
             vector_encoding="float",
         )
