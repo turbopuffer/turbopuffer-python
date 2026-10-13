@@ -10,6 +10,7 @@ from .._types import SequenceNotStr
 from .limit_param import LimitParam
 from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
+from .rerank_model_params import RerankModelParams
 from .include_attributes_param import IncludeAttributesParam
 
 __all__ = ["NamespaceQueryParams", "Consistency", "Limit"]
@@ -69,6 +70,9 @@ class NamespaceQueryParams(TypedDict, total=False):
 
     rank_by: object
     """How to rank the documents in the namespace."""
+
+    rerank_by: RerankModelParams
+    """Rerank retrieved candidates with a model."""
 
     top_k: int
     """The number of results to return."""

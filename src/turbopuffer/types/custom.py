@@ -8,6 +8,7 @@ from .embed_params import EmbedParams
 from .fuzzy_params import FuzzyParams
 from .saturate_params import SaturateParams
 from .bm25_clause_params import Bm25ClauseParams
+from .rerank_model_params import RerankModelParams
 from .highlight_config_params import HighlightConfigParams
 from .contains_any_token_filter_params import ContainsAnyTokenFilterParams
 from .contains_all_tokens_filter_params import ContainsAllTokensFilterParams
@@ -102,4 +103,4 @@ Expr = Union[
 ]
 GroupByFunction = Tuple[Literal["ForEachUnique"], str]
 GroupBy = Union[str, Mapping[str, GroupByFunction]]
-RerankBy = Union[Tuple[Literal["RRF"]], Tuple[Literal["RRF"], RrfParams]]
+RerankBy = Union[Tuple[Literal["RRF"]], Tuple[Literal["RRF"], RrfParams], RerankModelParams]
