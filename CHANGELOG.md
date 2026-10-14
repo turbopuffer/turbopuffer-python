@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.12.0...v2.13.0) (2026-10-13)
+
+
+### Features
+
+* rerank: support reranking with a model ([c3a9e57](https://github.com/turbopuffer/turbopuffer-python/commit/c3a9e574c277ab06080f438e55fae588f68e33c5))
+
 ## [2.12.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.11.0...v2.12.0) (2026-10-09)
 
 
