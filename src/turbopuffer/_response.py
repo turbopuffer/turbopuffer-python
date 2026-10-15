@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import time
 import inspect
 import logging
 import datetime
@@ -32,7 +31,8 @@ from ._models import BaseModel, is_basemodel
 from ._constants import RAW_RESPONSE_HEADER, OVERRIDE_CAST_TO_HEADER
 from ._streaming import Stream, AsyncStream, is_stream_class_type, extract_stream_chunk_type
 from ._exceptions import TurbopufferError, APIResponseValidationError
-from .lib.performance import merge_clock_into_response
+from .lib.telemetry import finish_response_timing
+from .lib.performance import start_response_timing
 
 if TYPE_CHECKING:
     from ._models import FinalRequestOptions
@@ -320,18 +320,13 @@ class APIResponse(BaseAPIResponse[R]):
         if not self._is_sse_stream:
             self.read()
 
-        clock = self.http_response.extensions.get("clock")
-        if clock is None and self.http_response._request is not None:
-            clock = self.http_response.request.extensions.get("clock")
-        if clock is None:
-            clock = {"request_start": 0.0}
-        clock["deserialize_start"] = time.monotonic()
+        clock = start_response_timing(self.http_response)
 
         parsed = self._parse(to=to)
         if is_given(self._options.post_parser):
             parsed = self._options.post_parser(parsed)
 
-        merge_clock_into_response(parsed, clock)
+        finish_response_timing(self, parsed, clock)
 
         self._parsed_by_type[cache_key] = parsed
         return parsed
@@ -429,18 +424,13 @@ class AsyncAPIResponse(BaseAPIResponse[R]):
         if not self._is_sse_stream:
             await self.read()
 
-        clock = self.http_response.extensions.get("clock")
-        if clock is None and self.http_response._request is not None:
-            clock = self.http_response.request.extensions.get("clock")
-        if clock is None:
-            clock = {"request_start": 0.0}
-        clock["deserialize_start"] = time.monotonic()
+        clock = start_response_timing(self.http_response)
 
         parsed = self._parse(to=to)
         if is_given(self._options.post_parser):
             parsed = self._options.post_parser(parsed)
 
-        merge_clock_into_response(parsed, clock)
+        finish_response_timing(self, parsed, clock)
 
         self._parsed_by_type[cache_key] = parsed
         return parsed

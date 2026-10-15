@@ -106,13 +106,13 @@ class Urllib3Transport(httpx.BaseTransport):
 
         # Compress the request content if worthwhile.
         content = request.content
-        clock["compress_start"] = time.monotonic()
+        clock["compress_start"] = time.perf_counter_ns()
         clock["compress_end"] = clock["compress_start"]  # overwritten later if we actually compress
         if len(request.content) > MIN_GZIP_SIZE:
             content = gzip.compress(request.content, compresslevel=1)
             request.headers["Content-Encoding"] = "gzip"
             request.headers["Content-Length"] = str(len(content))
-            clock["compress_end"] = time.monotonic()
+            clock["compress_end"] = time.perf_counter_ns()
 
         response = self._pool.request(
             request.method,
@@ -123,7 +123,7 @@ class Urllib3Transport(httpx.BaseTransport):
             preload_content=False,
             timeout=urllib3_timeout,
         )
-        clock["response_headers_end"] = time.monotonic()
+        clock["response_headers_end"] = time.perf_counter_ns()
 
         httpx_response = httpx.Response(
             status_code=response.status,
@@ -138,6 +138,6 @@ class Urllib3Transport(httpx.BaseTransport):
         # Eagerly read the response content (which will be cached on the
         # response object) so that we can time the body read.
         httpx_response.read()
-        clock["body_read_end"] = time.monotonic()
+        clock["body_read_end"] = time.perf_counter_ns()
 
         return httpx_response
