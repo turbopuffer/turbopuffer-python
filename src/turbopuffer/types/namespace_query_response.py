@@ -21,7 +21,20 @@ class NamespaceQueryResponse(BaseModel):
     """The performance information for a query."""
 
     aggregation_groups: Optional[List[AggregationGroup]] = None
+    """
+    One object per aggregation group, with its group key and the value of each
+    requested aggregation. Only present when `aggregate_by` and `group_by` are both
+    set.
+    """
 
     aggregations: Optional[Dict[str, object]] = None
+    """The value of each requested aggregation, keyed by its label.
+
+    Only present when `aggregate_by` is set without `group_by`.
+    """
 
     rows: Optional[List[Row]] = None
+    """The documents that matched the query, ordered by `rank_by`.
+
+    Only present when `rank_by` is set.
+    """

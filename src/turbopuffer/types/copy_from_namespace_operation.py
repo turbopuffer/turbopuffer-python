@@ -12,6 +12,8 @@ __all__ = ["CopyFromNamespaceOperation", "Running", "Finished"]
 
 
 class Running(BaseModel):
+    """The copy is still in progress."""
+
     start_time: datetime
     """The time at which the operation started."""
 
@@ -25,10 +27,13 @@ class Running(BaseModel):
 
 
 class Finished(BaseModel):
+    """The copy has finished, successfully or not."""
+
     finish_time: datetime
     """The time at which the operation finished."""
 
     result: CopyFromNamespaceOperationResult
+    """The result of the copy."""
 
     start_time: datetime
     """The time at which the operation started."""
