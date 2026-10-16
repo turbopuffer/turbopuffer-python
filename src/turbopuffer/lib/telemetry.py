@@ -219,10 +219,13 @@ class _RequestScope(RequestScope):
         self._buffer = buffer
         self._info = info
         # Kept for later attempts until one of them may have reached the server.
-        self._batch = buffer.take() if buffer is not None else None
+        self._batch: Optional[TelemetryBatch] = None
 
     @override
     def attempt_begin(self, attempt: int, request: httpx.Request) -> None:
+        # Taken only once a request is about to be sent, so one that fails before then can't lose it.
+        if attempt == 0 and self._buffer is not None:
+            self._batch = self._buffer.take()
         if self._batch is not None:
             request.headers[TELEMETRY_HEADER] = self._batch.header
 

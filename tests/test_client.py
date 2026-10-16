@@ -1100,6 +1100,39 @@ class TestTurbopuffer:
         assert interrupted.response is None
 
     @pytest.mark.respx(base_url=base_url)
+    def test_request_observer_parse_failure(self, client: Turbopuffer, respx_mock: MockRouter) -> None:
+        class Model(BaseModel):
+            foo: str
+
+        results: list[RequestResult] = []
+
+        class Scope(RequestScope):
+            @override
+            def finish(self, result: RequestResult) -> None:
+                results.append(result)
+
+        class Observer(RequestObserver):
+            @override
+            def start(self, info: RequestInfo) -> RequestScope:
+                return Scope()
+
+        respx_mock.post("/foo").mock(
+            return_value=httpx.Response(200, content=b"not json", headers={"Content-Type": "application/json"})
+        )
+        client = client.with_options()
+        client._observer = Observer()
+
+        with pytest.raises(ValueError) as exc_info:
+            client.post("/foo", cast_to=Model)
+
+        [result] = results
+        assert result.error is exc_info.value
+        assert result.error_kind == "other"
+        assert result.response is not None and result.response.status_code == 200
+        assert result.parsed is None
+        assert result.timings.deserialize_start is not None and result.timings.deserialize_end is not None
+
+    @pytest.mark.respx(base_url=base_url)
     def test_request_observer_unparsed_response(self, client: Turbopuffer, respx_mock: MockRouter) -> None:
         results: list[RequestResult] = []
 
@@ -2226,6 +2259,39 @@ class TestAsyncTurbopuffer:
         assert isinstance(interrupted.error, Interrupted)
         assert interrupted.error_kind == "canceled"
         assert interrupted.response is None
+
+    @pytest.mark.respx(base_url=base_url)
+    async def test_request_observer_parse_failure(self, async_client: AsyncTurbopuffer, respx_mock: MockRouter) -> None:
+        class Model(BaseModel):
+            foo: str
+
+        results: list[RequestResult] = []
+
+        class Scope(RequestScope):
+            @override
+            def finish(self, result: RequestResult) -> None:
+                results.append(result)
+
+        class Observer(RequestObserver):
+            @override
+            def start(self, info: RequestInfo) -> RequestScope:
+                return Scope()
+
+        respx_mock.post("/foo").mock(
+            return_value=httpx.Response(200, content=b"not json", headers={"Content-Type": "application/json"})
+        )
+        client = async_client.with_options()
+        client._observer = Observer()
+
+        with pytest.raises(ValueError) as exc_info:
+            await client.post("/foo", cast_to=Model)
+
+        [result] = results
+        assert result.error is exc_info.value
+        assert result.error_kind == "other"
+        assert result.response is not None and result.response.status_code == 200
+        assert result.parsed is None
+        assert result.timings.deserialize_start is not None and result.timings.deserialize_end is not None
 
     @pytest.mark.respx(base_url=base_url)
     async def test_request_observer_unparsed_response(

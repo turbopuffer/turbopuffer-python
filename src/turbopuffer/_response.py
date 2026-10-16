@@ -316,14 +316,19 @@ class APIResponse(BaseAPIResponse[R]):
         if cached is not None:
             return cached  # type: ignore[no-any-return]
 
-        if not self._is_sse_stream:
-            self.read()
-
         observation = RequestObservation.of(self.http_response)
-        observation.start_parse()
-        parsed = self._parse(to=to)
-        if is_given(self._options.post_parser):
-            parsed = self._options.post_parser(parsed)
+        try:
+            if not self._is_sse_stream:
+                self.read()
+
+            observation.start_parse()
+            parsed = self._parse(to=to)
+            if is_given(self._options.post_parser):
+                parsed = self._options.post_parser(parsed)
+        except BaseException as err:
+            # Failing to read or parse the response also ends the request.
+            observation.finish(response=self.http_response, error=err)
+            raise
         observation.finish(response=self.http_response, parsed=parsed)
 
         self._parsed_by_type[cache_key] = parsed
@@ -419,14 +424,19 @@ class AsyncAPIResponse(BaseAPIResponse[R]):
         if cached is not None:
             return cached  # type: ignore[no-any-return]
 
-        if not self._is_sse_stream:
-            await self.read()
-
         observation = RequestObservation.of(self.http_response)
-        observation.start_parse()
-        parsed = self._parse(to=to)
-        if is_given(self._options.post_parser):
-            parsed = self._options.post_parser(parsed)
+        try:
+            if not self._is_sse_stream:
+                await self.read()
+
+            observation.start_parse()
+            parsed = self._parse(to=to)
+            if is_given(self._options.post_parser):
+                parsed = self._options.post_parser(parsed)
+        except BaseException as err:
+            # Failing to read or parse the response also ends the request.
+            observation.finish(response=self.http_response, error=err)
+            raise
         observation.finish(response=self.http_response, parsed=parsed)
 
         self._parsed_by_type[cache_key] = parsed

@@ -321,6 +321,16 @@ class TestCopy:
 
 
 class TestRequests:
+    def test_failure_before_sending_keeps_records(self, telemetry_client: Turbopuffer) -> None:
+        assert telemetry_client._telemetry is not None
+        add_record(telemetry_client._telemetry)
+
+        # Building the request fails, so it's never sent.
+        with pytest.raises(TypeError):
+            telemetry_client.post(QUERY_PATH, cast_to=object, body={"unserializable": object()})
+
+        assert len(take_payload(telemetry_client._telemetry)["records"]) == 1
+
     @pytest.mark.respx(base_url=base_url)
     def test_records_ride_on_next_request(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         route = respx_mock.post(QUERY_PATH).mock(return_value=query_response())
