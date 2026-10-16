@@ -16,10 +16,14 @@ __all__ = ["NamespaceMetadata", "Index", "IndexIndexUpToDate", "IndexIndexUpdati
 
 
 class IndexIndexUpToDate(BaseModel):
+    """Every document in the namespace is indexed."""
+
     status: Literal["up-to-date"]
 
 
 class IndexIndexUpdating(BaseModel):
+    """Some documents are in the write-ahead log and haven't been indexed yet."""
+
     status: Literal["updating"]
 
     unindexed_bytes: int
@@ -84,6 +88,7 @@ class NamespaceMetadata(BaseModel):
     """The encryption configuration for a namespace."""
 
     index: Index
+    """The state of the namespace's index."""
 
     schema_: Dict[str, AttributeSchemaConfig] = FieldInfo(alias="schema")
     """The schema of the namespace."""

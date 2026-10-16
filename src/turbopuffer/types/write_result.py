@@ -12,7 +12,7 @@ __all__ = ["WriteResult"]
 
 
 class WriteResult(BaseModel):
-    """The response to a successful write request."""
+    """The copy succeeded, with the result of its write."""
 
     billing: WriteBilling
     """The billing information for a write request."""
