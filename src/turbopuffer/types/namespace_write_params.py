@@ -121,3 +121,4 @@ class PatchByFilter(TypedDict, total=False):
     """Filter by attributes. Same syntax as the query endpoint."""
 
     patch: Required[Dict[str, object]]
+    """The attributes to set on every document that matches `filters`."""
