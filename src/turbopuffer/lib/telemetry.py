@@ -251,8 +251,8 @@ class _RequestScope(RequestScope):
             self._batch = None
 
         error = None
-        if result.error_kind == "canceled":
-            error = "canceled"
+        if result.error_kind in ("canceled", "other"):
+            error = result.error_kind
         elif result.error_kind is not None:
             error = "timeout" if result.error_kind.endswith("timeout") else "connect"
         server_total_ms = getattr(getattr(result.parsed, "performance", None), "server_total_ms", None)

@@ -469,6 +469,23 @@ class TestRequests:
         assert [(r["status"], r["error"]) for r in records] == [(0, "canceled")]
 
     @pytest.mark.respx(base_url=base_url)
+    def test_parse_failures_are_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
+        route = respx_mock.post(QUERY_PATH)
+        route.side_effect = [
+            httpx.Response(200, content=b"not json", headers={"Content-Type": "application/json"}),
+            query_response(),
+        ]
+        ns = telemetry_client.namespace("my-ns")
+
+        with pytest.raises(ValueError):
+            ns.query(top_k=1)
+        ns.query(top_k=1)
+
+        records = sent_records(sent_requests(route)[1])
+        assert records is not None
+        assert [(r["status"], r["error"]) for r in records] == [(200, "other")]
+
+    @pytest.mark.respx(base_url=base_url)
     def test_failures_are_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         route = respx_mock.post(QUERY_PATH)
         route.side_effect = [
