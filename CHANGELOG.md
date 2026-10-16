@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.13.0...v2.14.0) (2026-10-16)
+
+
+### Features
+
+* OpenAPI: Add missing descriptions to prettify docblocks in output SDKs ([a2f329e](https://github.com/turbopuffer/turbopuffer-python/commit/a2f329ef4d5ee9e6d72379fb21f5baae6332927c))
+
 ## [2.13.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.12.0...v2.13.0) (2026-10-13)
 
 
