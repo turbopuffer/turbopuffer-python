@@ -18,6 +18,8 @@ class Detail(BaseModel):
 
 
 class OperationError(BaseModel):
+    """The error of an asynchronous operation that failed."""
+
     detail: Detail
     """The response to an unsuccessful request."""
 

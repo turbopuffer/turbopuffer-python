@@ -9,6 +9,10 @@ __all__ = ["NamespaceRecallResponse", "GroundTruth"]
 
 
 class GroundTruth(BaseModel):
+    """
+    One of the searches the evaluation ran: its query vector, sampled at random from the namespace's vectors unless `rank_by` is set, and the query's true nearest neighbors, found by exhaustive search. Recall compares these neighbors to the results of the approximate nearest neighbor (ANN) search.
+    """
+
     nearest_neighbors: List[Row]
     """The true nearest neighbors with their distances and vectors."""
 
