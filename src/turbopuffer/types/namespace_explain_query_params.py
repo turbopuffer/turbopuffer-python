@@ -11,7 +11,7 @@ from .distance_metric import DistanceMetric
 from .vector_encoding import VectorEncoding
 from .include_attributes_param import IncludeAttributesParam
 
-__all__ = ["NamespaceExplainQueryParams", "Consistency", "Limit"]
+__all__ = ["NamespaceExplainQueryParams", "Consistency", "Effort", "Limit"]
 
 
 class NamespaceExplainQueryParams(TypedDict, total=False):
@@ -35,6 +35,12 @@ class NamespaceExplainQueryParams(TypedDict, total=False):
 
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
+
+    effort: Effort
+    """How much work an ANN query does compared to the default.
+
+    Only supported for ANN queries.
+    """
 
     exclude_attributes: SequenceNotStr[str]
     """List of attribute names to exclude from the response.
@@ -81,6 +87,28 @@ class Consistency(TypedDict, total=False):
 
     level: Literal["strong", "eventual"]
     """The query's consistency level."""
+
+
+class Effort(TypedDict, total=False):
+    """How much work an ANN query does compared to the default.
+
+    Only supported for ANN queries.
+    """
+
+    ann: float
+    """Multiplies the work done.
+
+    Higher values improve recall at the cost of latency. Queries are billed
+    proportionally.
+    """
+
+    ann_filter: Literal["auto", "prefilter", "postfilter"]
+    """How filters are applied.
+
+    `auto` uses the query planner. `prefilter` evaluates filters before the ANN
+    search. `postfilter` evaluates filters only on rows near the query vector. Does
+    not affect pricing.
+    """
 
 
 Limit: TypeAlias = Union[int, LimitParam]
