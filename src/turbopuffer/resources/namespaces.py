@@ -923,7 +923,7 @@ class NamespacesResource(SyncAPIResource):
 
           encryption: The encryption configuration for a namespace.
 
-          patch_by_filter: The patch and filter specifying which documents to patch.
+          patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
           patch_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
 
@@ -1854,7 +1854,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           encryption: The encryption configuration for a namespace.
 
-          patch_by_filter: The patch and filter specifying which documents to patch.
+          patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
           patch_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
 

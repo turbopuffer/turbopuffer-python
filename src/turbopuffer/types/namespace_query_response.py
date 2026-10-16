@@ -12,7 +12,10 @@ __all__ = ["NamespaceQueryResponse"]
 
 
 class NamespaceQueryResponse(BaseModel):
-    """The result of a query."""
+    """The result of a query.
+
+    With `aggregate_by`, `aggregations` maps each aggregation's label to its value. With `group_by` as well, `aggregation_groups` holds one object per group instead, with its group key and the value of each aggregation.
+    """
 
     billing: QueryBilling
     """The billing information for a query."""
@@ -21,17 +24,8 @@ class NamespaceQueryResponse(BaseModel):
     """The performance information for a query."""
 
     aggregation_groups: Optional[List[AggregationGroup]] = None
-    """
-    One object per aggregation group, with its group key and the value of each
-    requested aggregation. Only present when `aggregate_by` and `group_by` are both
-    set.
-    """
 
     aggregations: Optional[Dict[str, object]] = None
-    """The value of each requested aggregation, keyed by its label.
-
-    Only present when `aggregate_by` is set without `group_by`.
-    """
 
     rows: Optional[List[Row]] = None
     """The documents that matched the query, ordered by `rank_by`.
