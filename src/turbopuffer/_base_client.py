@@ -582,10 +582,10 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
                 # since httpx's content param overrides other body arguments
                 # We use our own json library for serialization, which might be faster
                 # than httpx's, and at worst will be the same (stdlib json).
-                serialize_start = time.perf_counter_ns()
+                serialize_begin = time.perf_counter_ns()
                 kwargs["content"] = json.dumps(json_data) if is_given(json_data) and json_data is not None else None
                 kwargs.setdefault("extensions", {})[SERIALIZE_TIMING_EXTENSION] = (
-                    serialize_start,
+                    serialize_begin,
                     time.perf_counter_ns(),
                 )
             kwargs["files"] = files

@@ -60,37 +60,37 @@ class Timings:
     """
 
     __slots__ = (
-        "attempt_start",
-        "serialize_start",
+        "attempt_begin",
+        "serialize_begin",
         "serialize_end",
         "request_ready",
-        "connect_start",
+        "connect_begin",
         "connect_end",
-        "send_start",
+        "send_begin",
         "send_end",
         "response_headers",
         "body_end",
-        "deserialize_start",
+        "deserialize_begin",
         "deserialize_end",
         "reused",
         "extra",
     )
 
     def __init__(self) -> None:
-        self.attempt_start: Optional[int] = None
-        self.serialize_start: Optional[int] = None
+        self.attempt_begin: Optional[int] = None
+        self.serialize_begin: Optional[int] = None
         self.serialize_end: Optional[int] = None
         # The request was built and is about to be handed to the HTTP client.
         self.request_ready: Optional[int] = None
         # Opening a new connection: DNS, TCP and TLS.
-        self.connect_start: Optional[int] = None
+        self.connect_begin: Optional[int] = None
         self.connect_end: Optional[int] = None
         # Writing the request headers and body.
-        self.send_start: Optional[int] = None
+        self.send_begin: Optional[int] = None
         self.send_end: Optional[int] = None
         self.response_headers: Optional[int] = None
         self.body_end: Optional[int] = None
-        self.deserialize_start: Optional[int] = None
+        self.deserialize_begin: Optional[int] = None
         self.deserialize_end: Optional[int] = None
         # Whether the attempt used an existing connection, or `None` when unknown.
         self.reused: Optional[bool] = None
@@ -221,13 +221,13 @@ def _reached_server(err: BaseException) -> Optional[bool]:
 # httpcore trace events that mark timings, and the fields they set. Later events overwrite
 # earlier ones, so with TLS a connection ends when its handshake completes.
 _TRACE_EVENTS = {
-    "connection.connect_tcp.started": "connect_start",
-    "connection.connect_unix_socket.started": "connect_start",
+    "connection.connect_tcp.started": "connect_begin",
+    "connection.connect_unix_socket.started": "connect_begin",
     "connection.connect_tcp.complete": "connect_end",
     "connection.connect_unix_socket.complete": "connect_end",
     "connection.start_tls.complete": "connect_end",
-    "http11.send_request_headers.started": "send_start",
-    "http2.send_request_headers.started": "send_start",
+    "http11.send_request_headers.started": "send_begin",
+    "http2.send_request_headers.started": "send_begin",
     "http11.send_request_body.complete": "send_end",
     "http2.send_request_body.complete": "send_end",
     "http11.receive_response_headers.complete": "response_headers",
@@ -297,7 +297,7 @@ class RequestObservation:
             return
         self._attempt = attempt
         self._timings = Timings()
-        self._timings.attempt_start = time.perf_counter_ns()
+        self._timings.attempt_begin = time.perf_counter_ns()
 
     def before_send(self, request: httpx.Request, *, is_async: bool = False) -> None:
         if self._scope is None:
@@ -306,7 +306,7 @@ class RequestObservation:
         timings.request_ready = time.perf_counter_ns()
         serialize: Optional[Tuple[int, int]] = request.extensions.get(SERIALIZE_TIMING_EXTENSION)
         if serialize is not None:
-            timings.serialize_start, timings.serialize_end = serialize
+            timings.serialize_begin, timings.serialize_end = serialize
 
         request.extensions[TIMINGS_EXTENSION] = timings
         request.extensions[_OBSERVATION_EXTENSION] = self
@@ -352,7 +352,7 @@ class RequestObservation:
     def start_parse(self) -> None:
         if self._scope is None or self._finished:
             return
-        self._timings.deserialize_start = time.perf_counter_ns()
+        self._timings.deserialize_begin = time.perf_counter_ns()
 
     def finish(
         self,
@@ -364,7 +364,7 @@ class RequestObservation:
         if self._scope is None or self._finished:
             return
         self._finished = True
-        if self._timings.deserialize_start is not None:
+        if self._timings.deserialize_begin is not None:
             self._timings.deserialize_end = time.perf_counter_ns()
         self._settle()
         kind: Optional[ErrorKind] = None
@@ -383,8 +383,8 @@ class RequestObservation:
 
     def _settle(self) -> None:
         timings = self._timings
-        if timings.reused is None and timings.send_start is not None:
-            timings.reused = timings.connect_start is None
+        if timings.reused is None and timings.send_begin is not None:
+            timings.reused = timings.connect_begin is None
 
 
 _INERT = RequestObservation(None, None)

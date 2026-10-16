@@ -1054,9 +1054,9 @@ class TestTurbopuffer:
         assert result.retries == 1
         assert result.parsed is response
         timings = result.timings
-        assert timings.attempt_start is not None and timings.request_ready is not None
-        assert timings.deserialize_start is not None and timings.deserialize_end is not None
-        assert timings.attempt_start <= timings.request_ready <= timings.deserialize_start <= timings.deserialize_end
+        assert timings.attempt_begin is not None and timings.request_ready is not None
+        assert timings.deserialize_begin is not None and timings.deserialize_end is not None
+        assert timings.attempt_begin <= timings.request_ready <= timings.deserialize_begin <= timings.deserialize_end
 
     @pytest.mark.respx(base_url=base_url)
     def test_request_observer_failures(self, client: Turbopuffer, respx_mock: MockRouter) -> None:
@@ -1130,7 +1130,7 @@ class TestTurbopuffer:
         assert result.error_kind == "other"
         assert result.response is not None and result.response.status_code == 200
         assert result.parsed is None
-        assert result.timings.deserialize_start is not None and result.timings.deserialize_end is not None
+        assert result.timings.deserialize_begin is not None and result.timings.deserialize_end is not None
 
     @pytest.mark.respx(base_url=base_url)
     def test_request_observer_unparsed_response(self, client: Turbopuffer, respx_mock: MockRouter) -> None:
@@ -2215,9 +2215,9 @@ class TestAsyncTurbopuffer:
         assert result.retries == 1
         assert result.parsed is response
         timings = result.timings
-        assert timings.attempt_start is not None and timings.request_ready is not None
-        assert timings.deserialize_start is not None and timings.deserialize_end is not None
-        assert timings.attempt_start <= timings.request_ready <= timings.deserialize_start <= timings.deserialize_end
+        assert timings.attempt_begin is not None and timings.request_ready is not None
+        assert timings.deserialize_begin is not None and timings.deserialize_end is not None
+        assert timings.attempt_begin <= timings.request_ready <= timings.deserialize_begin <= timings.deserialize_end
 
     @pytest.mark.respx(base_url=base_url)
     async def test_request_observer_failures(self, async_client: AsyncTurbopuffer, respx_mock: MockRouter) -> None:
@@ -2291,7 +2291,7 @@ class TestAsyncTurbopuffer:
         assert result.error_kind == "other"
         assert result.response is not None and result.response.status_code == 200
         assert result.parsed is None
-        assert result.timings.deserialize_start is not None and result.timings.deserialize_end is not None
+        assert result.timings.deserialize_begin is not None and result.timings.deserialize_end is not None
 
     @pytest.mark.respx(base_url=base_url)
     async def test_request_observer_unparsed_response(

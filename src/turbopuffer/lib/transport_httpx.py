@@ -15,8 +15,8 @@ class HttpxTransport(httpx.HTTPTransport):
         compression = request.extensions.get("compression", True)
 
         # Compress the request content if worthwhile.
-        compress_start = time.perf_counter_ns()
-        compress_end = compress_start  # overwritten later if we actually compress
+        compress_begin = time.perf_counter_ns()
+        compress_end = compress_begin  # overwritten later if we actually compress
         if compression and len(request.content) > MIN_GZIP_SIZE:
             request._content = gzip.compress(request.content, compresslevel=1)
             request.stream = httpx.ByteStream(request._content)
@@ -24,7 +24,7 @@ class HttpxTransport(httpx.HTTPTransport):
             request.headers["Content-Length"] = str(len(request.content))
             compress_end = time.perf_counter_ns()
         if timings is not None:
-            timings.extra["compress_start"] = compress_start
+            timings.extra["compress_begin"] = compress_begin
             timings.extra["compress_end"] = compress_end
 
         response = super().handle_request(request)

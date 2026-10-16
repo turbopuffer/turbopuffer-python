@@ -86,10 +86,10 @@ def connection_trace_config() -> aiohttp.TraceConfig:
         return mark
 
     config = aiohttp.TraceConfig()
-    config.on_connection_create_start.append(marker("connect_start"))
+    config.on_connection_create_start.append(marker("connect_begin"))
     # A new connection is ready to send on as soon as it's created.
-    config.on_connection_create_end.append(marker("connect_end", "send_start"))
-    config.on_connection_reuseconn.append(marker("send_start"))
+    config.on_connection_create_end.append(marker("connect_end", "send_begin"))
+    config.on_connection_reuseconn.append(marker("send_begin"))
     # Each chunk overwrites the last, so this ends up marking when the whole body was sent.
     config.on_request_headers_sent.append(marker("send_end"))
     config.on_request_chunk_sent.append(marker("send_end"))
@@ -115,8 +115,8 @@ class AiohttpTransport(httpx.AsyncBaseTransport):
 
         # Compress the request content if worthwhile.
         content = request.content
-        compress_start = time.perf_counter_ns()
-        compress_end = compress_start  # overwritten later if we actually compress
+        compress_begin = time.perf_counter_ns()
+        compress_end = compress_begin  # overwritten later if we actually compress
         if compression and len(request.content) > MIN_GZIP_SIZE:
             loop = asyncio.get_event_loop()
             content = await loop.run_in_executor(None, lambda: gzip.compress(content, compresslevel=1))
@@ -124,7 +124,7 @@ class AiohttpTransport(httpx.AsyncBaseTransport):
             request.headers["Content-Length"] = str(len(content))
             compress_end = time.perf_counter_ns()
         if timings is not None:
-            timings.extra["compress_start"] = compress_start
+            timings.extra["compress_begin"] = compress_begin
             timings.extra["compress_end"] = compress_end
 
         with map_aiohttp_exceptions():

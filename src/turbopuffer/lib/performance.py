@@ -34,30 +34,30 @@ def compute_durations(timings: Timings, end: int) -> Dict[str, int]:
     Phases that weren't observed are left out.
     """
     durations: Dict[str, int] = {}
-    if timings.attempt_start is None:
+    if timings.attempt_begin is None:
         return durations
-    durations["total"] = end - timings.attempt_start
+    durations["total"] = end - timings.attempt_begin
 
-    if timings.serialize_start is not None and timings.serialize_end is not None:
-        durations["serialize"] = timings.serialize_end - timings.serialize_start
+    if timings.serialize_begin is not None and timings.serialize_end is not None:
+        durations["serialize"] = timings.serialize_end - timings.serialize_begin
 
     # Set by our transports, which may compress request bodies.
-    compress_start = timings.extra.get("compress_start")
+    compress_begin = timings.extra.get("compress_begin")
     compress_end = timings.extra.get("compress_end")
-    if compress_start is not None and compress_end is not None:
-        durations["compress"] = compress_end - compress_start
+    if compress_begin is not None and compress_end is not None:
+        durations["compress"] = compress_end - compress_begin
 
     # Waiting for a free connection, until connecting a new one or sending on a reused one.
-    pool_start = compress_end if compress_end is not None else timings.request_ready
-    connection_ready = timings.connect_start if timings.connect_start is not None else timings.send_start
-    if pool_start is not None and connection_ready is not None:
-        durations["pool"] = max(connection_ready - pool_start, 0)
+    pool_begin = compress_end if compress_end is not None else timings.request_ready
+    connection_ready = timings.connect_begin if timings.connect_begin is not None else timings.send_begin
+    if pool_begin is not None and connection_ready is not None:
+        durations["pool"] = max(connection_ready - pool_begin, 0)
 
-    if timings.connect_start is not None and timings.connect_end is not None:
-        durations["connect"] = timings.connect_end - timings.connect_start
+    if timings.connect_begin is not None and timings.connect_end is not None:
+        durations["connect"] = timings.connect_end - timings.connect_begin
 
-    if timings.send_start is not None and timings.send_end is not None:
-        durations["send"] = timings.send_end - timings.send_start
+    if timings.send_begin is not None and timings.send_end is not None:
+        durations["send"] = timings.send_end - timings.send_begin
 
     # Covers the network round trip and the server. aiohttp sends the body concurrently with
     # reading the response, so it can finish sending after headers arrive.
@@ -65,13 +65,13 @@ def compute_durations(timings: Timings, end: int) -> Dict[str, int]:
         durations["wait"] = max(timings.response_headers - timings.send_end, 0)
 
     if timings.response_headers is not None:
-        durations["response"] = timings.response_headers - timings.attempt_start
+        durations["response"] = timings.response_headers - timings.attempt_begin
 
     if timings.body_end is not None and timings.response_headers is not None:
         durations["body_read"] = timings.body_end - timings.response_headers
 
-    if timings.deserialize_start is not None and timings.deserialize_end is not None:
-        durations["deserialize"] = timings.deserialize_end - timings.deserialize_start
+    if timings.deserialize_begin is not None and timings.deserialize_end is not None:
+        durations["deserialize"] = timings.deserialize_end - timings.deserialize_begin
 
     return durations
 

@@ -680,14 +680,14 @@ class TestAsyncRequests:
 class TestConnectionPhases:
     def test_durations(self) -> None:
         new_connection = make_timings(
-            attempt_start=0,
+            attempt_begin=0,
             request_ready=50,
-            connect_start=150,
+            connect_begin=150,
             connect_end=400,
-            send_start=410,
+            send_begin=410,
             send_end=500,
             response_headers=900,
-            extra={"compress_start": 60, "compress_end": 100},
+            extra={"compress_begin": 60, "compress_end": 100},
         )
         durations = compute_durations(new_connection, 1000)
         assert {key: durations[key] for key in ("compress", "pool", "connect", "send", "wait")} == {
@@ -699,7 +699,7 @@ class TestConnectionPhases:
         }
 
         reused_connection = make_timings(
-            attempt_start=0, request_ready=100, send_start=130, send_end=160, response_headers=300
+            attempt_begin=0, request_ready=100, send_begin=130, send_end=160, response_headers=300
         )
         durations = compute_durations(reused_connection, 400)
         assert "connect" not in durations
@@ -710,7 +710,7 @@ class TestConnectionPhases:
         assert compute_durations(reused_connection, 400)["wait"] == 0
 
         # Untraced requests, e.g. through a user-supplied transport.
-        assert compute_durations(make_timings(attempt_start=0), 400) == {"total": 400}
+        assert compute_durations(make_timings(attempt_begin=0), 400) == {"total": 400}
 
     def test_sync_client(self, local_server: str) -> None:
         with Turbopuffer(base_url=local_server, api_key=api_key, telemetry=True) as client:
