@@ -250,7 +250,7 @@ class _RequestScope(RequestScope):
             self._buffer.restore(self._batch)
             self._batch = None
 
-        error = None
+        error: Optional[str] = None
         if result.error_kind in ("canceled", "other"):
             error = result.error_kind
         elif result.error_kind is not None:
