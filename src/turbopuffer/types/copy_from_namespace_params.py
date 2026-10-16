@@ -9,6 +9,8 @@ __all__ = ["CopyFromNamespaceParams", "CopyFromNamespaceConfig"]
 
 
 class CopyFromNamespaceConfig(TypedDict, total=False):
+    """Configuration for copying documents from another namespace."""
+
     source_namespace: Required[str]
     """The namespace to copy documents from."""
 

@@ -9,6 +9,8 @@ __all__ = ["BranchFromNamespaceParams", "BranchFromNamespaceConfig"]
 
 
 class BranchFromNamespaceConfig(TypedDict, total=False):
+    """Configuration for branching from another namespace."""
+
     source_namespace: Required[str]
     """The namespace to create an instant, copy-on-write clone of."""
 

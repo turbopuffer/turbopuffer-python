@@ -9,6 +9,8 @@ __all__ = ["NamespaceRecallResponse", "GroundTruth"]
 
 
 class GroundTruth(BaseModel):
+    """The ground truth for one of the queries."""
+
     nearest_neighbors: List[Row]
     """The true nearest neighbors with their distances and vectors."""
 
