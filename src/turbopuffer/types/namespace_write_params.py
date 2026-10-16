@@ -62,7 +62,7 @@ class NamespaceWriteParams(TypedDict, total=False):
     """The encryption configuration for a namespace."""
 
     patch_by_filter: PatchByFilter
-    """The patch and filter specifying which documents to patch."""
+    """Sets the attributes in `patch` on every document that matches `filters`."""
 
     patch_by_filter_allow_partial: bool
     """Allow partial completion when filter matches too many documents."""
@@ -115,7 +115,7 @@ class NamespaceWriteParams(TypedDict, total=False):
 
 
 class PatchByFilter(TypedDict, total=False):
-    """The patch and filter specifying which documents to patch."""
+    """Sets the attributes in `patch` on every document that matches `filters`."""
 
     filters: Required[Filter]
     """Filter by attributes. Same syntax as the query endpoint."""

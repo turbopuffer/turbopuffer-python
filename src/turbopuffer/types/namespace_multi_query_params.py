@@ -13,7 +13,7 @@ from .vector_encoding import VectorEncoding
 from .rerank_limit_param import RerankLimitParam
 from .include_attributes_param import IncludeAttributesParam
 
-__all__ = ["NamespaceMultiQueryParams", "Query", "QueryLimit", "Consistency", "Limit"]
+__all__ = ["NamespaceMultiQueryParams", "Query", "QueryEffort", "QueryLimit", "Consistency", "Limit"]
 
 
 class NamespaceMultiQueryParams(TypedDict, total=False):
@@ -40,6 +40,28 @@ class NamespaceMultiQueryParams(TypedDict, total=False):
     """The encoding to use for vectors in the response."""
 
 
+class QueryEffort(TypedDict, total=False):
+    """How much work an ANN query does compared to the default.
+
+    Only supported for ANN queries.
+    """
+
+    ann: float
+    """Multiplies the work done.
+
+    Higher values improve recall at the cost of latency. Queries are billed
+    proportionally.
+    """
+
+    ann_filter: Literal["auto", "prefilter", "postfilter"]
+    """How filters are applied.
+
+    `auto` uses the query planner. `prefilter` evaluates filters before the ANN
+    search. `postfilter` evaluates filters only on rows near the query vector. Does
+    not affect pricing.
+    """
+
+
 QueryLimit: TypeAlias = Union[int, LimitParam]
 
 
@@ -61,6 +83,12 @@ class Query(TypedDict, total=False):
 
     distance_metric: DistanceMetric
     """A function used to calculate vector similarity."""
+
+    effort: QueryEffort
+    """How much work an ANN query does compared to the default.
+
+    Only supported for ANN queries.
+    """
 
     exclude_attributes: SequenceNotStr[str]
     """List of attribute names to exclude from the response.

@@ -230,6 +230,7 @@ class NamespacesResource(SyncAPIResource):
         compute_attributes: Dict[str, object] | Omit = omit,
         consistency: namespace_explain_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
+        effort: namespace_explain_query_params.Effort | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
         filters: Filter | Omit = omit,
         group_by: Iterable[GroupBy] | Omit = omit,
@@ -260,6 +261,9 @@ class NamespacesResource(SyncAPIResource):
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
+
+          effort: How much work an ANN query does compared to the default. Only supported for ANN
+              queries.
 
           exclude_attributes: List of attribute names to exclude from the response. All other attributes will
               be included in the response.
@@ -303,6 +307,7 @@ class NamespacesResource(SyncAPIResource):
                     "compute_attributes": compute_attributes,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
+                    "effort": effort,
                     "exclude_attributes": exclude_attributes,
                     "filters": filters,
                     "group_by": group_by,
@@ -509,6 +514,7 @@ class NamespacesResource(SyncAPIResource):
         compute_attributes: Dict[str, object] | Omit = omit,
         consistency: namespace_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
+        effort: namespace_query_params.Effort | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
         filters: Filter | Omit = omit,
         group_by: Iterable[GroupBy] | Omit = omit,
@@ -540,6 +546,9 @@ class NamespacesResource(SyncAPIResource):
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
+
+          effort: How much work an ANN query does compared to the default. Only supported for ANN
+              queries.
 
           exclude_attributes: List of attribute names to exclude from the response. All other attributes will
               be included in the response.
@@ -585,6 +594,7 @@ class NamespacesResource(SyncAPIResource):
                     "compute_attributes": compute_attributes,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
+                    "effort": effort,
                     "exclude_attributes": exclude_attributes,
                     "filters": filters,
                     "group_by": group_by,
@@ -923,7 +933,7 @@ class NamespacesResource(SyncAPIResource):
 
           encryption: The encryption configuration for a namespace.
 
-          patch_by_filter: The patch and filter specifying which documents to patch.
+          patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
           patch_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
 
@@ -1161,6 +1171,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         compute_attributes: Dict[str, object] | Omit = omit,
         consistency: namespace_explain_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
+        effort: namespace_explain_query_params.Effort | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
         filters: Filter | Omit = omit,
         group_by: Iterable[GroupBy] | Omit = omit,
@@ -1191,6 +1202,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
+
+          effort: How much work an ANN query does compared to the default. Only supported for ANN
+              queries.
 
           exclude_attributes: List of attribute names to exclude from the response. All other attributes will
               be included in the response.
@@ -1234,6 +1248,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "compute_attributes": compute_attributes,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
+                    "effort": effort,
                     "exclude_attributes": exclude_attributes,
                     "filters": filters,
                     "group_by": group_by,
@@ -1440,6 +1455,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         compute_attributes: Dict[str, object] | Omit = omit,
         consistency: namespace_query_params.Consistency | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
+        effort: namespace_query_params.Effort | Omit = omit,
         exclude_attributes: SequenceNotStr[str] | Omit = omit,
         filters: Filter | Omit = omit,
         group_by: Iterable[GroupBy] | Omit = omit,
@@ -1471,6 +1487,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
           consistency: The consistency level for a query.
 
           distance_metric: A function used to calculate vector similarity.
+
+          effort: How much work an ANN query does compared to the default. Only supported for ANN
+              queries.
 
           exclude_attributes: List of attribute names to exclude from the response. All other attributes will
               be included in the response.
@@ -1516,6 +1535,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "compute_attributes": compute_attributes,
                     "consistency": consistency,
                     "distance_metric": distance_metric,
+                    "effort": effort,
                     "exclude_attributes": exclude_attributes,
                     "filters": filters,
                     "group_by": group_by,
@@ -1854,7 +1874,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           encryption: The encryption configuration for a namespace.
 
-          patch_by_filter: The patch and filter specifying which documents to patch.
+          patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
           patch_by_filter_allow_partial: Allow partial completion when filter matches too many documents.
 

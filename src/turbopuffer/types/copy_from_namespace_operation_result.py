@@ -12,11 +12,12 @@ __all__ = ["CopyFromNamespaceOperationResult", "Success", "Error"]
 
 class Success(BaseModel):
     success: WriteResult
-    """The response to a successful write request."""
+    """The copy succeeded, with the result of its write."""
 
 
 class Error(BaseModel):
     error: OperationError
+    """The copy failed, with its error."""
 
 
 CopyFromNamespaceOperationResult: TypeAlias = Union[Success, Error]
