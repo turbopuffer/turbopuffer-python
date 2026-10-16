@@ -34,6 +34,7 @@ from ._utils import (
 )
 from ._models import FinalRequestOptions
 from ._version import __version__
+from ._observer import RequestObservation
 from ._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
@@ -58,7 +59,7 @@ from .lib.namespace import (
     NamespaceWithStreamingResponse,
     AsyncNamespaceWithStreamingResponse,
 )
-from .lib.telemetry import telemetry_buffer
+from .lib.telemetry import TurbopufferObserver, telemetry_buffer
 from .types.namespace_summary import NamespaceSummary
 
 __all__ = [
@@ -172,6 +173,7 @@ class Turbopuffer(SyncAPIClient):
         )
 
         self._telemetry = telemetry_buffer(telemetry, self.api_key, self.base_url)
+        self._observer = TurbopufferObserver(self._telemetry)
         self.with_raw_response = TurbopufferWithRawResponse(self)
         self.with_streaming_response = TurbopufferWithStreamedResponse(self)
 
@@ -367,9 +369,16 @@ class Turbopuffer(SyncAPIClient):
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         retries_taken: int = 0,
     ) -> ResponseT:
-        response = respond_async.process_response(response=response, client=self, options=options)
-        if response.is_error:
-            raise self._make_status_error_from_response(response)
+        observation = RequestObservation.of(response)
+        try:
+            response = respond_async.process_response(response=response, client=self, options=options)
+            if response.is_error:
+                raise self._make_status_error_from_response(response)
+        except BaseException as err:
+            # Polling happens after the retry loop, which would otherwise finish the request.
+            final = getattr(err, "response", None)
+            observation.finish(response=final if isinstance(final, httpx.Response) else response, error=err)
+            raise
 
         return super()._process_response(
             cast_to=cast_to,
@@ -480,6 +489,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         )
 
         self._telemetry = telemetry_buffer(telemetry, self.api_key, self.base_url)
+        self._observer = TurbopufferObserver(self._telemetry)
         self.with_raw_response = AsyncTurbopufferWithRawResponse(self)
         self.with_streaming_response = AsyncTurbopufferWithStreamedResponse(self)
 
@@ -675,9 +685,16 @@ class AsyncTurbopuffer(AsyncAPIClient):
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         retries_taken: int = 0,
     ) -> ResponseT:
-        response = await respond_async.process_response_aio(response=response, client=self, options=options)
-        if response.is_error:
-            raise self._make_status_error_from_response(response)
+        observation = RequestObservation.of(response)
+        try:
+            response = await respond_async.process_response_aio(response=response, client=self, options=options)
+            if response.is_error:
+                raise self._make_status_error_from_response(response)
+        except BaseException as err:
+            # Polling happens after the retry loop, which would otherwise finish the request.
+            final = getattr(err, "response", None)
+            observation.finish(response=final if isinstance(final, httpx.Response) else response, error=err)
+            raise
 
         return await super()._process_response(
             cast_to=cast_to,

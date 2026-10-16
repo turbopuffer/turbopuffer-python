@@ -15,22 +15,15 @@ import random
 import logging
 import weakref
 import threading
-from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional
 from collections import deque
+from typing_extensions import override
 
 import httpx
 
 from . import json
-from .performance import (
-    TRACE_CONNECTION_EXTENSION,
-    compute_durations,
-    connection_reused,
-    merge_clock_into_response,
-)
-
-if TYPE_CHECKING:
-    from .._models import FinalRequestOptions
-    from .._response import BaseAPIResponse
+from .._observer import RequestInfo, RequestScope, AttemptResult, RequestResult, RequestObserver
+from .performance import compute_durations, merge_into_performance
 
 log: logging.Logger = logging.getLogger(__name__)
 
@@ -43,9 +36,6 @@ TELEMETRY_VERSION = 1
 # Keeps the header well under the 8 KB per-line limit of common proxies.
 MAX_RECORDS_PER_HEADER = 20
 MAX_BUFFERED_RECORDS = 1000
-
-# Errors raised before a request reached the server, so its telemetry batch can be sent again.
-UNSENT_ERRORS = (httpx.ConnectError, httpx.ConnectTimeout)
 
 _TRUE_VALUES = {"1", "true", "yes", "on"}
 _FALSE_VALUES = {"", "0", "false", "no", "off"}
@@ -213,86 +203,66 @@ def telemetry_buffer(enabled: Optional[bool], api_key: str, base_url: httpx.URL)
     return buffer
 
 
-class RequestTelemetry:
-    """Tracks the clock and telemetry of one request across its retry attempts."""
+class TurbopufferObserver(RequestObserver):
+    """Fills in client performance fields on responses, and records telemetry when enabled."""
 
-    def __init__(self, buffer: Optional[TelemetryBuffer]) -> None:
+    def __init__(self, telemetry: Optional[TelemetryBuffer]) -> None:
+        self.telemetry = telemetry
+
+    @override
+    def start(self, info: RequestInfo) -> RequestScope:
+        return _RequestScope(self.telemetry, info)
+
+
+class _RequestScope(RequestScope):
+    def __init__(self, buffer: Optional[TelemetryBuffer], info: RequestInfo) -> None:
         self._buffer = buffer
-        # Kept for later attempts until one of them reaches the server.
+        self._info = info
+        # Kept for later attempts until one of them may have reached the server.
         self._batch = buffer.take() if buffer is not None else None
-        self._options: Optional[FinalRequestOptions] = None
-        self._request: Optional[httpx.Request] = None
-        self._retries_taken = 0
 
-    def before_send(
-        self, options: FinalRequestOptions, request: httpx.Request, request_start: int, retries_taken: int
-    ) -> None:
-        request.extensions.setdefault("clock", {})["request_start"] = request_start
-        if self._buffer is not None:
-            request.extensions[TRACE_CONNECTION_EXTENSION] = True
-        self._options = options
-        self._request = request
-        self._retries_taken = retries_taken
+    @override
+    def attempt_begin(self, attempt: int, request: httpx.Request) -> None:
         if self._batch is not None:
             request.headers[TELEMETRY_HEADER] = self._batch.header
 
-    def on_error(self, err: Exception, remaining_retries: int) -> None:
-        if not isinstance(err, UNSENT_ERRORS):
+    @override
+    def attempt_end(self, result: AttemptResult) -> None:
+        if result.reached_server is not False:
             self._batch = None
-        if remaining_retries > 0 or self._buffer is None:
+        if self._buffer is not None and result.response is not None:
+            self._buffer.observe_response(result.response.headers)
+
+    @override
+    def finish(self, result: RequestResult) -> None:
+        timings = result.timings
+        end = timings.deserialize_end if timings.deserialize_end is not None else time.perf_counter_ns()
+        durations = compute_durations(timings, end)
+        merge_into_performance(result.parsed, durations)
+
+        if self._buffer is None:
             return
-        # The request is giving up, so a batch that never reached the server goes back for a later request.
+        # A batch that never reached the server goes back for a later request.
         if self._batch is not None:
             self._buffer.restore(self._batch)
             self._batch = None
-        self._record_failure(status=0, error="timeout" if isinstance(err, httpx.TimeoutException) else "connect")
 
-    def on_response(self, response: httpx.Response) -> None:
-        # The server has seen the batch, so later attempts must not repeat it.
-        self._batch = None
-        if self._buffer is not None:
-            self._buffer.observe_response(response.headers)
-
-    def on_status_error(self, response: httpx.Response) -> None:
-        self._record_failure(status=response.status_code)
-
-    def _record_failure(self, *, status: int, error: Optional[str] = None) -> None:
-        if self._buffer is None or self._options is None or self._request is None:
-            return
-        clock = self._request.extensions["clock"]
+        error = None
+        if result.error_kind == "canceled":
+            error = "canceled"
+        elif result.error_kind is not None:
+            error = "timeout" if result.error_kind.endswith("timeout") else "connect"
+        server_total_ms = getattr(getattr(result.parsed, "performance", None), "server_total_ms", None)
         self._buffer.record(
-            method=self._options.method,
-            url=self._options.url,
-            status=status,
-            retries=self._retries_taken,
-            durations=compute_durations(clock, time.perf_counter_ns()),
+            method=self._info.method,
+            url=self._info.url,
+            status=result.response.status_code if result.response is not None else 0,
+            retries=result.retries,
+            durations=durations,
+            server_total_ms=server_total_ms if isinstance(server_total_ms, (int, float)) else None,
             error=error,
-            reused=connection_reused(clock),
+            reused=timings.reused,
         )
-
-
-def finish_response_timing(api_response: BaseAPIResponse[Any], parsed: object, clock: Optional[Dict[str, int]]) -> None:
-    """Fills the client performance fields of a parsed response and records its telemetry."""
-    if clock is None:
-        return
-    durations = merge_clock_into_response(parsed, clock)
-
-    buffer = api_response._client._telemetry
-    # Parsing the same response into another type isn't another request.
-    if buffer is None or clock.get("telemetry_recorded"):
-        return
-    clock["telemetry_recorded"] = 1
-
-    server_total_ms = getattr(getattr(parsed, "performance", None), "server_total_ms", None)
-    buffer.record(
-        method=api_response._options.method,
-        url=api_response._options.url,
-        status=api_response.http_response.status_code,
-        retries=api_response.retries_taken,
-        durations=durations,
-        server_total_ms=server_total_ms if isinstance(server_total_ms, (int, float)) else None,
-        reused=connection_reused(clock),
-    )
 
 
 _buffers: weakref.WeakSet[TelemetryBuffer] = weakref.WeakSet()
