@@ -15,3 +15,4 @@ class NamespaceHintCacheWarmResponse(BaseModel):
     """The status of the request."""
 
     message: Optional[str] = None
+    """A message describing the result of the request."""

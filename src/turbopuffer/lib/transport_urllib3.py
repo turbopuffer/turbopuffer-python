@@ -95,6 +95,7 @@ class Urllib3Transport(httpx.BaseTransport):
     @override
     def handle_request(self, request: httpx.Request) -> httpx.Response:
         timings = request.extensions.get(TIMINGS_EXTENSION)
+        compression = request.extensions.get("compression", True)
         timeouts = request.extensions.get("timeout", {})
 
         connect_timeout = timeouts.get("connect", None)
@@ -109,7 +110,7 @@ class Urllib3Transport(httpx.BaseTransport):
         content = request.content
         compress_begin = time.perf_counter_ns()
         compress_end = compress_begin  # overwritten later if we actually compress
-        if len(request.content) > MIN_GZIP_SIZE:
+        if compression and len(request.content) > MIN_GZIP_SIZE:
             content = gzip.compress(request.content, compresslevel=1)
             request.headers["Content-Encoding"] = "gzip"
             request.headers["Content-Length"] = str(len(content))
