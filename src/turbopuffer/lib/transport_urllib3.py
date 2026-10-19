@@ -18,6 +18,7 @@ from httpx._types import CertTypes, ProxyTypes, SyncByteStream
 from httpx._config import create_ssl_context
 
 from .transport import MIN_GZIP_SIZE
+from .._observer import TIMINGS_EXTENSION
 
 
 def httpx_headers_to_urllib3_headers(headers: httpx.Headers) -> urllib3.HTTPHeaderDict:
@@ -93,7 +94,7 @@ class Urllib3Transport(httpx.BaseTransport):
 
     @override
     def handle_request(self, request: httpx.Request) -> httpx.Response:
-        clock = request.extensions["clock"]
+        timings = request.extensions.get(TIMINGS_EXTENSION)
         timeouts = request.extensions.get("timeout", {})
 
         connect_timeout = timeouts.get("connect", None)
@@ -106,13 +107,16 @@ class Urllib3Transport(httpx.BaseTransport):
 
         # Compress the request content if worthwhile.
         content = request.content
-        clock["compress_start"] = time.perf_counter_ns()
-        clock["compress_end"] = clock["compress_start"]  # overwritten later if we actually compress
+        compress_begin = time.perf_counter_ns()
+        compress_end = compress_begin  # overwritten later if we actually compress
         if len(request.content) > MIN_GZIP_SIZE:
             content = gzip.compress(request.content, compresslevel=1)
             request.headers["Content-Encoding"] = "gzip"
             request.headers["Content-Length"] = str(len(content))
-            clock["compress_end"] = time.perf_counter_ns()
+            compress_end = time.perf_counter_ns()
+        if timings is not None:
+            timings.extra["compress_begin"] = compress_begin
+            timings.extra["compress_end"] = compress_end
 
         response = self._pool.request(
             request.method,
@@ -123,21 +127,19 @@ class Urllib3Transport(httpx.BaseTransport):
             preload_content=False,
             timeout=urllib3_timeout,
         )
-        clock["response_headers_end"] = time.perf_counter_ns()
+        if timings is not None:
+            timings.response_headers = time.perf_counter_ns()
 
         httpx_response = httpx.Response(
             status_code=response.status,
             headers=httpx.Headers([(name, value) for name, value in response.headers.iteritems()]),
             content=ResponseStream(response),
-            extensions={
-                # Smuggle the clock through the response object.
-                "clock": clock,
-            },
         )
 
         # Eagerly read the response content (which will be cached on the
         # response object) so that we can time the body read.
         httpx_response.read()
-        clock["body_read_end"] = time.perf_counter_ns()
+        if timings is not None:
+            timings.body_end = time.perf_counter_ns()
 
         return httpx_response

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import asyncio
 import logging
 import threading
 from typing import Any, Dict, List, Iterator, Optional, cast
@@ -14,6 +15,7 @@ from respx import Route, MockRouter
 
 from turbopuffer import (
     Turbopuffer,
+    NotFoundError,
     APIStatusError,
     APITimeoutError,
     AsyncTurbopuffer,
@@ -21,7 +23,8 @@ from turbopuffer import (
     DefaultAsyncHttpxClient,
 )
 from tests.conftest import api_key, base_url
-from turbopuffer.lib import telemetry
+from turbopuffer.lib import telemetry, respond_async
+from turbopuffer._observer import Timings
 from turbopuffer.lib.telemetry import (
     TELEMETRY_HEADER,
     TELEMETRY_ENV_VAR,
@@ -32,7 +35,7 @@ from turbopuffer.lib.telemetry import (
     route_template,
     resolve_enabled,
 )
-from turbopuffer.lib.performance import compute_durations, connection_reused
+from turbopuffer.lib.performance import compute_durations
 
 QUERY_PATH = "/v2/namespaces/my-ns/query"
 QUERY_ROUTE = "POST /v2/namespaces/{ns}/query"
@@ -134,9 +137,25 @@ def assert_connection_phases(first: Dict[str, Any], second: Dict[str, Any]) -> N
     assert second["reused"] is True
     assert "connect_us" not in second
     for record in (first, second):
-        for key in ("pool_us", "send_us", "wait_us"):
+        for key in ("pool_us", "send_us", "wait_us", "body_read_us"):
             assert isinstance(record[key], int) and record[key] >= 0, key
-        assert record["wait_us"] <= record["total_us"]
+        assert record["wait_us"] + record["body_read_us"] <= record["total_us"]
+
+
+def make_timings(*, extra: Optional[Dict[str, int]] = None, **marks: int) -> Timings:
+    timings = Timings()
+    for name, value in marks.items():
+        setattr(timings, name, value)
+    timings.extra = extra or {}
+    return timings
+
+
+def assert_client_performance(performance: Any) -> None:
+    assert performance.client_total_ms > 0
+    assert performance.client_response_ms is not None
+    assert 0 < performance.client_response_ms <= performance.client_total_ms
+    assert performance.client_body_read_ms is not None and performance.client_body_read_ms >= 0
+    assert performance.client_deserialize_ms > 0
 
 
 @pytest.fixture
@@ -302,6 +321,16 @@ class TestCopy:
 
 
 class TestRequests:
+    def test_failure_before_sending_keeps_records(self, telemetry_client: Turbopuffer) -> None:
+        assert telemetry_client._telemetry is not None
+        add_record(telemetry_client._telemetry)
+
+        # Building the request fails, so it's never sent.
+        with pytest.raises(TypeError):
+            telemetry_client.post(QUERY_PATH, cast_to=object, body={"unserializable": object()})
+
+        assert len(take_payload(telemetry_client._telemetry)["records"]) == 1
+
     @pytest.mark.respx(base_url=base_url)
     def test_records_ride_on_next_request(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         route = respx_mock.post(QUERY_PATH).mock(return_value=query_response())
@@ -320,9 +349,10 @@ class TestRequests:
         assert record["route"] == QUERY_ROUTE
         assert record["status"] == 200
         assert record["server_total_us"] == 7000
-        for key in ("total_us", "serialize_us", "body_read_us", "deserialize_us"):
+        # Mocked transports never open connections, so network phases are only covered by TestConnectionPhases.
+        for key in ("total_us", "serialize_us", "deserialize_us"):
             assert isinstance(record[key], int) and record[key] >= 0, key
-        assert record["total_us"] >= record["body_read_us"] + record["deserialize_us"]
+        assert record["total_us"] >= record["serialize_us"] + record["deserialize_us"]
         assert record["age_ms"] >= 0
         for key in ("compress_us", "response_us", "retries", "error", "sample_rate"):
             assert key not in record, key
@@ -419,6 +449,43 @@ class TestRequests:
         assert records[0]["retries"] == 1
 
     @pytest.mark.respx(base_url=base_url)
+    def test_interrupted_requests_are_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
+        class Interrupted(BaseException):
+            pass
+
+        def interrupt(_request: httpx.Request) -> httpx.Response:
+            raise Interrupted()
+
+        route = respx_mock.post(QUERY_PATH).mock(side_effect=interrupt)
+        ns = telemetry_client.namespace("my-ns")
+
+        with pytest.raises(Interrupted):
+            ns.query(top_k=1)
+        route.mock(return_value=query_response())
+        ns.query(top_k=1)
+
+        records = sent_records(sent_requests(route)[-1])
+        assert records is not None
+        assert [(r["status"], r["error"]) for r in records] == [(0, "canceled")]
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_parse_failures_are_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
+        route = respx_mock.post(QUERY_PATH)
+        route.side_effect = [
+            httpx.Response(200, content=b"not json", headers={"Content-Type": "application/json"}),
+            query_response(),
+        ]
+        ns = telemetry_client.namespace("my-ns")
+
+        with pytest.raises(ValueError):
+            ns.query(top_k=1)
+        ns.query(top_k=1)
+
+        records = sent_records(sent_requests(route)[1])
+        assert records is not None
+        assert [(r["status"], r["error"]) for r in records] == [(200, "other")]
+
+    @pytest.mark.respx(base_url=base_url)
     def test_failures_are_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         route = respx_mock.post(QUERY_PATH)
         route.side_effect = [
@@ -476,7 +543,116 @@ class TestRequests:
         assert len(take_payload(telemetry_client._telemetry)["records"]) == 1
 
 
+class TestRespondAsync:
+    """Requests the server accepts with a 202 and the SDK then polls until they finish."""
+
+    WRITE_PATH = "/v2/namespaces/my-ns"
+    POLL_PATH = "/v1/namespaces/my-ns/operations/op-abc"
+
+    @pytest.fixture(autouse=True)
+    def _no_poll_delay(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setattr(respond_async, "POLL_INTERVAL_SECS", 0)
+
+    def accepted(self, respx_mock: MockRouter) -> None:
+        respx_mock.post(self.WRITE_PATH).mock(
+            return_value=httpx.Response(
+                202, headers={"preference-applied": "respond-async", "location": f"{base_url}{self.POLL_PATH}"}
+            )
+        )
+
+    def write(self, client: Turbopuffer) -> None:
+        client.namespace("my-ns").write(upsert_columns={"id": [1], "vector": [[0.1]]})
+
+    def records(self, respx_mock: MockRouter, client: Turbopuffer) -> List[Dict[str, Any]]:
+        """Returns the records sent on later requests, followed by those still buffered."""
+        calls = cast(List[Any], respx_mock.calls)
+        records = [record for call in calls for record in sent_records(call.request) or []]
+        assert client._telemetry is not None
+        return records + cast(List[Dict[str, Any]], take_payload(client._telemetry)["records"])
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_polls_and_request_are_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
+        self.accepted(respx_mock)
+        respx_mock.get(self.POLL_PATH).mock(
+            side_effect=[
+                httpx.Response(200, json={"status": "running"}),
+                httpx.Response(200, json={"status": "finished", "result": {"success": {"status": "OK"}}}),
+            ]
+        )
+
+        self.write(telemetry_client)
+
+        *polls, request = self.records(respx_mock, telemetry_client)
+        assert [(r["route"], r["status"]) for r in polls] == [
+            ("GET /v1/namespaces/{ns}/operations/{token}", 200),
+            ("GET /v1/namespaces/{ns}/operations/{token}", 200),
+        ]
+        # The request reports the final outcome, and its total spans the polling.
+        assert (request["route"], request["status"]) == ("POST /v2/namespaces/{ns}", 200)
+        assert "error" not in request
+        assert request["total_us"] >= sum(r["total_us"] for r in polls)
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_failed_operation_is_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
+        self.accepted(respx_mock)
+        respx_mock.get(self.POLL_PATH).mock(
+            return_value=httpx.Response(
+                200,
+                json={"status": "finished", "result": {"error": {"status_code": 404, "detail": {"error": "gone"}}}},
+            )
+        )
+
+        with pytest.raises(NotFoundError):
+            self.write(telemetry_client)
+
+        _poll, request = self.records(respx_mock, telemetry_client)
+        assert (request["route"], request["status"]) == ("POST /v2/namespaces/{ns}", 404)
+        assert "error" not in request
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_polling_timeout_is_recorded(
+        self, respx_mock: MockRouter, telemetry_client: Turbopuffer, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr(respond_async, "POLL_INTERVAL_SECS", 0.01)
+        self.accepted(respx_mock)
+        respx_mock.get(self.POLL_PATH).mock(return_value=httpx.Response(200, json={"status": "running"}))
+
+        with pytest.raises(APITimeoutError):
+            self.write(telemetry_client.with_options(timeout=0.05))
+
+        *_polls, request = self.records(respx_mock, telemetry_client)
+        assert (request["route"], request["status"], request["error"]) == ("POST /v2/namespaces/{ns}", 202, "timeout")
+
+
 class TestAsyncRequests:
+    @pytest.mark.respx(base_url=base_url)
+    async def test_cancelled_requests_are_recorded(self, respx_mock: MockRouter) -> None:
+        async def stall(_request: httpx.Request) -> httpx.Response:
+            await asyncio.sleep(10)
+            return query_response()
+
+        route = respx_mock.post(QUERY_PATH).mock(side_effect=stall)
+
+        async with AsyncTurbopuffer(
+            base_url=base_url,
+            api_key=api_key,
+            telemetry=True,
+            # The default aiohttp transport can't be mocked.
+            http_client=DefaultAsyncHttpxClient(transport=httpx.AsyncHTTPTransport()),
+        ) as client:
+            ns = client.namespace("my-ns")
+            with pytest.raises(asyncio.TimeoutError):
+                await asyncio.wait_for(ns.query(top_k=1), timeout=0.05)
+            route.mock(return_value=query_response())
+            await ns.query(top_k=1)
+
+        records = sent_records(sent_requests(route)[-1])
+        assert records is not None
+        [record] = records
+        assert (record["status"], record["error"]) == (0, "canceled")
+        # Covers the time until cancellation, a little less than the wait since setup came first.
+        assert record["total_us"] >= 10_000
+
     @pytest.mark.respx(base_url=base_url)
     async def test_records_ride_on_next_request(self, respx_mock: MockRouter) -> None:
         route = respx_mock.post(QUERY_PATH).mock(return_value=query_response())
@@ -503,41 +679,38 @@ class TestAsyncRequests:
 
 class TestConnectionPhases:
     def test_durations(self) -> None:
-        new_connection = {
-            "request_start": 0,
-            "transport_start": 100,
-            "connect_start": 150,
-            "connect_end": 400,
-            "send_start": 410,
-            "send_end": 500,
-            "response_headers_end": 900,
-        }
+        new_connection = make_timings(
+            attempt_begin=0,
+            request_ready=50,
+            connect_begin=150,
+            connect_end=400,
+            send_begin=410,
+            send_end=500,
+            response_headers=900,
+            extra={"compress_begin": 60, "compress_end": 100},
+        )
         durations = compute_durations(new_connection, 1000)
-        assert {key: durations[key] for key in ("pool", "connect", "send", "wait")} == {
+        assert {key: durations[key] for key in ("compress", "pool", "connect", "send", "wait")} == {
+            "compress": 40,
             "pool": 50,
             "connect": 250,
             "send": 90,
             "wait": 400,
         }
-        assert connection_reused(new_connection) is False
 
-        reused_connection = {
-            "request_start": 0,
-            "transport_start": 100,
-            "send_start": 130,
-            "send_end": 160,
-            "response_headers_end": 300,
-        }
+        reused_connection = make_timings(
+            attempt_begin=0, request_ready=100, send_begin=130, send_end=160, response_headers=300
+        )
         durations = compute_durations(reused_connection, 400)
         assert "connect" not in durations
         assert durations["pool"] == 30
-        assert connection_reused(reused_connection) is True
 
         # aiohttp can finish sending the body after the response headers arrive.
-        assert compute_durations({**reused_connection, "send_end": 350}, 400)["wait"] == 0
+        reused_connection.send_end = 350
+        assert compute_durations(reused_connection, 400)["wait"] == 0
 
         # Untraced requests, e.g. through a user-supplied transport.
-        assert connection_reused({"request_start": 0}) is None
+        assert compute_durations(make_timings(attempt_begin=0), 400) == {"total": 400}
 
     def test_sync_client(self, local_server: str) -> None:
         with Turbopuffer(base_url=local_server, api_key=api_key, telemetry=True) as client:
@@ -561,11 +734,20 @@ class TestConnectionPhases:
 
         assert_connection_phases(first, second)
 
-    def test_not_traced_without_telemetry(self, local_server: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_performance_without_telemetry(self, local_server: str, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv(TELEMETRY_ENV_VAR, raising=False)
         with Turbopuffer(base_url=local_server, api_key=api_key) as client:
-            response = client.namespace("my-ns").with_raw_response.query(top_k=1)
+            assert client._telemetry is None
+            performance = client.namespace("my-ns").query(top_k=1).performance
 
-        clock = response.http_request.extensions["clock"]
-        assert "transport_start" in clock
-        assert "send_start" not in clock
+        assert_client_performance(performance)
+
+    async def test_async_performance_without_telemetry(
+        self, local_server: str, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.delenv(TELEMETRY_ENV_VAR, raising=False)
+        async with AsyncTurbopuffer(base_url=local_server, api_key=api_key) as client:
+            assert client._telemetry is None
+            performance = (await client.namespace("my-ns").query(top_k=1)).performance
+
+        assert_client_performance(performance)
