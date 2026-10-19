@@ -1,3 +1,9 @@
+import gzip
+import json
+from io import BytesIO
+from typing import Any
+from unittest.mock import Mock
+
 import httpx
 import respx
 import pytest
@@ -5,7 +11,7 @@ import pytest
 import turbopuffer
 from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from tests.custom import test_prefix
-from tests.conftest import base_url
+from tests.conftest import api_key, base_url
 from tests.custom.conftest import region
 
 
@@ -322,3 +328,34 @@ async def test_async_accept_encoding_header_enabled():
     assert query_route.called
     request = query_route.calls.last.request
     assert request.headers.get("Accept-Encoding") == "gzip"
+
+
+@pytest.mark.parametrize("large", [False, True], ids=["small", "large"])
+@pytest.mark.parametrize(
+    "options, compression_enabled",
+    [({}, False), ({"compression": False}, False), ({"compression": True}, True)],
+    ids=["default", "disabled", "enabled"],
+)
+def test_urllib3_transport_compression(
+    options: dict[str, Any], compression_enabled: bool, large: bool, monkeypatch: pytest.MonkeyPatch
+):
+    """Verify the urllib3 transport honors the compression option, compressing only large requests."""
+    urllib3 = pytest.importorskip("urllib3")
+    from turbopuffer.lib.transport_urllib3 import Urllib3Transport
+
+    # respx can't intercept urllib3, so mock the transport's pool instead.
+    transport = Urllib3Transport()
+    pool_request = Mock(return_value=urllib3.HTTPResponse(body=BytesIO(b"{}"), status=200, preload_content=False))
+    monkeypatch.setattr(transport._pool, "request", pool_request)
+
+    http_client = httpx.Client(transport=transport)
+    with Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client, **options) as client:
+        client.namespace("test").write(upsert_rows=[{"id": 1, "vector": [0.1] * (1024 if large else 1)}])
+
+    expect_compressed = compression_enabled and large
+    sent = pool_request.call_args.kwargs
+    assert (sent["headers"].get("Content-Encoding") == "gzip") is expect_compressed
+    assert int(sent["headers"]["Content-Length"]) == len(sent["body"])
+
+    body = gzip.decompress(sent["body"]) if expect_compressed else sent["body"]
+    assert json.loads(body)["upsert_rows"][0]["id"] == 1
