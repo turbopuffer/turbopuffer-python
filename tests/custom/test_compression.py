@@ -12,7 +12,6 @@ import turbopuffer
 from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from tests.custom import test_prefix
 from tests.conftest import api_key, base_url
-from tests.custom.conftest import region
 
 
 def test_compression_disabled_by_default(tpuf: Turbopuffer):
@@ -104,7 +103,7 @@ def test_accept_encoding_header_disabled_by_default():
     )
 
     http_client = httpx.Client(transport=httpx.HTTPTransport())
-    client = Turbopuffer(base_url=base_url, http_client=http_client)
+    client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
     ns = client.namespace("test")
     ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
 
@@ -122,7 +121,7 @@ async def test_async_accept_encoding_header_disabled_by_default():
     )
 
     http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
-    async with AsyncTurbopuffer(base_url=base_url, http_client=http_client) as client:
+    async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         ns = client.namespace("test")
         await ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
 
@@ -131,9 +130,9 @@ async def test_async_accept_encoding_header_disabled_by_default():
     assert request.headers.get("Accept-Encoding") == "identity"
 
 
-def test_compression_enabled_large_request():
+def test_compression_enabled_large_request(tpuf: Turbopuffer):
     """Test that large requests are compressed when compression is enabled."""
-    client = Turbopuffer(region=region, compression=True)
+    client = tpuf.with_options(compression=True)
     ns = client.namespace(test_prefix + "compression-enabled-large")
 
     try:
@@ -174,9 +173,9 @@ def test_compression_enabled_large_request():
     assert response.headers["Content-Encoding"] == "gzip"
 
 
-def test_compression_enabled_small_request():
+def test_compression_enabled_small_request(tpuf: Turbopuffer):
     """Test that small requests are not compressed even when compression is enabled."""
-    client = Turbopuffer(region=region, compression=True)
+    client = tpuf.with_options(compression=True)
     ns = client.namespace(test_prefix + "compression-enabled-small")
 
     try:
@@ -303,7 +302,7 @@ def test_accept_encoding_header_enabled():
     )
 
     http_client = httpx.Client(transport=httpx.HTTPTransport())
-    client = Turbopuffer(base_url=base_url, compression=True, http_client=http_client)
+    client = Turbopuffer(base_url=base_url, api_key=api_key, compression=True, http_client=http_client)
     ns = client.namespace("test")
     ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
 
@@ -321,7 +320,9 @@ async def test_async_accept_encoding_header_enabled():
     )
 
     http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
-    async with AsyncTurbopuffer(base_url=base_url, compression=True, http_client=http_client) as client:
+    async with AsyncTurbopuffer(
+        base_url=base_url, api_key=api_key, compression=True, http_client=http_client
+    ) as client:
         ns = client.namespace("test")
         await ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
 

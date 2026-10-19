@@ -89,6 +89,14 @@ $ pip install ./path-to-wheel-file.whl
 $ ./scripts/test
 ```
 
+Some tests run against the live turbopuffer API and are skipped unless `TURBOPUFFER_API_KEY` is set. CI for PRs from forks
+doesn't have access to the key, so it runs only the other tests. After reviewing a fork PR, a maintainer runs the live tests
+against its head commit, which reports a "live tests" status on the PR:
+
+```sh
+$ gh workflow run live-tests.yml -f sha=$(gh pr view <number> --json headRefOid --jq .headRefOid)
+```
+
 ## Linting and formatting
 
 This repository uses [ruff](https://github.com/astral-sh/ruff) and
