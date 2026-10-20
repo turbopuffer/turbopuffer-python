@@ -26,12 +26,12 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohappyeyeballs" },
     { name = "aiosignal" },
-    { name = "async-timeout", marker = "python_full_version < '3.11' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "async-timeout", marker = "python_full_version < '3.11'" },
     { name = "attrs" },
     { name = "frozenlist" },
     { name = "multidict" },
     { name = "propcache" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
     { name = "yarl" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/6c/4c/bdccd81e9ee225b69c60e7766c9a5b05364f118f4d383713b89a682d772d/aiohttp-3.14.5.tar.gz", hash = "sha256:5558a7f5a05af9ecf744af91e5baefc436f93c9333e656c27ec253f9a6bbe178", size = 8078052, upload-time = "2026-10-11T01:05:12.408Z" }
@@ -204,7 +204,7 @@ version = "1.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "frozenlist" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/61/62/06741b579156360248d1ec624842ad0edf697050bbaf7c3e46394e106ad1/aiosignal-1.4.0.tar.gz", hash = "sha256:f47eecd9468083c2029cc99945502cb7708b082c232f9aca65da147157b251c7", size = 25007, upload-time = "2025-07-03T22:54:43.528Z" }
 wheels = [
@@ -225,9 +225,9 @@ name = "anyio"
 version = "4.12.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "exceptiongroup", marker = "python_full_version < '3.11' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
     { name = "idna" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/96/f0/5eb65b2bb0d09ac6776f2eb54adee6abe8228ea05b20a5ad0e4945de8aac/anyio-4.12.1.tar.gz", hash = "sha256:41cfcc3a4c85d3f05c932da7c26d0201ac36f72abd4435ba90d0464a3ffed703", size = 228685, upload-time = "2026-01-06T11:45:21.246Z" }
 wheels = [
@@ -302,7 +302,7 @@ name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/50/79/66800aadf48771f6b62f7eb014e352e5d06856655206165d775e675a02c9/exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219", size = 30371, upload-time = "2025-11-21T23:01:54.787Z" }
 wheels = [
@@ -545,7 +545,7 @@ name = "multidict"
 version = "6.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "python_full_version < '3.11' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/80/1e/5492c365f222f907de1039b91f922b93fa4f764c713ee858d235495d8f50/multidict-6.7.0.tar.gz", hash = "sha256:c6e99d9a65ca282e578dfea819cfa9c0a62b2499d8677392e09feaf305e9e6f5", size = 101834, upload-time = "2025-10-06T14:52:30.657Z" }
 wheels = [
@@ -685,7 +685,7 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mypy-extensions" },
     { name = "pathspec" },
-    { name = "tomli", marker = "python_full_version < '3.11' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/1e/e3/034322d5a779685218ed69286c32faa505247f1f096251ef66c8fd203b08/mypy-1.17.0.tar.gz", hash = "sha256:e5d7ccc08ba089c06e2f5629c660388ef1fee708444f1dee0b9203fa031dee03", size = 3352114, upload-time = "2025-07-14T20:34:30.181Z" }
@@ -926,10 +926,10 @@ resolution-markers = [
     "python_full_version < '3.15'",
 ]
 dependencies = [
-    { name = "annotated-types", marker = "extra == 'group-11-turbopuffer-pydantic-v2' or extra != 'group-11-turbopuffer-pydantic-v1'" },
-    { name = "pydantic-core", marker = "extra == 'group-11-turbopuffer-pydantic-v2' or extra != 'group-11-turbopuffer-pydantic-v1'" },
-    { name = "typing-extensions", marker = "extra == 'group-11-turbopuffer-pydantic-v2' or extra != 'group-11-turbopuffer-pydantic-v1'" },
-    { name = "typing-inspection", marker = "extra == 'group-11-turbopuffer-pydantic-v2' or extra != 'group-11-turbopuffer-pydantic-v1'" },
+    { name = "annotated-types", marker = "extra != 'group-11-turbopuffer-pydantic-v1' or extra == 'group-11-turbopuffer-pydantic-v2'" },
+    { name = "pydantic-core", marker = "extra != 'group-11-turbopuffer-pydantic-v1' or extra == 'group-11-turbopuffer-pydantic-v2'" },
+    { name = "typing-extensions", marker = "extra != 'group-11-turbopuffer-pydantic-v1' or extra == 'group-11-turbopuffer-pydantic-v2'" },
+    { name = "typing-inspection", marker = "extra != 'group-11-turbopuffer-pydantic-v1' or extra == 'group-11-turbopuffer-pydantic-v2'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/6b/fb/6e44b63b26efea1cec48c26d8362313310202ef5ed6e7a52f1669e64e2cd/pydantic-2.14.0.tar.gz", hash = "sha256:8a51a7aaddd60f55566d1f07bdd87b92b463903f39a8f26b71a06314cd1548ae", size = 898613, upload-time = "2026-10-08T14:34:48.341Z" }
 wheels = [
@@ -941,7 +941,7 @@ name = "pydantic-core"
 version = "2.50.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "extra == 'group-11-turbopuffer-pydantic-v2' or extra != 'group-11-turbopuffer-pydantic-v1'" },
+    { name = "typing-extensions", marker = "extra != 'group-11-turbopuffer-pydantic-v1' or extra == 'group-11-turbopuffer-pydantic-v2'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e6/6d/196e8c819e0e934f35a1a33b3530396feadb0af4ca38fe9f995249e55794/pydantic_core-2.50.0.tar.gz", hash = "sha256:84d2d38f7d163c4dec292f379e9de1960c661795442aca6c90d706436cb3749e", size = 513355, upload-time = "2026-10-08T14:30:58.245Z" }
 wheels = [
@@ -1110,13 +1110,13 @@ name = "pytest"
 version = "9.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
-    { name = "exceptiongroup", marker = "python_full_version < '3.11' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
     { name = "iniconfig" },
     { name = "packaging" },
     { name = "pluggy" },
     { name = "pygments" },
-    { name = "tomli", marker = "python_full_version < '3.11' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/d1/db/7ef3487e0fb0049ddb5ce41d3a49c235bf9ad299b6a25d5780a89f19230f/pytest-9.0.2.tar.gz", hash = "sha256:75186651a92bd89611d1d9fc20f0b4345fd827c41ccd5c299a868a05d70edf11", size = 1568901, upload-time = "2025-12-06T21:30:51.014Z" }
 wheels = [
@@ -1128,9 +1128,9 @@ name = "pytest-asyncio"
 version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "backports-asyncio-runner", marker = "python_full_version < '3.11' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "backports-asyncio-runner", marker = "python_full_version < '3.11'" },
     { name = "pytest" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'group-11-turbopuffer-pydantic-v1' and extra == 'group-11-turbopuffer-pydantic-v2')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/90/2c/8af215c0f776415f3590cac4f9086ccefd6fd463befeae41cd4d3f193e5a/pytest_asyncio-1.3.0.tar.gz", hash = "sha256:d7f52f36d231b80ee124cd216ffb19369aa168fc10095013c6b014a34d3ee9e5", size = 50087, upload-time = "2025-11-10T16:07:47.256Z" }
 wheels = [
@@ -1345,7 +1345,7 @@ dependencies = [
     { name = "distro" },
     { name = "httpx" },
     { name = "pydantic", version = "1.10.26", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'group-11-turbopuffer-pydantic-v1'" },
-    { name = "pydantic", version = "2.14.0", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'group-11-turbopuffer-pydantic-v2' or extra != 'group-11-turbopuffer-pydantic-v1'" },
+    { name = "pydantic", version = "2.14.0", source = { registry = "https://pypi.org/simple" }, marker = "extra != 'group-11-turbopuffer-pydantic-v1' or extra == 'group-11-turbopuffer-pydantic-v2'" },
     { name = "sniffio" },
     { name = "typing-extensions" },
 ]
@@ -1421,7 +1421,7 @@ name = "typing-inspection"
 version = "0.4.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "extra == 'group-11-turbopuffer-pydantic-v2' or extra != 'group-11-turbopuffer-pydantic-v1'" },
+    { name = "typing-extensions", marker = "extra != 'group-11-turbopuffer-pydantic-v1' or extra == 'group-11-turbopuffer-pydantic-v2'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a3/26/b09b8010994eccc3c09092e6b34058f36a460eea2d4c3e8b910c695975a0/typing_inspection-0.4.4.tar.gz", hash = "sha256:547274fa6b0a561ccf549cc9524b999a578e737d015d8709d021f9d0d13bea47", size = 76928, upload-time = "2026-08-12T12:37:25.997Z" }
 wheels = [
