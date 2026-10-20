@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import time
 import inspect
 import logging
 import datetime
@@ -29,10 +28,10 @@ from .lib import json
 from ._types import NoneType
 from ._utils import is_given, extract_type_arg, is_annotated_type, is_type_alias_type, extract_type_var_from_base
 from ._models import BaseModel, is_basemodel
+from ._observer import RequestObservation
 from ._constants import RAW_RESPONSE_HEADER, OVERRIDE_CAST_TO_HEADER
 from ._streaming import Stream, AsyncStream, is_stream_class_type, extract_stream_chunk_type
 from ._exceptions import TurbopufferError, APIResponseValidationError
-from .lib.performance import merge_clock_into_response
 
 if TYPE_CHECKING:
     from ._models import FinalRequestOptions
@@ -317,21 +316,20 @@ class APIResponse(BaseAPIResponse[R]):
         if cached is not None:
             return cached  # type: ignore[no-any-return]
 
-        if not self._is_sse_stream:
-            self.read()
+        observation = RequestObservation.of(self.http_response)
+        try:
+            if not self._is_sse_stream:
+                self.read()
 
-        clock = self.http_response.extensions.get("clock")
-        if clock is None and self.http_response._request is not None:
-            clock = self.http_response.request.extensions.get("clock")
-        if clock is None:
-            clock = {"request_start": 0.0}
-        clock["deserialize_start"] = time.monotonic()
-
-        parsed = self._parse(to=to)
-        if is_given(self._options.post_parser):
-            parsed = self._options.post_parser(parsed)
-
-        merge_clock_into_response(parsed, clock)
+            observation.start_parse()
+            parsed = self._parse(to=to)
+            if is_given(self._options.post_parser):
+                parsed = self._options.post_parser(parsed)
+        except BaseException as err:
+            # Failing to read or parse the response also ends the request.
+            observation.finish(response=self.http_response, error=err)
+            raise
+        observation.finish(response=self.http_response, parsed=parsed)
 
         self._parsed_by_type[cache_key] = parsed
         return parsed
@@ -426,21 +424,20 @@ class AsyncAPIResponse(BaseAPIResponse[R]):
         if cached is not None:
             return cached  # type: ignore[no-any-return]
 
-        if not self._is_sse_stream:
-            await self.read()
+        observation = RequestObservation.of(self.http_response)
+        try:
+            if not self._is_sse_stream:
+                await self.read()
 
-        clock = self.http_response.extensions.get("clock")
-        if clock is None and self.http_response._request is not None:
-            clock = self.http_response.request.extensions.get("clock")
-        if clock is None:
-            clock = {"request_start": 0.0}
-        clock["deserialize_start"] = time.monotonic()
-
-        parsed = self._parse(to=to)
-        if is_given(self._options.post_parser):
-            parsed = self._options.post_parser(parsed)
-
-        merge_clock_into_response(parsed, clock)
+            observation.start_parse()
+            parsed = self._parse(to=to)
+            if is_given(self._options.post_parser):
+                parsed = self._options.post_parser(parsed)
+        except BaseException as err:
+            # Failing to read or parse the response also ends the request.
+            observation.finish(response=self.http_response, error=err)
+            raise
+        observation.finish(response=self.http_response, parsed=parsed)
 
         self._parsed_by_type[cache_key] = parsed
         return parsed

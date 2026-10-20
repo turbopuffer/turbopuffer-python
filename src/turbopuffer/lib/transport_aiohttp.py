@@ -10,6 +10,7 @@ import time
 import typing
 import asyncio
 import contextlib
+from types import SimpleNamespace
 from typing_extensions import override
 
 import httpx
@@ -18,6 +19,7 @@ from aiohttp import ClientTimeout
 from aiohttp.client import ClientSession, ClientResponse
 
 from .transport import MIN_GZIP_SIZE
+from .._observer import TIMINGS_EXTENSION
 
 AIOHTTP_EXC_MAP = {
     aiohttp.ServerTimeoutError: httpx.TimeoutException,
@@ -67,6 +69,33 @@ class AiohttpResponseStream(httpx.AsyncByteStream):
             await self._aiohttp_response.__aexit__(None, None, None)
 
 
+_TraceCallback = typing.Callable[[ClientSession, SimpleNamespace, typing.Any], typing.Awaitable[None]]
+
+
+def connection_trace_config() -> aiohttp.TraceConfig:
+    """Returns a trace config that records connection phases in the timings passed as a request's trace context."""
+
+    def marker(*fields: str) -> _TraceCallback:
+        async def mark(_session: ClientSession, context: SimpleNamespace, _params: typing.Any) -> None:
+            timings = context.trace_request_ctx
+            if timings is not None:
+                now = time.perf_counter_ns()
+                for field in fields:
+                    setattr(timings, field, now)
+
+        return mark
+
+    config = aiohttp.TraceConfig()
+    config.on_connection_create_start.append(marker("connect_begin"))
+    # A new connection is ready to send on as soon as it's created.
+    config.on_connection_create_end.append(marker("connect_end", "send_begin"))
+    config.on_connection_reuseconn.append(marker("send_begin"))
+    # Each chunk overwrites the last, so this ends up marking when the whole body was sent.
+    config.on_request_headers_sent.append(marker("send_end"))
+    config.on_request_chunk_sent.append(marker("send_end"))
+    return config
+
+
 class AiohttpTransport(httpx.AsyncBaseTransport):
     def __init__(self, client: typing.Union[ClientSession, typing.Callable[[], ClientSession]]) -> None:
         self.client = client
@@ -76,7 +105,7 @@ class AiohttpTransport(httpx.AsyncBaseTransport):
         self,
         request: httpx.Request,
     ) -> httpx.Response:
-        clock = request.extensions["clock"]
+        timings = request.extensions.get(TIMINGS_EXTENSION)
         timeout = request.extensions.get("timeout", {})
         sni_hostname = request.extensions.get("sni_hostname")
         compression = request.extensions.get("compression", True)
@@ -86,14 +115,17 @@ class AiohttpTransport(httpx.AsyncBaseTransport):
 
         # Compress the request content if worthwhile.
         content = request.content
-        clock["compress_start"] = time.monotonic()
-        clock["compress_end"] = clock["compress_start"]  # overwritten later if we actually compress
+        compress_begin = time.perf_counter_ns()
+        compress_end = compress_begin  # overwritten later if we actually compress
         if compression and len(request.content) > MIN_GZIP_SIZE:
             loop = asyncio.get_event_loop()
             content = await loop.run_in_executor(None, lambda: gzip.compress(content, compresslevel=1))
             request.headers["Content-Encoding"] = "gzip"
             request.headers["Content-Length"] = str(len(content))
-            clock["compress_end"] = time.monotonic()
+            compress_end = time.perf_counter_ns()
+        if timings is not None:
+            timings.extra["compress_begin"] = compress_begin
+            timings.extra["compress_end"] = compress_end
 
         with map_aiohttp_exceptions():
             response = await self.client.request(
@@ -110,24 +142,24 @@ class AiohttpTransport(httpx.AsyncBaseTransport):
                     connect=timeout.get("pool"),
                 ),
                 server_hostname=sni_hostname,
+                # Sessions without our trace config ignore it.
+                trace_request_ctx=timings,
             ).__aenter__()
-            clock["response_headers_end"] = time.monotonic()
+            if timings is not None:
+                timings.response_headers = time.perf_counter_ns()
 
         httpx_response = httpx.Response(
             status_code=response.status,
             headers=response.headers,
             content=AiohttpResponseStream(response),
             request=request,
-            extensions={
-                # Smuggle the clock through the response object.
-                "clock": clock,
-            },
         )
 
         # Eagerly read the response content (which will be cached on the
         # response object) so that we can time the body read.
         await httpx_response.aread()
-        clock["body_read_end"] = time.monotonic()
+        if timings is not None:
+            timings.body_end = time.perf_counter_ns()
 
         return httpx_response
 

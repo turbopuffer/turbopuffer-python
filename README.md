@@ -499,6 +499,22 @@ client = Turbopuffer(
 )
 ```
 
+### Client telemetry
+
+The client can report its own request timings to turbopuffer to help diagnose latency between your application and the API. Telemetry is disabled by default. To enable it, set the `TURBOPUFFER_TELEMETRY` environment variable to `1`, or pass `telemetry=True`:
+
+```py
+from turbopuffer import Turbopuffer
+
+client = Turbopuffer(
+    telemetry=True,
+)
+```
+
+An explicit `telemetry=False` disables telemetry even when the environment variable is set.
+
+When enabled, timings for completed requests are attached to subsequent requests in the `X-turbopuffer-Client-Telemetry` header, so no additional requests are made. Each record contains the request's method and path with the namespace name removed, its status code, retry count, whether it reused an existing connection, and client-side durations (serialization, compression, waiting for a free connection, connecting, sending, waiting for the response, reading the response body, and deserialization). Request and response bodies and API keys are never included. turbopuffer may ask the client to record only a sample of requests.
+
 ## Versioning
 
 This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:

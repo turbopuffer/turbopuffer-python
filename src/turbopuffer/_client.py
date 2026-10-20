@@ -34,6 +34,7 @@ from ._utils import (
 )
 from ._models import FinalRequestOptions
 from ._version import __version__
+from ._observer import RequestObservation
 from ._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
@@ -58,6 +59,7 @@ from .lib.namespace import (
     NamespaceWithStreamingResponse,
     AsyncNamespaceWithStreamingResponse,
 )
+from .lib.telemetry import TurbopufferObserver, telemetry_buffer
 from .types.namespace_summary import NamespaceSummary
 
 __all__ = [
@@ -98,6 +100,8 @@ class Turbopuffer(SyncAPIClient):
         http_client: httpx.Client | None = None,
         # Enable or disable request compression. When enabled, requests larger than 1024 bytes are automatically compressed with gzip.
         compression: bool = False,
+        # Enable or disable sending client-side request timings to turbopuffer on subsequent requests.
+        telemetry: bool | None = None,
         # Enable or disable schema validation for data returned by the API.
         # When enabled an error APIResponseValidationError is raised
         # if the API responds with invalid data for the expected schema.
@@ -113,6 +117,7 @@ class Turbopuffer(SyncAPIClient):
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
         - `api_key` from `TURBOPUFFER_API_KEY`
         - `region` from `TURBOPUFFER_REGION` (unless base_url is overridden)
+        - `telemetry` from `TURBOPUFFER_TELEMETRY`
         """
         if api_key is None:
             api_key = os.environ.get("TURBOPUFFER_API_KEY")
@@ -167,6 +172,8 @@ class Turbopuffer(SyncAPIClient):
             compression=compression,
         )
 
+        self._telemetry = telemetry_buffer(telemetry, self.api_key, self.base_url)
+        self._observer = TurbopufferObserver(self._telemetry)
         self.with_raw_response = TurbopufferWithRawResponse(self)
         self.with_streaming_response = TurbopufferWithStreamedResponse(self)
 
@@ -209,6 +216,7 @@ class Turbopuffer(SyncAPIClient):
         default_query: Mapping[str, object] | None = None,
         set_default_query: Mapping[str, object] | None = None,
         compression: bool | None = None,
+        telemetry: bool | None = None,
         _extra_kwargs: Mapping[str, Any] = {},
     ) -> Self:
         """
@@ -244,6 +252,7 @@ class Turbopuffer(SyncAPIClient):
             default_headers=headers,
             default_query=params,
             compression=compression if compression is not None else self.compression,
+            telemetry=telemetry if telemetry is not None else self._telemetry is not None,
             **_extra_kwargs,
         )
 
@@ -360,9 +369,16 @@ class Turbopuffer(SyncAPIClient):
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         retries_taken: int = 0,
     ) -> ResponseT:
-        response = respond_async.process_response(response=response, client=self, options=options)
-        if response.is_error:
-            raise self._make_status_error_from_response(response)
+        observation = RequestObservation.of(response)
+        try:
+            response = respond_async.process_response(response=response, client=self, options=options)
+            if response.is_error:
+                raise self._make_status_error_from_response(response)
+        except BaseException as err:
+            # Polling happens after the retry loop, which would otherwise finish the request.
+            final = getattr(err, "response", None)
+            observation.finish(response=final if isinstance(final, httpx.Response) else response, error=err)
+            raise
 
         return super()._process_response(
             cast_to=cast_to,
@@ -400,6 +416,8 @@ class AsyncTurbopuffer(AsyncAPIClient):
         http_client: httpx.AsyncClient | None = None,
         # Enable or disable request compression. When enabled, requests larger than 1024 bytes are automatically compressed with gzip.
         compression: bool = False,
+        # Enable or disable sending client-side request timings to turbopuffer on subsequent requests.
+        telemetry: bool | None = None,
         # Enable or disable schema validation for data returned by the API.
         # When enabled an error APIResponseValidationError is raised
         # if the API responds with invalid data for the expected schema.
@@ -415,6 +433,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
         - `api_key` from `TURBOPUFFER_API_KEY`
         - `region` from `TURBOPUFFER_REGION` (unless base_url is overridden)
+        - `telemetry` from `TURBOPUFFER_TELEMETRY`
         """
         if api_key is None:
             api_key = os.environ.get("TURBOPUFFER_API_KEY")
@@ -469,6 +488,8 @@ class AsyncTurbopuffer(AsyncAPIClient):
             compression=compression,
         )
 
+        self._telemetry = telemetry_buffer(telemetry, self.api_key, self.base_url)
+        self._observer = TurbopufferObserver(self._telemetry)
         self.with_raw_response = AsyncTurbopufferWithRawResponse(self)
         self.with_streaming_response = AsyncTurbopufferWithStreamedResponse(self)
 
@@ -511,6 +532,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         default_query: Mapping[str, object] | None = None,
         set_default_query: Mapping[str, object] | None = None,
         compression: bool | None = None,
+        telemetry: bool | None = None,
         _extra_kwargs: Mapping[str, Any] = {},
     ) -> Self:
         """
@@ -546,6 +568,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
             default_headers=headers,
             default_query=params,
             compression=compression if compression is not None else self.compression,
+            telemetry=telemetry if telemetry is not None else self._telemetry is not None,
             **_extra_kwargs,
         )
 
@@ -662,9 +685,16 @@ class AsyncTurbopuffer(AsyncAPIClient):
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         retries_taken: int = 0,
     ) -> ResponseT:
-        response = await respond_async.process_response_aio(response=response, client=self, options=options)
-        if response.is_error:
-            raise self._make_status_error_from_response(response)
+        observation = RequestObservation.of(response)
+        try:
+            response = await respond_async.process_response_aio(response=response, client=self, options=options)
+            if response.is_error:
+                raise self._make_status_error_from_response(response)
+        except BaseException as err:
+            # Polling happens after the retry loop, which would otherwise finish the request.
+            final = getattr(err, "response", None)
+            observation.finish(response=final if isinstance(final, httpx.Response) else response, error=err)
+            raise
 
         return await super()._process_response(
             cast_to=cast_to,
