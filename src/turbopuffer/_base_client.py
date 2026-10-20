@@ -64,6 +64,7 @@ from ._types import (
 from ._utils import is_dict, is_list, asyncify, is_given, lru_cache, is_mapping
 from ._compat import PYDANTIC_V1, model_copy, model_dump
 from ._models import GenericModel, FinalRequestOptions, validate_type, construct_type
+from ._observer import SERIALIZE_TIMING_EXTENSION, RequestObserver, RequestObservation
 from ._response import (
     APIResponse,
     BaseAPIResponse,
@@ -369,6 +370,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
     _strict_response_validation: bool
     _idempotency_header: str | None
     _default_stream_cls: type[_DefaultStreamT] | None = None
+    _observer: RequestObserver | None = None
 
     def __init__(
         self,
@@ -562,7 +564,12 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             elif not files:
                 # Don't set content when JSON is sent as multipart/form-data,
                 # since httpx's content param overrides other body arguments
+                serialize_begin = time.perf_counter_ns()
                 kwargs["content"] = openapi_dumps(json_data) if is_given(json_data) and json_data is not None else None
+                kwargs.setdefault("extensions", {})[SERIALIZE_TIMING_EXTENSION] = (
+                    serialize_begin,
+                    time.perf_counter_ns(),
+                )
             kwargs["files"] = files
         else:
             headers.pop("Content-Type", None)
@@ -983,15 +990,18 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
 
         response: httpx.Response | None = None
         max_retries = input_options.get_max_retries(self.max_retries)
+        observation = RequestObservation(self._observer, input_options)
 
         retries_taken = 0
         for retries_taken in range(max_retries + 1):
+            observation.start_attempt(retries_taken)
             options = model_copy(input_options)
             options = self._prepare_options(options)
 
             remaining_retries = max_retries - retries_taken
             request = self._build_request(options, retries_taken=retries_taken)
             self._prepare_request(request)
+            observation.before_send(request)
 
             kwargs: HttpxSendArgs = {}
             if self.custom_auth is not None:
@@ -1011,6 +1021,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
                 )
             except httpx.TimeoutException as err:
                 log.debug("Encountered httpx.TimeoutException", exc_info=True)
+                observation.on_error(err, final=remaining_retries <= 0)
 
                 if remaining_retries > 0:
                     self._sleep_for_retry(
@@ -1025,6 +1036,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
                 raise APITimeoutError(request=request) from err
             except Exception as err:
                 log.debug("Encountered Exception", exc_info=True)
+                observation.on_error(err, final=remaining_retries <= 0)
 
                 if remaining_retries > 0:
                     self._sleep_for_retry(
@@ -1037,7 +1049,12 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
 
                 log.debug("Raising connection error")
                 raise APIConnectionError(request=request) from err
+            except BaseException as err:
+                # Interrupts and cancellations end the request without retrying.
+                observation.on_error(err, final=True)
+                raise
 
+            observation.on_response(response)
             log.debug(
                 'HTTP Response: %s %s "%i %s" %s',
                 request.method,
@@ -1067,8 +1084,10 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
                 if not err.response.is_closed:
                     err.response.read()
 
+                status_error = self._make_status_error_from_response(err.response)
+                observation.finish(response=err.response, error=status_error)
                 log.debug("Re-raising status error")
-                raise self._make_status_error_from_response(err.response) from None
+                raise status_error from None
 
             break
 
@@ -1134,6 +1153,9 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             )
 
         if cast_to == httpx.Response:
+            # Unless streamed, the body was already read so the request is done.
+            if response.is_closed:
+                RequestObservation.of(response).finish(response=response, parsed=response)
             return cast(ResponseT, response)
 
         api_response = APIResponse(
@@ -1567,15 +1589,18 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
 
         response: httpx.Response | None = None
         max_retries = input_options.get_max_retries(self.max_retries)
+        observation = RequestObservation(self._observer, input_options)
 
         retries_taken = 0
         for retries_taken in range(max_retries + 1):
+            observation.start_attempt(retries_taken)
             options = model_copy(input_options)
             options = await self._prepare_options(options)
 
             remaining_retries = max_retries - retries_taken
             request = self._build_request(options, retries_taken=retries_taken)
             await self._prepare_request(request)
+            observation.before_send(request, is_async=True)
 
             kwargs: HttpxSendArgs = {}
             if self.custom_auth is not None:
@@ -1595,6 +1620,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
                 )
             except httpx.TimeoutException as err:
                 log.debug("Encountered httpx.TimeoutException", exc_info=True)
+                observation.on_error(err, final=remaining_retries <= 0)
 
                 if remaining_retries > 0:
                     await self._sleep_for_retry(
@@ -1609,6 +1635,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
                 raise APITimeoutError(request=request) from err
             except Exception as err:
                 log.debug("Encountered Exception", exc_info=True)
+                observation.on_error(err, final=remaining_retries <= 0)
 
                 if remaining_retries > 0:
                     await self._sleep_for_retry(
@@ -1621,7 +1648,12 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
 
                 log.debug("Raising connection error")
                 raise APIConnectionError(request=request) from err
+            except BaseException as err:
+                # Interrupts and cancellations end the request without retrying.
+                observation.on_error(err, final=True)
+                raise
 
+            observation.on_response(response)
             log.debug(
                 'HTTP Response: %s %s "%i %s" %s',
                 request.method,
@@ -1651,8 +1683,10 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
                 if not err.response.is_closed:
                     await err.response.aread()
 
+                status_error = self._make_status_error_from_response(err.response)
+                observation.finish(response=err.response, error=status_error)
                 log.debug("Re-raising status error")
-                raise self._make_status_error_from_response(err.response) from None
+                raise status_error from None
 
             break
 
@@ -1718,6 +1752,9 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
             )
 
         if cast_to == httpx.Response:
+            # Unless streamed, the body was already read so the request is done.
+            if response.is_closed:
+                RequestObservation.of(response).finish(response=response, parsed=response)
             return cast(ResponseT, response)
 
         api_response = AsyncAPIResponse(
