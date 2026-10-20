@@ -218,21 +218,24 @@ class _RequestScope(RequestScope):
     def __init__(self, buffer: Optional[TelemetryBuffer], info: RequestInfo) -> None:
         self._buffer = buffer
         self._info = info
-        # Kept for later attempts until one of them may have reached the server.
+        # Held only while an attempt is in flight.
         self._batch: Optional[TelemetryBatch] = None
 
     @override
-    def attempt_begin(self, attempt: int, request: httpx.Request) -> None:
+    def attempt_begin(self, attempt: int, request: httpx.Request) -> None:  # noqa: ARG002
         # Taken only once a request is about to be sent, so one that fails before then can't lose it.
-        if attempt == 0 and self._buffer is not None:
+        if self._buffer is not None:
             self._batch = self._buffer.take()
         if self._batch is not None:
             request.headers[TELEMETRY_HEADER] = self._batch.header
 
     @override
     def attempt_end(self, result: AttemptResult) -> None:
-        if result.reached_server is not False:
-            self._batch = None
+        # A batch that never reached the server goes back right away rather than waiting for a retry,
+        # which may never come if the request is interrupted between attempts.
+        if self._buffer is not None and self._batch is not None and result.reached_server is False:
+            self._buffer.restore(self._batch)
+        self._batch = None
         if self._buffer is not None and result.response is not None:
             self._buffer.observe_response(result.response.headers)
 
@@ -245,10 +248,6 @@ class _RequestScope(RequestScope):
 
         if self._buffer is None:
             return
-        # A batch that never reached the server goes back for a later request.
-        if self._batch is not None:
-            self._buffer.restore(self._batch)
-            self._batch = None
 
         error: Optional[str] = None
         if result.error_kind in ("canceled", "other"):

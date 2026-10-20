@@ -424,8 +424,35 @@ class TestRequests:
         ns.query(top_k=1)
 
         first_attempt = sent_records(sent_requests(route)[1])
-        assert first_attempt is not None
-        assert sent_records(sent_requests(route)[2]) == first_attempt
+        second_attempt = sent_records(sent_requests(route)[2])
+        assert first_attempt is not None and second_attempt is not None
+        # Ages are recomputed whenever a batch is taken, so only they may differ.
+        for record in (*first_attempt, *second_attempt):
+            del record["age_ms"]
+        assert second_attempt == first_attempt
+
+    @pytest.mark.respx(base_url=base_url)
+    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", no_retry_delay)
+    def test_batch_is_kept_when_interrupted_before_retry(
+        self, respx_mock: MockRouter, telemetry_client: Turbopuffer
+    ) -> None:
+        class Interrupted(BaseException):
+            pass
+
+        route = respx_mock.post(QUERY_PATH)
+        route.side_effect = [query_response(), httpx.ConnectError("refused"), query_response()]
+        ns = telemetry_client.namespace("my-ns")
+
+        ns.query(top_k=1)
+        # Interrupted while waiting to retry, so the request never finishes.
+        with mock.patch.object(Turbopuffer, "_sleep_for_retry", side_effect=Interrupted()):
+            with pytest.raises(Interrupted):
+                ns.query(top_k=1)
+        ns.query(top_k=1)
+
+        records = sent_records(sent_requests(route)[2])
+        assert records is not None
+        assert [r["route"] for r in records] == [QUERY_ROUTE]
 
     @pytest.mark.respx(base_url=base_url)
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", no_retry_delay)
