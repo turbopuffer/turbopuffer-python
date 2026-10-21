@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.14.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.13.0...v2.14.0) (2026-10-20)
+
+
+### Features
+
+* OpenAPI: Add missing descriptions to prettify docblocks in output SDKs ([a2f329e](https://github.com/turbopuffer/turbopuffer-python/commit/a2f329ef4d5ee9e6d72379fb21f5baae6332927c))
+* Revamp client telemetry in preparation for send to server ([66b1938](https://github.com/turbopuffer/turbopuffer-python/commit/66b1938f09141d69c97bc6c30e45f907baf7c979))
+
+
+### Bug Fixes
+
+* honor compression option in urllib3 transport ([#280](https://github.com/turbopuffer/turbopuffer-python/issues/280)) ([7d864b9](https://github.com/turbopuffer/turbopuffer-python/commit/7d864b98b618e6fab5cb4dfe4f4b31d1cc02460d))
+
 ## [2.13.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.12.0...v2.13.0) (2026-10-13)
 
 
