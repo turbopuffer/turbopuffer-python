@@ -2,15 +2,15 @@ import gzip
 import time
 from typing_extensions import override
 
-import httpx
+import httpx2
 
 from .transport import MIN_GZIP_SIZE
 from .._observer import TIMINGS_EXTENSION
 
 
-class HttpxTransport(httpx.HTTPTransport):
+class HttpxTransport(httpx2.HTTPTransport):
     @override
-    def handle_request(self, request: httpx.Request) -> httpx.Response:
+    def handle_request(self, request: httpx2.Request) -> httpx2.Response:
         timings = request.extensions.get(TIMINGS_EXTENSION)
         compression = request.extensions.get("compression", True)
 
@@ -19,7 +19,7 @@ class HttpxTransport(httpx.HTTPTransport):
         compress_end = compress_begin  # overwritten later if we actually compress
         if compression and len(request.content) > MIN_GZIP_SIZE:
             request._content = gzip.compress(request.content, compresslevel=1)
-            request.stream = httpx.ByteStream(request._content)
+            request.stream = httpx2.ByteStream(request._content)
             request.headers["Content-Encoding"] = "gzip"
             request.headers["Content-Length"] = str(len(request.content))
             compress_end = time.perf_counter_ns()

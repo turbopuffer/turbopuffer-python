@@ -15,9 +15,8 @@ from typing import Any, Union, TypeVar, Callable, Iterable, Iterator, Optional, 
 from unittest import mock
 from typing_extensions import Literal, AsyncIterator, override
 
-import httpx
+import httpx2
 import pytest
-from respx import MockRouter
 from pydantic import ValidationError
 
 from turbopuffer import (
@@ -25,6 +24,7 @@ from turbopuffer import (
     AsyncTurbopuffer as AsyncTurbopufferStd,
     APIResponseValidationError,
 )
+from tests.respx2 import MockRouter
 from turbopuffer._types import Omit
 from turbopuffer._utils import asyncify
 from turbopuffer._models import BaseModel, FinalRequestOptions
@@ -55,20 +55,20 @@ api_key = "tpuf_A1..."
 class AsyncTurbopuffer(AsyncTurbopufferStd):
     def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(
-            *args, **{"http_client": DefaultAsyncHttpxClient(transport=httpx.AsyncHTTPTransport()), **kwargs}
+            *args, **{"http_client": DefaultAsyncHttpxClient(transport=httpx2.AsyncHTTPTransport()), **kwargs}
         )
 
 
 @pytest.fixture
 def async_client(async_client: AsyncTurbopuffer):
-    new_client = async_client.with_options(http_client=DefaultAsyncHttpxClient(transport=httpx.AsyncHTTPTransport()))
+    new_client = async_client.with_options(http_client=DefaultAsyncHttpxClient(transport=httpx2.AsyncHTTPTransport()))
     new_client._strict_response_validation = async_client._strict_response_validation
     yield new_client
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
     request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-    url = httpx.URL(request.url)
+    url = httpx2.URL(request.url)
     return dict(url.params)
 
 
@@ -76,25 +76,25 @@ def _low_retry_timeout(*_args: Any, **_kwargs: Any) -> float:
     return 0.1
 
 
-def mirror_request_content(request: httpx.Request) -> httpx.Response:
-    return httpx.Response(200, content=request.content)
+def mirror_request_content(request: httpx2.Request) -> httpx2.Response:
+    return httpx2.Response(200, content=request.content)
 
 
-# note: we can't use the httpx.MockTransport class as it consumes the request
+# note: we can't use the httpx2.MockTransport class as it consumes the request
 #       body itself, which means we can't test that the body is read lazily
-class MockTransport(httpx.BaseTransport, httpx.AsyncBaseTransport):
+class MockTransport(httpx2.BaseTransport, httpx2.AsyncBaseTransport):
     def __init__(
         self,
-        handler: Callable[[httpx.Request], httpx.Response]
-        | Callable[[httpx.Request], Coroutine[Any, Any, httpx.Response]],
+        handler: Callable[[httpx2.Request], httpx2.Response]
+        | Callable[[httpx2.Request], Coroutine[Any, Any, httpx2.Response]],
     ) -> None:
         self.handler = handler
 
     @override
     def handle_request(
         self,
-        request: httpx.Request,
-    ) -> httpx.Response:
+        request: httpx2.Request,
+    ) -> httpx2.Response:
         assert not inspect.iscoroutinefunction(self.handler), "handler must not be a coroutine function"
         assert inspect.isfunction(self.handler), "handler must be a function"
         return self.handler(request)
@@ -102,8 +102,8 @@ class MockTransport(httpx.BaseTransport, httpx.AsyncBaseTransport):
     @override
     async def handle_async_request(
         self,
-        request: httpx.Request,
-    ) -> httpx.Response:
+        request: httpx2.Request,
+    ) -> httpx2.Response:
         assert inspect.iscoroutinefunction(self.handler), "handler must be a coroutine function"
         return await self.handler(request)
 
@@ -130,22 +130,22 @@ async def _make_async_iterator(iterable: Iterable[T], counter: Optional[Counter]
 class TestTurbopuffer:
     @pytest.mark.respx(base_url=base_url)
     def test_raw_response(self, respx_mock: MockRouter, client: Turbopuffer) -> None:
-        respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.post("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
 
-        response = client.post("/foo", cast_to=httpx.Response)
+        response = client.post("/foo", cast_to=httpx2.Response)
         assert response.status_code == 200
-        assert isinstance(response, httpx.Response)
+        assert isinstance(response, httpx2.Response)
         assert response.json() == {"foo": "bar"}
 
     @pytest.mark.respx(base_url=base_url)
     def test_raw_response_for_binary(self, respx_mock: MockRouter, client: Turbopuffer) -> None:
         respx_mock.post("/foo").mock(
-            return_value=httpx.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
+            return_value=httpx2.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
         )
 
-        response = client.post("/foo", cast_to=httpx.Response)
+        response = client.post("/foo", cast_to=httpx2.Response)
         assert response.status_code == 200
-        assert isinstance(response, httpx.Response)
+        assert isinstance(response, httpx2.Response)
         assert response.json() == {"foo": "bar"}
 
     def test_copy(self, client: Turbopuffer) -> None:
@@ -167,10 +167,10 @@ class TestTurbopuffer:
         assert copied.max_retries == 7
 
         # timeout
-        assert isinstance(client.timeout, httpx.Timeout)
+        assert isinstance(client.timeout, httpx2.Timeout)
         copied = client.copy(timeout=None)
         assert copied.timeout is None
-        assert isinstance(client.timeout, httpx.Timeout)
+        assert isinstance(client.timeout, httpx2.Timeout)
 
     def test_copy_default_headers(self) -> None:
         client = Turbopuffer(
@@ -326,64 +326,64 @@ class TestTurbopuffer:
 
     def test_request_timeout(self, client: Turbopuffer) -> None:
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
+        timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == DEFAULT_TIMEOUT
 
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo", timeout=httpx.Timeout(100.0)))
-        timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
-        assert timeout == httpx.Timeout(100.0)
+        request = client._build_request(FinalRequestOptions(method="get", url="/foo", timeout=httpx2.Timeout(100.0)))
+        timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
+        assert timeout == httpx2.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
         client = Turbopuffer(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx2.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
-        assert timeout == httpx.Timeout(0)
+        timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
+        assert timeout == httpx2.Timeout(0)
 
         client.close()
 
     def test_http_client_timeout_option(self) -> None:
-        # custom timeout given to the httpx client should be used
-        with httpx.Client(timeout=None) as http_client:
+        # custom timeout given to the httpx2 client should be used
+        with httpx2.Client(timeout=None) as http_client:
             client = Turbopuffer(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-            timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
-            assert timeout == httpx.Timeout(None)
+            timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
+            assert timeout == httpx2.Timeout(None)
 
             client.close()
 
-        # no timeout given to the httpx client should not use the httpx default
-        with httpx.Client() as http_client:
+        # no timeout given to the httpx2 client should not use the httpx2 default
+        with httpx2.Client() as http_client:
             client = Turbopuffer(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-            timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
+            timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == DEFAULT_TIMEOUT
 
             client.close()
 
         # explicitly passing the default timeout currently results in it being ignored
-        with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
+        with httpx2.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = Turbopuffer(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-            timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
+            timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == DEFAULT_TIMEOUT  # our default
 
             client.close()
 
     async def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
-            async with httpx.AsyncClient() as http_client:
+            async with httpx2.AsyncClient() as http_client:
                 Turbopuffer(
                     base_url=base_url,
                     api_key=api_key,
@@ -430,7 +430,7 @@ class TestTurbopuffer:
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        url = httpx.URL(request.url)
+        url = httpx2.URL(request.url)
         assert dict(url.params) == {"query_param": "bar"}
 
         request = client._build_request(
@@ -440,14 +440,14 @@ class TestTurbopuffer:
                 params={"foo": "baz", "query_param": "overridden"},
             )
         )
-        url = httpx.URL(request.url)
+        url = httpx2.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
         client.close()
 
     def test_hardcoded_query_params_in_url(self, client: Turbopuffer) -> None:
         request = client._build_request(FinalRequestOptions(method="get", url="/foo?beta=true"))
-        url = httpx.URL(request.url)
+        url = httpx2.URL(request.url)
         assert dict(url.params) == {"beta": "true"}
 
         request = client._build_request(
@@ -457,7 +457,7 @@ class TestTurbopuffer:
                 params={"limit": "10", "page": "abc"},
             )
         )
-        url = httpx.URL(request.url)
+        url = httpx2.URL(request.url)
         assert dict(url.params) == {"beta": "true", "limit": "10", "page": "abc"}
 
         request = client._build_request(
@@ -604,7 +604,7 @@ class TestTurbopuffer:
         response = client.post(
             "/upload",
             content=file_content,
-            cast_to=httpx.Response,
+            cast_to=httpx2.Response,
             options={"headers": {"Content-Type": "application/octet-stream"}},
         )
 
@@ -617,20 +617,20 @@ class TestTurbopuffer:
         counter = Counter()
         iterator = _make_sync_iterator([file_content], counter=counter)
 
-        def mock_handler(request: httpx.Request) -> httpx.Response:
+        def mock_handler(request: httpx2.Request) -> httpx2.Response:
             assert counter.value == 0, "the request body should not have been read"
-            return httpx.Response(200, content=request.read())
+            return httpx2.Response(200, content=request.read())
 
         with Turbopuffer(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
-            http_client=httpx.Client(transport=MockTransport(handler=mock_handler)),
+            http_client=httpx2.Client(transport=MockTransport(handler=mock_handler)),
         ) as client:
             response = client.post(
                 "/upload",
                 content=iterator,
-                cast_to=httpx.Response,
+                cast_to=httpx2.Response,
                 options={"headers": {"Content-Type": "application/octet-stream"}},
             )
 
@@ -651,7 +651,7 @@ class TestTurbopuffer:
             response = client.post(
                 "/upload",
                 body=file_content,
-                cast_to=httpx.Response,
+                cast_to=httpx2.Response,
                 options={"headers": {"Content-Type": "application/octet-stream"}},
             )
 
@@ -667,7 +667,7 @@ class TestTurbopuffer:
         class Model2(BaseModel):
             foo: str
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
 
         response = client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model2)
@@ -683,13 +683,13 @@ class TestTurbopuffer:
         class Model2(BaseModel):
             foo: str
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
 
         response = client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model2)
         assert response.foo == "bar"
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": 1}))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, json={"foo": 1}))
 
         response = client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model1)
@@ -705,7 +705,7 @@ class TestTurbopuffer:
             foo: int
 
         respx_mock.get("/foo").mock(
-            return_value=httpx.Response(
+            return_value=httpx2.Response(
                 200,
                 content=json.dumps({"foo": 2}),
                 headers={"Content-Type": "application/text"},
@@ -771,7 +771,7 @@ class TestTurbopuffer:
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
-                http_client=httpx.Client(),
+                http_client=httpx2.Client(),
             ),
         ],
         ids=["standard", "custom http client"],
@@ -797,7 +797,7 @@ class TestTurbopuffer:
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
-                http_client=httpx.Client(),
+                http_client=httpx2.Client(),
             ),
         ],
         ids=["standard", "custom http client"],
@@ -823,7 +823,7 @@ class TestTurbopuffer:
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
-                http_client=httpx.Client(),
+                http_client=httpx2.Client(),
             ),
         ],
         ids=["standard", "custom http client"],
@@ -863,7 +863,7 @@ class TestTurbopuffer:
         class Model(BaseModel):
             foo: str
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": {"invalid": True}}))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, json={"foo": {"invalid": True}}))
 
         with pytest.raises(APIResponseValidationError) as exc:
             client.get("/foo", cast_to=Model)
@@ -881,7 +881,7 @@ class TestTurbopuffer:
         class Model(BaseModel):
             name: str
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, text="my-custom-format"))
 
         strict_client = Turbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
@@ -921,7 +921,7 @@ class TestTurbopuffer:
     def test_parse_retry_after_header(
         self, remaining_retries: int, retry_after: str, timeout: float, client: Turbopuffer
     ) -> None:
-        headers = httpx.Headers({"retry-after": retry_after})
+        headers = httpx2.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert (calculated == pytest.approx(timeout, 0.25 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
@@ -941,21 +941,21 @@ class TestTurbopuffer:
 
         nb_retries = 0
 
-        def retry_handler(_request: httpx.Request) -> httpx.Response:
+        def retry_handler(_request: httpx2.Request) -> httpx2.Response:
             nonlocal nb_retries
             if nb_retries < failures_before_success:
                 nb_retries += 1
                 if failure_mode == "exception":
                     raise RuntimeError("oops")
-                return httpx.Response(500)
-            return httpx.Response(200)
+                return httpx2.Response(500)
+            return httpx2.Response(200)
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
         response = client.with_raw_response.namespaces()
 
         assert response.retries_taken == failures_before_success
-        assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
+        assert int(response.http_request.headers["x-stainless-retry-count"]) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
@@ -967,12 +967,12 @@ class TestTurbopuffer:
 
         nb_retries = 0
 
-        def retry_handler(_request: httpx.Request) -> httpx.Response:
+        def retry_handler(_request: httpx2.Request) -> httpx2.Response:
             nonlocal nb_retries
             if nb_retries < failures_before_success:
                 nb_retries += 1
-                return httpx.Response(500)
-            return httpx.Response(200)
+                return httpx2.Response(500)
+            return httpx2.Response(200)
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
@@ -990,12 +990,12 @@ class TestTurbopuffer:
 
         nb_retries = 0
 
-        def retry_handler(_request: httpx.Request) -> httpx.Response:
+        def retry_handler(_request: httpx2.Request) -> httpx2.Response:
             nonlocal nb_retries
             if nb_retries < failures_before_success:
                 nb_retries += 1
-                return httpx.Response(500)
-            return httpx.Response(200)
+                return httpx2.Response(500)
+            return httpx2.Response(200)
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
@@ -1014,7 +1014,7 @@ class TestTurbopuffer:
 
         class Scope(RequestScope):
             @override
-            def attempt_begin(self, attempt: int, request: httpx.Request) -> None:
+            def attempt_begin(self, attempt: int, request: httpx2.Request) -> None:
                 events.append(f"attempt_begin:{attempt}")
                 request.headers["x-observed"] = "yes"
 
@@ -1034,7 +1034,7 @@ class TestTurbopuffer:
                 events.append(f"start:{info.method}:{info.url}")
                 return Scope()
 
-        respx_mock.post("/foo").mock(side_effect=[httpx.Response(500), httpx.Response(200, json={"foo": "bar"})])
+        respx_mock.post("/foo").mock(side_effect=[httpx2.Response(500), httpx2.Response(200, json={"foo": "bar"})])
         client = client.with_options(max_retries=1)
         client._observer = Observer()
 
@@ -1078,10 +1078,10 @@ class TestTurbopuffer:
             def start(self, info: RequestInfo) -> RequestScope:
                 return Scope()
 
-        def interrupt(_request: httpx.Request) -> httpx.Response:
+        def interrupt(_request: httpx2.Request) -> httpx2.Response:
             raise Interrupted()
 
-        route = respx_mock.post("/foo").mock(return_value=httpx.Response(404, json={"error": "not found"}))
+        route = respx_mock.post("/foo").mock(return_value=httpx2.Response(404, json={"error": "not found"}))
         client = client.with_options(max_retries=0)
         client._observer = Observer()
 
@@ -1117,7 +1117,7 @@ class TestTurbopuffer:
                 return Scope()
 
         respx_mock.post("/foo").mock(
-            return_value=httpx.Response(200, content=b"not json", headers={"Content-Type": "application/json"})
+            return_value=httpx2.Response(200, content=b"not json", headers={"Content-Type": "application/json"})
         )
         client = client.with_options()
         client._observer = Observer()
@@ -1146,11 +1146,11 @@ class TestTurbopuffer:
             def start(self, info: RequestInfo) -> RequestScope:
                 return Scope()
 
-        respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.post("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
         client = client.with_options()
         client._observer = Observer()
 
-        response = client.post("/foo", cast_to=httpx.Response)
+        response = client.post("/foo", cast_to=httpx2.Response)
 
         [result] = results
         assert result.parsed is response
@@ -1163,7 +1163,7 @@ class TestTurbopuffer:
 
         class Scope(RequestScope):
             @override
-            def attempt_begin(self, attempt: int, request: httpx.Request) -> None:
+            def attempt_begin(self, attempt: int, request: httpx2.Request) -> None:
                 raise RuntimeError("attempt_begin")
 
             @override
@@ -1179,7 +1179,7 @@ class TestTurbopuffer:
             def start(self, info: RequestInfo) -> RequestScope:
                 return Scope()
 
-        respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.post("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
         client = client.with_options()
         client._observer = Observer()
 
@@ -1187,12 +1187,12 @@ class TestTurbopuffer:
         assert response.foo == "bar"
 
     def test_request_observer_error_kinds(self) -> None:
-        request = httpx.Request("GET", "https://example.com")
+        request = httpx2.Request("GET", "https://example.com")
         wrapped = APITimeoutError(request=request)
         assert error_kind(wrapped) == "timeout"
-        wrapped.__cause__ = httpx.ReadTimeout("slow")
+        wrapped.__cause__ = httpx2.ReadTimeout("slow")
         assert error_kind(wrapped) == "read_timeout"
-        assert error_kind(httpx.ConnectError("refused")) == "connect_error"
+        assert error_kind(httpx2.ConnectError("refused")) == "connect_error"
         assert error_kind(KeyboardInterrupt()) == "canceled"
         assert error_kind(ValueError("bad")) == "other"
 
@@ -1224,7 +1224,7 @@ class TestTurbopuffer:
             trust_env=True,
             http1=True,
             http2=False,
-            limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
+            limits=httpx2.Limits(max_connections=100, max_keepalive_connections=20),
         )
 
     def test_default_client_honors_connection_limits(self) -> None:
@@ -1237,12 +1237,12 @@ class TestTurbopuffer:
         )
 
     def test_default_client_honors_custom_connection_limits(self) -> None:
-        limits = httpx.Limits(max_connections=7, max_keepalive_connections=3, keepalive_expiry=1.0)
+        limits = httpx2.Limits(max_connections=7, max_keepalive_connections=3, keepalive_expiry=1.0)
         pool = DefaultHttpxClient(limits=limits)._transport._pool  # type: ignore[attr-defined]
         assert (pool._max_connections, pool._max_keepalive_connections, pool._keepalive_expiry) == (7, 3, 1.0)  # pyright: ignore[reportUnknownMemberType]
 
     def test_default_client_honors_transport_kwargs(self) -> None:
-        # A custom transport causes httpx to ignore transport-construction
+        # A custom transport causes httpx2 to ignore transport-construction
         # kwargs (verify, cert, http1/http2, limits), so the default client
         # must thread them into the transport itself. verify=False must reach
         # the connection pool, otherwise TLS verification stays on despite the
@@ -1257,11 +1257,11 @@ class TestTurbopuffer:
     def test_follow_redirects(self, respx_mock: MockRouter, client: Turbopuffer) -> None:
         # Test that the default follow_redirects=True allows following redirects
         respx_mock.post("/redirect").mock(
-            return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
+            return_value=httpx2.Response(302, headers={"Location": f"{base_url}/redirected"})
         )
-        respx_mock.get("/redirected").mock(return_value=httpx.Response(200, json={"status": "ok"}))
+        respx_mock.get("/redirected").mock(return_value=httpx2.Response(200, json={"status": "ok"}))
 
-        response = client.post("/redirect", body={"key": "value"}, cast_to=httpx.Response)
+        response = client.post("/redirect", body={"key": "value"}, cast_to=httpx2.Response)
         assert response.status_code == 200
         assert response.json() == {"status": "ok"}
 
@@ -1269,11 +1269,13 @@ class TestTurbopuffer:
     def test_follow_redirects_disabled(self, respx_mock: MockRouter, client: Turbopuffer) -> None:
         # Test that follow_redirects=False prevents following redirects
         respx_mock.post("/redirect").mock(
-            return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
+            return_value=httpx2.Response(302, headers={"Location": f"{base_url}/redirected"})
         )
 
         with pytest.raises(APIStatusError) as exc_info:
-            client.post("/redirect", body={"key": "value"}, options={"follow_redirects": False}, cast_to=httpx.Response)
+            client.post(
+                "/redirect", body={"key": "value"}, options={"follow_redirects": False}, cast_to=httpx2.Response
+            )
 
         assert exc_info.value.response.status_code == 302
         assert exc_info.value.response.headers["Location"] == f"{base_url}/redirected"
@@ -1282,22 +1284,22 @@ class TestTurbopuffer:
 class TestAsyncTurbopuffer:
     @pytest.mark.respx(base_url=base_url)
     async def test_raw_response(self, respx_mock: MockRouter, async_client: AsyncTurbopuffer) -> None:
-        respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.post("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
 
-        response = await async_client.post("/foo", cast_to=httpx.Response)
+        response = await async_client.post("/foo", cast_to=httpx2.Response)
         assert response.status_code == 200
-        assert isinstance(response, httpx.Response)
+        assert isinstance(response, httpx2.Response)
         assert response.json() == {"foo": "bar"}
 
     @pytest.mark.respx(base_url=base_url)
     async def test_raw_response_for_binary(self, respx_mock: MockRouter, async_client: AsyncTurbopuffer) -> None:
         respx_mock.post("/foo").mock(
-            return_value=httpx.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
+            return_value=httpx2.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
         )
 
-        response = await async_client.post("/foo", cast_to=httpx.Response)
+        response = await async_client.post("/foo", cast_to=httpx2.Response)
         assert response.status_code == 200
-        assert isinstance(response, httpx.Response)
+        assert isinstance(response, httpx2.Response)
         assert response.json() == {"foo": "bar"}
 
     def test_copy(self, async_client: AsyncTurbopuffer) -> None:
@@ -1319,10 +1321,10 @@ class TestAsyncTurbopuffer:
         assert copied.max_retries == 7
 
         # timeout
-        assert isinstance(async_client.timeout, httpx.Timeout)
+        assert isinstance(async_client.timeout, httpx2.Timeout)
         copied = async_client.copy(timeout=None)
         assert copied.timeout is None
-        assert isinstance(async_client.timeout, httpx.Timeout)
+        assert isinstance(async_client.timeout, httpx2.Timeout)
 
     async def test_copy_default_headers(self) -> None:
         client = AsyncTurbopuffer(
@@ -1478,66 +1480,66 @@ class TestAsyncTurbopuffer:
 
     async def test_request_timeout(self, async_client: AsyncTurbopuffer) -> None:
         request = async_client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
+        timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == DEFAULT_TIMEOUT
 
         request = async_client._build_request(
-            FinalRequestOptions(method="get", url="/foo", timeout=httpx.Timeout(100.0))
+            FinalRequestOptions(method="get", url="/foo", timeout=httpx2.Timeout(100.0))
         )
-        timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
-        assert timeout == httpx.Timeout(100.0)
+        timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
+        assert timeout == httpx2.Timeout(100.0)
 
     async def test_client_timeout_option(self) -> None:
         client = AsyncTurbopuffer(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx2.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
-        assert timeout == httpx.Timeout(0)
+        timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
+        assert timeout == httpx2.Timeout(0)
 
         await client.close()
 
     async def test_http_client_timeout_option(self) -> None:
-        # custom timeout given to the httpx client should be used
-        async with httpx.AsyncClient(timeout=None) as http_client:
+        # custom timeout given to the httpx2 client should be used
+        async with httpx2.AsyncClient(timeout=None) as http_client:
             client = AsyncTurbopuffer(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-            timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
-            assert timeout == httpx.Timeout(None)
+            timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
+            assert timeout == httpx2.Timeout(None)
 
             await client.close()
 
-        # no timeout given to the httpx client should not use the httpx default
-        async with httpx.AsyncClient() as http_client:
+        # no timeout given to the httpx2 client should not use the httpx2 default
+        async with httpx2.AsyncClient() as http_client:
             client = AsyncTurbopuffer(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-            timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
+            timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == DEFAULT_TIMEOUT
 
             await client.close()
 
         # explicitly passing the default timeout currently results in it being ignored
-        async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
+        async with httpx2.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = AsyncTurbopuffer(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-            timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
+            timeout = httpx2.Timeout(**request.extensions["timeout"])  # type: ignore
             assert timeout == DEFAULT_TIMEOUT  # our default
 
             await client.close()
 
     def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
-            with httpx.Client() as http_client:
+            with httpx2.Client() as http_client:
                 AsyncTurbopuffer(
                     base_url=base_url,
                     api_key=api_key,
@@ -1584,7 +1586,7 @@ class TestAsyncTurbopuffer:
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        url = httpx.URL(request.url)
+        url = httpx2.URL(request.url)
         assert dict(url.params) == {"query_param": "bar"}
 
         request = client._build_request(
@@ -1594,14 +1596,14 @@ class TestAsyncTurbopuffer:
                 params={"foo": "baz", "query_param": "overridden"},
             )
         )
-        url = httpx.URL(request.url)
+        url = httpx2.URL(request.url)
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
         await client.close()
 
     async def test_hardcoded_query_params_in_url(self, async_client: AsyncTurbopuffer) -> None:
         request = async_client._build_request(FinalRequestOptions(method="get", url="/foo?beta=true"))
-        url = httpx.URL(request.url)
+        url = httpx2.URL(request.url)
         assert dict(url.params) == {"beta": "true"}
 
         request = async_client._build_request(
@@ -1611,7 +1613,7 @@ class TestAsyncTurbopuffer:
                 params={"limit": "10", "page": "abc"},
             )
         )
-        url = httpx.URL(request.url)
+        url = httpx2.URL(request.url)
         assert dict(url.params) == {"beta": "true", "limit": "10", "page": "abc"}
 
         request = async_client._build_request(
@@ -1758,7 +1760,7 @@ class TestAsyncTurbopuffer:
         response = await async_client.post(
             "/upload",
             content=file_content,
-            cast_to=httpx.Response,
+            cast_to=httpx2.Response,
             options={"headers": {"Content-Type": "application/octet-stream"}},
         )
 
@@ -1771,20 +1773,20 @@ class TestAsyncTurbopuffer:
         counter = Counter()
         iterator = _make_async_iterator([file_content], counter=counter)
 
-        async def mock_handler(request: httpx.Request) -> httpx.Response:
+        async def mock_handler(request: httpx2.Request) -> httpx2.Response:
             assert counter.value == 0, "the request body should not have been read"
-            return httpx.Response(200, content=await request.aread())
+            return httpx2.Response(200, content=await request.aread())
 
         async with AsyncTurbopuffer(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
-            http_client=httpx.AsyncClient(transport=MockTransport(handler=mock_handler)),
+            http_client=httpx2.AsyncClient(transport=MockTransport(handler=mock_handler)),
         ) as client:
             response = await client.post(
                 "/upload",
                 content=iterator,
-                cast_to=httpx.Response,
+                cast_to=httpx2.Response,
                 options={"headers": {"Content-Type": "application/octet-stream"}},
             )
 
@@ -1807,7 +1809,7 @@ class TestAsyncTurbopuffer:
             response = await async_client.post(
                 "/upload",
                 body=file_content,
-                cast_to=httpx.Response,
+                cast_to=httpx2.Response,
                 options={"headers": {"Content-Type": "application/octet-stream"}},
             )
 
@@ -1823,7 +1825,7 @@ class TestAsyncTurbopuffer:
         class Model2(BaseModel):
             foo: str
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
 
         response = await async_client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model2)
@@ -1839,13 +1841,13 @@ class TestAsyncTurbopuffer:
         class Model2(BaseModel):
             foo: str
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
 
         response = await async_client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model2)
         assert response.foo == "bar"
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": 1}))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, json={"foo": 1}))
 
         response = await async_client.get("/foo", cast_to=cast(Any, Union[Model1, Model2]))
         assert isinstance(response, Model1)
@@ -1863,7 +1865,7 @@ class TestAsyncTurbopuffer:
             foo: int
 
         respx_mock.get("/foo").mock(
-            return_value=httpx.Response(
+            return_value=httpx2.Response(
                 200,
                 content=json.dumps({"foo": 2}),
                 headers={"Content-Type": "application/text"},
@@ -1929,7 +1931,7 @@ class TestAsyncTurbopuffer:
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
-                http_client=httpx.AsyncClient(),
+                http_client=httpx2.AsyncClient(),
             ),
         ],
         ids=["standard", "custom http client"],
@@ -1955,7 +1957,7 @@ class TestAsyncTurbopuffer:
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
-                http_client=httpx.AsyncClient(),
+                http_client=httpx2.AsyncClient(),
             ),
         ],
         ids=["standard", "custom http client"],
@@ -1981,7 +1983,7 @@ class TestAsyncTurbopuffer:
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
-                http_client=httpx.AsyncClient(),
+                http_client=httpx2.AsyncClient(),
             ),
         ],
         ids=["standard", "custom http client"],
@@ -2024,7 +2026,7 @@ class TestAsyncTurbopuffer:
         class Model(BaseModel):
             foo: str
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, json={"foo": {"invalid": True}}))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, json={"foo": {"invalid": True}}))
 
         with pytest.raises(APIResponseValidationError) as exc:
             await async_client.get("/foo", cast_to=Model)
@@ -2042,7 +2044,7 @@ class TestAsyncTurbopuffer:
         class Model(BaseModel):
             name: str
 
-        respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
+        respx_mock.get("/foo").mock(return_value=httpx2.Response(200, text="my-custom-format"))
 
         strict_client = AsyncTurbopuffer(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
@@ -2082,7 +2084,7 @@ class TestAsyncTurbopuffer:
     async def test_parse_retry_after_header(
         self, remaining_retries: int, retry_after: str, timeout: float, async_client: AsyncTurbopuffer
     ) -> None:
-        headers = httpx.Headers({"retry-after": retry_after})
+        headers = httpx2.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = async_client._calculate_retry_timeout(remaining_retries, options, headers)
         assert (calculated == pytest.approx(timeout, 0.25 * 0.875)) or (calculated <= RETRY_AFTER_LIMIT_SECS)  # pyright: ignore[reportUnknownMemberType]
@@ -2102,21 +2104,21 @@ class TestAsyncTurbopuffer:
 
         nb_retries = 0
 
-        def retry_handler(_request: httpx.Request) -> httpx.Response:
+        def retry_handler(_request: httpx2.Request) -> httpx2.Response:
             nonlocal nb_retries
             if nb_retries < failures_before_success:
                 nb_retries += 1
                 if failure_mode == "exception":
                     raise RuntimeError("oops")
-                return httpx.Response(500)
-            return httpx.Response(200)
+                return httpx2.Response(500)
+            return httpx2.Response(200)
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
         response = await client.with_raw_response.namespaces()
 
         assert response.retries_taken == failures_before_success
-        assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
+        assert int(response.http_request.headers["x-stainless-retry-count"]) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
@@ -2128,12 +2130,12 @@ class TestAsyncTurbopuffer:
 
         nb_retries = 0
 
-        def retry_handler(_request: httpx.Request) -> httpx.Response:
+        def retry_handler(_request: httpx2.Request) -> httpx2.Response:
             nonlocal nb_retries
             if nb_retries < failures_before_success:
                 nb_retries += 1
-                return httpx.Response(500)
-            return httpx.Response(200)
+                return httpx2.Response(500)
+            return httpx2.Response(200)
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
@@ -2151,12 +2153,12 @@ class TestAsyncTurbopuffer:
 
         nb_retries = 0
 
-        def retry_handler(_request: httpx.Request) -> httpx.Response:
+        def retry_handler(_request: httpx2.Request) -> httpx2.Response:
             nonlocal nb_retries
             if nb_retries < failures_before_success:
                 nb_retries += 1
-                return httpx.Response(500)
-            return httpx.Response(200)
+                return httpx2.Response(500)
+            return httpx2.Response(200)
 
         respx_mock.get("/v1/namespaces").mock(side_effect=retry_handler)
 
@@ -2175,7 +2177,7 @@ class TestAsyncTurbopuffer:
 
         class Scope(RequestScope):
             @override
-            def attempt_begin(self, attempt: int, request: httpx.Request) -> None:
+            def attempt_begin(self, attempt: int, request: httpx2.Request) -> None:
                 events.append(f"attempt_begin:{attempt}")
                 request.headers["x-observed"] = "yes"
 
@@ -2195,7 +2197,7 @@ class TestAsyncTurbopuffer:
                 events.append(f"start:{info.method}:{info.url}")
                 return Scope()
 
-        respx_mock.post("/foo").mock(side_effect=[httpx.Response(500), httpx.Response(200, json={"foo": "bar"})])
+        respx_mock.post("/foo").mock(side_effect=[httpx2.Response(500), httpx2.Response(200, json={"foo": "bar"})])
         client = async_client.with_options(max_retries=1)
         client._observer = Observer()
 
@@ -2239,10 +2241,10 @@ class TestAsyncTurbopuffer:
             def start(self, info: RequestInfo) -> RequestScope:
                 return Scope()
 
-        def interrupt(_request: httpx.Request) -> httpx.Response:
+        def interrupt(_request: httpx2.Request) -> httpx2.Response:
             raise Interrupted()
 
-        route = respx_mock.post("/foo").mock(return_value=httpx.Response(404, json={"error": "not found"}))
+        route = respx_mock.post("/foo").mock(return_value=httpx2.Response(404, json={"error": "not found"}))
         client = async_client.with_options(max_retries=0)
         client._observer = Observer()
 
@@ -2278,7 +2280,7 @@ class TestAsyncTurbopuffer:
                 return Scope()
 
         respx_mock.post("/foo").mock(
-            return_value=httpx.Response(200, content=b"not json", headers={"Content-Type": "application/json"})
+            return_value=httpx2.Response(200, content=b"not json", headers={"Content-Type": "application/json"})
         )
         client = async_client.with_options()
         client._observer = Observer()
@@ -2309,11 +2311,11 @@ class TestAsyncTurbopuffer:
             def start(self, info: RequestInfo) -> RequestScope:
                 return Scope()
 
-        respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.post("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
         client = async_client.with_options()
         client._observer = Observer()
 
-        response = await client.post("/foo", cast_to=httpx.Response)
+        response = await client.post("/foo", cast_to=httpx2.Response)
 
         [result] = results
         assert result.parsed is response
@@ -2328,7 +2330,7 @@ class TestAsyncTurbopuffer:
 
         class Scope(RequestScope):
             @override
-            def attempt_begin(self, attempt: int, request: httpx.Request) -> None:
+            def attempt_begin(self, attempt: int, request: httpx2.Request) -> None:
                 raise RuntimeError("attempt_begin")
 
             @override
@@ -2344,7 +2346,7 @@ class TestAsyncTurbopuffer:
             def start(self, info: RequestInfo) -> RequestScope:
                 return Scope()
 
-        respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+        respx_mock.post("/foo").mock(return_value=httpx2.Response(200, json={"foo": "bar"}))
         client = async_client.with_options()
         client._observer = Observer()
 
@@ -2383,18 +2385,18 @@ class TestAsyncTurbopuffer:
             trust_env=True,
             http1=True,
             http2=False,
-            limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
+            limits=httpx2.Limits(max_connections=100, max_keepalive_connections=20),
         )
 
     @pytest.mark.respx(base_url=base_url)
     async def test_follow_redirects(self, respx_mock: MockRouter, async_client: AsyncTurbopuffer) -> None:
         # Test that the default follow_redirects=True allows following redirects
         respx_mock.post("/redirect").mock(
-            return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
+            return_value=httpx2.Response(302, headers={"Location": f"{base_url}/redirected"})
         )
-        respx_mock.get("/redirected").mock(return_value=httpx.Response(200, json={"status": "ok"}))
+        respx_mock.get("/redirected").mock(return_value=httpx2.Response(200, json={"status": "ok"}))
 
-        response = await async_client.post("/redirect", body={"key": "value"}, cast_to=httpx.Response)
+        response = await async_client.post("/redirect", body={"key": "value"}, cast_to=httpx2.Response)
         assert response.status_code == 200
         assert response.json() == {"status": "ok"}
 
@@ -2402,12 +2404,12 @@ class TestAsyncTurbopuffer:
     async def test_follow_redirects_disabled(self, respx_mock: MockRouter, async_client: AsyncTurbopuffer) -> None:
         # Test that follow_redirects=False prevents following redirects
         respx_mock.post("/redirect").mock(
-            return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
+            return_value=httpx2.Response(302, headers={"Location": f"{base_url}/redirected"})
         )
 
         with pytest.raises(APIStatusError) as exc_info:
             await async_client.post(
-                "/redirect", body={"key": "value"}, options={"follow_redirects": False}, cast_to=httpx.Response
+                "/redirect", body={"key": "value"}, options={"follow_redirects": False}, cast_to=httpx2.Response
             )
 
         assert exc_info.value.response.status_code == 302

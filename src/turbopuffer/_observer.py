@@ -11,7 +11,7 @@ import logging
 from typing import TYPE_CHECKING, Any, Dict, Tuple, Callable, Optional, Awaitable
 from typing_extensions import Literal
 
-import httpx
+import httpx2
 
 from ._exceptions import APIStatusError, APITimeoutError, APIConnectionError
 
@@ -118,8 +118,8 @@ class AttemptResult:
         self,
         *,
         attempt: int,
-        request: httpx.Request,
-        response: Optional[httpx.Response],
+        request: httpx2.Request,
+        response: Optional[httpx2.Response],
         error: Optional[BaseException],
         error_kind: Optional[ErrorKind],
         reached_server: Optional[bool],
@@ -145,7 +145,7 @@ class RequestResult:
         self,
         *,
         retries: int,
-        response: Optional[httpx.Response],
+        response: Optional[httpx2.Response],
         error: Optional[BaseException],
         error_kind: Optional[ErrorKind],
         parsed: object,
@@ -163,7 +163,7 @@ class RequestResult:
 class RequestScope:
     """Observes one request across its attempts. Subclass it and override what you need."""
 
-    def attempt_begin(self, attempt: int, request: httpx.Request) -> None:  # noqa: ARG002
+    def attempt_begin(self, attempt: int, request: httpx2.Request) -> None:  # noqa: ARG002
         """Called before each attempt is sent. May change the request's headers."""
         return None
 
@@ -194,31 +194,31 @@ def error_kind(err: BaseException) -> ErrorKind:
         return error_kind(err.__cause__)
     if isinstance(err, APITimeoutError):
         return "timeout"
-    if isinstance(err, httpx.PoolTimeout):
+    if isinstance(err, httpx2.PoolTimeout):
         return "pool_timeout"
-    if isinstance(err, httpx.ConnectTimeout):
+    if isinstance(err, httpx2.ConnectTimeout):
         return "connect_timeout"
-    if isinstance(err, httpx.WriteTimeout):
+    if isinstance(err, httpx2.WriteTimeout):
         return "write_timeout"
-    if isinstance(err, httpx.ReadTimeout):
+    if isinstance(err, httpx2.ReadTimeout):
         return "read_timeout"
-    if isinstance(err, httpx.TimeoutException):
+    if isinstance(err, httpx2.TimeoutException):
         return "timeout"
-    if isinstance(err, httpx.ConnectError):
+    if isinstance(err, httpx2.ConnectError):
         return "connect_error"
-    if isinstance(err, (httpx.ReadError, httpx.RemoteProtocolError)):
+    if isinstance(err, (httpx2.ReadError, httpx2.RemoteProtocolError)):
         return "read_error"
     return "other"
 
 
 def _reached_server(err: BaseException) -> Optional[bool]:
     # These are raised before any part of the request is written.
-    if isinstance(err, (httpx.PoolTimeout, httpx.ConnectTimeout, httpx.ConnectError)):
+    if isinstance(err, (httpx2.PoolTimeout, httpx2.ConnectTimeout, httpx2.ConnectError)):
         return False
     return None
 
 
-# httpcore trace events that mark timings, and the fields they set. Later events overwrite
+# httpcore2 trace events that mark timings, and the fields they set. Later events overwrite
 # earlier ones, so with TLS a connection ends when its handshake completes.
 _TRACE_EVENTS = {
     "connection.connect_tcp.started": "connect_begin",
@@ -279,12 +279,12 @@ class RequestObservation:
         if observer is not None and options is not None:
             self._scope = _call(observer.start, RequestInfo(method=options.method, url=options.url))
         self._attempt = 0
-        self._request: Optional[httpx.Request] = None
+        self._request: Optional[httpx2.Request] = None
         self._timings = Timings()
         self._finished = False
 
     @staticmethod
-    def of(response: httpx.Response) -> RequestObservation:
+    def of(response: httpx2.Response) -> RequestObservation:
         """Returns the observation of the request behind `response`, or an inert one."""
         if response._request is not None:
             observation = response.request.extensions.get(_OBSERVATION_EXTENSION)
@@ -299,7 +299,7 @@ class RequestObservation:
         self._timings = Timings()
         self._timings.attempt_begin = time.perf_counter_ns()
 
-    def before_send(self, request: httpx.Request, *, is_async: bool = False) -> None:
+    def before_send(self, request: httpx2.Request, *, is_async: bool = False) -> None:
         if self._scope is None:
             return
         timings = self._timings
@@ -315,7 +315,7 @@ class RequestObservation:
         self._request = request
         _call(self._scope.attempt_begin, self._attempt, request)
 
-    def on_response(self, response: httpx.Response) -> None:
+    def on_response(self, response: httpx2.Response) -> None:
         if self._scope is None or self._request is None:
             return
         self._settle()
@@ -357,7 +357,7 @@ class RequestObservation:
     def finish(
         self,
         *,
-        response: Optional[httpx.Response] = None,
+        response: Optional[httpx2.Response] = None,
         error: Optional[BaseException] = None,
         parsed: object = None,
     ) -> None:

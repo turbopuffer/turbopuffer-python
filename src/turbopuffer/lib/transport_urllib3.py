@@ -2,7 +2,7 @@
 # Obtained from the following URL on 9 June 2025:
 # https://gist.github.com/florimondmanca/d56764d78d748eb9f73165da388e546e
 #
-# In theory this should be faster than the default `httpx` transport, but in
+# In theory this should be faster than the default `httpx2` transport, but in
 # practice it seems to be slightly slower. We keep it here in case it's useful
 # in the future.
 
@@ -12,16 +12,16 @@ import time
 import typing
 from typing_extensions import override
 
-import httpx
+import httpx2
 import urllib3
-from httpx._types import CertTypes, ProxyTypes, SyncByteStream
-from httpx._config import create_ssl_context
+from httpx2._types import CertTypes, ProxyTypes, SyncByteStream
+from httpx2._config import create_ssl_context
 
 from .transport import MIN_GZIP_SIZE
 from .._observer import TIMINGS_EXTENSION
 
 
-def httpx_headers_to_urllib3_headers(headers: httpx.Headers) -> urllib3.HTTPHeaderDict:
+def httpx_headers_to_urllib3_headers(headers: httpx2.Headers) -> urllib3.HTTPHeaderDict:
     urllib3_headers = urllib3.HTTPHeaderDict()
     for name, value in headers.multi_items():
         urllib3_headers.add(name, value)
@@ -44,7 +44,7 @@ class ResponseStream(SyncByteStream):
         self._urllib3_stream.release_conn()
 
 
-class Urllib3Transport(httpx.BaseTransport):
+class Urllib3Transport(httpx2.BaseTransport):
     def __init__(
         self,
         verify: typing.Union[ssl.SSLContext, str, bool] = True,
@@ -55,7 +55,7 @@ class Urllib3Transport(httpx.BaseTransport):
         proxy: typing.Union[ProxyTypes, None] = None,
     ) -> None:
         ssl_context = create_ssl_context(cert=cert, verify=verify, trust_env=trust_env)
-        proxy = httpx.Proxy(url=proxy) if isinstance(proxy, (str, httpx.URL)) else proxy
+        proxy = httpx2.Proxy(url=proxy) if isinstance(proxy, (str, httpx2.URL)) else proxy
 
         if proxy is None:
             self._pool = urllib3.PoolManager(
@@ -93,7 +93,7 @@ class Urllib3Transport(httpx.BaseTransport):
             )
 
     @override
-    def handle_request(self, request: httpx.Request) -> httpx.Response:
+    def handle_request(self, request: httpx2.Request) -> httpx2.Response:
         timings = request.extensions.get(TIMINGS_EXTENSION)
         compression = request.extensions.get("compression", True)
         timeouts = request.extensions.get("timeout", {})
@@ -131,9 +131,9 @@ class Urllib3Transport(httpx.BaseTransport):
         if timings is not None:
             timings.response_headers = time.perf_counter_ns()
 
-        httpx_response = httpx.Response(
+        httpx_response = httpx2.Response(
             status_code=response.status,
-            headers=httpx.Headers([(name, value) for name, value in response.headers.iteritems()]),
+            headers=httpx2.Headers([(name, value) for name, value in response.headers.iteritems()]),
             content=ResponseStream(response),
         )
 

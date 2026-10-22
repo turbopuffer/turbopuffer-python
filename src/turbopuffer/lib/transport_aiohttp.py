@@ -2,7 +2,7 @@
 # Obtained from the following URL on 9 June 2025:
 # https://github.com/karpetrosyan/httpx-aiohttp/tree/6bfcb1dcf13632aa5338e49b13dccf54bd51ca65
 #
-# The default async transport for `httpx` is quite slow, so we use this
+# The default async transport for `httpx2` is quite slow, so we use this
 # aiohttp-based transport instead.
 
 import gzip
@@ -13,7 +13,7 @@ import contextlib
 from types import SimpleNamespace
 from typing_extensions import override
 
-import httpx
+import httpx2
 import aiohttp
 from aiohttp import ClientTimeout
 from aiohttp.client import ClientSession, ClientResponse
@@ -22,12 +22,12 @@ from .transport import MIN_GZIP_SIZE
 from .._observer import TIMINGS_EXTENSION
 
 AIOHTTP_EXC_MAP = {
-    aiohttp.ServerTimeoutError: httpx.TimeoutException,
-    aiohttp.ConnectionTimeoutError: httpx.ConnectTimeout,
-    aiohttp.SocketTimeoutError: httpx.ReadTimeout,
-    aiohttp.ClientConnectorError: httpx.ConnectError,
-    aiohttp.ClientPayloadError: httpx.ReadError,
-    aiohttp.ClientProxyConnectionError: httpx.ProxyError,
+    aiohttp.ServerTimeoutError: httpx2.TimeoutException,
+    aiohttp.ConnectionTimeoutError: httpx2.ConnectTimeout,
+    aiohttp.SocketTimeoutError: httpx2.ReadTimeout,
+    aiohttp.ClientConnectorError: httpx2.ConnectError,
+    aiohttp.ClientPayloadError: httpx2.ReadError,
+    aiohttp.ClientProxyConnectionError: httpx2.ProxyError,
 }
 
 
@@ -51,7 +51,7 @@ def map_aiohttp_exceptions() -> typing.Iterator[None]:
         raise mapped_exc(message) from exc
 
 
-class AiohttpResponseStream(httpx.AsyncByteStream):
+class AiohttpResponseStream(httpx2.AsyncByteStream):
     CHUNK_SIZE = 1024 * 16
 
     def __init__(self, aiohttp_response: ClientResponse) -> None:
@@ -96,15 +96,15 @@ def connection_trace_config() -> aiohttp.TraceConfig:
     return config
 
 
-class AiohttpTransport(httpx.AsyncBaseTransport):
+class AiohttpTransport(httpx2.AsyncBaseTransport):
     def __init__(self, client: typing.Union[ClientSession, typing.Callable[[], ClientSession]]) -> None:
         self.client = client
 
     @override
     async def handle_async_request(
         self,
-        request: httpx.Request,
-    ) -> httpx.Response:
+        request: httpx2.Request,
+    ) -> httpx2.Response:
         timings = request.extensions.get(TIMINGS_EXTENSION)
         timeout = request.extensions.get("timeout", {})
         sni_hostname = request.extensions.get("sni_hostname")
@@ -148,7 +148,7 @@ class AiohttpTransport(httpx.AsyncBaseTransport):
             if timings is not None:
                 timings.response_headers = time.perf_counter_ns()
 
-        httpx_response = httpx.Response(
+        httpx_response = httpx2.Response(
             status_code=response.status,
             headers=response.headers,
             content=AiohttpResponseStream(response),
