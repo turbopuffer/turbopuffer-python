@@ -1,0 +1,105 @@
+# Runs the full test suite, including the tests against the live turbopuffer
+# API, from this repository so that it has access to the test API key:
+#
+# * Nightly on `main`, to catch API changes that break the tests independently
+#   of any SDK change. Failures open (or comment on) a tracking issue.
+#
+# * On demand for a PR from a fork. Fork PRs don't get repository secrets, so
+#   their CI skips the live tests. After reviewing the PR, a maintainer runs:
+#
+#       gh workflow run live-tests.yml \
+#           -f sha=$(gh pr view <number> --json headRefOid --jq .headRefOid)
+#
+#   The result is reported as a "live tests" status on that commit, which
+#   shows up in the PR's checks.
+#
+# This runs the given commit's code with the API key, so only dispatch it for
+# a commit you've reviewed, including changes to tests, scripts, and
+# `pyproject.toml`.
+name: Live tests
+on:
+  schedule:
+    - cron: '23 9 * * *'
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Reviewed commit to test (defaults to the selected branch)
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    timeout-minutes: 10
+    name: live tests
+    runs-on: ubuntu-latest
+    if: github.repository == 'turbopuffer/turbopuffer-python'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ inputs.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
+        with:
+          version: '0.13.0'
+
+      - name: Bootstrap
+        run: ./scripts/bootstrap
+
+      - name: Run tests
+        run: ./scripts/test
+        env:
+          TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_TEST_API_KEY }}
+
+  # Kept separate from `test` so that the PR's code never runs with a token
+  # that can write statuses or issues.
+  report-status:
+    name: report status
+    needs: test
+    if: always() && inputs.sha
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - name: Report status on the tested commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ inputs.sha }}
+          RESULT: ${{ needs.test.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          case "$RESULT" in
+            success|failure) state="$RESULT" ;;
+            *) state=error ;;
+          esac
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state="$state" \
+            -f context="live tests" \
+            -f description="Live API tests: $RESULT" \
+            -f target_url="$RUN_URL"
+
+  report-nightly-failure:
+    name: report nightly failure
+    needs: test
+    if: failure() && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open or update tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: Nightly live tests are failing
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          number=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title \"$TITLE\"" \
+            --json number,title --jq '[.[] | select(.title == env.TITLE)][0].number // empty')
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --repo "$GITHUB_REPOSITORY" --body "Still failing: $RUN_URL"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" \
+              --body "The nightly run of the live API tests on \`main\` failed: $RUN_URL. Close this issue once they pass again."
+          fi
