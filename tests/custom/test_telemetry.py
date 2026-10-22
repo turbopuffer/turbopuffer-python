@@ -4,7 +4,7 @@ import json
 import asyncio
 import logging
 import threading
-from typing import Any, Dict, List, Iterator, Optional, cast
+from typing import Any, Dict, List, Tuple, Iterator, Optional, cast
 from unittest import mock
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from typing_extensions import override
@@ -26,12 +26,19 @@ from tests.conftest import api_key, base_url
 from turbopuffer.lib import telemetry, respond_async
 from turbopuffer._observer import Timings
 from turbopuffer.lib.telemetry import (
+    REQUEST_ID_BYTES,
     TELEMETRY_HEADER,
+    REQUEST_ID_HEADER,
+    REQUEST_ID_PREFIX,
     TELEMETRY_ENV_VAR,
     SAMPLE_RATE_HEADER,
+    REQUEST_ID_ALPHABET,
     MAX_BUFFERED_RECORDS,
     MAX_RECORDS_PER_HEADER,
+    REQUEST_ID_RANDOM_BYTES,
     TelemetryBuffer,
+    encode_base32,
+    new_request_id,
     route_template,
     resolve_enabled,
 )
@@ -79,14 +86,32 @@ def take_payload(buffer: TelemetryBuffer) -> Dict[str, Any]:
     return json.loads(batch.header)
 
 
-def add_record(buffer: TelemetryBuffer, *, status: int = 200) -> None:
+def add_record(buffer: TelemetryBuffer, *, status: int = 200, sample_rate: float = 1.0) -> None:
     buffer.record(
         method="post",
         url=QUERY_PATH,
         status=status,
         retries=0,
         durations={"total": 5_000_000},
+        sample_rate=sample_rate,
     )
+
+
+def decode_request_id(request_id: str) -> Tuple[int, bytes]:
+    """Returns the millisecond time and random bytes of a generated request ID, checking its format."""
+    assert request_id.startswith(REQUEST_ID_PREFIX), request_id
+    encoded = request_id[len(REQUEST_ID_PREFIX) :]
+    alphabet = REQUEST_ID_ALPHABET.decode("ascii")
+    assert len(encoded) == 29 and all(c in alphabet for c in encoded), request_id
+    value = 0
+    for c in encoded:
+        value = (value << 5) | alphabet.index(c)
+    # The 29 characters hold one bit more than the bytes, which pads them with a zero.
+    assert value & 1 == 0, request_id
+    data = (value >> 1).to_bytes(REQUEST_ID_BYTES, "big")
+    random_bytes = data[:REQUEST_ID_RANDOM_BYTES]
+    millis = bytes(m ^ r for m, r in zip(data[REQUEST_ID_RANDOM_BYTES:], random_bytes, strict=False))
+    return int.from_bytes(millis, "big"), random_bytes
 
 
 def no_retry_delay(*_args: Any, **_kwargs: Any) -> float:
@@ -102,8 +127,11 @@ def clear_shared_buffers() -> None:
 class QueryHandler(BaseHTTPRequestHandler):
     # Keeps connections open between requests, so they can be reused.
     protocol_version = "HTTP/1.1"
+    # The request IDs that requests arrived with, in order.
+    request_ids: List[Optional[str]] = []
 
     def do_POST(self) -> None:
+        QueryHandler.request_ids.append(self.headers.get(REQUEST_ID_HEADER))
         self.rfile.read(int(self.headers["Content-Length"]))
         body = query_response().content
         self.send_response(200)
@@ -237,6 +265,7 @@ class TestBuffer:
             status=200,
             retries=2,
             durations={"total": 1_234_567, "compress": 0, "deserialize": 999},
+            sample_rate=1.0,
             server_total_ms=7,
         )
 
@@ -273,6 +302,27 @@ class TestBuffer:
         buffer.restore(batch)
 
         assert [r["status"] for r in take_payload(buffer)["records"]] == [0, 1, 2, 99]
+
+    def test_samples_requests(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        buffer = TelemetryBuffer()
+        monkeypatch.setattr(telemetry, "_random", lambda: 0.3)
+        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "0.5"}))
+        assert buffer.sample() == 0.5
+        add_record(buffer, sample_rate=0.5)
+        assert take_payload(buffer)["records"][0]["sample_rate"] == 0.5
+
+        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "0.25"}))
+        assert buffer.sample() is None
+
+        monkeypatch.setattr(telemetry, "_random", lambda: 0.0)
+        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "0"}))
+        assert buffer.sample() is None
+
+        # A full rate isn't reported.
+        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "1"}))
+        assert buffer.sample() == 1.0
+        add_record(buffer)
+        assert "sample_rate" not in take_payload(buffer)["records"][0]
 
     @pytest.mark.parametrize("value", ["abc", "1.5", "-0.1", "nan", ""])
     def test_invalid_sample_rate_is_ignored(self, value: str) -> None:
@@ -368,6 +418,7 @@ class TestRequests:
             ns.query(top_k=1)
 
         assert all(TELEMETRY_HEADER not in request.headers for request in sent_requests(route))
+        assert all(REQUEST_ID_HEADER not in request.headers for request in sent_requests(route))
 
     @pytest.mark.respx(base_url=base_url)
     def test_compression_is_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
@@ -394,6 +445,8 @@ class TestRequests:
         assert all(sent_records(request) is None for request in sent_requests(route))
         assert telemetry_client._telemetry is not None
         assert telemetry_client._telemetry.sample_rate == 0.0
+        # Unrecorded requests have no request IDs to link.
+        assert all(REQUEST_ID_HEADER not in request.headers for request in sent_requests(route)[1:])
 
     @pytest.mark.respx(base_url=base_url)
     def test_server_sample_rate_is_applied(
@@ -404,14 +457,22 @@ class TestRequests:
 
         monkeypatch.setattr(telemetry, "_random", lambda: 0.2)
         ns.query(top_k=1)
+        ns.query(top_k=1)
         monkeypatch.setattr(telemetry, "_random", lambda: 0.3)
         ns.query(top_k=1)
         ns.query(top_k=1)
 
-        records = sent_records(sent_requests(route)[1])
+        # Requests are sampled as they start, so the first is at the full rate the server hadn't changed yet.
+        requests = sent_requests(route)
+        records = sent_records(requests[1])
+        assert records is not None
+        assert "sample_rate" not in records[0]
+        records = sent_records(requests[2])
         assert records is not None
         assert records[0]["sample_rate"] == 0.25
-        assert sent_records(sent_requests(route)[2]) is None
+        assert sent_records(requests[3]) is None
+        # Unrecorded requests have no request IDs to link.
+        assert REQUEST_ID_HEADER not in requests[2].headers
 
     @pytest.mark.respx(base_url=base_url)
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", no_retry_delay)
@@ -570,6 +631,84 @@ class TestRequests:
         assert len(take_payload(telemetry_client._telemetry)["records"]) == 1
 
 
+class TestRequestIds:
+    @pytest.mark.parametrize(
+        ("data", "expected"),
+        [
+            (bytes(16), "22222222222222222222222222"),
+            (bytes(15) + b"\x01", "22222222222222222222222226"),
+            (bytes(15) + b"\x0f", "2222222222222222222222223w"),
+            (bytes(15) + b"\xff", "222222222222222222222222zw"),
+            (b"\xff" * 16, "zzzzzzzzzzzzzzzzzzzzzzzzzw"),
+        ],
+    )
+    def test_encodes_base32(self, data: bytes, expected: str) -> None:
+        # The vectors of riverpro's uuidbase32, which uses the same encoding.
+        assert encode_base32(data) == expected
+
+    def test_encodes_request_ids(self) -> None:
+        # Generated with Python's base64 module, independently of the implementation.
+        random_bytes = bytes.fromhex("9f1c2e7a4b6d8e0f1a2b3c4d")
+        request_id = new_request_id(1_792_497_600_123, random_bytes)
+        assert request_id == "tpreq_nwi4wymfhqb2yalfblatxjfremalg"
+        assert decode_request_id(request_id) == (1_792_497_600_123, random_bytes)
+
+    def test_generates_request_ids(self) -> None:
+        millis, random_bytes = decode_request_id(new_request_id(1_792_497_600_123))
+        assert millis == 1_792_497_600_123
+        _, other = decode_request_id(new_request_id(1_792_497_600_123))
+        assert other != random_bytes
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_sends_request_ids_that_records_repeat(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
+        route = respx_mock.post(QUERY_PATH).mock(return_value=query_response())
+        ns = telemetry_client.namespace("my-ns")
+
+        ns.query(top_k=1)
+        ns.query(top_k=1)
+
+        first, second = (request.headers[REQUEST_ID_HEADER] for request in sent_requests(route))
+        assert first != second
+        for request_id in (first, second):
+            decode_request_id(request_id)
+        records = sent_records(sent_requests(route)[1])
+        assert records is not None
+        assert records[0]["request_id"] == first
+
+    @pytest.mark.respx(base_url=base_url)
+    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", no_retry_delay)
+    def test_retries_keep_their_request_ids(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
+        route = respx_mock.post(QUERY_PATH)
+        route.side_effect = [httpx.Response(503), query_response()]
+
+        telemetry_client.namespace("my-ns").query(top_k=1)
+
+        first, second = (request.headers[REQUEST_ID_HEADER] for request in sent_requests(route))
+        assert first == second
+        assert telemetry_client._telemetry is not None
+        [record] = take_payload(telemetry_client._telemetry)["records"]
+        assert record["request_id"] == first
+        assert record["retries"] == 1
+
+    @pytest.mark.respx(base_url=base_url)
+    @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", no_retry_delay)
+    @pytest.mark.parametrize("per_request", [False, True])
+    def test_keeps_request_ids_set_by_callers(self, respx_mock: MockRouter, per_request: bool) -> None:
+        route = respx_mock.post(QUERY_PATH)
+        route.side_effect = [httpx.Response(503), query_response()]
+        default_headers = {} if per_request else {"X-Request-Id": "my-request"}
+        extra_headers = {"x-request-id": "my-request"} if per_request else None
+
+        with Turbopuffer(base_url=base_url, api_key=api_key, telemetry=True, default_headers=default_headers) as client:
+            client.namespace("my-ns").query(top_k=1, extra_headers=extra_headers)
+            assert client._telemetry is not None
+            [record] = take_payload(client._telemetry)["records"]
+
+        # Retries keep the caller's ID too.
+        assert [request.headers[REQUEST_ID_HEADER] for request in sent_requests(route)] == ["my-request"] * 2
+        assert "request_id" not in record
+
+
 class TestRespondAsync:
     """Requests the server accepts with a 202 and the SDK then polls until they finish."""
 
@@ -618,6 +757,11 @@ class TestRespondAsync:
         assert (request["route"], request["status"]) == ("POST /v2/namespaces/{ns}", 200)
         assert "error" not in request
         assert request["total_us"] >= sum(r["total_us"] for r in polls)
+        # Each poll is a request of its own, with its own ID.
+        calls = cast(List[Any], respx_mock.calls)
+        request_ids = [call.request.headers[REQUEST_ID_HEADER] for call in calls]
+        assert len(set(request_ids)) == 3
+        assert [r["request_id"] for r in (request, *polls)] == request_ids
 
     @pytest.mark.respx(base_url=base_url)
     def test_failed_operation_is_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
@@ -702,6 +846,9 @@ class TestAsyncRequests:
         assert record["route"] == QUERY_ROUTE
         assert record["server_total_us"] == 7000
         assert record["total_us"] >= record["deserialize_us"]
+        first, second = (request.headers[REQUEST_ID_HEADER] for request in sent_requests(route))
+        assert first != second
+        assert record["request_id"] == first
 
 
 class TestConnectionPhases:
@@ -740,6 +887,7 @@ class TestConnectionPhases:
         assert compute_durations(make_timings(attempt_begin=0), 400) == {"total": 400}
 
     def test_sync_client(self, local_server: str) -> None:
+        QueryHandler.request_ids.clear()
         with Turbopuffer(base_url=local_server, api_key=api_key, telemetry=True) as client:
             assert client._telemetry is not None
             ns = client.namespace("my-ns")
@@ -749,8 +897,10 @@ class TestConnectionPhases:
             [second] = take_payload(client._telemetry)["records"]
 
         assert_connection_phases(first, second)
+        assert QueryHandler.request_ids == [first["request_id"], second["request_id"]]
 
     async def test_async_client(self, local_server: str) -> None:
+        QueryHandler.request_ids.clear()
         async with AsyncTurbopuffer(base_url=local_server, api_key=api_key, telemetry=True) as client:
             assert client._telemetry is not None
             ns = client.namespace("my-ns")
@@ -760,6 +910,8 @@ class TestConnectionPhases:
             [second] = take_payload(client._telemetry)["records"]
 
         assert_connection_phases(first, second)
+        # Sent by the default aiohttp transport too.
+        assert QueryHandler.request_ids == [first["request_id"], second["request_id"]]
 
     def test_performance_without_telemetry(self, local_server: str, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv(TELEMETRY_ENV_VAR, raising=False)
