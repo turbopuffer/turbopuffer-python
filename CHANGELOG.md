@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.14.0...v3.0.0) (2026-10-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade from httpx to httpx2
+
+### Features
+
+* Send client-generated request IDs ([#284](https://github.com/turbopuffer/turbopuffer-python/issues/284)) ([3b4dc40](https://github.com/turbopuffer/turbopuffer-python/commit/3b4dc4060a2bec463161905b6567fa5cc5a9a2e8))
+* Upgrade from httpx to httpx2 ([cde3711](https://github.com/turbopuffer/turbopuffer-python/commit/cde3711a92431f614cafe6baee01fa9c84e275a1))
+
 ## [2.14.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.13.0...v2.14.0) (2026-10-20)
 
 
