@@ -17,7 +17,7 @@ from typing import Any, Union, Optional
 from typing_extensions import Literal
 
 import anyio
-import httpx
+import httpx2
 import pydantic
 
 from .._types import omit
@@ -48,10 +48,10 @@ def prepare_options(options: FinalRequestOptions) -> None:
 
 def process_response(
     *,
-    response: httpx.Response,
+    response: httpx2.Response,
     client: SyncAPIClient,
     options: FinalRequestOptions,
-) -> httpx.Response:
+) -> httpx2.Response:
     if not _respond_async_applied(response):
         return response
 
@@ -64,7 +64,7 @@ def process_response(
             raise APITimeoutError(request=orig_request)
 
         poll = client.request(
-            cast_to=httpx.Response,
+            cast_to=httpx2.Response,
             options=FinalRequestOptions.construct(
                 method="get",
                 url=location,
@@ -80,10 +80,10 @@ def process_response(
 
 async def process_response_aio(
     *,
-    response: httpx.Response,
+    response: httpx2.Response,
     client: AsyncAPIClient,
     options: FinalRequestOptions,
-) -> httpx.Response:
+) -> httpx2.Response:
     if not _respond_async_applied(response):
         return response
 
@@ -96,7 +96,7 @@ async def process_response_aio(
             raise APITimeoutError(request=orig_request)
 
         poll = await client.request(
-            cast_to=httpx.Response,
+            cast_to=httpx2.Response,
             options=FinalRequestOptions.construct(
                 method="get",
                 url=location,
@@ -110,14 +110,14 @@ async def process_response_aio(
         await anyio.sleep(timeout.sleep_duration())
 
 
-def _respond_async_applied(response: httpx.Response) -> bool:
+def _respond_async_applied(response: httpx2.Response) -> bool:
     if response.status_code != 202:
         return False
     applied = response.headers.get(HEADER_PREFERENCE_APPLIED, "")
     return bool(applied.strip().lower() == RESPOND_ASYNC)
 
 
-def _extract_location(response: httpx.Response) -> str:
+def _extract_location(response: httpx2.Response) -> str:
     raw_location: str = response.headers.get(HEADER_LOCATION, "").strip()
     if not raw_location:
         raise APIResponseValidationError(
@@ -130,7 +130,7 @@ def _extract_location(response: httpx.Response) -> str:
     try:
         # Resolve the Location against the original request URL.
         location = orig.join(raw_location)
-    except httpx.InvalidURL as err:
+    except httpx2.InvalidURL as err:
         raise APIResponseValidationError(
             response=response,
             body=response.text,
@@ -162,7 +162,7 @@ class _PollBody(BaseModel):
     result: Optional[_PollResult] = None
 
 
-def _resolve_poll_response(response: httpx.Response, request: httpx.Request) -> httpx.Response | None:
+def _resolve_poll_response(response: httpx2.Response, request: httpx2.Request) -> httpx2.Response | None:
     try:
         body = parse_obj(_PollBody, response.json())
         if body.status == "running":
@@ -177,7 +177,7 @@ def _resolve_poll_response(response: httpx.Response, request: httpx.Request) -> 
         ) from err
 
     if body.result.success is not None:
-        return httpx.Response(
+        return httpx2.Response(
             status_code=200,
             json=body.result.success,
             request=request,
@@ -185,7 +185,7 @@ def _resolve_poll_response(response: httpx.Response, request: httpx.Request) -> 
 
     assert body.result.error is not None
     error = body.result.error
-    return httpx.Response(
+    return httpx2.Response(
         status_code=error.status_code,
         json=error.detail,
         request=request,
@@ -195,9 +195,9 @@ def _resolve_poll_response(response: httpx.Response, request: httpx.Request) -> 
 class _Timeout:
     """Timeout tracking for async polling."""
 
-    def __init__(self, request_options: FinalRequestOptions, client_timeout: Union[float, httpx.Timeout, None]):
+    def __init__(self, request_options: FinalRequestOptions, client_timeout: Union[float, httpx2.Timeout, None]):
         timeout = request_options.timeout if is_given(request_options.timeout) else client_timeout
-        if isinstance(timeout, httpx.Timeout):
+        if isinstance(timeout, httpx2.Timeout):
             timeout = timeout.read
 
         if timeout is None:

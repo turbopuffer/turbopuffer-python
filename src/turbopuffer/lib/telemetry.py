@@ -23,7 +23,7 @@ from typing import Any, Dict, List, Tuple, Optional
 from collections import deque
 from typing_extensions import override
 
-import httpx
+import httpx2
 
 from . import json
 from .._observer import RequestInfo, RequestScope, AttemptResult, RequestResult, RequestObserver
@@ -83,7 +83,7 @@ def route_template(method: str, url: str) -> str:
     """Returns the method and path of a request with identifiers like the namespace replaced."""
     path = url
     if "://" in path:
-        path = httpx.URL(path).raw_path.decode("ascii", errors="replace")
+        path = httpx2.URL(path).raw_path.decode("ascii", errors="replace")
     path = _NAMESPACE_RE.sub(r"\g<1>{ns}", path)
     path = _OPERATION_RE.sub(r"\g<1>{token}", path)
     return f"{method.upper()} {path}"
@@ -121,7 +121,7 @@ class TelemetryBuffer:
     def sample_rate(self) -> float:
         return self._sample_rate
 
-    def observe_response(self, headers: httpx.Headers) -> None:
+    def observe_response(self, headers: httpx2.Headers) -> None:
         """Adopts the sample rate advertised by the server, ignoring invalid values."""
         value = headers.get(SAMPLE_RATE_HEADER)
         if value is None:
@@ -212,7 +212,7 @@ class TelemetryBuffer:
         self._dropped = 0
 
 
-def telemetry_buffer(enabled: Optional[bool], api_key: str, base_url: httpx.URL) -> Optional[TelemetryBuffer]:
+def telemetry_buffer(enabled: Optional[bool], api_key: str, base_url: httpx2.URL) -> Optional[TelemetryBuffer]:
     """Returns the buffer shared by clients with the same API key and base URL, or None if telemetry is disabled.
 
     Sharing lets records ride on any client's requests, including copies, but never to another org or region.
@@ -271,7 +271,7 @@ class _RequestScope(RequestScope):
         self._request_id = new_request_id(time.time_ns() // 1_000_000) if self._sample_rate is not None else None
 
     @override
-    def attempt_begin(self, attempt: int, request: httpx.Request) -> None:
+    def attempt_begin(self, attempt: int, request: httpx2.Request) -> None:
         # Taken only once a request is about to be sent, so one that fails before then can't lose it.
         if self._buffer is not None:
             self._batch = self._buffer.take()

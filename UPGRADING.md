@@ -4,6 +4,47 @@ This document describes the notable breaking changes, if any, in each version of
 the Python client. See [CHANGELOG.md](./CHANGELOG.md) for a comprehensive
 list of changes.
 
+## v3.0
+
+Python 3.11 or newer is required (Python 3.10 is EOL as of October 2026).
+
+The SDK now uses `httpx2` instead of `httpx`. Ordinary API calls and numeric
+timeouts work as before. Applications that configure the HTTP layer must create
+clients, transports, timeouts, URLs, and response types from `httpx2`:
+
+```python
+import httpx2
+from turbopuffer import Turbopuffer, DefaultHttpxClient
+
+client = Turbopuffer(
+    region="gcp-us-central1",
+    timeout=httpx2.Timeout(60.0, connect=5.0),
+    http_client=DefaultHttpxClient(transport=httpx2.HTTPTransport()),
+)
+```
+
+The exported `DefaultHttpxClient`, `DefaultAsyncHttpxClient`, and
+`DefaultAioHttpClient` names are unchanged. They now use httpx2 types. The default
+async client still uses turbopuffer's aiohttp transport, and the `aiohttp` extra is
+retained for compatibility but no longer installs an additional adapter.
+
+Replace `cast_to=httpx.Response` with `cast_to=httpx2.Response`. Raw response
+objects, error request/response attributes, and observer callbacks also use httpx2
+types. SDK exceptions such as `APIConnectionError` and `APITimeoutError` are
+unchanged, but their underlying HTTP exceptions come from `httpx2`. Legacy HTTPX
+objects are not interchangeable with httpx2 objects.
+
+The default synchronous transport now verifies TLS using the operating system's
+certificate store instead of certifi. Ensure that system CA certificates are
+installed, or pass an explicit `ssl.SSLContext` through `verify` on a custom
+transport. `SSL_CERT_FILE` and `SSL_CERT_DIR` remain supported with `trust_env=True`.
+The custom aiohttp transport retains aiohttp's TLS behavior. Update logging
+configuration from `httpx` / `httpcore` to `httpx2` / `httpcore2`.
+
+The SDK no longer installs legacy `httpx`. Add it as a direct dependency if other
+application code still imports it. HTTP mocking integrations must support httpx2;
+legacy RESPX does not intercept the new transports.
+
 ## v2.0
 
 - The `encryption` parameter has been restructured.

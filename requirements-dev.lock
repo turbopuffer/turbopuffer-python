@@ -11,45 +11,33 @@ annotated-types==0.7.0
     # via pydantic
 anyio==4.12.1
     # via
-    #   httpx
+    #   httpx2
     #   turbopuffer
-async-timeout==5.0.1 ; python_full_version < '3.11'
-    # via aiohttp
 attrs==25.4.0
     # via aiohttp
-backports-asyncio-runner==1.2.0 ; python_full_version < '3.11'
-    # via pytest-asyncio
-certifi==2026.1.4
-    # via
-    #   httpcore
-    #   httpx
 colorama==0.4.6 ; sys_platform == 'win32'
     # via pytest
 dirty-equals==0.11
 distro==1.9.0
     # via turbopuffer
-exceptiongroup==1.3.1 ; python_full_version < '3.11'
-    # via
-    #   anyio
-    #   pytest
 execnet==2.1.2
     # via pytest-xdist
 frozenlist==1.8.0
     # via
     #   aiohttp
     #   aiosignal
-h11==0.16.0
-    # via httpcore
-httpcore==1.0.9
-    # via httpx
-httpx==0.28.1
-    # via
-    #   respx
-    #   turbopuffer
-idna==3.11
+h11==0.16.0 ; sys_platform != 'emscripten'
+    # via httpcore2
+httpcore2==2.16.0 ; sys_platform != 'emscripten'
+    # via httpx2
+httpx2==2.16.0
+    # via turbopuffer
+httpx2-jsfetch==1.0 ; python_full_version >= '3.12' and sys_platform == 'emscripten'
+    # via httpx2
+idna==3.20
     # via
     #   anyio
-    #   httpx
+    #   httpx2
     #   yarl
 importlib-metadata==8.7.1
 iniconfig==2.3.0
@@ -67,8 +55,7 @@ mypy-extensions==1.1.0
     # via mypy
 nodeenv==1.10.0
     # via pyright
-numpy==2.2.6 ; python_full_version < '3.11'
-numpy==2.4.6 ; python_full_version == '3.11.*'
+numpy==2.4.6 ; python_full_version < '3.12'
 numpy==2.5.4 ; python_full_version >= '3.12'
 orjson==3.13.0
     # via turbopuffer
@@ -99,23 +86,21 @@ pytest==9.0.2
     #   pytest-xdist
 pytest-asyncio==1.3.0
 pytest-xdist==3.8.0
-respx==0.22.0
 rich==14.2.0
 ruff==0.14.13
 sniffio==1.3.1
     # via turbopuffer
 time-machine==3.5.1
-tomli==2.4.0 ; python_full_version < '3.11'
+truststore==0.10.5 ; sys_platform != 'emscripten'
     # via
-    #   mypy
-    #   pytest
+    #   httpcore2
+    #   httpx2
 typing-extensions==4.16.0
     # via
     #   aiohttp
     #   aiosignal
     #   anyio
-    #   exceptiongroup
-    #   multidict
+    #   httpx2
     #   mypy
     #   pydantic
     #   pydantic-core
