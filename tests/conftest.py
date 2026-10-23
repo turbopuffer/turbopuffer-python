@@ -6,7 +6,7 @@ import os
 import logging
 from typing import TYPE_CHECKING, Iterator, AsyncIterator
 
-import httpx
+import httpx2
 import pytest
 from pytest_asyncio import is_async_test
 
@@ -15,6 +15,8 @@ from turbopuffer._utils import is_dict
 
 if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest  # pyright: ignore[reportPrivateImportUsage]
+
+pytest_plugins = ["tests.respx2.plugin"]
 
 pytest.register_assert_rewrite("tests.utils")
 
@@ -64,7 +66,7 @@ async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncTurbopuffe
 
     # defaults
     strict = True
-    http_client: None | httpx.AsyncClient = None
+    http_client: None | httpx2.AsyncClient = None
 
     if isinstance(param, bool):
         strict = param
@@ -72,7 +74,7 @@ async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncTurbopuffe
         strict = param.get("strict", True)
         assert isinstance(strict, bool)
 
-        http_client_type = param.get("http_client", "httpx")
+        http_client_type = param.get("http_client", "httpx2")
         if http_client_type == "aiohttp":
             http_client = DefaultAioHttpClient()
     else:

@@ -1,8 +1,8 @@
-import httpx
-import respx
+import httpx2
 import pytest
 
 import turbopuffer
+from tests import respx2 as respx
 from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from tests.conftest import api_key, base_url
 from turbopuffer.lib import respond_async
@@ -25,9 +25,9 @@ def _no_poll_delay(monkeypatch: pytest.MonkeyPatch) -> None:  # pyright: ignore[
 
 @respx.mock
 def test_sync_prefer_header_sent() -> None:
-    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx.Response(200, json=WRITE_OK_BODY))
+    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx2.Response(200, json=WRITE_OK_BODY))
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
     client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -38,9 +38,9 @@ def test_sync_prefer_header_sent() -> None:
 @respx.mock
 @pytest.mark.asyncio
 async def test_async_prefer_header_sent() -> None:
-    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx.Response(200, json=WRITE_OK_BODY))
+    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx2.Response(200, json=WRITE_OK_BODY))
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -50,9 +50,9 @@ async def test_async_prefer_header_sent() -> None:
 
 @respx.mock
 def test_sync_pass_through_sync_response() -> None:
-    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx.Response(200, json=WRITE_OK_BODY))
+    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx2.Response(200, json=WRITE_OK_BODY))
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
     resp = client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -65,9 +65,9 @@ def test_sync_pass_through_sync_response() -> None:
 @respx.mock
 @pytest.mark.asyncio
 async def test_async_pass_through_sync_response() -> None:
-    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx.Response(200, json=WRITE_OK_BODY))
+    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx2.Response(200, json=WRITE_OK_BODY))
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         resp = await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -81,7 +81,7 @@ async def test_async_pass_through_sync_response() -> None:
 def test_sync_async_applied_and_polled_to_success() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-abc"
     write_route = respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={
                 "preference-applied": "respond-async",
@@ -91,16 +91,16 @@ def test_sync_async_applied_and_polled_to_success() -> None:
     )
     poll_route = respx.get(poll_url).mock(
         side_effect=[
-            httpx.Response(200, json={"status": "running"}),
-            httpx.Response(200, json={"status": "running"}),
-            httpx.Response(
+            httpx2.Response(200, json={"status": "running"}),
+            httpx2.Response(200, json={"status": "running"}),
+            httpx2.Response(
                 200,
                 json={"status": "finished", "result": {"success": WRITE_OK_BODY}},
             ),
         ]
     )
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
     resp = client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -116,7 +116,7 @@ def test_sync_async_applied_and_polled_to_success() -> None:
 async def test_async_async_applied_and_polled_to_success() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-abc"
     write_route = respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={
                 "preference-applied": "respond-async",
@@ -126,16 +126,16 @@ async def test_async_async_applied_and_polled_to_success() -> None:
     )
     poll_route = respx.get(poll_url).mock(
         side_effect=[
-            httpx.Response(200, json={"status": "running"}),
-            httpx.Response(200, json={"status": "running"}),
-            httpx.Response(
+            httpx2.Response(200, json={"status": "running"}),
+            httpx2.Response(200, json={"status": "running"}),
+            httpx2.Response(
                 200,
                 json={"status": "finished", "result": {"success": WRITE_OK_BODY}},
             ),
         ]
     )
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         resp = await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -150,7 +150,7 @@ async def test_async_async_applied_and_polled_to_success() -> None:
 def test_sync_async_finished_with_error() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-fail"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={
                 "preference-applied": "respond-async",
@@ -159,7 +159,7 @@ def test_sync_async_finished_with_error() -> None:
         )
     )
     respx.get(poll_url).mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             200,
             json={
                 "status": "finished",
@@ -168,7 +168,7 @@ def test_sync_async_finished_with_error() -> None:
         )
     )
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
 
     with pytest.raises(turbopuffer.NotFoundError) as excinfo:
@@ -181,7 +181,7 @@ def test_sync_async_finished_with_error() -> None:
 async def test_async_async_finished_with_error() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-fail"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={
                 "preference-applied": "respond-async",
@@ -190,7 +190,7 @@ async def test_async_async_finished_with_error() -> None:
         )
     )
     respx.get(poll_url).mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             200,
             json={
                 "status": "finished",
@@ -199,7 +199,7 @@ async def test_async_async_finished_with_error() -> None:
         )
     )
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         with pytest.raises(turbopuffer.NotFoundError) as excinfo:
             await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
@@ -208,9 +208,9 @@ async def test_async_async_finished_with_error() -> None:
 
 @respx.mock
 def test_sync_pass_through_unrelated_202() -> None:
-    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx.Response(202, json=WRITE_OK_BODY))
+    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx2.Response(202, json=WRITE_OK_BODY))
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
     resp = client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -221,9 +221,9 @@ def test_sync_pass_through_unrelated_202() -> None:
 @respx.mock
 @pytest.mark.asyncio
 async def test_async_pass_through_unrelated_202() -> None:
-    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx.Response(202, json=WRITE_OK_BODY))
+    route = respx.post(f"{base_url}/v2/namespaces/test").mock(return_value=httpx2.Response(202, json=WRITE_OK_BODY))
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         resp = await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -235,7 +235,7 @@ async def test_async_pass_through_unrelated_202() -> None:
 def test_sync_poll_transient_failure() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-flaky"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={
                 "preference-applied": "respond-async",
@@ -245,16 +245,16 @@ def test_sync_poll_transient_failure() -> None:
     )
     poll_route = respx.get(poll_url).mock(
         side_effect=[
-            httpx.Response(503),
-            httpx.Response(503),
-            httpx.Response(
+            httpx2.Response(503),
+            httpx2.Response(503),
+            httpx2.Response(
                 200,
                 json={"status": "finished", "result": {"success": WRITE_OK_BODY}},
             ),
         ]
     )
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
     resp = client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -267,7 +267,7 @@ def test_sync_poll_transient_failure() -> None:
 async def test_async_poll_transient_failure() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-flaky"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={
                 "preference-applied": "respond-async",
@@ -277,16 +277,16 @@ async def test_async_poll_transient_failure() -> None:
     )
     poll_route = respx.get(poll_url).mock(
         side_effect=[
-            httpx.Response(503),
-            httpx.Response(503),
-            httpx.Response(
+            httpx2.Response(503),
+            httpx2.Response(503),
+            httpx2.Response(
                 200,
                 json={"status": "finished", "result": {"success": WRITE_OK_BODY}},
             ),
         ]
     )
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         resp = await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
@@ -300,14 +300,14 @@ def test_sync_poll_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
 
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-slow"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={"preference-applied": "respond-async", "location": poll_url},
         )
     )
-    respx.get(poll_url).mock(return_value=httpx.Response(200, json={"status": "running"}))
+    respx.get(poll_url).mock(return_value=httpx2.Response(200, json={"status": "running"}))
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client, timeout=0.05)
 
     with pytest.raises(turbopuffer.APITimeoutError):
@@ -321,14 +321,14 @@ async def test_async_poll_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
 
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-slow"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={"preference-applied": "respond-async", "location": poll_url},
         )
     )
-    respx.get(poll_url).mock(return_value=httpx.Response(200, json={"status": "running"}))
+    respx.get(poll_url).mock(return_value=httpx2.Response(200, json={"status": "running"}))
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client, timeout=0.05) as client:
         with pytest.raises(turbopuffer.APITimeoutError):
             await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
@@ -337,10 +337,10 @@ async def test_async_poll_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
 @respx.mock
 def test_sync_async_applied_missing_location_header() -> None:
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(202, headers={"preference-applied": "respond-async"})
+        return_value=httpx2.Response(202, headers={"preference-applied": "respond-async"})
     )
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
 
     with pytest.raises(turbopuffer.APIResponseValidationError):
@@ -351,10 +351,10 @@ def test_sync_async_applied_missing_location_header() -> None:
 @pytest.mark.asyncio
 async def test_async_async_applied_missing_location_header() -> None:
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(202, headers={"preference-applied": "respond-async"})
+        return_value=httpx2.Response(202, headers={"preference-applied": "respond-async"})
     )
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         with pytest.raises(turbopuffer.APIResponseValidationError):
             await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
@@ -372,12 +372,12 @@ BAD_LOCATIONS = [
 @pytest.mark.parametrize("bad_location", BAD_LOCATIONS)
 def test_sync_async_applied_bad_location(bad_location: str) -> None:
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={"preference-applied": "respond-async", "location": bad_location},
         )
     )
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
     with pytest.raises(turbopuffer.APIResponseValidationError):
         client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
@@ -388,12 +388,12 @@ def test_sync_async_applied_bad_location(bad_location: str) -> None:
 @pytest.mark.parametrize("bad_location", BAD_LOCATIONS)
 async def test_async_async_applied_bad_location(bad_location: str) -> None:
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={"preference-applied": "respond-async", "location": bad_location},
         )
     )
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         with pytest.raises(turbopuffer.APIResponseValidationError):
             await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
@@ -403,7 +403,7 @@ async def test_async_async_applied_bad_location(bad_location: str) -> None:
 def test_sync_poll_too_many_failures() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-dead"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={
                 "preference-applied": "respond-async",
@@ -411,9 +411,9 @@ def test_sync_poll_too_many_failures() -> None:
             },
         )
     )
-    respx.get(poll_url).mock(return_value=httpx.Response(503))
+    respx.get(poll_url).mock(return_value=httpx2.Response(503))
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client, max_retries=0)
 
     with pytest.raises(turbopuffer.InternalServerError):
@@ -425,7 +425,7 @@ def test_sync_poll_too_many_failures() -> None:
 async def test_async_poll_too_many_failures() -> None:
     poll_url = f"{base_url}/v1/namespaces/test/operations/op-dead"
     respx.post(f"{base_url}/v2/namespaces/test").mock(
-        return_value=httpx.Response(
+        return_value=httpx2.Response(
             202,
             headers={
                 "preference-applied": "respond-async",
@@ -433,9 +433,9 @@ async def test_async_poll_too_many_failures() -> None:
             },
         )
     )
-    respx.get(poll_url).mock(return_value=httpx.Response(503))
+    respx.get(poll_url).mock(return_value=httpx2.Response(503))
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client, max_retries=0) as client:
         with pytest.raises(turbopuffer.InternalServerError):
             await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})

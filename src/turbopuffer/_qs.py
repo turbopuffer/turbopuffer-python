@@ -118,7 +118,7 @@ class Querystring:
         return [(key, serialised)]
 
     def _primitive_value_to_str(self, value: PrimitiveData) -> str:
-        # copied from httpx
+        # copied from httpx2
         if value is True:
             return "true"
         elif value is False:

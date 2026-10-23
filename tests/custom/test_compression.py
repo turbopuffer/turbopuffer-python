@@ -4,11 +4,11 @@ from io import BytesIO
 from typing import Any
 from unittest.mock import Mock
 
-import httpx
-import respx
+import httpx2
 import pytest
 
 import turbopuffer
+from tests import respx2 as respx
 from turbopuffer import Turbopuffer, AsyncTurbopuffer
 from tests.custom import test_prefix
 from tests.conftest import api_key, base_url
@@ -99,10 +99,10 @@ async def test_async_compression_disabled_by_default(async_tpuf: AsyncTurbopuffe
 def test_accept_encoding_header_disabled_by_default():
     """Verify Accept-Encoding: identity header is sent by default."""
     query_route = respx.post(f"{base_url}/v2/namespaces/test/query").mock(
-        return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
+        return_value=httpx2.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
     )
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client)
     ns = client.namespace("test")
     ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
@@ -117,10 +117,10 @@ def test_accept_encoding_header_disabled_by_default():
 async def test_async_accept_encoding_header_disabled_by_default():
     """Verify Accept-Encoding: identity header is sent by default (async)."""
     query_route = respx.post(f"{base_url}/v2/namespaces/test/query").mock(
-        return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
+        return_value=httpx2.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
     )
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(base_url=base_url, api_key=api_key, http_client=http_client) as client:
         ns = client.namespace("test")
         await ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
@@ -298,10 +298,10 @@ async def test_async_compression_enabled_small_request(async_tpuf: AsyncTurbopuf
 def test_accept_encoding_header_enabled():
     """Verify Accept-Encoding: gzip header is sent when compression is enabled."""
     query_route = respx.post(f"{base_url}/v2/namespaces/test/query").mock(
-        return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
+        return_value=httpx2.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
     )
 
-    http_client = httpx.Client(transport=httpx.HTTPTransport())
+    http_client = httpx2.Client(transport=httpx2.HTTPTransport())
     client = Turbopuffer(base_url=base_url, api_key=api_key, compression=True, http_client=http_client)
     ns = client.namespace("test")
     ns.query(rank_by=("vector", "ANN", [0.1] * 10), top_k=1)
@@ -316,10 +316,10 @@ def test_accept_encoding_header_enabled():
 async def test_async_accept_encoding_header_enabled():
     """Verify Accept-Encoding: gzip header is sent when compression is enabled (async)."""
     query_route = respx.post(f"{base_url}/v2/namespaces/test/query").mock(
-        return_value=httpx.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
+        return_value=httpx2.Response(200, json={"dist_metric": "euclidean_squared", "top_k": []})
     )
 
-    http_client = httpx.AsyncClient(transport=httpx.AsyncHTTPTransport())
+    http_client = httpx2.AsyncClient(transport=httpx2.AsyncHTTPTransport())
     async with AsyncTurbopuffer(
         base_url=base_url, api_key=api_key, compression=True, http_client=http_client
     ) as client:
@@ -349,7 +349,7 @@ def test_urllib3_transport_compression(
     pool_request = Mock(return_value=urllib3.HTTPResponse(body=BytesIO(b"{}"), status=200, preload_content=False))
     monkeypatch.setattr(transport._pool, "request", pool_request)
 
-    http_client = httpx.Client(transport=transport)
+    http_client = httpx2.Client(transport=transport)
     with Turbopuffer(base_url=base_url, api_key=api_key, http_client=http_client, **options) as client:
         client.namespace("test").write(upsert_rows=[{"id": 1, "vector": [0.1] * (1024 if large else 1)}])
 

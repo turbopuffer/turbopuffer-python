@@ -9,9 +9,8 @@ from unittest import mock
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from typing_extensions import override
 
-import httpx
+import httpx2
 import pytest
-from respx import Route, MockRouter
 
 from turbopuffer import (
     Turbopuffer,
@@ -22,6 +21,7 @@ from turbopuffer import (
     APIConnectionError,
     DefaultAsyncHttpxClient,
 )
+from tests.respx2 import Route, MockRouter
 from tests.conftest import api_key, base_url
 from turbopuffer.lib import telemetry, respond_async
 from turbopuffer._observer import Timings
@@ -48,8 +48,8 @@ QUERY_PATH = "/v2/namespaces/my-ns/query"
 QUERY_ROUTE = "POST /v2/namespaces/{ns}/query"
 
 
-def query_response(*, headers: Optional[Dict[str, str]] = None) -> httpx.Response:
-    return httpx.Response(
+def query_response(*, headers: Optional[Dict[str, str]] = None) -> httpx2.Response:
+    return httpx2.Response(
         200,
         json={
             "rows": [],
@@ -66,12 +66,12 @@ def query_response(*, headers: Optional[Dict[str, str]] = None) -> httpx.Respons
     )
 
 
-def sent_requests(route: Route) -> List[httpx.Request]:
+def sent_requests(route: Route) -> List[httpx2.Request]:
     calls = cast(List[Any], route.calls)
     return [call.request for call in calls]
 
 
-def sent_records(request: httpx.Request) -> Optional[List[Dict[str, Any]]]:
+def sent_records(request: httpx2.Request) -> Optional[List[Dict[str, Any]]]:
     value = request.headers.get(TELEMETRY_HEADER)
     if value is None:
         return None
@@ -306,20 +306,20 @@ class TestBuffer:
     def test_samples_requests(self, monkeypatch: pytest.MonkeyPatch) -> None:
         buffer = TelemetryBuffer()
         monkeypatch.setattr(telemetry, "_random", lambda: 0.3)
-        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "0.5"}))
+        buffer.observe_response(httpx2.Headers({SAMPLE_RATE_HEADER: "0.5"}))
         assert buffer.sample() == 0.5
         add_record(buffer, sample_rate=0.5)
         assert take_payload(buffer)["records"][0]["sample_rate"] == 0.5
 
-        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "0.25"}))
+        buffer.observe_response(httpx2.Headers({SAMPLE_RATE_HEADER: "0.25"}))
         assert buffer.sample() is None
 
         monkeypatch.setattr(telemetry, "_random", lambda: 0.0)
-        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "0"}))
+        buffer.observe_response(httpx2.Headers({SAMPLE_RATE_HEADER: "0"}))
         assert buffer.sample() is None
 
         # A full rate isn't reported.
-        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "1"}))
+        buffer.observe_response(httpx2.Headers({SAMPLE_RATE_HEADER: "1"}))
         assert buffer.sample() == 1.0
         add_record(buffer)
         assert "sample_rate" not in take_payload(buffer)["records"][0]
@@ -327,8 +327,8 @@ class TestBuffer:
     @pytest.mark.parametrize("value", ["abc", "1.5", "-0.1", "nan", ""])
     def test_invalid_sample_rate_is_ignored(self, value: str) -> None:
         buffer = TelemetryBuffer()
-        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: "0.5"}))
-        buffer.observe_response(httpx.Headers({SAMPLE_RATE_HEADER: value}))
+        buffer.observe_response(httpx2.Headers({SAMPLE_RATE_HEADER: "0.5"}))
+        buffer.observe_response(httpx2.Headers({SAMPLE_RATE_HEADER: value}))
         assert buffer.sample_rate == 0.5
 
     def test_fork_resets_buffer(self) -> None:
@@ -478,7 +478,7 @@ class TestRequests:
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", no_retry_delay)
     def test_batch_is_resent_after_connect_error(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         route = respx_mock.post(QUERY_PATH)
-        route.side_effect = [query_response(), httpx.ConnectError("refused"), query_response()]
+        route.side_effect = [query_response(), httpx2.ConnectError("refused"), query_response()]
         ns = telemetry_client.namespace("my-ns")
 
         ns.query(top_k=1)
@@ -501,7 +501,7 @@ class TestRequests:
             pass
 
         route = respx_mock.post(QUERY_PATH)
-        route.side_effect = [query_response(), httpx.ConnectError("refused"), query_response()]
+        route.side_effect = [query_response(), httpx2.ConnectError("refused"), query_response()]
         ns = telemetry_client.namespace("my-ns")
 
         ns.query(top_k=1)
@@ -521,7 +521,7 @@ class TestRequests:
         self, respx_mock: MockRouter, telemetry_client: Turbopuffer
     ) -> None:
         route = respx_mock.post(QUERY_PATH)
-        route.side_effect = [query_response(), httpx.Response(503), query_response(), query_response()]
+        route.side_effect = [query_response(), httpx2.Response(503), query_response(), query_response()]
         ns = telemetry_client.namespace("my-ns")
 
         ns.query(top_k=1)
@@ -541,7 +541,7 @@ class TestRequests:
         class Interrupted(BaseException):
             pass
 
-        def interrupt(_request: httpx.Request) -> httpx.Response:
+        def interrupt(_request: httpx2.Request) -> httpx2.Response:
             raise Interrupted()
 
         route = respx_mock.post(QUERY_PATH).mock(side_effect=interrupt)
@@ -560,7 +560,7 @@ class TestRequests:
     def test_parse_failures_are_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         route = respx_mock.post(QUERY_PATH)
         route.side_effect = [
-            httpx.Response(200, content=b"not json", headers={"Content-Type": "application/json"}),
+            httpx2.Response(200, content=b"not json", headers={"Content-Type": "application/json"}),
             query_response(),
         ]
         ns = telemetry_client.namespace("my-ns")
@@ -577,9 +577,9 @@ class TestRequests:
     def test_failures_are_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         route = respx_mock.post(QUERY_PATH)
         route.side_effect = [
-            httpx.ReadTimeout("slow"),
-            httpx.ConnectError("refused"),
-            httpx.Response(400, json={"error": "bad request"}),
+            httpx2.ReadTimeout("slow"),
+            httpx2.ConnectError("refused"),
+            httpx2.Response(400, json={"error": "bad request"}),
             query_response(),
         ]
         ns = telemetry_client.with_options(max_retries=0).namespace("my-ns")
@@ -611,7 +611,7 @@ class TestRequests:
 
     @pytest.mark.respx(base_url=base_url)
     def test_query_params_are_not_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
-        respx_mock.get("/v1/namespaces").mock(return_value=httpx.Response(200, json={"namespaces": []}))
+        respx_mock.get("/v1/namespaces").mock(return_value=httpx2.Response(200, json={"namespaces": []}))
 
         telemetry_client.namespaces(prefix="secret-prefix")
 
@@ -625,7 +625,7 @@ class TestRequests:
 
         response = telemetry_client.namespace("my-ns").with_raw_response.query(top_k=1)
         response.parse()
-        response.parse(to=httpx.Response)
+        response.parse(to=httpx2.Response)
 
         assert telemetry_client._telemetry is not None
         assert len(take_payload(telemetry_client._telemetry)["records"]) == 1
@@ -679,7 +679,7 @@ class TestRequestIds:
     @mock.patch("turbopuffer._base_client.BaseClient._calculate_retry_timeout", no_retry_delay)
     def test_retries_keep_their_request_ids(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         route = respx_mock.post(QUERY_PATH)
-        route.side_effect = [httpx.Response(503), query_response()]
+        route.side_effect = [httpx2.Response(503), query_response()]
 
         telemetry_client.namespace("my-ns").query(top_k=1)
 
@@ -695,7 +695,7 @@ class TestRequestIds:
     @pytest.mark.parametrize("per_request", [False, True])
     def test_keeps_request_ids_set_by_callers(self, respx_mock: MockRouter, per_request: bool) -> None:
         route = respx_mock.post(QUERY_PATH)
-        route.side_effect = [httpx.Response(503), query_response()]
+        route.side_effect = [httpx2.Response(503), query_response()]
         default_headers = {} if per_request else {"X-Request-Id": "my-request"}
         extra_headers = {"x-request-id": "my-request"} if per_request else None
 
@@ -721,7 +721,7 @@ class TestRespondAsync:
 
     def accepted(self, respx_mock: MockRouter) -> None:
         respx_mock.post(self.WRITE_PATH).mock(
-            return_value=httpx.Response(
+            return_value=httpx2.Response(
                 202, headers={"preference-applied": "respond-async", "location": f"{base_url}{self.POLL_PATH}"}
             )
         )
@@ -741,8 +741,8 @@ class TestRespondAsync:
         self.accepted(respx_mock)
         respx_mock.get(self.POLL_PATH).mock(
             side_effect=[
-                httpx.Response(200, json={"status": "running"}),
-                httpx.Response(200, json={"status": "finished", "result": {"success": {"status": "OK"}}}),
+                httpx2.Response(200, json={"status": "running"}),
+                httpx2.Response(200, json={"status": "finished", "result": {"success": {"status": "OK"}}}),
             ]
         )
 
@@ -767,7 +767,7 @@ class TestRespondAsync:
     def test_failed_operation_is_recorded(self, respx_mock: MockRouter, telemetry_client: Turbopuffer) -> None:
         self.accepted(respx_mock)
         respx_mock.get(self.POLL_PATH).mock(
-            return_value=httpx.Response(
+            return_value=httpx2.Response(
                 200,
                 json={"status": "finished", "result": {"error": {"status_code": 404, "detail": {"error": "gone"}}}},
             )
@@ -786,7 +786,7 @@ class TestRespondAsync:
     ) -> None:
         monkeypatch.setattr(respond_async, "POLL_INTERVAL_SECS", 0.01)
         self.accepted(respx_mock)
-        respx_mock.get(self.POLL_PATH).mock(return_value=httpx.Response(200, json={"status": "running"}))
+        respx_mock.get(self.POLL_PATH).mock(return_value=httpx2.Response(200, json={"status": "running"}))
 
         with pytest.raises(APITimeoutError):
             self.write(telemetry_client.with_options(timeout=0.05))
@@ -798,7 +798,7 @@ class TestRespondAsync:
 class TestAsyncRequests:
     @pytest.mark.respx(base_url=base_url)
     async def test_cancelled_requests_are_recorded(self, respx_mock: MockRouter) -> None:
-        async def stall(_request: httpx.Request) -> httpx.Response:
+        async def stall(_request: httpx2.Request) -> httpx2.Response:
             await asyncio.sleep(10)
             return query_response()
 
@@ -809,7 +809,7 @@ class TestAsyncRequests:
             api_key=api_key,
             telemetry=True,
             # The default aiohttp transport can't be mocked.
-            http_client=DefaultAsyncHttpxClient(transport=httpx.AsyncHTTPTransport()),
+            http_client=DefaultAsyncHttpxClient(transport=httpx2.AsyncHTTPTransport()),
         ) as client:
             ns = client.namespace("my-ns")
             with pytest.raises(asyncio.TimeoutError):
@@ -833,7 +833,7 @@ class TestAsyncRequests:
             api_key=api_key,
             telemetry=True,
             # The default aiohttp transport can't be mocked.
-            http_client=DefaultAsyncHttpxClient(transport=httpx.AsyncHTTPTransport()),
+            http_client=DefaultAsyncHttpxClient(transport=httpx2.AsyncHTTPTransport()),
         ) as client:
             ns = client.namespace("my-ns")
             await ns.query(top_k=1)

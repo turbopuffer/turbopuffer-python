@@ -6,7 +6,7 @@ import os
 from typing import Any, Type, Mapping
 from typing_extensions import Self, override
 
-import httpx
+import httpx2
 
 from . import _exceptions
 from ._qs import Querystring
@@ -89,15 +89,15 @@ class Turbopuffer(SyncAPIClient):
         api_key: str | None = None,
         region: str | None = None,
         default_namespace: str | None = None,
-        base_url: str | httpx.URL | None = None,
+        base_url: str | httpx2.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
-        # Configure a custom httpx client.
+        # Configure a custom httpx2 client.
         # We provide a `DefaultHttpxClient` class that you can pass to retain the default values we use for `limits`, `timeout` & `follow_redirects`.
-        # See the [httpx documentation](https://www.python-httpx.org/api/#client) for more details.
-        http_client: httpx.Client | None = None,
+        # See the [httpx2 documentation](https://httpx2.pydantic.dev/api/#client) for more details.
+        http_client: httpx2.Client | None = None,
         # Enable or disable request compression. When enabled, requests larger than 1024 bytes are automatically compressed with gzip.
         compression: bool = False,
         # Enable or disable sending client-side request timings to turbopuffer on subsequent requests.
@@ -207,9 +207,9 @@ class Turbopuffer(SyncAPIClient):
         api_key: str | None = None,
         region: str | None = None,
         default_namespace: str | None = None,
-        base_url: str | httpx.URL | None = None,
+        base_url: str | httpx2.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
-        http_client: httpx.Client | None = None,
+        http_client: httpx2.Client | None = None,
         max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
@@ -271,7 +271,7 @@ class Turbopuffer(SyncAPIClient):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> SyncNamespacePage[NamespaceSummary]:
         """
         List namespaces.
@@ -326,7 +326,7 @@ class Turbopuffer(SyncAPIClient):
         err_msg: str,
         *,
         body: object,
-        response: httpx.Response,
+        response: httpx2.Response,
     ) -> APIStatusError:
         if response.status_code == 400:
             return _exceptions.BadRequestError(err_msg, response=response, body=body)
@@ -364,7 +364,7 @@ class Turbopuffer(SyncAPIClient):
         *,
         cast_to: Type[ResponseT],
         options: FinalRequestOptions,
-        response: httpx.Response,
+        response: httpx2.Response,
         stream: bool,
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         retries_taken: int = 0,
@@ -377,7 +377,7 @@ class Turbopuffer(SyncAPIClient):
         except BaseException as err:
             # Polling happens after the retry loop, which would otherwise finish the request.
             final = getattr(err, "response", None)
-            observation.finish(response=final if isinstance(final, httpx.Response) else response, error=err)
+            observation.finish(response=final if isinstance(final, httpx2.Response) else response, error=err)
             raise
 
         return super()._process_response(
@@ -405,15 +405,15 @@ class AsyncTurbopuffer(AsyncAPIClient):
         api_key: str | None = None,
         region: str | None = None,
         default_namespace: str | None = None,
-        base_url: str | httpx.URL | None = None,
+        base_url: str | httpx2.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
-        # Configure a custom httpx client.
+        # Configure a custom httpx2 client.
         # We provide a `DefaultAsyncHttpxClient` class that you can pass to retain the default values we use for `limits`, `timeout` & `follow_redirects`.
-        # See the [httpx documentation](https://www.python-httpx.org/api/#asyncclient) for more details.
-        http_client: httpx.AsyncClient | None = None,
+        # See the [httpx2 documentation](https://httpx2.pydantic.dev/api/#asyncclient) for more details.
+        http_client: httpx2.AsyncClient | None = None,
         # Enable or disable request compression. When enabled, requests larger than 1024 bytes are automatically compressed with gzip.
         compression: bool = False,
         # Enable or disable sending client-side request timings to turbopuffer on subsequent requests.
@@ -523,9 +523,9 @@ class AsyncTurbopuffer(AsyncAPIClient):
         api_key: str | None = None,
         region: str | None = None,
         default_namespace: str | None = None,
-        base_url: str | httpx.URL | None = None,
+        base_url: str | httpx2.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
-        http_client: httpx.AsyncClient | None = None,
+        http_client: httpx2.AsyncClient | None = None,
         max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
@@ -587,7 +587,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[NamespaceSummary, AsyncNamespacePage[NamespaceSummary]]:
         """
         List namespaces.
@@ -642,7 +642,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         err_msg: str,
         *,
         body: object,
-        response: httpx.Response,
+        response: httpx2.Response,
     ) -> APIStatusError:
         if response.status_code == 400:
             return _exceptions.BadRequestError(err_msg, response=response, body=body)
@@ -680,7 +680,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         *,
         cast_to: Type[ResponseT],
         options: FinalRequestOptions,
-        response: httpx.Response,
+        response: httpx2.Response,
         stream: bool,
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         retries_taken: int = 0,
@@ -693,7 +693,7 @@ class AsyncTurbopuffer(AsyncAPIClient):
         except BaseException as err:
             # Polling happens after the retry loop, which would otherwise finish the request.
             final = getattr(err, "response", None)
-            observation.finish(response=final if isinstance(final, httpx.Response) else response, error=err)
+            observation.finish(response=final if isinstance(final, httpx2.Response) else response, error=err)
             raise
 
         return await super()._process_response(

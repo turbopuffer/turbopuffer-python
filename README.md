@@ -3,9 +3,9 @@
 <!-- prettier-ignore -->
 <a href="https://pypi.org/project/turbopuffer/"><img src="https://img.shields.io/pypi/v/turbopuffer.svg?label=pypi%20(stable)" alt="PyPI version" align="right"></a>
 
-The turbopuffer Python library provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs/overview) from any Python 3.10+
+The turbopuffer Python library provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs/overview) from any Python 3.11+
 application. The library includes type definitions for all request params and response fields,
-and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
+and offers both synchronous and asynchronous clients powered by [httpx2](https://github.com/pydantic/httpx2).
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -19,6 +19,21 @@ The HTTP API documentation can be found at [turbopuffer.com/docs/api-overview](h
 # install from PyPI
 pip install turbopuffer
 ```
+
+## Migrating from HTTPX
+
+Python 3.11 or newer is required. Applications that supply HTTP clients, transports,
+timeouts, URLs, or response types must create them from `httpx2` instead of `httpx`.
+The existing `DefaultHttpxClient`, `DefaultAsyncHttpxClient`, and `DefaultAioHttpClient`
+names remain available and now use HTTPX2 types. SDK exceptions are unchanged.
+
+HTTPX2 uses the operating system's certificate store instead of certifi by default.
+Install system CA certificates or configure an explicit `ssl.SSLContext` with `verify`.
+`SSL_CERT_FILE` and `SSL_CERT_DIR` remain supported when `trust_env=True`.
+Logging names are now `httpx2` and `httpcore2`. Custom transports retain their own TLS behavior.
+
+Legacy HTTPX objects and mocking integrations are not interchangeable with HTTPX2.
+See the [HTTPX2 migration guide](https://httpx2.pydantic.dev/migration/) for more details.
 
 ## Usage
 
@@ -113,16 +128,16 @@ Functionality between the synchronous and asynchronous clients is otherwise iden
 
 ### With aiohttp
 
-By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
+The async client uses httpx2 with turbopuffer's aiohttp transport by default. `aiohttp` is installed automatically.
 
-You can enable this by installing `aiohttp`:
+The `aiohttp` extra remains available for compatibility:
 
 ```sh
 # install from PyPI
 pip install turbopuffer[aiohttp]
 ```
 
-Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
+You can also configure this client explicitly with `http_client=DefaultAioHttpClient()`:
 
 ```python
 import os
@@ -272,7 +287,7 @@ try:
     )
 except turbopuffer.APIConnectionError as e:
     print("The server could not be reached")
-    print(e.__cause__)  # an underlying Exception, likely raised within httpx.
+    print(e.__cause__)  # an underlying Exception, likely raised within httpx2.
 except turbopuffer.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
 except turbopuffer.APIStatusError as e:
@@ -320,9 +335,10 @@ client.with_options(max_retries=5).namespaces(
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx2.Timeout`](https://httpx2.pydantic.dev/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
+import httpx2
 from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
@@ -333,7 +349,7 @@ client = Turbopuffer(
 
 # More granular control:
 client = Turbopuffer(
-    timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
+    timeout=httpx2.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
 # Override per-request:
@@ -366,10 +382,10 @@ In an API response, a field may be explicitly `null`, or missing entirely; in ei
 
 ```py
 if response.my_field is None:
-  if 'my_field' not in response.model_fields_set:
-    print('Got json like {}, without a "my_field" key present at all.')
-  else:
-    print('Got json like {"my_field": null}.')
+    if "my_field" not in response.model_fields_set:
+        print('Got json like {}, without a "my_field" key present at all.')
+    else:
+        print('Got json like {"my_field": null}.')
 ```
 
 ### Accessing raw response data (e.g. headers)
@@ -383,7 +399,7 @@ client = Turbopuffer()
 response = client.with_raw_response.namespaces(
     prefix="foo",
 )
-print(response.headers.get('X-My-Header'))
+print(response.headers.get("X-My-Header"))
 
 client = response.parse()  # get the object that `namespaces()` would have returned
 print(client.id)
@@ -423,11 +439,11 @@ To make requests to undocumented endpoints, you can make requests using `client.
 http verbs. Options on the client will be respected (such as retries) when making this request.
 
 ```py
-import httpx
+import httpx2
 
 response = client.post(
     "/foo",
-    cast_to=httpx.Response,
+    cast_to=httpx2.Response,
     body={"my_param": True},
 )
 
@@ -447,14 +463,14 @@ can also get all the extra fields on the Pydantic model as a dict with
 
 ### Configuring the HTTP client
 
-You can directly override the [httpx client](https://www.python-httpx.org/api/#client) to customize it for your use case, including:
+You can directly override the [httpx2 client](https://httpx2.pydantic.dev/api/#client) to customize it for your use case, including:
 
-- Support for [proxies](https://www.python-httpx.org/advanced/proxies/)
-- Custom [transports](https://www.python-httpx.org/advanced/transports/)
-- Additional [advanced](https://www.python-httpx.org/advanced/clients/) functionality
+- Support for [proxies](https://httpx2.pydantic.dev/advanced/proxies/)
+- Custom [transports](https://httpx2.pydantic.dev/advanced/transports/)
+- Additional [advanced](https://httpx2.pydantic.dev/advanced/clients/) functionality
 
 ```python
-import httpx
+import httpx2
 from turbopuffer import Turbopuffer, DefaultHttpxClient
 
 client = Turbopuffer(
@@ -462,7 +478,7 @@ client = Turbopuffer(
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
         proxy="http://my.test.proxy.example.com",
-        transport=httpx.HTTPTransport(local_address="0.0.0.0"),
+        transport=httpx2.HTTPTransport(local_address="0.0.0.0"),
     ),
 )
 ```
@@ -481,8 +497,8 @@ By default the library closes underlying HTTP connections whenever the client is
 from turbopuffer import Turbopuffer
 
 with Turbopuffer() as client:
-  # make requests here
-  ...
+    # make requests here
+    ...
 
 # HTTP client is now closed
 ```
@@ -535,12 +551,13 @@ You can determine the version that is being used at runtime with:
 
 ```py
 import turbopuffer
+
 print(turbopuffer.__version__)
 ```
 
 ## Requirements
 
-Python 3.10 or higher.
+Python 3.11 or higher.
 
 ## Contributing
 
