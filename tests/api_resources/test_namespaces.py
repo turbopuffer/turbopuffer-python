@@ -44,6 +44,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_branch_from(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.branch_from(
             namespace="namespace",
             source_namespace="source_namespace",
@@ -105,6 +106,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_copy_from(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
@@ -150,6 +152,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_delete_all(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.delete_all(
             namespace="namespace",
         )
@@ -213,6 +216,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_explain_query(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.explain_query(
             namespace="namespace",
         )
@@ -255,6 +259,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_hint_cache_warm(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.hint_cache_warm(
             namespace="namespace",
         )
@@ -297,6 +302,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_metadata(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.metadata(
             namespace="namespace",
         )
@@ -368,6 +374,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_multi_query(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.multi_query(
             namespace="namespace",
             queries=[{}],
@@ -414,6 +421,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_poll_copy_from(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.poll_copy_from(
             token="token",
             namespace="namespace",
@@ -491,6 +499,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_query(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.query(
             namespace="namespace",
         )
@@ -546,6 +555,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_recall(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.recall(
             namespace="namespace",
         )
@@ -588,6 +598,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_schema(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.schema(
             namespace="namespace",
         )
@@ -646,6 +657,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_start_copy_from(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
@@ -701,6 +713,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_update_metadata(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.update_metadata(
             namespace="namespace",
         )
@@ -752,6 +765,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_update_schema(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.update_schema(
             namespace="namespace",
         )
@@ -845,6 +859,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_write(self, client: Turbopuffer) -> None:
+
         response = client.namespaces.with_raw_response.write(
             namespace="namespace",
         )
@@ -894,6 +909,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_branch_from(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.branch_from(
             namespace="namespace",
             source_namespace="source_namespace",
@@ -955,6 +971,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_copy_from(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
@@ -1000,6 +1017,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.delete_all(
             namespace="namespace",
         )
@@ -1063,6 +1081,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_explain_query(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.explain_query(
             namespace="namespace",
         )
@@ -1105,6 +1124,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.hint_cache_warm(
             namespace="namespace",
         )
@@ -1147,6 +1167,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_metadata(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.metadata(
             namespace="namespace",
         )
@@ -1218,6 +1239,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.multi_query(
             namespace="namespace",
             queries=[{}],
@@ -1264,6 +1286,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_poll_copy_from(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.poll_copy_from(
             token="token",
             namespace="namespace",
@@ -1341,6 +1364,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_query(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.query(
             namespace="namespace",
         )
@@ -1396,6 +1420,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_recall(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.recall(
             namespace="namespace",
         )
@@ -1438,6 +1463,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_schema(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.schema(
             namespace="namespace",
         )
@@ -1496,6 +1522,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_start_copy_from(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
@@ -1551,6 +1578,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_update_metadata(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.update_metadata(
             namespace="namespace",
         )
@@ -1602,6 +1630,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_update_schema(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.update_schema(
             namespace="namespace",
         )
@@ -1695,6 +1724,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_write(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.namespaces.with_raw_response.write(
             namespace="namespace",
         )

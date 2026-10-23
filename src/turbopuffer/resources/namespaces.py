@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterable, Optional, cast
 
-import httpx
+import httpx2
 
 from ..types import (
     DistanceMetric,
@@ -94,7 +94,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceBranchFromResponse:
         """
         Creates an instant, copy-on-write clone of a namespace.
@@ -138,7 +138,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceCopyFromResponse:
         """
         Copy all documents from another namespace into this one.
@@ -190,7 +190,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceDeleteAllResponse:
         """
         Delete namespace.
@@ -238,7 +238,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceExplainQueryResponse:
         """
         Explain a query plan.
@@ -324,7 +324,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceHintCacheWarmResponse:
         """
         Signal turbopuffer to prepare for low-latency requests.
@@ -359,7 +359,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMetadata:
         """
         Get metadata about a namespace.
@@ -400,7 +400,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMultiQueryResponse:
         """
         Issue multiple concurrent queries filter or search documents.
@@ -458,7 +458,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> CopyFromNamespaceOperation:
         """
         Retrieve the current status of a copy operation.
@@ -518,7 +518,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceQueryResponse:
         """
         Query, filter, full-text search and vector search documents.
@@ -612,7 +612,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceRecallResponse:
         """Evaluate recall.
 
@@ -670,7 +670,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceSchemaResponse:
         """
         Get namespace schema.
@@ -709,7 +709,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceStartCopyFromResponse:
         """Start copying all documents from another namespace into this one.
 
@@ -766,7 +766,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMetadata:
         """
         Update metadata configuration for a namespace.
@@ -819,7 +819,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceUpdateSchemaResponse:
         """
         Update namespace schema.
@@ -878,7 +878,7 @@ class NamespacesResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceWriteResponse:
         """
         Create, update, or delete documents.
@@ -1011,7 +1011,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceBranchFromResponse:
         """
         Creates an instant, copy-on-write clone of a namespace.
@@ -1055,7 +1055,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceCopyFromResponse:
         """
         Copy all documents from another namespace into this one.
@@ -1107,7 +1107,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceDeleteAllResponse:
         """
         Delete namespace.
@@ -1155,7 +1155,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceExplainQueryResponse:
         """
         Explain a query plan.
@@ -1241,7 +1241,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceHintCacheWarmResponse:
         """
         Signal turbopuffer to prepare for low-latency requests.
@@ -1276,7 +1276,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMetadata:
         """
         Get metadata about a namespace.
@@ -1317,7 +1317,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMultiQueryResponse:
         """
         Issue multiple concurrent queries filter or search documents.
@@ -1375,7 +1375,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> CopyFromNamespaceOperation:
         """
         Retrieve the current status of a copy operation.
@@ -1435,7 +1435,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceQueryResponse:
         """
         Query, filter, full-text search and vector search documents.
@@ -1529,7 +1529,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceRecallResponse:
         """Evaluate recall.
 
@@ -1587,7 +1587,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceSchemaResponse:
         """
         Get namespace schema.
@@ -1626,7 +1626,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceStartCopyFromResponse:
         """Start copying all documents from another namespace into this one.
 
@@ -1683,7 +1683,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceMetadata:
         """
         Update metadata configuration for a namespace.
@@ -1736,7 +1736,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceUpdateSchemaResponse:
         """
         Update namespace schema.
@@ -1795,7 +1795,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceWriteResponse:
         """
         Create, update, or delete documents.

@@ -37,6 +37,7 @@ class TestClient:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_namespaces(self, client: Turbopuffer) -> None:
+
         response = client.with_raw_response.namespaces()
 
         assert response.is_closed is True
@@ -81,6 +82,7 @@ class TestAsyncClient:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_namespaces(self, async_client: AsyncTurbopuffer) -> None:
+
         response = await async_client.with_raw_response.namespaces()
 
         assert response.is_closed is True

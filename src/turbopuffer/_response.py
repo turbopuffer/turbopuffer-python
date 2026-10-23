@@ -21,7 +21,7 @@ from typing import (
 from typing_extensions import Awaitable, ParamSpec, override, get_origin
 
 import anyio
-import httpx
+import httpx2
 import pydantic
 
 from ._types import NoneType
@@ -54,7 +54,7 @@ class BaseAPIResponse(Generic[R]):
     _stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None
     _options: FinalRequestOptions
 
-    http_response: httpx.Response
+    http_response: httpx2.Response
 
     retries_taken: int
     """The number of retries made. If no retries happened this will be `0`"""
@@ -62,7 +62,7 @@ class BaseAPIResponse(Generic[R]):
     def __init__(
         self,
         *,
-        raw: httpx.Response,
+        raw: httpx2.Response,
         cast_to: type[R],
         client: BaseClient[Any, Any],
         stream: bool,
@@ -80,12 +80,12 @@ class BaseAPIResponse(Generic[R]):
         self.retries_taken = retries_taken
 
     @property
-    def headers(self) -> httpx.Headers:
+    def headers(self) -> httpx2.Headers:
         return self.http_response.headers
 
     @property
-    def http_request(self) -> httpx.Request:
-        """Returns the httpx Request instance associated with the current response."""
+    def http_request(self) -> httpx2.Request:
+        """Returns the httpx2 Request instance associated with the current response."""
         return self.http_response.request
 
     @property
@@ -93,7 +93,7 @@ class BaseAPIResponse(Generic[R]):
         return self.http_response.status_code
 
     @property
-    def url(self) -> httpx.URL:
+    def url(self) -> httpx2.URL:
         """Returns the URL for which the request was made."""
         return self.http_response.url
 
@@ -204,14 +204,14 @@ class BaseAPIResponse(Generic[R]):
         if origin == APIResponse:
             raise RuntimeError("Unexpected state - cast_to is `APIResponse`")
 
-        if inspect.isclass(origin) and issubclass(origin, httpx.Response):
-            # Because of the invariance of our ResponseT TypeVar, users can subclass httpx.Response
+        if inspect.isclass(origin) and issubclass(origin, httpx2.Response):
+            # Because of the invariance of our ResponseT TypeVar, users can subclass httpx2.Response
             # and pass that class to our request functions. We cannot change the variance to be either
             # covariant or contravariant as that makes our usage of ResponseT illegal. We could construct
-            # the response class ourselves but that is something that should be supported directly in httpx
+            # the response class ourselves but that is something that should be supported directly in httpx2
             # as it would be easy to incorrectly construct the Response object due to the multitude of arguments.
-            if cast_to != httpx.Response:
-                raise ValueError(f"Subclasses of httpx.Response cannot be passed to `cast_to`")
+            if cast_to != httpx2.Response:
+                raise ValueError(f"Subclasses of httpx2.Response cannot be passed to `cast_to`")
             return cast(R, response)
 
         if (
@@ -233,7 +233,7 @@ class BaseAPIResponse(Generic[R]):
             and not issubclass(origin, BaseModel)
         ):
             raise RuntimeError(
-                f"Unsupported type, expected {cast_to} to be a subclass of {BaseModel}, {dict}, {list}, {Union}, {NoneType}, {str} or {httpx.Response}."
+                f"Unsupported type, expected {cast_to} to be a subclass of {BaseModel}, {dict}, {list}, {Union}, {NoneType}, {str} or {httpx2.Response}."
             )
 
         # split is required to handle cases where additional information is included
@@ -308,7 +308,7 @@ class APIResponse(BaseAPIResponse[R]):
           - `str`
           - `int`
           - `float`
-          - `httpx.Response`
+          - `httpx2.Response`
         """
         cache_key = to if to is not None else self._cast_to
         cached = self._parsed_by_type.get(cache_key)
@@ -337,8 +337,8 @@ class APIResponse(BaseAPIResponse[R]):
         """Read and return the binary response content."""
         try:
             return self.http_response.read()
-        except httpx.StreamConsumed as exc:
-            # The default error raised by httpx isn't very
+        except httpx2.StreamConsumed as exc:
+            # The default error raised by httpx2 isn't very
             # helpful in our case so we re-raise it with
             # a different error message.
             raise StreamAlreadyConsumed() from exc
@@ -416,7 +416,7 @@ class AsyncAPIResponse(BaseAPIResponse[R]):
           - `list`
           - `Union`
           - `str`
-          - `httpx.Response`
+          - `httpx2.Response`
         """
         cache_key = to if to is not None else self._cast_to
         cached = self._parsed_by_type.get(cache_key)
@@ -445,8 +445,8 @@ class AsyncAPIResponse(BaseAPIResponse[R]):
         """Read and return the binary response content."""
         try:
             return await self.http_response.aread()
-        except httpx.StreamConsumed as exc:
-            # the default error raised by httpx isn't very
+        except httpx2.StreamConsumed as exc:
+            # the default error raised by httpx2 isn't very
             # helpful in our case so we re-raise it with
             # a different error message
             raise StreamAlreadyConsumed() from exc

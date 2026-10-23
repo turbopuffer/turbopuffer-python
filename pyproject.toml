@@ -9,7 +9,7 @@ authors = [
 ]
 
 dependencies = [
-  "httpx>=0.23.0, <1",
+  "httpx2>=2.16.0, <3",
   "pydantic>=1.9.0, <3",
   "typing-extensions>=4.14, <5",
   "anyio>=3.5.0, <5",
@@ -17,11 +17,10 @@ dependencies = [
   "sniffio",
 ]
 
-requires-python = ">= 3.10"
+requires-python = ">= 3.11"
 classifiers = [
   "Typing :: Typed",
   "Intended Audience :: Developers",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -41,7 +40,7 @@ Homepage = "https://github.com/turbopuffer/turbopuffer-python"
 Repository = "https://github.com/turbopuffer/turbopuffer-python"
 
 [project.optional-dependencies]
-aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.9"]
+aiohttp = ["aiohttp", "httpx-aiohttp[httpx2]>=0.2.0, <0.3"]
 
 [tool.uv]
 managed = true
@@ -58,7 +57,6 @@ conflicts = [
 dev = [
     "pyright==1.1.399",
     "mypy==1.17",
-    "respx",
     "pytest",
     "pytest-asyncio",
     "ruff",
@@ -128,9 +126,10 @@ filterwarnings = [
 # there are a couple of flags that are still disabled by
 # default in strict mode as they are experimental and niche.
 typeCheckingMode = "strict"
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 
 exclude = [
+    "tests/respx2",
     "_dev",
     ".venv",
     ".nox",
@@ -195,10 +194,15 @@ ignore_errors = true
 ignore_missing_imports = true
 
 
+[[tool.mypy.overrides]]
+module = "tests.respx2.*"
+ignore_errors = true
+
 [tool.ruff]
+extend-exclude = ["tests/respx2"]
 line-length = 120
 output-format = "grouped"
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.format]
 docstring-code-format = true
