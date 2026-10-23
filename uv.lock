@@ -1521,7 +1521,7 @@ wheels = [
 
 [[package]]
 name = "turbopuffer"
-version = "2.14.0"
+version = "3.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
