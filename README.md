@@ -322,7 +322,7 @@ from turbopuffer import Turbopuffer
 
 # Configure the default for all requests:
 client = Turbopuffer(
-    # default is 2
+    # default is 4
     max_retries=0,
 )
 
