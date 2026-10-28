@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.1.0](https://github.com/turbopuffer/turbopuffer-python/compare/v3.0.0...v3.1.0) (2026-10-28)
+
+
+### Features
+
+* openapi: add encryption_context to customer-managed encryption ([8fe0229](https://github.com/turbopuffer/turbopuffer-python/commit/8fe02292208cb5086b3843321ac79ff853dd3f24))
+* spec: split query consistency into strong and eventual variants ([a9ad579](https://github.com/turbopuffer/turbopuffer-python/commit/a9ad57946cff92408749812bb4b523df5f0d1d54))
+* tpuf-engine: add max_staleness_seconds to eventual consistency ([bf3422c](https://github.com/turbopuffer/turbopuffer-python/commit/bf3422ce8d8a5da2a990d70cd9d6b6e69144835f))
+
+
+### Chores
+
+* keep custom code out of spec-driven generated files ([#291](https://github.com/turbopuffer/turbopuffer-python/issues/291)) ([90c36bb](https://github.com/turbopuffer/turbopuffer-python/commit/90c36bbae208f01dffbba50400f33552a0f9fb76))
+
 ## [3.0.0](https://github.com/turbopuffer/turbopuffer-python/compare/v2.14.0...v3.0.0) (2026-10-23)
 
 
