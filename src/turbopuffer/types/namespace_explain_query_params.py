@@ -82,5 +82,12 @@ class Consistency(TypedDict, total=False):
     level: Literal["strong", "eventual"]
     """The query's consistency level."""
 
+    max_staleness_seconds: int
+    """
+    How long an eventually consistent query may reuse the node's cached view of the
+    namespace before refreshing it from object storage. Only valid with
+    `level: eventual`. Defaults to 60.
+    """
+
 
 Limit: TypeAlias = Union[int, LimitParam]

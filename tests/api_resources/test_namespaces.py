@@ -199,7 +199,10 @@ class TestNamespaces:
             namespace="namespace",
             aggregate_by={"foo": "bar"},
             compute_attributes={"foo": "bar"},
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             filters={},
@@ -363,7 +366,10 @@ class TestNamespaces:
                     "top_k": 0,
                 }
             ],
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             limit=0,
             offset=0,
             rerank_by={},
@@ -477,7 +483,10 @@ class TestNamespaces:
             namespace="namespace",
             aggregate_by={"foo": "bar"},
             compute_attributes={"foo": "bar"},
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             filters={},
@@ -1064,7 +1073,10 @@ class TestAsyncNamespaces:
             namespace="namespace",
             aggregate_by={"foo": "bar"},
             compute_attributes={"foo": "bar"},
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             filters={},
@@ -1228,7 +1240,10 @@ class TestAsyncNamespaces:
                     "top_k": 0,
                 }
             ],
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             limit=0,
             offset=0,
             rerank_by={},
@@ -1342,7 +1357,10 @@ class TestAsyncNamespaces:
             namespace="namespace",
             aggregate_by={"foo": "bar"},
             compute_attributes={"foo": "bar"},
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             filters={},
