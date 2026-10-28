@@ -176,7 +176,10 @@ class TestNamespaces:
         namespace = client.namespace("namespace").explain_query(
             aggregate_by={"foo": ("Sum", "bar")},
             compute_attributes={"foo": ("Highlight", "bar")},
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             include_attributes=True,
@@ -310,7 +313,10 @@ class TestNamespaces:
                     "top_k": 0,
                 }
             ],
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             limit=0,
             offset=0,
             rerank_by=("RRF",),
@@ -419,7 +425,10 @@ class TestNamespaces:
         namespace = client.namespace("namespace").query(
             aggregate_by={"foo": ("Sum", "bar")},
             compute_attributes={"foo": ("Highlight", "bar")},
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             include_attributes=True,
@@ -928,7 +937,10 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespace("namespace").explain_query(
             aggregate_by={"foo": ("Sum", "bar")},
             compute_attributes={"foo": ("Highlight", "bar")},
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             include_attributes=True,
@@ -1065,7 +1077,10 @@ class TestAsyncNamespaces:
                     "top_k": 0,
                 }
             ],
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             limit=0,
             offset=0,
             rerank_by=("RRF",),
@@ -1174,7 +1189,10 @@ class TestAsyncNamespaces:
         namespace = await async_client.namespace("namespace").query(
             aggregate_by={"foo": ("Sum", "bar")},
             compute_attributes={"foo": ("Highlight", "bar")},
-            consistency={"level": "strong"},
+            consistency={
+                "level": "strong",
+                "max_staleness_seconds": 1,
+            },
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             include_attributes=True,
