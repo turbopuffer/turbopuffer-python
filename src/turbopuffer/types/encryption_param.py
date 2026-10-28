@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Union
+from typing import Dict, Union
 from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
 __all__ = ["EncryptionParam", "CustomerManaged", "Default"]
@@ -19,6 +19,13 @@ class CustomerManaged(TypedDict, total=False):
     """
 
     mode: Required[Literal["customer-managed"]]
+
+    encryption_context: Dict[str, str]
+    """The AWS KMS encryption context to send with every request that uses the key.
+
+    Only supported on AWS, and must be enabled for your organization. Keys may not
+    start with `tpuf:` or `aws:`.
+    """
 
 
 class Default(TypedDict, total=False):
