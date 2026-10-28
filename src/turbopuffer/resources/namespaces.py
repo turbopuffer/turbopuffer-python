@@ -33,7 +33,6 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._exceptions import NotFoundError
 from .._base_client import make_request_options
 from ..types.custom import Filter, RankBy, GroupBy, RerankBy, AggregateBy
 from ..types.id_param import IDParam
@@ -118,11 +117,9 @@ class NamespacesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=branchFrom", namespace=namespace),
-            body={
-                "branch_from_namespace": maybe_transform(
-                    {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
-                )
-            },
+            body=maybe_transform(
+                {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -170,17 +167,15 @@ class NamespacesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=copyFrom", namespace=namespace),
-            body={
-                "copy_from_namespace": maybe_transform(
-                    {
-                        "source_namespace": source_namespace,
-                        "dest_encryption": dest_encryption,
-                        "source_api_key": source_api_key,
-                        "source_region": source_region,
-                    },
-                    namespace_copy_from_params.NamespaceCopyFromParams,
-                )
-            },
+            body=maybe_transform(
+                {
+                    "source_namespace": source_namespace,
+                    "dest_encryption": dest_encryption,
+                    "source_api_key": source_api_key,
+                    "source_region": source_region,
+                },
+                namespace_copy_from_params.NamespaceCopyFromParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -702,14 +697,6 @@ class NamespacesResource(SyncAPIResource):
             cast_to=NamespaceSchemaResponse,
         )
 
-    def exists(self) -> bool:
-        """Check whether the namespace exists."""
-        try:
-            self.schema()
-            return True
-        except NotFoundError:
-            return False
-
     def start_copy_from(
         self,
         *,
@@ -754,17 +741,15 @@ class NamespacesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return self._post(
             path_template("/v2/namespaces/{namespace}/async?stainless_overload=startCopyFrom", namespace=namespace),
-            body={
-                "copy_from_namespace": maybe_transform(
-                    {
-                        "source_namespace": source_namespace,
-                        "dest_encryption": dest_encryption,
-                        "source_api_key": source_api_key,
-                        "source_region": source_region,
-                    },
-                    namespace_start_copy_from_params.NamespaceStartCopyFromParams,
-                )
-            },
+            body=maybe_transform(
+                {
+                    "source_namespace": source_namespace,
+                    "dest_encryption": dest_encryption,
+                    "source_api_key": source_api_key,
+                    "source_region": source_region,
+                },
+                namespace_start_copy_from_params.NamespaceStartCopyFromParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -996,6 +981,16 @@ class NamespacesResource(SyncAPIResource):
             cast_to=NamespaceWriteResponse,
         )
 
+    def exists(self) -> bool:
+        """Check whether the namespace exists."""
+        from .._exceptions import NotFoundError
+
+        try:
+            self.schema()
+            return True
+        except NotFoundError:
+            return False
+
 
 class AsyncNamespacesResource(AsyncAPIResource):
     @cached_property
@@ -1049,11 +1044,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=branchFrom", namespace=namespace),
-            body={
-                "branch_from_namespace": await async_maybe_transform(
-                    {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
-                )
-            },
+            body=await async_maybe_transform(
+                {"source_namespace": source_namespace}, namespace_branch_from_params.NamespaceBranchFromParams
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1101,17 +1094,15 @@ class AsyncNamespacesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             path_template("/v2/namespaces/{namespace}?stainless_overload=copyFrom", namespace=namespace),
-            body={
-                "copy_from_namespace": await async_maybe_transform(
-                    {
-                        "source_namespace": source_namespace,
-                        "dest_encryption": dest_encryption,
-                        "source_api_key": source_api_key,
-                        "source_region": source_region,
-                    },
-                    namespace_copy_from_params.NamespaceCopyFromParams,
-                )
-            },
+            body=await async_maybe_transform(
+                {
+                    "source_namespace": source_namespace,
+                    "dest_encryption": dest_encryption,
+                    "source_api_key": source_api_key,
+                    "source_region": source_region,
+                },
+                namespace_copy_from_params.NamespaceCopyFromParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1633,14 +1624,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
             cast_to=NamespaceSchemaResponse,
         )
 
-    async def exists(self) -> bool:
-        """Check whether the namespace exists."""
-        try:
-            await self.schema()
-            return True
-        except NotFoundError:
-            return False
-
     async def start_copy_from(
         self,
         *,
@@ -1685,17 +1668,15 @@ class AsyncNamespacesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `namespace` but received {namespace!r}")
         return await self._post(
             path_template("/v2/namespaces/{namespace}/async?stainless_overload=startCopyFrom", namespace=namespace),
-            body={
-                "copy_from_namespace": await async_maybe_transform(
-                    {
-                        "source_namespace": source_namespace,
-                        "dest_encryption": dest_encryption,
-                        "source_api_key": source_api_key,
-                        "source_region": source_region,
-                    },
-                    namespace_start_copy_from_params.NamespaceStartCopyFromParams,
-                )
-            },
+            body=await async_maybe_transform(
+                {
+                    "source_namespace": source_namespace,
+                    "dest_encryption": dest_encryption,
+                    "source_api_key": source_api_key,
+                    "source_region": source_region,
+                },
+                namespace_start_copy_from_params.NamespaceStartCopyFromParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1926,6 +1907,16 @@ class AsyncNamespacesResource(AsyncAPIResource):
             ),
             cast_to=NamespaceWriteResponse,
         )
+
+    async def exists(self) -> bool:
+        """Check whether the namespace exists."""
+        from .._exceptions import NotFoundError
+
+        try:
+            await self.schema()
+            return True
+        except NotFoundError:
+            return False
 
 
 class NamespacesResourceWithRawResponse:

@@ -90,6 +90,7 @@ from ._exceptions import (
     APIConnectionError,
     APIResponseValidationError,
 )
+from .lib.nested_body import nest_overload_body
 from .lib.transport_httpx import HttpxTransport
 from .lib.transport_aiohttp import AiohttpTransport, connection_trace_config
 
@@ -514,7 +515,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
             )
         kwargs: dict[str, Any] = {}
 
-        json_data = options.json_data
+        json_data = nest_overload_body(options.url, options.json_data)
         if options.extra_json is not None:
             if json_data is None:
                 json_data = cast(Body, options.extra_json)

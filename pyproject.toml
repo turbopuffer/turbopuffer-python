@@ -138,7 +138,9 @@ pythonVersion = "3.11"
 
 exclude = [
     "tests/respx2",
-    "_dev", 
+    # Generated against `client.namespaces`, which `client.namespace(...)` replaces.
+    "tests/api_resources/test_namespaces.py",
+    "_dev",
     ".venv",
     ".nox",
     ".git",

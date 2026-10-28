@@ -35,7 +35,8 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_branch_from(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").branch_from(
+        namespace = client.namespaces.branch_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         )
         assert_matches_type(NamespaceBranchFromResponse, namespace, path=["response"])
@@ -43,7 +44,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_branch_from(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.branch_from(
+
+        response = client.namespaces.with_raw_response.branch_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         )
 
@@ -55,7 +58,8 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_branch_from(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.branch_from(
+        with client.namespaces.with_streaming_response.branch_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         ) as response:
             assert not response.is_closed
@@ -70,14 +74,16 @@ class TestNamespaces:
     @parametrize
     def test_path_params_branch_from(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.branch_from(
+            client.namespaces.with_raw_response.branch_from(
+                namespace="",
                 source_namespace="source_namespace",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_copy_from(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").copy_from(
+        namespace = client.namespaces.copy_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         )
         assert_matches_type(NamespaceCopyFromResponse, namespace, path=["response"])
@@ -85,7 +91,8 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_copy_from_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").copy_from(
+        namespace = client.namespaces.copy_from(
+            namespace="namespace",
             source_namespace="source_namespace",
             dest_encryption={
                 "key_name": "key_name",
@@ -99,7 +106,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_copy_from(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.copy_from(
+
+        response = client.namespaces.with_raw_response.copy_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         )
 
@@ -111,7 +120,8 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_copy_from(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.copy_from(
+        with client.namespaces.with_streaming_response.copy_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         ) as response:
             assert not response.is_closed
@@ -126,20 +136,26 @@ class TestNamespaces:
     @parametrize
     def test_path_params_copy_from(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.copy_from(
+            client.namespaces.with_raw_response.copy_from(
+                namespace="",
                 source_namespace="source_namespace",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_delete_all(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").delete_all()
+        namespace = client.namespaces.delete_all(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_delete_all(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.delete_all()
+
+        response = client.namespaces.with_raw_response.delete_all(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -149,7 +165,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_delete_all(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.delete_all() as response:
+        with client.namespaces.with_streaming_response.delete_all(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -162,26 +180,34 @@ class TestNamespaces:
     @parametrize
     def test_path_params_delete_all(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.delete_all()
+            client.namespaces.with_raw_response.delete_all(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_explain_query(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").explain_query()
+        namespace = client.namespaces.explain_query(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_explain_query_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").explain_query(
-            aggregate_by={"foo": ("Sum", "bar")},
-            compute_attributes={"foo": ("Highlight", "bar")},
+        namespace = client.namespaces.explain_query(
+            namespace="namespace",
+            aggregate_by={"foo": "bar"},
+            compute_attributes={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
+            filters={},
+            group_by=[{}],
             include_attributes=True,
             limit=0,
             offset=0,
+            rank_by={},
             top_k=0,
             vector_encoding="float",
         )
@@ -190,7 +216,10 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_explain_query(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.explain_query()
+
+        response = client.namespaces.with_raw_response.explain_query(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -200,7 +229,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_explain_query(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.explain_query() as response:
+        with client.namespaces.with_streaming_response.explain_query(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -213,18 +244,25 @@ class TestNamespaces:
     @parametrize
     def test_path_params_explain_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.explain_query()
+            client.namespaces.with_raw_response.explain_query(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_hint_cache_warm(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").hint_cache_warm()
+        namespace = client.namespaces.hint_cache_warm(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceHintCacheWarmResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_hint_cache_warm(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.hint_cache_warm()
+
+        response = client.namespaces.with_raw_response.hint_cache_warm(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -234,7 +272,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_hint_cache_warm(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.hint_cache_warm() as response:
+        with client.namespaces.with_streaming_response.hint_cache_warm(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -247,18 +287,25 @@ class TestNamespaces:
     @parametrize
     def test_path_params_hint_cache_warm(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.hint_cache_warm()
+            client.namespaces.with_raw_response.hint_cache_warm(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_metadata(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").metadata()
+        namespace = client.namespaces.metadata(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_metadata(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.metadata()
+
+        response = client.namespaces.with_raw_response.metadata(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -268,7 +315,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_metadata(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.metadata() as response:
+        with client.namespaces.with_streaming_response.metadata(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -281,12 +330,14 @@ class TestNamespaces:
     @parametrize
     def test_path_params_metadata(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.metadata()
+            client.namespaces.with_raw_response.metadata(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_multi_query(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").multi_query(
+        namespace = client.namespaces.multi_query(
             namespace="namespace",
             queries=[{}],
         )
@@ -295,25 +346,27 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_multi_query_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").multi_query(
+        namespace = client.namespaces.multi_query(
             namespace="namespace",
             queries=[
                 {
                     "aggregate_by": {"foo": "bar"},
-                    "compute_attributes": {"foo": ("Highlight", "bar")},
+                    "compute_attributes": {"foo": "bar"},
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
+                    "filters": {},
+                    "group_by": [{}],
                     "include_attributes": True,
                     "limit": 0,
                     "offset": 0,
-                    "rank_by": ("id", "asc"),
+                    "rank_by": {},
                     "top_k": 0,
                 }
             ],
             consistency={"level": "strong"},
             limit=0,
             offset=0,
-            rerank_by=("RRF",),
+            rerank_by={},
             vector_encoding="float",
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
@@ -321,7 +374,8 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_multi_query(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.multi_query(
+
+        response = client.namespaces.with_raw_response.multi_query(
             namespace="namespace",
             queries=[{}],
         )
@@ -334,7 +388,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_multi_query(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.multi_query(
+        with client.namespaces.with_streaming_response.multi_query(
             namespace="namespace",
             queries=[{}],
         ) as response:
@@ -350,7 +404,7 @@ class TestNamespaces:
     @parametrize
     def test_path_params_multi_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("namespace").with_raw_response.multi_query(
+            client.namespaces.with_raw_response.multi_query(
                 namespace="",
                 queries=[{}],
             )
@@ -358,7 +412,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_poll_copy_from(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").poll_copy_from(
+        namespace = client.namespaces.poll_copy_from(
             token="token",
             namespace="namespace",
         )
@@ -367,7 +421,8 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_poll_copy_from(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.poll_copy_from(
+
+        response = client.namespaces.with_raw_response.poll_copy_from(
             token="token",
             namespace="namespace",
         )
@@ -380,7 +435,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_poll_copy_from(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.poll_copy_from(
+        with client.namespaces.with_streaming_response.poll_copy_from(
             token="token",
             namespace="namespace",
         ) as response:
@@ -396,13 +451,13 @@ class TestNamespaces:
     @parametrize
     def test_path_params_poll_copy_from(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("namespace").with_raw_response.poll_copy_from(
+            client.namespaces.with_raw_response.poll_copy_from(
                 token="token",
                 namespace="",
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `token` but received ''"):
-            client.namespace("namespace").with_raw_response.poll_copy_from(
+            client.namespaces.with_raw_response.poll_copy_from(
                 token="",
                 namespace="namespace",
             )
@@ -410,22 +465,27 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_query(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").query()
+        namespace = client.namespaces.query(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_query_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").query(
-            aggregate_by={"foo": ("Sum", "bar")},
-            compute_attributes={"foo": ("Highlight", "bar")},
+        namespace = client.namespaces.query(
+            namespace="namespace",
+            aggregate_by={"foo": "bar"},
+            compute_attributes={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
+            filters={},
+            group_by=[{}],
             include_attributes=True,
             limit=0,
             offset=0,
-            rank_by=("id", "asc"),
+            rank_by={},
             rerank_by={
                 "attribute": "attribute",
                 "model": "model",
@@ -439,7 +499,10 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_query(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.query()
+
+        response = client.namespaces.with_raw_response.query(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -449,7 +512,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_query(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.query() as response:
+        with client.namespaces.with_streaming_response.query(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -462,18 +527,24 @@ class TestNamespaces:
     @parametrize
     def test_path_params_query(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.query()
+            client.namespaces.with_raw_response.query(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_recall(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").recall()
+        namespace = client.namespaces.recall(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_recall_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").recall(
+        namespace = client.namespaces.recall(
+            namespace="namespace",
+            filters={},
             include_ground_truth=True,
             num=0,
             rank_by={},
@@ -484,7 +555,10 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_recall(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.recall()
+
+        response = client.namespaces.with_raw_response.recall(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -494,7 +568,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_recall(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.recall() as response:
+        with client.namespaces.with_streaming_response.recall(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -507,18 +583,25 @@ class TestNamespaces:
     @parametrize
     def test_path_params_recall(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.recall()
+            client.namespaces.with_raw_response.recall(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_schema(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").schema()
+        namespace = client.namespaces.schema(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_schema(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.schema()
+
+        response = client.namespaces.with_raw_response.schema(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -528,7 +611,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_schema(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.schema() as response:
+        with client.namespaces.with_streaming_response.schema(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -541,12 +626,14 @@ class TestNamespaces:
     @parametrize
     def test_path_params_schema(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.schema()
+            client.namespaces.with_raw_response.schema(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_start_copy_from(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").start_copy_from(
+        namespace = client.namespaces.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
         )
@@ -555,7 +642,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_start_copy_from_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").start_copy_from(
+        namespace = client.namespaces.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
             dest_encryption={
@@ -570,7 +657,8 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_start_copy_from(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.start_copy_from(
+
+        response = client.namespaces.with_raw_response.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
         )
@@ -583,7 +671,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_start_copy_from(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.start_copy_from(
+        with client.namespaces.with_streaming_response.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
         ) as response:
@@ -599,7 +687,7 @@ class TestNamespaces:
     @parametrize
     def test_path_params_start_copy_from(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("namespace").with_raw_response.start_copy_from(
+            client.namespaces.with_raw_response.start_copy_from(
                 namespace="",
                 source_namespace="source_namespace",
             )
@@ -607,7 +695,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update_metadata(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").update_metadata(
+        namespace = client.namespaces.update_metadata(
             namespace="namespace",
         )
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
@@ -615,7 +703,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update_metadata_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").update_metadata(
+        namespace = client.namespaces.update_metadata(
             namespace="namespace",
             pinning=True,
             read_only=True,
@@ -625,7 +713,8 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_update_metadata(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.update_metadata(
+
+        response = client.namespaces.with_raw_response.update_metadata(
             namespace="namespace",
         )
 
@@ -637,7 +726,7 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_update_metadata(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.update_metadata(
+        with client.namespaces.with_streaming_response.update_metadata(
             namespace="namespace",
         ) as response:
             assert not response.is_closed
@@ -652,20 +741,23 @@ class TestNamespaces:
     @parametrize
     def test_path_params_update_metadata(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("namespace").with_raw_response.update_metadata(
+            client.namespaces.with_raw_response.update_metadata(
                 namespace="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update_schema(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").update_schema()
+        namespace = client.namespaces.update_schema(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update_schema_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").update_schema(
+        namespace = client.namespaces.update_schema(
+            namespace="namespace",
             schema={"foo": "string"},
         )
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
@@ -673,7 +765,10 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_update_schema(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.update_schema()
+
+        response = client.namespaces.with_raw_response.update_schema(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -683,7 +778,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_update_schema(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.update_schema() as response:
+        with client.namespaces.with_streaming_response.update_schema(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -696,22 +793,29 @@ class TestNamespaces:
     @parametrize
     def test_path_params_update_schema(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.update_schema()
+            client.namespaces.with_raw_response.update_schema(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_write(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").write()
+        namespace = client.namespaces.write(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_write_with_all_params(self, client: Turbopuffer) -> None:
-        namespace = client.namespace("namespace").write(
+        namespace = client.namespaces.write(
+            namespace="namespace",
             branch_from_namespace="string",
             copy_from_namespace="string",
             create_namespace=True,
+            delete_by_filter={},
             delete_by_filter_allow_partial=True,
+            delete_condition={},
             deletes=["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
             disable_backpressure=True,
             distance_metric="cosine_distance",
@@ -720,7 +824,7 @@ class TestNamespaces:
                 "mode": "customer-managed",
             },
             patch_by_filter={
-                "filters": ("name", "Eq", "foo"),
+                "filters": {},
                 "patch": {"foo": "bar"},
             },
             patch_by_filter_allow_partial=True,
@@ -728,6 +832,7 @@ class TestNamespaces:
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
             },
+            patch_condition={},
             patch_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -741,6 +846,7 @@ class TestNamespaces:
                 "id": ["182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"],
                 "vector": [[0]],
             },
+            upsert_condition={},
             upsert_rows=[
                 {
                     "id": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -753,7 +859,10 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_write(self, client: Turbopuffer) -> None:
-        response = client.namespace("namespace").with_raw_response.write()
+
+        response = client.namespaces.with_raw_response.write(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -763,7 +872,9 @@ class TestNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_write(self, client: Turbopuffer) -> None:
-        with client.namespace("namespace").with_streaming_response.write() as response:
+        with client.namespaces.with_streaming_response.write(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -776,7 +887,9 @@ class TestNamespaces:
     @parametrize
     def test_path_params_write(self, client: Turbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            client.namespace("").with_raw_response.write()
+            client.namespaces.with_raw_response.write(
+                namespace="",
+            )
 
 
 class TestAsyncNamespaces:
@@ -787,7 +900,8 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_branch_from(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").branch_from(
+        namespace = await async_client.namespaces.branch_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         )
         assert_matches_type(NamespaceBranchFromResponse, namespace, path=["response"])
@@ -795,7 +909,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_branch_from(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.branch_from(
+
+        response = await async_client.namespaces.with_raw_response.branch_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         )
 
@@ -807,7 +923,8 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_branch_from(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.branch_from(
+        async with async_client.namespaces.with_streaming_response.branch_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         ) as response:
             assert not response.is_closed
@@ -822,14 +939,16 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_branch_from(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.branch_from(
+            await async_client.namespaces.with_raw_response.branch_from(
+                namespace="",
                 source_namespace="source_namespace",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").copy_from(
+        namespace = await async_client.namespaces.copy_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         )
         assert_matches_type(NamespaceCopyFromResponse, namespace, path=["response"])
@@ -837,7 +956,8 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_copy_from_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").copy_from(
+        namespace = await async_client.namespaces.copy_from(
+            namespace="namespace",
             source_namespace="source_namespace",
             dest_encryption={
                 "key_name": "key_name",
@@ -851,7 +971,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.copy_from(
+
+        response = await async_client.namespaces.with_raw_response.copy_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         )
 
@@ -863,7 +985,8 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.copy_from(
+        async with async_client.namespaces.with_streaming_response.copy_from(
+            namespace="namespace",
             source_namespace="source_namespace",
         ) as response:
             assert not response.is_closed
@@ -878,20 +1001,26 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_copy_from(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.copy_from(
+            await async_client.namespaces.with_raw_response.copy_from(
+                namespace="",
                 source_namespace="source_namespace",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_delete_all(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").delete_all()
+        namespace = await async_client.namespaces.delete_all(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceDeleteAllResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.delete_all()
+
+        response = await async_client.namespaces.with_raw_response.delete_all(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -901,7 +1030,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_delete_all(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.delete_all() as response:
+        async with async_client.namespaces.with_streaming_response.delete_all(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -914,26 +1045,34 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_delete_all(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.delete_all()
+            await async_client.namespaces.with_raw_response.delete_all(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_explain_query(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").explain_query()
+        namespace = await async_client.namespaces.explain_query(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceExplainQueryResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_explain_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").explain_query(
-            aggregate_by={"foo": ("Sum", "bar")},
-            compute_attributes={"foo": ("Highlight", "bar")},
+        namespace = await async_client.namespaces.explain_query(
+            namespace="namespace",
+            aggregate_by={"foo": "bar"},
+            compute_attributes={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
+            filters={},
+            group_by=[{}],
             include_attributes=True,
             limit=0,
             offset=0,
+            rank_by={},
             top_k=0,
             vector_encoding="float",
         )
@@ -942,7 +1081,10 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_explain_query(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.explain_query()
+
+        response = await async_client.namespaces.with_raw_response.explain_query(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -952,7 +1094,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_explain_query(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.explain_query() as response:
+        async with async_client.namespaces.with_streaming_response.explain_query(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -965,18 +1109,25 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_explain_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.explain_query()
+            await async_client.namespaces.with_raw_response.explain_query(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").hint_cache_warm()
+        namespace = await async_client.namespaces.hint_cache_warm(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceHintCacheWarmResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.hint_cache_warm()
+
+        response = await async_client.namespaces.with_raw_response.hint_cache_warm(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -986,7 +1137,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.hint_cache_warm() as response:
+        async with async_client.namespaces.with_streaming_response.hint_cache_warm(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -998,22 +1151,26 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_hint_cache_warm(self, async_client: AsyncTurbopuffer) -> None:
-        with pytest.raises(
-            ValueError,
-            match=r"Expected a non-empty value for `namespace` but received ''",
-        ):
-            await async_client.namespace("").with_raw_response.hint_cache_warm()
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
+            await async_client.namespaces.with_raw_response.hint_cache_warm(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_metadata(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").metadata()
+        namespace = await async_client.namespaces.metadata(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_metadata(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.metadata()
+
+        response = await async_client.namespaces.with_raw_response.metadata(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1023,7 +1180,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_metadata(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.metadata() as response:
+        async with async_client.namespaces.with_streaming_response.metadata(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -1036,12 +1195,14 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_metadata(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.metadata()
+            await async_client.namespaces.with_raw_response.metadata(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_multi_query(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").multi_query(
+        namespace = await async_client.namespaces.multi_query(
             namespace="namespace",
             queries=[{}],
         )
@@ -1050,25 +1211,27 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_multi_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").multi_query(
+        namespace = await async_client.namespaces.multi_query(
             namespace="namespace",
             queries=[
                 {
                     "aggregate_by": {"foo": "bar"},
-                    "compute_attributes": {"foo": ("Highlight", "bar")},
+                    "compute_attributes": {"foo": "bar"},
                     "distance_metric": "cosine_distance",
                     "exclude_attributes": ["string"],
+                    "filters": {},
+                    "group_by": [{}],
                     "include_attributes": True,
                     "limit": 0,
                     "offset": 0,
-                    "rank_by": ("id", "asc"),
+                    "rank_by": {},
                     "top_k": 0,
                 }
             ],
             consistency={"level": "strong"},
             limit=0,
             offset=0,
-            rerank_by=("RRF",),
+            rerank_by={},
             vector_encoding="float",
         )
         assert_matches_type(NamespaceMultiQueryResponse, namespace, path=["response"])
@@ -1076,7 +1239,8 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.multi_query(
+
+        response = await async_client.namespaces.with_raw_response.multi_query(
             namespace="namespace",
             queries=[{}],
         )
@@ -1089,7 +1253,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_multi_query(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.multi_query(
+        async with async_client.namespaces.with_streaming_response.multi_query(
             namespace="namespace",
             queries=[{}],
         ) as response:
@@ -1105,7 +1269,7 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_multi_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("namespace").with_raw_response.multi_query(
+            await async_client.namespaces.with_raw_response.multi_query(
                 namespace="",
                 queries=[{}],
             )
@@ -1113,7 +1277,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_poll_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").poll_copy_from(
+        namespace = await async_client.namespaces.poll_copy_from(
             token="token",
             namespace="namespace",
         )
@@ -1122,7 +1286,8 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_poll_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.poll_copy_from(
+
+        response = await async_client.namespaces.with_raw_response.poll_copy_from(
             token="token",
             namespace="namespace",
         )
@@ -1135,7 +1300,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_poll_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.poll_copy_from(
+        async with async_client.namespaces.with_streaming_response.poll_copy_from(
             token="token",
             namespace="namespace",
         ) as response:
@@ -1151,13 +1316,13 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_poll_copy_from(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("namespace").with_raw_response.poll_copy_from(
+            await async_client.namespaces.with_raw_response.poll_copy_from(
                 token="token",
                 namespace="",
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `token` but received ''"):
-            await async_client.namespace("namespace").with_raw_response.poll_copy_from(
+            await async_client.namespaces.with_raw_response.poll_copy_from(
                 token="",
                 namespace="namespace",
             )
@@ -1165,22 +1330,27 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_query(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").query()
+        namespace = await async_client.namespaces.query(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceQueryResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_query_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").query(
-            aggregate_by={"foo": ("Sum", "bar")},
-            compute_attributes={"foo": ("Highlight", "bar")},
+        namespace = await async_client.namespaces.query(
+            namespace="namespace",
+            aggregate_by={"foo": "bar"},
+            compute_attributes={"foo": "bar"},
             consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
+            filters={},
+            group_by=[{}],
             include_attributes=True,
             limit=0,
             offset=0,
-            rank_by=("id", "asc"),
+            rank_by={},
             rerank_by={
                 "attribute": "attribute",
                 "model": "model",
@@ -1194,7 +1364,10 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_query(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.query()
+
+        response = await async_client.namespaces.with_raw_response.query(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1204,7 +1377,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_query(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.query() as response:
+        async with async_client.namespaces.with_streaming_response.query(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -1217,18 +1392,23 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_query(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.query()
+            await async_client.namespaces.with_raw_response.query(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_recall(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").recall()
+        namespace = await async_client.namespaces.recall(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceRecallResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_recall_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").recall(
+        namespace = await async_client.namespaces.recall(
+            namespace="namespace",
             filters={},
             include_ground_truth=True,
             num=0,
@@ -1240,7 +1420,10 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_recall(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.recall()
+
+        response = await async_client.namespaces.with_raw_response.recall(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1250,7 +1433,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_recall(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.recall() as response:
+        async with async_client.namespaces.with_streaming_response.recall(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -1263,18 +1448,25 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_recall(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.recall()
+            await async_client.namespaces.with_raw_response.recall(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_schema(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").schema()
+        namespace = await async_client.namespaces.schema(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceSchemaResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_schema(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.schema()
+
+        response = await async_client.namespaces.with_raw_response.schema(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1284,7 +1476,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_schema(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.schema() as response:
+        async with async_client.namespaces.with_streaming_response.schema(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -1297,12 +1491,14 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_schema(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.schema()
+            await async_client.namespaces.with_raw_response.schema(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_start_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").start_copy_from(
+        namespace = await async_client.namespaces.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
         )
@@ -1311,7 +1507,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_start_copy_from_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").start_copy_from(
+        namespace = await async_client.namespaces.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
             dest_encryption={
@@ -1326,7 +1522,8 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_start_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.start_copy_from(
+
+        response = await async_client.namespaces.with_raw_response.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
         )
@@ -1339,7 +1536,7 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_start_copy_from(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.start_copy_from(
+        async with async_client.namespaces.with_streaming_response.start_copy_from(
             namespace="namespace",
             source_namespace="source_namespace",
         ) as response:
@@ -1355,7 +1552,7 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_start_copy_from(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("namespace").with_raw_response.start_copy_from(
+            await async_client.namespaces.with_raw_response.start_copy_from(
                 namespace="",
                 source_namespace="source_namespace",
             )
@@ -1363,13 +1560,16 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update_metadata(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").update_metadata()
+        namespace = await async_client.namespaces.update_metadata(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceMetadata, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update_metadata_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").update_metadata(
+        namespace = await async_client.namespaces.update_metadata(
+            namespace="namespace",
             pinning=True,
             read_only=True,
         )
@@ -1378,7 +1578,10 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_update_metadata(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.update_metadata()
+
+        response = await async_client.namespaces.with_raw_response.update_metadata(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1388,7 +1591,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_update_metadata(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.update_metadata() as response:
+        async with async_client.namespaces.with_streaming_response.update_metadata(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -1401,20 +1606,23 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_update_metadata(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("namespace").with_raw_response.update_metadata(
+            await async_client.namespaces.with_raw_response.update_metadata(
                 namespace="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update_schema(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").update_schema()
+        namespace = await async_client.namespaces.update_schema(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update_schema_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").update_schema(
+        namespace = await async_client.namespaces.update_schema(
+            namespace="namespace",
             schema={"foo": "string"},
         )
         assert_matches_type(NamespaceUpdateSchemaResponse, namespace, path=["response"])
@@ -1422,7 +1630,10 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_update_schema(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.update_schema()
+
+        response = await async_client.namespaces.with_raw_response.update_schema(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1432,7 +1643,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_update_schema(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.update_schema() as response:
+        async with async_client.namespaces.with_streaming_response.update_schema(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -1445,18 +1658,23 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_update_schema(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.update_schema()
+            await async_client.namespaces.with_raw_response.update_schema(
+                namespace="",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_write(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").write()
+        namespace = await async_client.namespaces.write(
+            namespace="namespace",
+        )
         assert_matches_type(NamespaceWriteResponse, namespace, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_write_with_all_params(self, async_client: AsyncTurbopuffer) -> None:
-        namespace = await async_client.namespace("namespace").write(
+        namespace = await async_client.namespaces.write(
+            namespace="namespace",
             branch_from_namespace="string",
             copy_from_namespace="string",
             create_namespace=True,
@@ -1471,7 +1689,7 @@ class TestAsyncNamespaces:
                 "mode": "customer-managed",
             },
             patch_by_filter={
-                "filters": ("name", "Eq", "foo"),
+                "filters": {},
                 "patch": {"foo": "bar"},
             },
             patch_by_filter_allow_partial=True,
@@ -1506,7 +1724,10 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_write(self, async_client: AsyncTurbopuffer) -> None:
-        response = await async_client.namespace("namespace").with_raw_response.write()
+
+        response = await async_client.namespaces.with_raw_response.write(
+            namespace="namespace",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1516,7 +1737,9 @@ class TestAsyncNamespaces:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_write(self, async_client: AsyncTurbopuffer) -> None:
-        async with async_client.namespace("namespace").with_streaming_response.write() as response:
+        async with async_client.namespaces.with_streaming_response.write(
+            namespace="namespace",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -1529,4 +1752,6 @@ class TestAsyncNamespaces:
     @parametrize
     async def test_path_params_write(self, async_client: AsyncTurbopuffer) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `namespace` but received ''"):
-            await async_client.namespace("").with_raw_response.write()
+            await async_client.namespaces.with_raw_response.write(
+                namespace="",
+            )
