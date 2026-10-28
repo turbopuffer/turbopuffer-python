@@ -97,6 +97,7 @@ class TestNamespaces:
             dest_encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             source_api_key="source_api_key",
             source_region="source_region",
@@ -199,10 +200,7 @@ class TestNamespaces:
             namespace="namespace",
             aggregate_by={"foo": "bar"},
             compute_attributes={"foo": "bar"},
-            consistency={
-                "level": "strong",
-                "max_staleness_seconds": 1,
-            },
+            consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             filters={},
@@ -366,10 +364,7 @@ class TestNamespaces:
                     "top_k": 0,
                 }
             ],
-            consistency={
-                "level": "strong",
-                "max_staleness_seconds": 1,
-            },
+            consistency={"level": "strong"},
             limit=0,
             offset=0,
             rerank_by={},
@@ -483,10 +478,7 @@ class TestNamespaces:
             namespace="namespace",
             aggregate_by={"foo": "bar"},
             compute_attributes={"foo": "bar"},
-            consistency={
-                "level": "strong",
-                "max_staleness_seconds": 1,
-            },
+            consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             filters={},
@@ -657,6 +649,7 @@ class TestNamespaces:
             dest_encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             source_api_key="source_api_key",
             source_region="source_region",
@@ -831,6 +824,7 @@ class TestNamespaces:
             encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             patch_by_filter={
                 "filters": {},
@@ -971,6 +965,7 @@ class TestAsyncNamespaces:
             dest_encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             source_api_key="source_api_key",
             source_region="source_region",
@@ -1073,10 +1068,7 @@ class TestAsyncNamespaces:
             namespace="namespace",
             aggregate_by={"foo": "bar"},
             compute_attributes={"foo": "bar"},
-            consistency={
-                "level": "strong",
-                "max_staleness_seconds": 1,
-            },
+            consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             filters={},
@@ -1240,10 +1232,7 @@ class TestAsyncNamespaces:
                     "top_k": 0,
                 }
             ],
-            consistency={
-                "level": "strong",
-                "max_staleness_seconds": 1,
-            },
+            consistency={"level": "strong"},
             limit=0,
             offset=0,
             rerank_by={},
@@ -1357,10 +1346,7 @@ class TestAsyncNamespaces:
             namespace="namespace",
             aggregate_by={"foo": "bar"},
             compute_attributes={"foo": "bar"},
-            consistency={
-                "level": "strong",
-                "max_staleness_seconds": 1,
-            },
+            consistency={"level": "strong"},
             distance_metric="cosine_distance",
             exclude_attributes=["string"],
             filters={},
@@ -1531,6 +1517,7 @@ class TestAsyncNamespaces:
             dest_encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             source_api_key="source_api_key",
             source_region="source_region",
@@ -1705,6 +1692,7 @@ class TestAsyncNamespaces:
             encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             patch_by_filter={
                 "filters": {},

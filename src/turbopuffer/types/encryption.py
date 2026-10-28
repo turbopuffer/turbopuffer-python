@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Union
+from typing import Dict, Union, Optional
 from typing_extensions import Literal, TypeAlias
 
 from .._models import BaseModel
@@ -19,6 +19,13 @@ class CustomerManaged(BaseModel):
     """
 
     mode: Literal["customer-managed"]
+
+    encryption_context: Optional[Dict[str, str]] = None
+    """The AWS KMS encryption context to send with every request that uses the key.
+
+    Only supported on AWS, and must be enabled for your organization. Keys may not
+    start with `tpuf:` or `aws:`.
+    """
 
 
 class Default(BaseModel):
