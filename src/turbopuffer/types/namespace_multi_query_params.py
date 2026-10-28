@@ -12,7 +12,15 @@ from .vector_encoding import VectorEncoding
 from .rerank_limit_param import RerankLimitParam
 from .include_attributes_param import IncludeAttributesParam
 
-__all__ = ["NamespaceMultiQueryParams", "Query", "QueryLimit", "Consistency", "Limit"]
+__all__ = [
+    "NamespaceMultiQueryParams",
+    "Query",
+    "QueryLimit",
+    "Consistency",
+    "ConsistencyStrong",
+    "ConsistencyEventual",
+    "Limit",
+]
 
 
 class NamespaceMultiQueryParams(TypedDict, total=False):
@@ -98,18 +106,30 @@ class Query(TypedDict, total=False):
     """The number of results to return."""
 
 
-class Consistency(TypedDict, total=False):
-    """The consistency level for a query."""
+class ConsistencyStrong(TypedDict, total=False):
+    """Strong consistency.
 
-    level: Literal["strong", "eventual"]
-    """The query's consistency level."""
+    Requires a round-trip to object storage to fetch the latest writes.
+    """
+
+    level: Required[Literal["strong"]]
+
+
+class ConsistencyEventual(TypedDict, total=False):
+    """Eventual consistency.
+
+    Does not require a round-trip to object storage, but may not see the latest writes.
+    """
+
+    level: Required[Literal["eventual"]]
 
     max_staleness_seconds: int
     """
-    How long an eventually consistent query may reuse the node's cached view of the
-    namespace before refreshing it from object storage. Only valid with
-    `level: eventual`. Defaults to 60.
+    How long the query may reuse the node's cached view of the namespace before
+    refreshing it from object storage. Defaults to 60.
     """
 
+
+Consistency: TypeAlias = Union[ConsistencyStrong, ConsistencyEventual]
 
 Limit: TypeAlias = Union[int, RerankLimitParam]
