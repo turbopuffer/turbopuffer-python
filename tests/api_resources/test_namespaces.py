@@ -97,6 +97,7 @@ class TestNamespaces:
             dest_encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             source_api_key="source_api_key",
             source_region="source_region",
@@ -657,6 +658,7 @@ class TestNamespaces:
             dest_encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             source_api_key="source_api_key",
             source_region="source_region",
@@ -831,6 +833,7 @@ class TestNamespaces:
             encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             patch_by_filter={
                 "filters": {},
@@ -971,6 +974,7 @@ class TestAsyncNamespaces:
             dest_encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             source_api_key="source_api_key",
             source_region="source_region",
@@ -1531,6 +1535,7 @@ class TestAsyncNamespaces:
             dest_encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             source_api_key="source_api_key",
             source_region="source_region",
@@ -1705,6 +1710,7 @@ class TestAsyncNamespaces:
             encryption={
                 "key_name": "key_name",
                 "mode": "customer-managed",
+                "encryption_context": {"foo": "string"},
             },
             patch_by_filter={
                 "filters": {},
