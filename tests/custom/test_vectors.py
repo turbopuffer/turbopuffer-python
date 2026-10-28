@@ -13,7 +13,6 @@ from turbopuffer.types import (
     VectorEncoding,
     NamespaceWriteParams,
     NamespaceQueryResponse,
-    namespace_query_params,
 )
 from turbopuffer.lib.vector import b64decode_vector, b64encode_vector
 from turbopuffer._utils._transform import transform, async_transform
@@ -275,7 +274,7 @@ def test_query_vectors(tpuf: Turbopuffer):
     vector_set = ns.query(
         rank_by=("id", "asc"),
         top_k=3,
-        consistency=namespace_query_params.Consistency(level="eventual"),
+        consistency={"level": "eventual"},
     )
     assert vector_set.rows is not None
     assert len(vector_set.rows) == 3
@@ -296,7 +295,7 @@ def test_query_vectors(tpuf: Turbopuffer):
         ns.query(
             rank_by=("id", "asc"),
             top_k=3,
-            consistency=namespace_query_params.Consistency(level="nonexistentvalue"),  # type: ignore
+            consistency={"level": "nonexistentvalue"},  # type: ignore
         )
         raise AssertionError("Using consistency level other than 'strong' or 'eventual' should not be allowed")
     except turbopuffer.UnprocessableEntityError as err:
