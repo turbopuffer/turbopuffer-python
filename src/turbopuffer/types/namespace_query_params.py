@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Dict, Union, Iterable
-from typing_extensions import Literal, TypeAlias, TypedDict
+from typing_extensions import Literal, Required, TypeAlias, TypedDict
 
 from .custom import Expr, Filter, GroupBy, AggregateBy
 from .._types import SequenceNotStr
@@ -13,7 +13,7 @@ from .vector_encoding import VectorEncoding
 from .rerank_model_params import RerankModelParams
 from .include_attributes_param import IncludeAttributesParam
 
-__all__ = ["NamespaceQueryParams", "Consistency", "Limit"]
+__all__ = ["NamespaceQueryParams", "Consistency", "ConsistencyStrong", "ConsistencyEventual", "Limit"]
 
 
 class NamespaceQueryParams(TypedDict, total=False):
@@ -81,11 +81,30 @@ class NamespaceQueryParams(TypedDict, total=False):
     """The encoding to use for vectors in the response."""
 
 
-class Consistency(TypedDict, total=False):
-    """The consistency level for a query."""
+class ConsistencyStrong(TypedDict, total=False):
+    """Strong consistency.
 
-    level: Literal["strong", "eventual"]
-    """The query's consistency level."""
+    Requires a round-trip to object storage to fetch the latest writes.
+    """
 
+    level: Required[Literal["strong"]]
+
+
+class ConsistencyEventual(TypedDict, total=False):
+    """Eventual consistency.
+
+    Does not require a round-trip to object storage, but may not see the latest writes.
+    """
+
+    level: Required[Literal["eventual"]]
+
+    max_staleness_seconds: int
+    """
+    How long the query may reuse the node's cached view of the namespace before
+    refreshing it from object storage. Defaults to 60.
+    """
+
+
+Consistency: TypeAlias = Union[ConsistencyStrong, ConsistencyEventual]
 
 Limit: TypeAlias = Union[int, LimitParam]
