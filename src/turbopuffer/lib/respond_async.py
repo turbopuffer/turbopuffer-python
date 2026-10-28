@@ -199,6 +199,8 @@ class _Timeout:
         timeout = request_options.timeout if is_given(request_options.timeout) else client_timeout
         if isinstance(timeout, httpx2.Timeout):
             timeout = timeout.read
+            if timeout is None:
+                timeout = POLL_REQUEST_TIMEOUT_SECS
 
         if timeout is None:
             self.deadline = float("inf")
