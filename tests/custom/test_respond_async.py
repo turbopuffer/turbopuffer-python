@@ -334,6 +334,26 @@ async def test_async_poll_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
             await client.namespace("test").write(upsert_columns={"id": [1], "vector": [[0.1]]})
 
 
+def test_poll_timeout_deadline_is_finite_when_read_timeout_is_none() -> None:
+    tracker = respond_async._Timeout(
+        request_options=FinalRequestOptions.construct(method="get", url="/v2/namespaces/test"),
+        client_timeout=httpx2.Timeout(connect=5.0, read=None, write=5.0, pool=5.0),
+    )
+
+    assert not math.isinf(tracker.deadline)
+    assert tracker.remaining() > 0
+
+
+def test_poll_timeout_deadline_can_be_infinite_when_timeout_is_explicitly_none() -> None:
+    tracker = respond_async._Timeout(
+        request_options=FinalRequestOptions.construct(method="get", url="/v2/namespaces/test", timeout=None),
+        client_timeout=httpx2.Timeout(5.0),
+    )
+
+    assert math.isinf(tracker.deadline)
+    assert math.isinf(tracker.remaining())
+
+
 @respx.mock
 def test_sync_async_applied_missing_location_header() -> None:
     respx.post(f"{base_url}/v2/namespaces/test").mock(
