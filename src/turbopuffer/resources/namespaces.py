@@ -852,6 +852,7 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
+        arrange_by: str | Omit = omit,
         branch_from_namespace: BranchFromNamespaceParams | Omit = omit,
         copy_from_namespace: CopyFromNamespaceParams | Omit = omit,
         create_namespace: bool | Omit = omit,
@@ -880,10 +881,17 @@ class NamespacesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceWriteResponse:
-        """
-        Create, update, or delete documents.
+        """Create, update, or delete documents.
 
         Args:
+          arrange_by: Experimental.
+
+        Stores documents in ranges of this attribute, ordered by it, so
+              queries filtering on a narrow range of it or ordered by it skip the rest.
+              Documents should be written in roughly ascending order of it. Must have type
+              `int`, `uint`, `datetime` or `string`, and can only be set on a namespace's
+              inaugural write.
+
           branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
 
           copy_from_namespace: The namespace to copy documents from.
@@ -950,6 +958,7 @@ class NamespacesResource(SyncAPIResource):
             path_template("/v2/namespaces/{namespace}", namespace=namespace),
             body=maybe_transform(
                 {
+                    "arrange_by": arrange_by,
                     "branch_from_namespace": branch_from_namespace,
                     "copy_from_namespace": copy_from_namespace,
                     "create_namespace": create_namespace,
@@ -1769,6 +1778,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
+        arrange_by: str | Omit = omit,
         branch_from_namespace: BranchFromNamespaceParams | Omit = omit,
         copy_from_namespace: CopyFromNamespaceParams | Omit = omit,
         create_namespace: bool | Omit = omit,
@@ -1797,10 +1807,17 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceWriteResponse:
-        """
-        Create, update, or delete documents.
+        """Create, update, or delete documents.
 
         Args:
+          arrange_by: Experimental.
+
+        Stores documents in ranges of this attribute, ordered by it, so
+              queries filtering on a narrow range of it or ordered by it skip the rest.
+              Documents should be written in roughly ascending order of it. Must have type
+              `int`, `uint`, `datetime` or `string`, and can only be set on a namespace's
+              inaugural write.
+
           branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
 
           copy_from_namespace: The namespace to copy documents from.
@@ -1867,6 +1884,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
             path_template("/v2/namespaces/{namespace}", namespace=namespace),
             body=await async_maybe_transform(
                 {
+                    "arrange_by": arrange_by,
                     "branch_from_namespace": branch_from_namespace,
                     "copy_from_namespace": copy_from_namespace,
                     "create_namespace": create_namespace,

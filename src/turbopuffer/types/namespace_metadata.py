@@ -96,6 +96,9 @@ class NamespaceMetadata(BaseModel):
     updated_at: datetime
     """The timestamp when the namespace was last modified by a write operation."""
 
+    arrange_by: Optional[str] = None
+    """The attribute the namespace is arranged by. Omitted when not set."""
+
     pinning: Optional[Pinning] = None
     """
     Configuration for namespace pinning, along with the current status of the pinned

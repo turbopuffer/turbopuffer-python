@@ -22,6 +22,16 @@ __all__ = ["NamespaceWriteParams", "PatchByFilter"]
 class NamespaceWriteParams(TypedDict, total=False):
     namespace: str
 
+    arrange_by: str
+    """Experimental.
+
+    Stores documents in ranges of this attribute, ordered by it, so queries
+    filtering on a narrow range of it or ordered by it skip the rest. Documents
+    should be written in roughly ascending order of it. Must have type `int`,
+    `uint`, `datetime` or `string`, and can only be set on a namespace's inaugural
+    write.
+    """
+
     branch_from_namespace: BranchFromNamespaceParams
     """The namespace to create an instant, copy-on-write clone of."""
 
