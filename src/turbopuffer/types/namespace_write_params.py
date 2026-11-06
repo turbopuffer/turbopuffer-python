@@ -16,7 +16,7 @@ from .attribute_schema_param import AttributeSchemaParam
 from .copy_from_namespace_params import CopyFromNamespaceParams
 from .branch_from_namespace_params import BranchFromNamespaceParams
 
-__all__ = ["NamespaceWriteParams", "PatchByFilter"]
+__all__ = ["NamespaceWriteParams", "Layout", "PatchByFilter"]
 
 
 class NamespaceWriteParams(TypedDict, total=False):
@@ -59,6 +59,13 @@ class NamespaceWriteParams(TypedDict, total=False):
 
     encryption: EncryptionParam
     """The encryption configuration for a namespace."""
+
+    layout: Layout
+    """Experimental.
+
+    How a namespace stores its documents. Can only be set on a namespace's inaugural
+    write, and cannot be changed later.
+    """
 
     patch_by_filter: PatchByFilter
     """Sets the attributes in `patch` on every document that matches `filters`."""
@@ -111,6 +118,21 @@ class NamespaceWriteParams(TypedDict, total=False):
     """
 
     upsert_rows: Iterable[RowParam]
+
+
+class Layout(TypedDict, total=False):
+    """Experimental.
+
+    How a namespace stores its documents. Can only be set on a namespace's inaugural write, and cannot be changed later.
+    """
+
+    arrange_by: str
+    """
+    Stores documents in ranges of this attribute, ordered by it, so queries
+    filtering on a narrow range of it or ordered by it skip the rest. Documents
+    should be written in roughly ascending order of it. Must have type `int`,
+    `uint`, `datetime` or `string`.
+    """
 
 
 class PatchByFilter(TypedDict, total=False):
