@@ -258,12 +258,9 @@ client = Turbopuffer()
 
 response = client.namespaces.write(
     namespace="namespace",
-    patch_by_filter={
-        "filters": {},
-        "patch": {"foo": "bar"},
-    },
+    layout={},
 )
-print(response.patch_by_filter)
+print(response.layout)
 ```
 
 ## Handling errors

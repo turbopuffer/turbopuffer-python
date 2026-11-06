@@ -853,7 +853,6 @@ class NamespacesResource(SyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        arrange_by: str | Omit = omit,
         branch_from_namespace: BranchFromNamespaceParams | Omit = omit,
         copy_from_namespace: CopyFromNamespaceParams | Omit = omit,
         create_namespace: bool | Omit = omit,
@@ -864,6 +863,7 @@ class NamespacesResource(SyncAPIResource):
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: EncryptionParam | Omit = omit,
+        layout: namespace_write_params.Layout | Omit = omit,
         patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
         patch_by_filter_allow_partial: bool | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
@@ -882,17 +882,10 @@ class NamespacesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceWriteResponse:
-        """Create, update, or delete documents.
+        """
+        Create, update, or delete documents.
 
         Args:
-          arrange_by: Experimental.
-
-        Stores documents in ranges of this attribute, ordered by it, so
-              queries filtering on a narrow range of it or ordered by it skip the rest.
-              Documents should be written in roughly ascending order of it. Must have type
-              `int`, `uint`, `datetime` or `string`, and can only be set on a namespace's
-              inaugural write.
-
           branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
 
           copy_from_namespace: The namespace to copy documents from.
@@ -915,6 +908,9 @@ class NamespacesResource(SyncAPIResource):
           distance_metric: A function used to calculate vector similarity.
 
           encryption: The encryption configuration for a namespace.
+
+          layout: Experimental. How a namespace stores its documents. Can only be set on a
+              namespace's inaugural write, and cannot be changed later.
 
           patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
@@ -959,7 +955,6 @@ class NamespacesResource(SyncAPIResource):
             path_template("/v2/namespaces/{namespace}", namespace=namespace),
             body=maybe_transform(
                 {
-                    "arrange_by": arrange_by,
                     "branch_from_namespace": branch_from_namespace,
                     "copy_from_namespace": copy_from_namespace,
                     "create_namespace": create_namespace,
@@ -970,6 +965,7 @@ class NamespacesResource(SyncAPIResource):
                     "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
+                    "layout": layout,
                     "patch_by_filter": patch_by_filter,
                     "patch_by_filter_allow_partial": patch_by_filter_allow_partial,
                     "patch_columns": patch_columns,
@@ -1789,7 +1785,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
         self,
         *,
         namespace: str | None = None,
-        arrange_by: str | Omit = omit,
         branch_from_namespace: BranchFromNamespaceParams | Omit = omit,
         copy_from_namespace: CopyFromNamespaceParams | Omit = omit,
         create_namespace: bool | Omit = omit,
@@ -1800,6 +1795,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: EncryptionParam | Omit = omit,
+        layout: namespace_write_params.Layout | Omit = omit,
         patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
         patch_by_filter_allow_partial: bool | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
@@ -1818,17 +1814,10 @@ class AsyncNamespacesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx2.Timeout | None | NotGiven = not_given,
     ) -> NamespaceWriteResponse:
-        """Create, update, or delete documents.
+        """
+        Create, update, or delete documents.
 
         Args:
-          arrange_by: Experimental.
-
-        Stores documents in ranges of this attribute, ordered by it, so
-              queries filtering on a narrow range of it or ordered by it skip the rest.
-              Documents should be written in roughly ascending order of it. Must have type
-              `int`, `uint`, `datetime` or `string`, and can only be set on a namespace's
-              inaugural write.
-
           branch_from_namespace: The namespace to create an instant, copy-on-write clone of.
 
           copy_from_namespace: The namespace to copy documents from.
@@ -1851,6 +1840,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
           distance_metric: A function used to calculate vector similarity.
 
           encryption: The encryption configuration for a namespace.
+
+          layout: Experimental. How a namespace stores its documents. Can only be set on a
+              namespace's inaugural write, and cannot be changed later.
 
           patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
@@ -1895,7 +1887,6 @@ class AsyncNamespacesResource(AsyncAPIResource):
             path_template("/v2/namespaces/{namespace}", namespace=namespace),
             body=await async_maybe_transform(
                 {
-                    "arrange_by": arrange_by,
                     "branch_from_namespace": branch_from_namespace,
                     "copy_from_namespace": copy_from_namespace,
                     "create_namespace": create_namespace,
@@ -1906,6 +1897,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
+                    "layout": layout,
                     "patch_by_filter": patch_by_filter,
                     "patch_by_filter_allow_partial": patch_by_filter_allow_partial,
                     "patch_columns": patch_columns,

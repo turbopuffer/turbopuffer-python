@@ -12,7 +12,15 @@ from .pinning_config import PinningConfig
 from .sharding_config import ShardingConfig
 from .attribute_schema_config import AttributeSchemaConfig
 
-__all__ = ["NamespaceMetadata", "Index", "IndexIndexUpToDate", "IndexIndexUpdating", "Pinning", "PinningStatus"]
+__all__ = [
+    "NamespaceMetadata",
+    "Index",
+    "IndexIndexUpToDate",
+    "IndexIndexUpdating",
+    "Layout",
+    "Pinning",
+    "PinningStatus",
+]
 
 
 class IndexIndexUpToDate(BaseModel):
@@ -37,6 +45,21 @@ class IndexIndexUpdating(BaseModel):
 
 
 Index: TypeAlias = Union[IndexIndexUpToDate, IndexIndexUpdating]
+
+
+class Layout(BaseModel):
+    """Experimental.
+
+    How a namespace stores its documents. Can only be set on a namespace's inaugural write, and cannot be changed later.
+    """
+
+    arrange_by: Optional[str] = None
+    """
+    Stores documents in ranges of this attribute, ordered by it, so queries
+    filtering on a narrow range of it or ordered by it skip the rest. Documents
+    should be written in roughly ascending order of it. Must have type `int`,
+    `uint`, `datetime` or `string`.
+    """
 
 
 class PinningStatus(BaseModel):
@@ -96,8 +119,12 @@ class NamespaceMetadata(BaseModel):
     updated_at: datetime
     """The timestamp when the namespace was last modified by a write operation."""
 
-    arrange_by: Optional[str] = None
-    """The attribute the namespace is arranged by. Omitted when not set."""
+    layout: Optional[Layout] = None
+    """Experimental.
+
+    How a namespace stores its documents. Can only be set on a namespace's inaugural
+    write, and cannot be changed later.
+    """
 
     pinning: Optional[Pinning] = None
     """
