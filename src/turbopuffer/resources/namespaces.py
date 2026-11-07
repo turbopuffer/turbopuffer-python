@@ -862,6 +862,7 @@ class NamespacesResource(SyncAPIResource):
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: EncryptionParam | Omit = omit,
+        layout: namespace_write_params.Layout | Omit = omit,
         patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
         patch_by_filter_allow_partial: bool | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
@@ -906,6 +907,9 @@ class NamespacesResource(SyncAPIResource):
           distance_metric: A function used to calculate vector similarity.
 
           encryption: The encryption configuration for a namespace.
+
+          layout: Experimental. How a namespace stores its documents. A change applies to
+              documents indexed after it.
 
           patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
@@ -960,6 +964,7 @@ class NamespacesResource(SyncAPIResource):
                     "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
+                    "layout": layout,
                     "patch_by_filter": patch_by_filter,
                     "patch_by_filter_allow_partial": patch_by_filter_allow_partial,
                     "patch_columns": patch_columns,
@@ -1779,6 +1784,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
         disable_backpressure: bool | Omit = omit,
         distance_metric: DistanceMetric | Omit = omit,
         encryption: EncryptionParam | Omit = omit,
+        layout: namespace_write_params.Layout | Omit = omit,
         patch_by_filter: namespace_write_params.PatchByFilter | Omit = omit,
         patch_by_filter_allow_partial: bool | Omit = omit,
         patch_columns: ColumnsParam | Omit = omit,
@@ -1823,6 +1829,9 @@ class AsyncNamespacesResource(AsyncAPIResource):
           distance_metric: A function used to calculate vector similarity.
 
           encryption: The encryption configuration for a namespace.
+
+          layout: Experimental. How a namespace stores its documents. A change applies to
+              documents indexed after it.
 
           patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
@@ -1877,6 +1886,7 @@ class AsyncNamespacesResource(AsyncAPIResource):
                     "disable_backpressure": disable_backpressure,
                     "distance_metric": distance_metric,
                     "encryption": encryption,
+                    "layout": layout,
                     "patch_by_filter": patch_by_filter,
                     "patch_by_filter_allow_partial": patch_by_filter_allow_partial,
                     "patch_columns": patch_columns,
