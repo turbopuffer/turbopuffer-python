@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, Union, Optional
+from typing import Dict, List, Union, Optional
 from datetime import datetime
 from typing_extensions import Literal, TypeAlias
 
@@ -12,7 +12,15 @@ from .pinning_config import PinningConfig
 from .sharding_config import ShardingConfig
 from .attribute_schema_config import AttributeSchemaConfig
 
-__all__ = ["NamespaceMetadata", "Index", "IndexIndexUpToDate", "IndexIndexUpdating", "Pinning", "PinningStatus"]
+__all__ = [
+    "NamespaceMetadata",
+    "Index",
+    "IndexIndexUpToDate",
+    "IndexIndexUpdating",
+    "Layout",
+    "Pinning",
+    "PinningStatus",
+]
 
 
 class IndexIndexUpToDate(BaseModel):
@@ -37,6 +45,22 @@ class IndexIndexUpdating(BaseModel):
 
 
 Index: TypeAlias = Union[IndexIndexUpToDate, IndexIndexUpdating]
+
+
+class Layout(BaseModel):
+    """Experimental.
+
+    How a namespace stores its documents. A change applies to documents indexed after it.
+    """
+
+    rank_by: Optional[List[object]] = None
+    """
+    Stores documents in ranges of an attribute, in ascending order, so queries
+    filtering on a narrow range of it or ranking by it skip the rest. Documents
+    should be written in roughly ascending order of it. Must have type `int`,
+    `uint`, `datetime` or `string`. `["id", "asc"]` resets the namespace to the
+    default layout.
+    """
 
 
 class PinningStatus(BaseModel):
@@ -95,6 +119,13 @@ class NamespaceMetadata(BaseModel):
 
     updated_at: datetime
     """The timestamp when the namespace was last modified by a write operation."""
+
+    layout: Optional[Layout] = None
+    """Experimental.
+
+    How a namespace stores its documents. A change applies to documents indexed
+    after it.
+    """
 
     pinning: Optional[Pinning] = None
     """
