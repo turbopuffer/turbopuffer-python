@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, Union, Optional
+from typing import Dict, List, Union, Optional
 from datetime import datetime
 from typing_extensions import Literal, TypeAlias
 
@@ -53,12 +53,13 @@ class Layout(BaseModel):
     How a namespace stores its documents. A change applies to documents indexed after it.
     """
 
-    arrange_by: Optional[str] = None
+    rank_by: Optional[List[object]] = None
     """
-    Stores documents in ranges of this attribute, ordered by it, so queries
-    filtering on a narrow range of it or ordered by it skip the rest. Documents
+    Stores documents in ranges of an attribute, in ascending order, so queries
+    filtering on a narrow range of it or ranking by it skip the rest. Documents
     should be written in roughly ascending order of it. Must have type `int`,
-    `uint`, `datetime` or `string`. `id` resets the namespace to the default layout.
+    `uint`, `datetime` or `string`. `["id", "asc"]` resets the namespace to the
+    default layout.
     """
 
 

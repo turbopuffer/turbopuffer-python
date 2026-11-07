@@ -127,12 +127,13 @@ class Layout(TypedDict, total=False):
     How a namespace stores its documents. A change applies to documents indexed after it.
     """
 
-    arrange_by: str
+    rank_by: Iterable[object]
     """
-    Stores documents in ranges of this attribute, ordered by it, so queries
-    filtering on a narrow range of it or ordered by it skip the rest. Documents
+    Stores documents in ranges of an attribute, in ascending order, so queries
+    filtering on a narrow range of it or ranking by it skip the rest. Documents
     should be written in roughly ascending order of it. Must have type `int`,
-    `uint`, `datetime` or `string`. `id` resets the namespace to the default layout.
+    `uint`, `datetime` or `string`. `["id", "asc"]` resets the namespace to the
+    default layout.
     """
 
 
