@@ -909,8 +909,8 @@ class NamespacesResource(SyncAPIResource):
 
           encryption: The encryption configuration for a namespace.
 
-          layout: Experimental. How a namespace stores its documents. Can only be set on a
-              namespace's inaugural write, and cannot be changed later.
+          layout: Experimental. How a namespace stores its documents. A change applies to
+              documents indexed after it.
 
           patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
@@ -1841,8 +1841,8 @@ class AsyncNamespacesResource(AsyncAPIResource):
 
           encryption: The encryption configuration for a namespace.
 
-          layout: Experimental. How a namespace stores its documents. Can only be set on a
-              namespace's inaugural write, and cannot be changed later.
+          layout: Experimental. How a namespace stores its documents. A change applies to
+              documents indexed after it.
 
           patch_by_filter: Sets the attributes in `patch` on every document that matches `filters`.
 
