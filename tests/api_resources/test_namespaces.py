@@ -826,6 +826,7 @@ class TestNamespaces:
                 "mode": "customer-managed",
                 "encryption_context": {"foo": "string"},
             },
+            layout={"rank_by": [{}]},
             patch_by_filter={
                 "filters": {},
                 "patch": {"foo": "bar"},
@@ -1694,6 +1695,7 @@ class TestAsyncNamespaces:
                 "mode": "customer-managed",
                 "encryption_context": {"foo": "string"},
             },
+            layout={"rank_by": [{}]},
             patch_by_filter={
                 "filters": {},
                 "patch": {"foo": "bar"},
